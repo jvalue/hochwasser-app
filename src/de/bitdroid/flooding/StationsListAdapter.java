@@ -7,6 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +32,6 @@ final class StationsListAdapter extends BaseAdapter {
 	public StationsListAdapter(Context context) {
 		if (context == null) throw new NullPointerException("context cannot be null");
 		this.context = context;
-		loadData();
 	}
 
 	@Override
@@ -65,8 +67,24 @@ final class StationsListAdapter extends BaseAdapter {
 	}
 
 
+	@Override
+	public void notifyDataSetChanged() {
+		Log.i("Flooding", "items.size() " + items.size());
+		items.clear();
+		Cursor cursor = context.getContentResolver().query(new Uri.Builder().scheme("content").authority("de.bitdroid.flooding.provider").path("foobar").build(), null, null, null, null);
+		for (int i = 0; i < cursor.getCount(); i++) {
+			items.add(cursor.getString(i));
+			cursor.moveToNext();
+		}
+	
+		Log.i("Flooding", "items.size() " + items.size());
 
-	public void loadData() {
+		super.notifyDataSetChanged();
+	}
+
+
+
+	private void loadData() {
 		RequestQueue queue = VolleyManager.getInstance(context).getRequestQueue();
 		queue.add(new StringRequest(Method.GET,
 					"http://faui2o2f.cs.fau.de:8080/open-data-service/ods/de/pegelonline/stationsFlat",

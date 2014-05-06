@@ -11,8 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
 public final class RestCall {
 
 	enum RequestType {
@@ -72,13 +70,13 @@ public final class RestCall {
 
 
 		// create connection
-		HttpsURLConnection conn = null;
+		HttpURLConnection conn = null;
 		OutputStream outputStream = null;
 		BufferedReader dataReader = null;
 		try {
 			URL url = new URL(urlBuilder.toString());
 
-			conn = (HttpsURLConnection) url.openConnection();
+			conn = (HttpURLConnection) url.openConnection();
 			for (String key : headers.keySet()) {
 				conn.setRequestProperty(key, headers.get(key));
 			}
@@ -114,7 +112,7 @@ public final class RestCall {
 
 	
 
-	class Builder {
+	static class Builder {
 		private final RequestType requestType;
 		private final String baseUrl;
 		private final List<String> paths = new LinkedList<String>();

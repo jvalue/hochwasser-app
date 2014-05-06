@@ -3,9 +3,6 @@ package de.bitdroid.flooding;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,13 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 
 
 final class StationsListAdapter extends BaseAdapter {
@@ -81,38 +71,4 @@ final class StationsListAdapter extends BaseAdapter {
 
 		super.notifyDataSetChanged();
 	}
-
-
-
-	private void loadData() {
-		RequestQueue queue = VolleyManager.getInstance(context).getRequestQueue();
-		queue.add(new StringRequest(Method.GET,
-					"http://faui2o2f.cs.fau.de:8080/open-data-service/ods/de/pegelonline/stationsFlat",
-					new Response.Listener<String>() {
-						@Override
-						public void onResponse(String response) {
-							items.clear();
-							try {
-								JSONArray array = new JSONArray(response);
-								for (int i = 0; i < array.length(); i++) {
-									items.add(array.get(i).toString());
-								}
-							} catch(JSONException je) {
-								items.add(je.getMessage());
-							}
-							Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
-							notifyDataSetChanged();
-						}
-					},
-					new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							items.clear();
-							items.add(error.getMessage());
-							Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show();
-							notifyDataSetChanged();
-						}
-					}));
-	}
-
 }

@@ -1,8 +1,13 @@
 package de.bitdroid.flooding.ods;
 
+import static de.bitdroid.flooding.ods.OdsContract.ACCOUNT;
+import static de.bitdroid.flooding.ods.OdsContract.AUTHORITY;
+import static de.bitdroid.flooding.ods.OdsContract.BASE_CONTENT_URI;
+import static de.bitdroid.flooding.ods.OdsContract.BASE_PATH;
+import static de.bitdroid.flooding.ods.OdsContract.SYNC_PATH;
+
 import java.util.ArrayList;
 
-import android.accounts.Account;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -19,20 +24,24 @@ import android.os.Bundle;
 
 public final class OdsContentProvider extends ContentProvider {
 
-	public static final String AUTHORITY = "de.bitdroid.flooding.provider";
-	public static final String BASE_PATH = "ods";
-	public static final Uri CONTENT_URI 
-		= new Uri.Builder().scheme("content").authority(AUTHORITY).appendPath(BASE_PATH).build();
-
 	private static final int
 		URI_MATCHER_ALL = 10,
 		URI_MATCHER_ALL_SYNC = 20,
 		URI_MATCHER_SERVER_ID = 30;
 	private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 	static {
-		URI_MATCHER.addURI(AUTHORITY, BASE_PATH, URI_MATCHER_ALL);
-		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/sync", URI_MATCHER_ALL_SYNC);
-		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/*", URI_MATCHER_SERVER_ID);
+		URI_MATCHER.addURI(
+				AUTHORITY, 
+				BASE_PATH, 
+				URI_MATCHER_ALL);
+		URI_MATCHER.addURI(
+				AUTHORITY, 
+				BASE_PATH + "/" + SYNC_PATH, 
+				URI_MATCHER_ALL_SYNC);
+		URI_MATCHER.addURI(
+				AUTHORITY, 
+				BASE_PATH + "/*", 
+				URI_MATCHER_SERVER_ID);
 	}
 
 	private OdsTable odsTable;
@@ -46,7 +55,6 @@ public final class OdsContentProvider extends ContentProvider {
 
 	@Override
 	public String getType(Uri uri) {
-		// TODO return something meaningful?
 		return null;
 	}
 
@@ -61,7 +69,7 @@ public final class OdsContentProvider extends ContentProvider {
 
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 		// todo check columns
-		queryBuilder.setTables(odsTable.getTableName());
+		queryBuilder.setTables(BASE_PATH);
 		
 		switch (URI_MATCHER.match(uri)) {
 			case URI_MATCHER_ALL_SYNC:
@@ -69,15 +77,15 @@ public final class OdsContentProvider extends ContentProvider {
 				settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 				settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 				ContentResolver.requestSync(
-						new Account("dummyaccount", "de.bitdroid.flooding"),
+						ACCOUNT,
 						AUTHORITY,
 						settingsBundle);
 
 			case URI_MATCHER_ALL:
 				break;
 			case URI_MATCHER_SERVER_ID:
-				queryBuilder.appendWhere(odsTable.getIdColumn() 
-						+ "=\"" + uri.getLastPathSegment() + "\"");
+				queryBuilder.appendWhere(
+						OdsContract.COLUMN_ID + "=\"" + uri.getLastPathSegment() + "\"");
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -97,12 +105,12 @@ public final class OdsContentProvider extends ContentProvider {
 		switch(URI_MATCHER.match(uri)) {
 			case URI_MATCHER_ALL:
 				long id = odsTable.getWritableDatabase().insert(
-						odsTable.getTableName(),
+						BASE_PATH,
 						null,
 						data);
 				
 				getContext().getContentResolver().notifyChange(uri, null);
-				return CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+				return BASE_CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
 
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);

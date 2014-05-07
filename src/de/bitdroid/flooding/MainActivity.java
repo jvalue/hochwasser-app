@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import de.bitdroid.flooding.ods.OdsContentProvider;
+import de.bitdroid.flooding.ods.OdsContract;
 import de.bitdroid.flooding.ods.SyncSetup;
 
 public class MainActivity extends Activity {
@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		getContentResolver().registerContentObserver(
-				OdsContentProvider.CONTENT_URI,
+				OdsContract.BASE_CONTENT_URI,
 				true,
 				contentObserver);
 

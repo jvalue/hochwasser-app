@@ -75,12 +75,12 @@ final class Processor {
 
 		// query if already present
 		String serverId = object.getString("_id");
-		Uri uri = OdsContentProvider.CONTENT_URI.buildUpon().appendPath(serverId).build();
+		Uri uri = OdsContract.BASE_CONTENT_URI.buildUpon().appendPath(serverId).build();
 		Cursor cursor = null;
 		try {
 			cursor = provider.query(
 					uri,
-					new String[] { OdsTable.COLUMN_SERVER_ID },
+					new String[] { OdsContract.COLUMN_SERVER_ID },
 					null, null, null);
 
 			if (cursor.getCount() >= 1) {
@@ -95,12 +95,12 @@ final class Processor {
 
 		// insert db
 		ContentValues data = new ContentValues();
-		data.put(OdsTable.COLUMN_SERVER_ID, serverId);
-		data.put(OdsTable.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
-		data.put(OdsTable.COLUMN_JSON_DATA, object.toString());
+		data.put(OdsContract.COLUMN_SERVER_ID, serverId);
+		data.put(OdsContract.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
+		data.put(OdsContract.COLUMN_JSON_DATA, object.toString());
 
 		ContentProviderOperation.Builder builder 
-			= ContentProviderOperation.newInsert(OdsContentProvider.CONTENT_URI);
+			= ContentProviderOperation.newInsert(OdsContract.BASE_CONTENT_URI);
 		builder.withValues(data);
 		return builder.build();
 	}

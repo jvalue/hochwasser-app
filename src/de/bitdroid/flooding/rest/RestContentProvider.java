@@ -1,27 +1,34 @@
 package de.bitdroid.flooding.rest;
 
+import android.accounts.Account;
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Bundle;
+
+import de.bitdroid.flooding.utils.Log;
 
 
 public final class RestContentProvider extends ContentProvider {
 
-	private static final String AUTHORITY = "de.bitdroid.flooding.provider";
-	private static final String BASE_PATH = "ods";
+	public static final String AUTHORITY = "de.bitdroid.flooding.provider";
+	public static final String BASE_PATH = "ods";
 	public static final Uri CONTENT_URI 
-		= new Uri.Builder().scheme("content").authority(AUTHORITY).path(BASE_PATH).build();
+		= new Uri.Builder().scheme("content").authority(AUTHORITY).appendPath(BASE_PATH).build();
 
 	private static final int
 		URI_MATCHER_ALL = 10,
-		URI_MATCHER_ID = 20;
+		URI_MATCHER_ALL_SYNC = 20,
+		URI_MATCHER_SERVER_ID = 30;
 	private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 	{
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH, URI_MATCHER_ALL);
-		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/#", URI_MATCHER_ID);
+		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/sync", URI_MATCHER_ALL_SYNC);
+		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/*", URI_MATCHER_SERVER_ID);
 	}
 
 	private ODSTable odsTable;
@@ -35,6 +42,7 @@ public final class RestContentProvider extends ContentProvider {
 
 	@Override
 	public String getType(Uri uri) {
+		// TODO return something meaningful?
 		return null;
 	}
 
@@ -52,10 +60,20 @@ public final class RestContentProvider extends ContentProvider {
 		queryBuilder.setTables(odsTable.getTableName());
 		
 		switch (URI_MATCHER.match(uri)) {
+			case URI_MATCHER_ALL_SYNC:
+				Bundle settingsBundle = new Bundle();
+				settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+				settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+				ContentResolver.requestSync(
+						new Account("dummyaccount", "de.bitdroid.flooding"),
+						AUTHORITY,
+						settingsBundle);
+
 			case URI_MATCHER_ALL:
 				break;
-			case URI_MATCHER_ID:
-				queryBuilder.appendWhere(odsTable.getIdColumn() + "=" + uri.getLastPathSegment());
+			case URI_MATCHER_SERVER_ID:
+				queryBuilder.appendWhere(odsTable.getIdColumn() 
+						+ "=\"" + uri.getLastPathSegment() + "\"");
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -80,7 +98,7 @@ public final class RestContentProvider extends ContentProvider {
 						data);
 				
 				getContext().getContentResolver().notifyChange(uri, null);
-				return CONTENT_URI.buildUpon().path(String.valueOf(id)).build();
+				return CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
 
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);

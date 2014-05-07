@@ -14,7 +14,7 @@ public final class ODSTable extends SQLiteOpenHelper implements Table {
 	private static final int DATABASE_VERSION = 1;
 
 	public static final String 
-				TABLE_NAME = "poItems",
+				TABLE_NAME = "odsResources",
 				COLUMN_ID = "_id",
 				COLUMN_SERVER_ID = "serverId",
 				COLUMN_HTTP_STATUS = "httpStatus",
@@ -68,7 +68,7 @@ public final class ODSTable extends SQLiteOpenHelper implements Table {
 
 	@Override
 	public String getIdColumn() {
-		return COLUMN_ID;
+		return COLUMN_SERVER_ID;
 	}
 
 	@Override

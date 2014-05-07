@@ -30,7 +30,7 @@
 		</service>
 
 		<provider
-				android:name="de.bitdroid.flooding.ods.RestContentProvider"
+				android:name="de.bitdroid.flooding.ods.OdsContentProvider"
 				android:authorities="de.bitdroid.flooding.provider"
 				android:exported="true"
 				android:syncable="true"

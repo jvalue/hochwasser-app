@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import de.bitdroid.flooding.rest.ODSTable;
-import de.bitdroid.flooding.rest.RestContentProvider;
+import de.bitdroid.flooding.ods.OdsContentProvider;
+import de.bitdroid.flooding.ods.OdsTable;
 import de.bitdroid.flooding.utils.Log;
 
 public class MainActivity extends Activity {
@@ -55,10 +55,10 @@ public class MainActivity extends Activity {
 
 		// trigger a sync manually
 		getContentResolver().query(
-				RestContentProvider.CONTENT_URI.buildUpon()
+				OdsContentProvider.CONTENT_URI.buildUpon()
 					.appendPath("sync")
 					.build(),
-				new String[] { ODSTable.COLUMN_SERVER_ID },
+				new String[] { OdsTable.COLUMN_SERVER_ID },
 				null, null, null);
     }
 
@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		getContentResolver().registerContentObserver(
-				RestContentProvider.CONTENT_URI,
+				OdsContentProvider.CONTENT_URI,
 				true,
 				contentObserver);
 

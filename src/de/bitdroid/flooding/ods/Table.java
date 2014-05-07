@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.rest;
+package de.bitdroid.flooding.ods;
 
 import android.database.sqlite.SQLiteOpenHelper;
 

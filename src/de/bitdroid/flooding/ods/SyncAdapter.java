@@ -1,4 +1,4 @@
-package de.bitdroid.flooding;
+package de.bitdroid.flooding.ods;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,14 +15,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.RemoteException;
 
-import de.bitdroid.flooding.rest.ODSTable;
-import de.bitdroid.flooding.rest.RestCall;
-import de.bitdroid.flooding.rest.RestContentProvider;
-import de.bitdroid.flooding.rest.RestException;
 import de.bitdroid.flooding.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
-
 
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
@@ -88,8 +83,8 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 		// query if already present
 		String serverId = object.getString("_id");
 		Cursor cursor = provider.query(
-				RestContentProvider.CONTENT_URI.buildUpon().appendPath(serverId).build(),
-				new String[] { ODSTable.COLUMN_SERVER_ID },
+				OdsContentProvider.CONTENT_URI.buildUpon().appendPath(serverId).build(),
+				new String[] { OdsTable.COLUMN_SERVER_ID },
 				null, null, null);
 
 		if (cursor.getCount() >= 1) {
@@ -100,11 +95,11 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 		// insert db
 		ContentValues data = new ContentValues();
-		data.put(ODSTable.COLUMN_SERVER_ID, serverId);
-		data.put(ODSTable.COLUMN_HTTP_STATUS, "foo");
-		data.put(ODSTable.COLUMN_SYNC_STATUS, "foo");
-		data.put(ODSTable.COLUMN_JSON_DATA, object.toString());
+		data.put(OdsTable.COLUMN_SERVER_ID, serverId);
+		data.put(OdsTable.COLUMN_HTTP_STATUS, "foo");
+		data.put(OdsTable.COLUMN_SYNC_STATUS, "foo");
+		data.put(OdsTable.COLUMN_JSON_DATA, object.toString());
 
-		provider.insert(RestContentProvider.CONTENT_URI, data);
+		provider.insert(OdsContentProvider.CONTENT_URI, data);
 	}
 }

@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import de.bitdroid.flooding.rest.ODSTable;
-import de.bitdroid.flooding.rest.RestContentProvider;
+import de.bitdroid.flooding.ods.OdsContentProvider;
+import de.bitdroid.flooding.ods.OdsTable;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -71,12 +71,12 @@ final class StationsListAdapter extends BaseAdapter {
 	private void loadData() {
 		Log.debug("reloading data"); items.clear();
 		Cursor cursor = context.getContentResolver().query(
-				RestContentProvider.CONTENT_URI,
-				ODSTable.COLUMN_NAMES,
+				OdsContentProvider.CONTENT_URI,
+				OdsTable.COLUMN_NAMES,
 				null, null, null);
 
 		cursor.moveToFirst();
-		int idx = cursor.getColumnIndex(ODSTable.COLUMN_SERVER_ID);
+		int idx = cursor.getColumnIndex(OdsTable.COLUMN_SERVER_ID);
 		for (int i = 0; i < cursor.getCount(); i++) {
 			items.add(cursor.getString(idx));
 			cursor.moveToNext();

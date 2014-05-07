@@ -20,7 +20,7 @@
 			</intent-filter>
 		</activity>
 
-		<service android:name="de.bitdroid.flooding.AuthenticatorService">
+		<service android:name="de.bitdroid.flooding.ods.AuthenticatorService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>
 			</intent-filter>
@@ -30,7 +30,7 @@
 		</service>
 
 		<provider
-				android:name="de.bitdroid.flooding.rest.RestContentProvider"
+				android:name="de.bitdroid.flooding.ods.RestContentProvider"
 				android:authorities="de.bitdroid.flooding.provider"
 				android:exported="true"
 				android:syncable="true"
@@ -38,7 +38,7 @@
 		/>
 
 		<service 
-				android:name="de.bitdroid.flooding.SyncService"
+				android:name="de.bitdroid.flooding.ods.SyncService"
 				android:exported="true"
 				android:process=":sync">
 			<intent-filter>

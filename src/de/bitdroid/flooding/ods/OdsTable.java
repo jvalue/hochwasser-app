@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.rest;
+package de.bitdroid.flooding.ods;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,7 +8,7 @@ import de.bitdroid.flooding.utils.Log;
 
 
 
-public final class ODSTable extends SQLiteOpenHelper implements Table {
+public final class OdsTable extends SQLiteOpenHelper implements Table {
 
 	private static final String DATABASE_NAME = "database.db";
 	private static final int DATABASE_VERSION = 1;
@@ -35,7 +35,7 @@ public final class ODSTable extends SQLiteOpenHelper implements Table {
 		+ COLUMN_JSON_DATA + " text not null);";
 
 
-	public ODSTable(Context context) {
+	public OdsTable(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 

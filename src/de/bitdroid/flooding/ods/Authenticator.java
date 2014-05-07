@@ -1,4 +1,4 @@
-package de.bitdroid.flooding;
+package de.bitdroid.flooding.ods;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;

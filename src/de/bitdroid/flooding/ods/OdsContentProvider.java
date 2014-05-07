@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.rest;
+package de.bitdroid.flooding.ods;
 
 import android.accounts.Account;
 import android.content.ContentProvider;
@@ -10,10 +10,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 
-import de.bitdroid.flooding.utils.Log;
 
-
-public final class RestContentProvider extends ContentProvider {
+public final class OdsContentProvider extends ContentProvider {
 
 	public static final String AUTHORITY = "de.bitdroid.flooding.provider";
 	public static final String BASE_PATH = "ods";
@@ -31,12 +29,12 @@ public final class RestContentProvider extends ContentProvider {
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/*", URI_MATCHER_SERVER_ID);
 	}
 
-	private ODSTable odsTable;
+	private OdsTable odsTable;
 
 
 	@Override
 	public boolean onCreate() {
-		odsTable = new ODSTable(getContext());
+		odsTable = new OdsTable(getContext());
 		return true;
 	}
 

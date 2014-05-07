@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.rest;
+package de.bitdroid.flooding.ods;
 
 import java.io.BufferedReader;
 import java.io.IOException;

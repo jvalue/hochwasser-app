@@ -3,48 +3,83 @@ package de.bitdroid.flooding;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import de.bitdroid.flooding.rest.ODSTable;
+import de.bitdroid.flooding.rest.RestContentProvider;
+import de.bitdroid.flooding.utils.Log;
+
 public class MainActivity extends Activity {
 
-	private static final String AUTHORITY = "de.bitdroid.flooding.provider";
 	private static final String ACCOUNT_TYPE = "de.bitdroid.flooding";
 	private static final String ACCOUNT = "dummyaccount";
-	
-	private Account account;
 
+	private StationsListAdapter listAdapter;
+	private ContentObserver contentObserver = new ContentObserver(null) {
+			@Override
+			public void onChange(boolean selfChange) {
+				onChange(selfChange, null);
+			}
+			@Override
+			public void onChange(boolean selfChange, Uri uri) {
+				listAdapter.notifyDataSetChanged();
+			}
+		};
+	
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-		final StationsListAdapter adapter = new StationsListAdapter(this);
+		listAdapter = new StationsListAdapter(this);
 		ListView listView = (ListView) findViewById(R.id.content_list);
-		listView.setAdapter(adapter);
+		listView.setAdapter(listAdapter);
 
 		Button updateButton = (Button) findViewById(R.id.update_button);
 		updateButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				adapter.notifyDataSetChanged();
-				Bundle bundle = new Bundle();
-				bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-				bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-				ContentResolver.requestSync(account, AUTHORITY, bundle); 
+				listAdapter.notifyDataSetChanged();
 			}
 		});
 
+		createSyncAccount(this);
 
-		account = createSyncAccount(this);
 
+		// trigger a sync manually
+		getContentResolver().query(
+				RestContentProvider.CONTENT_URI.buildUpon()
+					.appendPath("sync")
+					.build(),
+				new String[] { ODSTable.COLUMN_SERVER_ID },
+				null, null, null);
     }
+
+
+	@Override
+	public void onResume() {
+		getContentResolver().registerContentObserver(
+				RestContentProvider.CONTENT_URI,
+				true,
+				contentObserver);
+
+		super.onResume();
+	}
+
+
+	@Override
+	public void onPause() {
+		getContentResolver().unregisterContentObserver(contentObserver);
+		super.onPause();
+	}
+
 
 
 	private static Account createSyncAccount(Context context) {
@@ -52,9 +87,9 @@ public class MainActivity extends Activity {
 		AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
 
 		if (accountManager.addAccountExplicitly(account, null, null)) {
-			Log.i("Flooding", "Adding account successfull");
+			Log.info("Adding account successfull");
 		} else {
-			Log.i("Flooding", "Adding account failed");
+			Log.warning("Adding account failed");
 		}
 		return account;
 	}

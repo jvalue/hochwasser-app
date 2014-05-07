@@ -5,13 +5,15 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import de.bitdroid.flooding.rest.ODSTable;
+import de.bitdroid.flooding.rest.RestContentProvider;
+import de.bitdroid.flooding.utils.Log;
 
 
 final class StationsListAdapter extends BaseAdapter {
@@ -22,11 +24,13 @@ final class StationsListAdapter extends BaseAdapter {
 	public StationsListAdapter(Context context) {
 		if (context == null) throw new NullPointerException("context cannot be null");
 		this.context = context;
+		loadData();
 	}
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater 
+			= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		View itemView = inflater.inflate(R.layout.item, parent, false);
 		TextView textView = (TextView) itemView.findViewById(R.id.item_text);
@@ -59,16 +63,23 @@ final class StationsListAdapter extends BaseAdapter {
 
 	@Override
 	public void notifyDataSetChanged() {
-		Log.i("Flooding", "items.size() " + items.size());
-		items.clear();
-		Cursor cursor = context.getContentResolver().query(new Uri.Builder().scheme("content").authority("de.bitdroid.flooding.provider").path("foobar").build(), null, null, null, null);
+		loadData();
+		super.notifyDataSetChanged();
+	}
+
+
+	private void loadData() {
+		Log.debug("reloading data"); items.clear();
+		Cursor cursor = context.getContentResolver().query(
+				RestContentProvider.CONTENT_URI,
+				ODSTable.COLUMN_NAMES,
+				null, null, null);
+
+		cursor.moveToFirst();
+		int idx = cursor.getColumnIndex(ODSTable.COLUMN_SERVER_ID);
 		for (int i = 0; i < cursor.getCount(); i++) {
-			items.add(cursor.getString(i));
+			items.add(cursor.getString(idx));
 			cursor.moveToNext();
 		}
-	
-		Log.i("Flooding", "items.size() " + items.size());
-
-		super.notifyDataSetChanged();
 	}
 }

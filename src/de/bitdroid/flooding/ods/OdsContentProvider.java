@@ -29,7 +29,7 @@ public final class OdsContentProvider extends ContentProvider {
 		URI_MATCHER_ALL_SYNC = 20,
 		URI_MATCHER_SERVER_ID = 30;
 	private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-	{
+	static {
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH, URI_MATCHER_ALL);
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/sync", URI_MATCHER_ALL_SYNC);
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/*", URI_MATCHER_SERVER_ID);

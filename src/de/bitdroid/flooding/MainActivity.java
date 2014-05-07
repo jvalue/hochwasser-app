@@ -1,11 +1,7 @@
 package de.bitdroid.flooding;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
-import android.content.Context;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -13,13 +9,9 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import de.bitdroid.flooding.ods.OdsContentProvider;
-import de.bitdroid.flooding.ods.OdsTable;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.flooding.ods.SyncSetup;
 
 public class MainActivity extends Activity {
-
-	private static final String ACCOUNT_TYPE = "de.bitdroid.flooding";
-	private static final String ACCOUNT = "dummyaccount";
 
 	private StationsListAdapter listAdapter;
 	private ContentObserver contentObserver = new ContentObserver(null) {
@@ -51,21 +43,7 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		createSyncAccount(this);
-
-
-		// trigger a sync manually
-		Cursor cursor = null;
-		try {
-			cursor = getContentResolver().query(
-					OdsContentProvider.CONTENT_URI.buildUpon()
-						.appendPath("sync")
-						.build(),
-					new String[] { OdsTable.COLUMN_SERVER_ID },
-					null, null, null);
-		} finally {
-			cursor.close();
-		}
+		SyncSetup.setupSyncAdapter(this);
     }
 
 
@@ -84,19 +62,5 @@ public class MainActivity extends Activity {
 	public void onPause() {
 		getContentResolver().unregisterContentObserver(contentObserver);
 		super.onPause();
-	}
-
-
-
-	private static Account createSyncAccount(Context context) {
-		Account account = new Account(ACCOUNT, ACCOUNT_TYPE);
-		AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-
-		if (accountManager.addAccountExplicitly(account, null, null)) {
-			Log.info("Adding account successfull");
-		} else {
-			Log.warning("Adding account failed");
-		}
-		return account;
 	}
 }

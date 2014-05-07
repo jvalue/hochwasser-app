@@ -13,7 +13,7 @@ import java.util.Map;
 
 public final class RestCall {
 
-	enum RequestType {
+	public enum RequestType {
 		GET("GET"),
 		POST("POST"),
 		UPDATE("UPDATE"),
@@ -112,7 +112,7 @@ public final class RestCall {
 
 	
 
-	static class Builder {
+	public static class Builder {
 		private final RequestType requestType;
 		private final String baseUrl;
 		private final List<String> paths = new LinkedList<String>();

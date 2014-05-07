@@ -1,11 +1,17 @@
 package de.bitdroid.flooding.ods;
 
+import java.util.ArrayList;
+
 import android.accounts.Account;
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -115,5 +121,22 @@ public final class OdsContentProvider extends ContentProvider {
 			String  selection,
 			String[] selectionArgs) {
 		return 0;
+	}
+
+
+	@Override
+	public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
+			throws OperationApplicationException {
+
+		SQLiteDatabase db = odsTable.getWritableDatabase();
+		db.beginTransaction();
+
+		try {
+			ContentProviderResult[] result = super.applyBatch(operations);
+			db.setTransactionSuccessful();
+			return result;
+		} finally {
+			db.endTransaction();
+		}
 	}
 }

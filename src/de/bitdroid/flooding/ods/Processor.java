@@ -1,12 +1,17 @@
 package de.bitdroid.flooding.ods;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentProviderClient;
+import android.content.ContentProviderOperation;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.RemoteException;
 
 import de.bitdroid.flooding.utils.Log;
@@ -27,16 +32,34 @@ final class Processor {
 	}
 
 
-	public void processGetSingle(String jsonString) throws RemoteException, JSONException {
+	public void processGetSingle(String jsonString) 
+			throws RemoteException, JSONException, OperationApplicationException {
+
 		JSONObject json = new JSONObject(jsonString);
-		insertIntoProvider(json);
+		ContentProviderOperation operation = insertIntoProvider(json);
+		if (operation != null) {
+			ArrayList<ContentProviderOperation> operations 
+				= new ArrayList<ContentProviderOperation>();
+			operations.add(operation);
+			provider.applyBatch(operations);
+		}
 	}
 
-	public void processGetAll(String jsonString) throws RemoteException, JSONException {
+	public void processGetAll(String jsonString) 
+			throws RemoteException, JSONException, OperationApplicationException {
+
+		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 		JSONArray json = new JSONArray(jsonString);
 		for (int i = 0; i < json.length(); i++) {
-			insertIntoProvider(json.getJSONObject(i));
+			ContentProviderOperation operation = insertIntoProvider(json.getJSONObject(i));
+			if (operation != null) operations.add(operation);
+			if (operations.size() >= 100) {
+				provider.applyBatch(operations);
+				operations.clear();
+			}
 		}
+
+		if (operations.size() > 0) provider.applyBatch(operations);
 	}
 
 	public void prePost() {
@@ -47,21 +70,22 @@ final class Processor {
 	}
 
 
-	private void insertIntoProvider(JSONObject object) 
+	private ContentProviderOperation insertIntoProvider(JSONObject object) 
 			throws RemoteException, JSONException {
 
 		// query if already present
 		String serverId = object.getString("_id");
+		Uri uri = OdsContentProvider.CONTENT_URI.buildUpon().appendPath(serverId).build();
 		Cursor cursor = null;
 		try {
 			cursor = provider.query(
-					OdsContentProvider.CONTENT_URI.buildUpon().appendPath(serverId).build(),
+					uri,
 					new String[] { OdsTable.COLUMN_SERVER_ID },
 					null, null, null);
 
 			if (cursor.getCount() >= 1) {
 				Log.debug("Found row, not inserting");
-				return;
+				return null;
 			}
 
 		} finally {
@@ -75,6 +99,9 @@ final class Processor {
 		data.put(OdsTable.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
 		data.put(OdsTable.COLUMN_JSON_DATA, object.toString());
 
-		provider.insert(OdsContentProvider.CONTENT_URI, data);
+		ContentProviderOperation.Builder builder 
+			= ContentProviderOperation.newInsert(OdsContentProvider.CONTENT_URI);
+		builder.withValues(data);
+		return builder.build();
 	}
 }

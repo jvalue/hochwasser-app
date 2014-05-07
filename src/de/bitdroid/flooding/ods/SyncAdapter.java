@@ -1,14 +1,11 @@
 package de.bitdroid.flooding.ods;
 
-import org.json.JSONException;
-
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
-import android.os.RemoteException;
 
 import de.bitdroid.flooding.utils.Log;
 
@@ -63,15 +60,9 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			}
 
-		} catch (RemoteException re) {
+		} catch (Exception e) {
 			syncResult.hasHardError();
-			Log.error(re.getMessage());
-		} catch (RestException e) {
-			syncResult.hasHardError();
-			Log.error(e.getMessage());
-		} catch (JSONException je) {
-			syncResult.hasHardError();
-			Log.error(je.getMessage());
+			Log.error(android.util.Log.getStackTraceString(e));
 		}
 	}
 }

@@ -6,14 +6,14 @@ import java.util.List;
 
 public final class Log {
 
-	private Log() {
-	}
+	private Log() { }
 
-	{
+	static {
+		logHandlers = new LinkedList<LogHandler>();
 		addHandler(new AndroidLogHandler());
 	}
 
-	private final static List<LogHandler> logHandlers = new LinkedList<LogHandler>();
+	private final static List<LogHandler> logHandlers;
 
 	public static synchronized void addHandler(LogHandler handler) {
 		logHandlers.add(handler);

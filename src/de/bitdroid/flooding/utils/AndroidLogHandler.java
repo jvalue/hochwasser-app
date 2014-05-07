@@ -2,7 +2,7 @@ package de.bitdroid.flooding.utils;
 
 final class AndroidLogHandler implements LogHandler {
 
-	private final static String LOG_PREFIX = "MailDroid";
+	private final static String LOG_PREFIX = "Flooding";
 	
 	@Override
 	public void debug(String msg) {

@@ -26,20 +26,20 @@ public final class RestException extends Exception {
 	@Override
 	public String getMessage() {
 		Throwable cause = getCause();
-		if (cause != null) return "Failed to communicate with TradeCard servers (" + cause.getMessage() + ")";
+		if (cause != null) return "Failed to communicate with servers (" + cause.getMessage() + ")";
 		
 		if (code == HttpURLConnection.HTTP_NOT_MODIFIED) {
-			return "The requested documents on TradeCard were not modified";
+			return "The requested documents were not modified";
 		} else if (code == HttpURLConnection.HTTP_BAD_REQUEST) {
-			return "The TradeCard servers did not understand the request";
+			return "The servers did not understand the request";
 		} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
 			return "The credentials provided were not correct";
 		} else if (code == HttpURLConnection.HTTP_FORBIDDEN) {
 			return "The request is not allowed to make these changes";
 		} else if (code == HttpURLConnection.HTTP_NOT_FOUND) {
-			return "The requested resource is not available in TradeCard";
+			return "The requested resource is not available";
 		} else if (code >= 500 && code <= 600) {
-			return "Unable to connec to the TradeCard servers";
+			return "Unable to connec to the servers";
 		}
 		return "Unknown error (" + code + ")";
 	}

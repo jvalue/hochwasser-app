@@ -30,7 +30,7 @@
 		</service>
 
 		<provider
-				android:name="de.bitdroid.flooding.StubProvider"
+				android:name="de.bitdroid.flooding.rest.RestContentProvider"
 				android:authorities="de.bitdroid.flooding.provider"
 				android:exported="false"
 				android:syncable="true" />

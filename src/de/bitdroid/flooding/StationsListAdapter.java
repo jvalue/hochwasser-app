@@ -70,16 +70,23 @@ final class StationsListAdapter extends BaseAdapter {
 
 	private void loadData() {
 		Log.debug("reloading data"); items.clear();
-		Cursor cursor = context.getContentResolver().query(
-				OdsContentProvider.CONTENT_URI,
-				OdsTable.COLUMN_NAMES,
-				null, null, null);
+		Cursor cursor = null; 
+		
+		try {
+			cursor = context.getContentResolver().query(
+					OdsContentProvider.CONTENT_URI,
+					OdsTable.COLUMN_NAMES,
+					null, null, null);
 
-		cursor.moveToFirst();
-		int idx = cursor.getColumnIndex(OdsTable.COLUMN_SERVER_ID);
-		for (int i = 0; i < cursor.getCount(); i++) {
-			items.add(cursor.getString(idx));
-			cursor.moveToNext();
+			cursor.moveToFirst();
+			int idx = cursor.getColumnIndex(OdsTable.COLUMN_SERVER_ID);
+			for (int i = 0; i < cursor.getCount(); i++) {
+				items.add(cursor.getString(idx));
+				cursor.moveToNext();
+			}
+
+		} finally {
+			if (cursor != null) cursor.close();
 		}
 	}
 }

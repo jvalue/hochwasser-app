@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.database.ContentObserver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -54,12 +55,17 @@ public class MainActivity extends Activity {
 
 
 		// trigger a sync manually
-		getContentResolver().query(
-				OdsContentProvider.CONTENT_URI.buildUpon()
-					.appendPath("sync")
-					.build(),
-				new String[] { OdsTable.COLUMN_SERVER_ID },
-				null, null, null);
+		Cursor cursor = null;
+		try {
+			cursor = getContentResolver().query(
+					OdsContentProvider.CONTENT_URI.buildUpon()
+						.appendPath("sync")
+						.build(),
+					new String[] { OdsTable.COLUMN_SERVER_ID },
+					null, null, null);
+		} finally {
+			cursor.close();
+		}
     }
 
 

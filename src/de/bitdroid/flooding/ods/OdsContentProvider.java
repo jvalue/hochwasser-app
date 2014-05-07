@@ -78,7 +78,7 @@ public final class OdsContentProvider extends ContentProvider {
 		}
 
 		return queryBuilder.query(
-				odsTable.getWritableDatabase(),
+				odsTable.getReadableDatabase(),
 				projection,
 				selection,
 				selectionArgs,

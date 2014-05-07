@@ -52,14 +52,20 @@ final class Processor {
 
 		// query if already present
 		String serverId = object.getString("_id");
-		Cursor cursor = provider.query(
-				OdsContentProvider.CONTENT_URI.buildUpon().appendPath(serverId).build(),
-				new String[] { OdsTable.COLUMN_SERVER_ID },
-				null, null, null);
+		Cursor cursor = null;
+		try {
+			cursor = provider.query(
+					OdsContentProvider.CONTENT_URI.buildUpon().appendPath(serverId).build(),
+					new String[] { OdsTable.COLUMN_SERVER_ID },
+					null, null, null);
 
-		if (cursor.getCount() >= 1) {
-			Log.debug("Found row, not inserting");
-			return;
+			if (cursor.getCount() >= 1) {
+				Log.debug("Found row, not inserting");
+				return;
+			}
+
+		} finally {
+			if (cursor != null) cursor.close();
 		}
 
 

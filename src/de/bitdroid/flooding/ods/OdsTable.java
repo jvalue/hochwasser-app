@@ -17,20 +17,18 @@ public final class OdsTable extends SQLiteOpenHelper implements Table {
 				TABLE_NAME = "odsResources",
 				COLUMN_ID = "_id",
 				COLUMN_SERVER_ID = "serverId",
-				COLUMN_HTTP_STATUS = "httpStatus",
 				COLUMN_SYNC_STATUS = "syncStatus",
 				COLUMN_JSON_DATA = "jsonData";
 
 	public static final String[] COLUMN_NAMES = 
 	{ 
-		COLUMN_ID, COLUMN_SERVER_ID, COLUMN_HTTP_STATUS, COLUMN_SYNC_STATUS, COLUMN_JSON_DATA
+		COLUMN_ID, COLUMN_SERVER_ID, COLUMN_SYNC_STATUS, COLUMN_JSON_DATA
 	};
 
 	private final String DATABASE_CREATE =
 		"create table " + TABLE_NAME + " ( "
 		+ COLUMN_ID + " integer primary key autoincrement, "
 		+ COLUMN_SERVER_ID + " text not null, "
-		+ COLUMN_HTTP_STATUS + " text not null, "
 		+ COLUMN_SYNC_STATUS + " text not null, "
 		+ COLUMN_JSON_DATA + " text not null);";
 

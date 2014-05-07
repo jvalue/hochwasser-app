@@ -1,19 +1,27 @@
 package de.bitdroid.flooding;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
-import android.net.Uri;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.util.Log;
+
+import de.bitdroid.flooding.rest.ODSTable;
+import de.bitdroid.flooding.rest.RestCall;
+import de.bitdroid.flooding.rest.RestContentProvider;
+import de.bitdroid.flooding.rest.RestException;
+import de.bitdroid.flooding.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
-
-	private int syncCounter = 0;
 
 
 	public SyncAdapter(Context context, boolean autoInitialize) {
@@ -36,20 +44,67 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			SyncResult syncResult) {
 
 
-
-		syncCounter++;
-		String msg = "SyncCounter = " + syncCounter;
-
-		Uri uri = new Uri.Builder().scheme("content").authority(authority).path("foobar").build();
-		ContentValues data = new ContentValues();
-		data.put(StubProvider.KEY, msg);
-
 		try {
-			provider.insert(uri, data);
+			RestCall call = new RestCall.Builder(
+					RestCall.RequestType.GET, 
+					"http://faui2o2f.cs.fau.de:8080")
+				.path("open-data-service")
+				.path("ods")
+				.path("de")
+				.path("pegelonline")
+				.path("stations")
+				.build();
+
+			String resultString = call.execute();
+			Object tmpJson = new JSONTokener(resultString).nextValue();
+
+			if (tmpJson instanceof JSONObject) {
+				insertIntoProvider((JSONObject) tmpJson, provider);
+
+			} else if (tmpJson instanceof JSONArray) {
+				JSONArray arrayJson = (JSONArray) tmpJson;
+				for (int i = 0; i < arrayJson.length(); i++) {
+					insertIntoProvider(arrayJson.getJSONObject(i), provider);
+				}
+			}
+
+
 		} catch (RemoteException re) {
 			syncResult.hasHardError();
+			Log.error(re.getMessage());
+		} catch (RestException e) {
+			syncResult.hasHardError();
+			Log.error(e.getMessage());
+		} catch (JSONException je) {
+			syncResult.hasHardError();
+			Log.error(je.getMessage());
+		}
+	}
+
+
+	private void insertIntoProvider(JSONObject object, ContentProviderClient provider) 
+			throws RemoteException, JSONException {
+
+		// query if already present
+		String serverId = object.getString("_id");
+		Cursor cursor = provider.query(
+				RestContentProvider.CONTENT_URI.buildUpon().appendPath(serverId).build(),
+				new String[] { ODSTable.COLUMN_SERVER_ID },
+				null, null, null);
+
+		if (cursor.getCount() >= 1) {
+			Log.debug("Found row, not inserting");
+			return;
 		}
 
-		Log.i("Flooding", "synced");
+
+		// insert db
+		ContentValues data = new ContentValues();
+		data.put(ODSTable.COLUMN_SERVER_ID, serverId);
+		data.put(ODSTable.COLUMN_HTTP_STATUS, "foo");
+		data.put(ODSTable.COLUMN_SYNC_STATUS, "foo");
+		data.put(ODSTable.COLUMN_JSON_DATA, object.toString());
+
+		provider.insert(RestContentProvider.CONTENT_URI, data);
 	}
 }

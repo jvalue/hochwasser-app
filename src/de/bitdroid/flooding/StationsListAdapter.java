@@ -3,6 +3,9 @@ package de.bitdroid.flooding;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -16,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.ods.OdsContract;
+import de.bitdroid.flooding.ods.json.PegelonlineParser;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -85,8 +89,13 @@ final class StationsListAdapter extends BaseAdapter implements LoaderManager.Loa
 		items.clear();
 		cursor.moveToFirst();
 		while (cursor.moveToNext()) {
-			int idx = cursor.getColumnIndex(OdsContract.COLUMN_SERVER_ID);
-			items.add(cursor.getString(idx));
+			int idx = cursor.getColumnIndex(OdsContract.COLUMN_JSON_DATA);
+			try {
+				JSONObject json = new JSONObject(cursor.getString(idx));
+				items.add(PegelonlineParser.getStationName(json));
+			} catch(JSONException je) {
+				Log.error(android.util.Log.getStackTraceString(je));
+			}
 		}
 		notifyDataSetChanged();
 	}

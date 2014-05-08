@@ -11,9 +11,9 @@ import android.preference.PreferenceManager;
 import de.bitdroid.flooding.utils.Log;
 
 
-public final class SyncSetup {
+public final class SyncUtils {
 
-	private SyncSetup() { }
+	private SyncUtils () { }
 
 
 	private static final String KEY_FIRST_START = "firstStart";
@@ -44,17 +44,19 @@ public final class SyncSetup {
 					OdsContract.AUTHORITY,
 					new Bundle(),
 					1000 * 60 * 60);
+		}
+	}
 
-			// trigger manual sync
-			Cursor cursor = null;
-			try {
-				cursor = context.getContentResolver().query(
-						OdsContract.BASE_CONTENT_URI.buildUpon().appendPath("sync").build(),
-						new String[] { OdsContract.COLUMN_SERVER_ID },
-						null, null, null);
-			} finally {
-				cursor.close();
-			}
+
+	public static void triggerManualSync(Context context) {
+		Cursor cursor = null;
+		try {
+			cursor = context.getContentResolver().query(
+					OdsContract.BASE_CONTENT_URI.buildUpon().appendPath("sync").build(),
+					new String[] { OdsContract.COLUMN_SERVER_ID },
+					null, null, null);
+		} finally {
+			cursor.close();
 		}
 	}
 }

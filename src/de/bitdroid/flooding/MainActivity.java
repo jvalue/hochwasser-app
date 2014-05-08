@@ -1,13 +1,12 @@
 package de.bitdroid.flooding;
 
 import android.app.Activity;
-import android.app.LoaderManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import de.bitdroid.flooding.ods.SyncSetup;
+import de.bitdroid.flooding.ods.SyncUtils;
 
 public class MainActivity extends Activity {
 
@@ -31,7 +30,7 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		SyncSetup.setupSyncAdapter(this);
+		SyncUtils.setupSyncAdapter(this);
 
 		getLoaderManager().initLoader(StationsListAdapter.ODS_LOADER_ID, null, listAdapter);
     }

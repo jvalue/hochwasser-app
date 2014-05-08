@@ -38,6 +38,7 @@ public final class SyncSetup {
 
 			// setup periodic sync
 			ContentResolver.setIsSyncable(OdsContract.ACCOUNT, OdsContract.AUTHORITY, 1);
+			ContentResolver.setSyncAutomatically(OdsContract.ACCOUNT, OdsContract.AUTHORITY, true);
 			ContentResolver.addPeriodicSync(
 					OdsContract.ACCOUNT,
 					OdsContract.AUTHORITY,

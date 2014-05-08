@@ -1,29 +1,17 @@
 package de.bitdroid.flooding;
 
 import android.app.Activity;
-import android.database.ContentObserver;
-import android.net.Uri;
+import android.app.LoaderManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import de.bitdroid.flooding.ods.OdsContract;
 import de.bitdroid.flooding.ods.SyncSetup;
 
 public class MainActivity extends Activity {
 
 	private StationsListAdapter listAdapter;
-	private ContentObserver contentObserver = new ContentObserver(null) {
-			@Override
-			public void onChange(boolean selfChange) {
-				onChange(selfChange, null);
-			}
-			@Override
-			public void onChange(boolean selfChange, Uri uri) {
-				listAdapter.notifyDataSetChanged();
-			}
-		};
 	
 
     @Override
@@ -44,23 +32,8 @@ public class MainActivity extends Activity {
 		});
 
 		SyncSetup.setupSyncAdapter(this);
+
+		getLoaderManager().initLoader(StationsListAdapter.ODS_LOADER_ID, null, listAdapter);
     }
 
-
-	@Override
-	public void onResume() {
-		getContentResolver().registerContentObserver(
-				OdsContract.BASE_CONTENT_URI,
-				true,
-				contentObserver);
-
-		super.onResume();
-	}
-
-
-	@Override
-	public void onPause() {
-		getContentResolver().unregisterContentObserver(contentObserver);
-		super.onPause();
-	}
 }

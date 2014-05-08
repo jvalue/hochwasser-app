@@ -91,13 +91,15 @@ public final class OdsContentProvider extends ContentProvider {
 				throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
 
-		return queryBuilder.query(
+		Cursor cursor = queryBuilder.query(
 				odsTable.getReadableDatabase(),
 				projection,
 				selection,
 				selectionArgs,
 				null, null,
 				sortOrder);
+		cursor.setNotificationUri(getContext().getContentResolver(), uri);
+		return cursor;
 	}
 
 	@Override
@@ -108,7 +110,7 @@ public final class OdsContentProvider extends ContentProvider {
 						BASE_PATH,
 						null,
 						data);
-				
+
 				getContext().getContentResolver().notifyChange(uri, null);
 				return BASE_CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
 

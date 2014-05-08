@@ -3,8 +3,12 @@ package de.bitdroid.flooding;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +19,7 @@ import de.bitdroid.flooding.ods.OdsContract;
 import de.bitdroid.flooding.utils.Log;
 
 
-final class StationsListAdapter extends BaseAdapter {
+final class StationsListAdapter extends BaseAdapter implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	private final List<String> items = new LinkedList<String>();
 	private final Context context;
@@ -23,7 +27,6 @@ final class StationsListAdapter extends BaseAdapter {
 	public StationsListAdapter(Context context) {
 		if (context == null) throw new NullPointerException("context cannot be null");
 		this.context = context;
-		loadData();
 	}
 
 	@Override
@@ -60,32 +63,35 @@ final class StationsListAdapter extends BaseAdapter {
 	}
 
 
+	static final int ODS_LOADER_ID = 42;
+
 	@Override
-	public void notifyDataSetChanged() {
-		loadData();
-		super.notifyDataSetChanged();
+	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+		Log.debug("onCreateLoader called");
+		if (id != ODS_LOADER_ID) return null;
+		return new CursorLoader(
+				context,
+				OdsContract.BASE_CONTENT_URI,
+				new String[] {
+					OdsContract.COLUMN_SERVER_ID,
+					OdsContract.COLUMN_SYNC_STATUS,
+					OdsContract.COLUMN_JSON_DATA
+				}, null, null, null);
 	}
 
-
-	private void loadData() {
-		Log.debug("reloading data"); items.clear();
-		Cursor cursor = null; 
-		
-		try {
-			cursor = context.getContentResolver().query(
-					OdsContract.BASE_CONTENT_URI,
-					OdsContract.COLUMN_NAMES,
-					null, null, null);
-
-			cursor.moveToFirst();
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		Log.debug("onLoadFinished called");
+		items.clear();
+		cursor.moveToFirst();
+		while (cursor.moveToNext()) {
 			int idx = cursor.getColumnIndex(OdsContract.COLUMN_SERVER_ID);
-			for (int i = 0; i < cursor.getCount(); i++) {
-				items.add(cursor.getString(idx));
-				cursor.moveToNext();
-			}
-
-		} finally {
-			if (cursor != null) cursor.close();
+			items.add(cursor.getString(idx));
 		}
 	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+	}
+
 }

@@ -5,13 +5,6 @@
     android:layout_height="fill_parent"
 	>
 
-	<Button
-		android:id="@+id/update_button"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:text="Update content"
-	/>
-
 	<ListView
 		android:id="@+id/content_list"
 		android:layout_width="fill_parent"

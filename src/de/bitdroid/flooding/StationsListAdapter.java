@@ -88,6 +88,7 @@ final class StationsListAdapter extends BaseAdapter implements LoaderManager.Loa
 			int idx = cursor.getColumnIndex(OdsContract.COLUMN_SERVER_ID);
 			items.add(cursor.getString(idx));
 		}
+		notifyDataSetChanged();
 	}
 
 	@Override

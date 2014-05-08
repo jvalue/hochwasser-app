@@ -85,7 +85,7 @@ public final class OdsContentProvider extends ContentProvider {
 				break;
 			case URI_MATCHER_SERVER_ID:
 				queryBuilder.appendWhere(
-						OdsContract.COLUMN_ID + "=\"" + uri.getLastPathSegment() + "\"");
+						OdsContract.COLUMN_SERVER_ID + "=\"" + uri.getLastPathSegment() + "\"");
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);

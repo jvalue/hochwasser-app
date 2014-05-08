@@ -33,6 +33,8 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			ContentProviderClient provider,
 			SyncResult syncResult) {
 
+		Log.debug("performing sync");
+
 		String resourceId = extras.getString(EXTRA_RESOURCE_ID);
 		Processor processor = new Processor(provider);
 

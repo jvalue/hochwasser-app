@@ -14,8 +14,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
 
-import de.bitdroid.flooding.utils.Log;
-
 
 /* What is the processor all about?
  *
@@ -83,10 +81,7 @@ final class Processor {
 					new String[] { OdsContract.COLUMN_SERVER_ID },
 					null, null, null);
 
-			if (cursor.getCount() >= 1) {
-				Log.debug("Found row, not inserting");
-				return null;
-			}
+			if (cursor.getCount() >= 1) return null;
 
 		} finally {
 			if (cursor != null) cursor.close();

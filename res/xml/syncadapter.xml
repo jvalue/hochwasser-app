@@ -3,7 +3,7 @@
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:contentAuthority="de.bitdroid.flooding.provider"
 		android:accountType="de.bitdroid.flooding"
-		android:userVisible="false"
+		android:userVisible="true"
 		android:supportsUploading="false"
 		android:allowParallelSyncs="false"
 		android:isAlwaysSyncable="true" />

@@ -10,7 +10,7 @@ import android.os.Bundle;
 
 import de.bitdroid.flooding.R;
 
-public class MapActivity extends Activity {
+public class MapActivity extends Activity implements MapConstants {
 	
 	private MyLocationNewOverlay locationOverlay;
 	private FixedMapView mapView;
@@ -56,19 +56,19 @@ public class MapActivity extends Activity {
 
 
 	private void saveMapState() {
-		SharedPreferences.Editor editor = getSharedPreferences(MapConstants.PREFS_NAME, Context.MODE_PRIVATE).edit();
-		editor.putInt(MapConstants.PREFS_SCROLL_X, mapView.getScrollX());
-		editor.putInt(MapConstants.PREFS_SCROLL_Y, mapView.getScrollY());
-		editor.putInt(MapConstants.PREFS_ZOOM_LEVEL, mapView.getZoomLevel());
+		SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
+		editor.putInt(PREFS_SCROLL_X, mapView.getScrollX());
+		editor.putInt(PREFS_SCROLL_Y, mapView.getScrollY());
+		editor.putInt(PREFS_ZOOM_LEVEL, mapView.getZoomLevel());
 		editor.commit();
 	}
 
 	private void restoreMapState() {
-		SharedPreferences prefs = getSharedPreferences(MapConstants.PREFS_NAME, Context.MODE_PRIVATE);
-		mapView.getController().setZoom(prefs.getInt(MapConstants.PREFS_ZOOM_LEVEL, 1));
+		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+		mapView.getController().setZoom(prefs.getInt(PREFS_ZOOM_LEVEL, 1));
 		mapView.scrollTo(
-				prefs.getInt(MapConstants.PREFS_SCROLL_X, 0),
-				prefs.getInt(MapConstants.PREFS_SCROLL_Y, 0));
+				prefs.getInt(PREFS_SCROLL_X, 0),
+				prefs.getInt(PREFS_SCROLL_Y, 0));
 	}
 
 }

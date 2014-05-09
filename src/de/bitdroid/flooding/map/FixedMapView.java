@@ -1,4 +1,4 @@
-package de.bitdroid.flooding;
+package de.bitdroid.flooding.map;
 
 import org.osmdroid.views.MapView;
 

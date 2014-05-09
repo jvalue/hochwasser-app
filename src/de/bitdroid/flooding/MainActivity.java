@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.ods.SyncUtils;
 
 public class MainActivity extends Activity {

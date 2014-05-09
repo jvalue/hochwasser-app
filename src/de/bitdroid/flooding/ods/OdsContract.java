@@ -4,9 +4,7 @@ import android.accounts.Account;
 import android.net.Uri;
 
 
-public final class OdsContract {
-
-	private OdsContract() { }
+public interface OdsContract {
 
 	public static final String 
 		ACCOUNT_NAME = "OpenDataService",

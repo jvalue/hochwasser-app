@@ -23,7 +23,8 @@ import de.bitdroid.flooding.ods.json.PegelonlineParser;
 import de.bitdroid.flooding.utils.Log;
 
 
-final class StationsListAdapter extends BaseAdapter implements LoaderManager.LoaderCallbacks<Cursor> {
+final class StationsListAdapter extends BaseAdapter 
+		implements LoaderManager.LoaderCallbacks<Cursor>, OdsContract {
 
 	private final List<String> items = new LinkedList<String>();
 	private final Context context;
@@ -75,11 +76,11 @@ final class StationsListAdapter extends BaseAdapter implements LoaderManager.Loa
 		if (id != ODS_LOADER_ID) return null;
 		return new CursorLoader(
 				context,
-				OdsContract.BASE_CONTENT_URI,
+				BASE_CONTENT_URI,
 				new String[] {
-					OdsContract.COLUMN_SERVER_ID,
-					OdsContract.COLUMN_SYNC_STATUS,
-					OdsContract.COLUMN_JSON_DATA
+					COLUMN_SERVER_ID,
+					COLUMN_SYNC_STATUS,
+					COLUMN_JSON_DATA
 				}, null, null, null);
 	}
 
@@ -89,7 +90,7 @@ final class StationsListAdapter extends BaseAdapter implements LoaderManager.Loa
 		items.clear();
 		cursor.moveToFirst();
 		while (cursor.moveToNext()) {
-			int idx = cursor.getColumnIndex(OdsContract.COLUMN_JSON_DATA);
+			int idx = cursor.getColumnIndex(COLUMN_JSON_DATA);
 			try {
 				JSONObject json = new JSONObject(cursor.getString(idx));
 				items.add(PegelonlineParser.getStationName(json));

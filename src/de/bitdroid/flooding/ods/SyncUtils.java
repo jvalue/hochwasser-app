@@ -11,7 +11,7 @@ import android.preference.PreferenceManager;
 import de.bitdroid.flooding.utils.Log;
 
 
-public final class SyncUtils {
+public final class SyncUtils implements OdsContract {
 
 	private SyncUtils () { }
 
@@ -30,18 +30,18 @@ public final class SyncUtils {
 			AccountManager accountManager 
 				= (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 
-			if (accountManager.addAccountExplicitly(OdsContract.ACCOUNT, null, null)) {
+			if (accountManager.addAccountExplicitly(ACCOUNT, null, null)) {
 				Log.info("Added account successfully");
 			} else {
 				Log.warning("Adding account failed");
 			}
 
 			// setup periodic sync
-			ContentResolver.setIsSyncable(OdsContract.ACCOUNT, OdsContract.AUTHORITY, 1);
-			ContentResolver.setSyncAutomatically(OdsContract.ACCOUNT, OdsContract.AUTHORITY, true);
+			ContentResolver.setIsSyncable(ACCOUNT, AUTHORITY, 1);
+			ContentResolver.setSyncAutomatically(ACCOUNT, AUTHORITY, true);
 			ContentResolver.addPeriodicSync(
-					OdsContract.ACCOUNT,
-					OdsContract.AUTHORITY,
+					ACCOUNT,
+					AUTHORITY,
 					new Bundle(),
 					1000 * 60 * 60);
 		}
@@ -52,8 +52,8 @@ public final class SyncUtils {
 		Cursor cursor = null;
 		try {
 			cursor = context.getContentResolver().query(
-					OdsContract.BASE_CONTENT_URI.buildUpon().appendPath("sync").build(),
-					new String[] { OdsContract.COLUMN_SERVER_ID },
+					BASE_CONTENT_URI.buildUpon().appendPath("sync").build(),
+					new String[] { COLUMN_SERVER_ID },
 					null, null, null);
 		} finally {
 			cursor.close();

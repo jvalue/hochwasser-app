@@ -1,11 +1,5 @@
 package de.bitdroid.flooding.ods;
 
-import static de.bitdroid.flooding.ods.OdsContract.ACCOUNT;
-import static de.bitdroid.flooding.ods.OdsContract.AUTHORITY;
-import static de.bitdroid.flooding.ods.OdsContract.BASE_CONTENT_URI;
-import static de.bitdroid.flooding.ods.OdsContract.BASE_PATH;
-import static de.bitdroid.flooding.ods.OdsContract.SYNC_PATH;
-
 import java.util.ArrayList;
 
 import android.content.ContentProvider;
@@ -22,7 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 
-public final class OdsContentProvider extends ContentProvider {
+public final class OdsContentProvider extends ContentProvider implements OdsContract {
 
 	private static final int
 		URI_MATCHER_ALL = 10,
@@ -85,7 +79,7 @@ public final class OdsContentProvider extends ContentProvider {
 				break;
 			case URI_MATCHER_SERVER_ID:
 				queryBuilder.appendWhere(
-						OdsContract.COLUMN_SERVER_ID + "=\"" + uri.getLastPathSegment() + "\"");
+						COLUMN_SERVER_ID + "=\"" + uri.getLastPathSegment() + "\"");
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI: " + uri);

@@ -5,18 +5,11 @@
     android:layout_height="fill_parent"
 	>
 
-	<Button
-		android:id="@+id/map_button"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:text="Show OSM"
-	/>
-
-	<ListView
-		android:id="@+id/content_list"
-		android:layout_width="fill_parent"
+	<de.bitdroid.flooding.FixedMapView
+		android:id="@+id/map"
 		android:layout_height="fill_parent"
-		android:dividerHeight="2px"
+		android:layout_width="fill_parent"
+		tilesource="Mapnik"
 	/>
 
 </LinearLayout>

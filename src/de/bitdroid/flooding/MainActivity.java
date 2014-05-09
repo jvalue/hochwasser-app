@@ -34,7 +34,10 @@ public class MainActivity extends Activity {
 
 		SyncUtils.setupSyncAdapter(this);
 
-		getLoaderManager().initLoader(StationsListAdapter.ODS_LOADER_ID, null, listAdapter);
+		getLoaderManager().initLoader(
+				StationsLoaderCallbacks.ODS_LOADER_ID, 
+				null, 
+				listAdapter.getLoaderCallback());
     }
 
 }

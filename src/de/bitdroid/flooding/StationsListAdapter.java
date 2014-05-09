@@ -6,32 +6,49 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import de.bitdroid.flooding.ods.OdsContract;
 import de.bitdroid.flooding.ods.json.PegelonlineParser;
 import de.bitdroid.flooding.utils.Log;
 
 
-final class StationsListAdapter extends BaseAdapter 
-		implements LoaderManager.LoaderCallbacks<Cursor>, OdsContract {
+final class StationsListAdapter extends BaseAdapter {
+		
 
 	private final List<String> items = new LinkedList<String>();
 	private final Context context;
+	private final StationsLoaderCallbacks loaderCallback;
 
 	public StationsListAdapter(Context context) {
 		if (context == null) throw new NullPointerException("context cannot be null");
 		this.context = context;
+		this.loaderCallback = new StationsLoaderCallbacks(context) {
+			@Override
+			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
+				Log.debug("onLoadFinished called");
+				items.clear();
+				cursor.moveToFirst();
+				while (cursor.moveToNext()) {
+					int idx = cursor.getColumnIndex(COLUMN_JSON_DATA);
+					try {
+						JSONObject json = new JSONObject(cursor.getString(idx));
+						items.add(PegelonlineParser.getStationName(json));
+					} catch(JSONException je) {
+						Log.error(android.util.Log.getStackTraceString(je));
+					}
+				}
+				notifyDataSetChanged();
+			}
+			@Override
+			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
+		};
 	}
 
 	@Override
@@ -67,42 +84,7 @@ final class StationsListAdapter extends BaseAdapter
 		return items.size();
 	}
 
-
-	static final int ODS_LOADER_ID = 42;
-
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-		Log.debug("onCreateLoader called");
-		if (id != ODS_LOADER_ID) return null;
-		return new CursorLoader(
-				context,
-				BASE_CONTENT_URI,
-				new String[] {
-					COLUMN_SERVER_ID,
-					COLUMN_SYNC_STATUS,
-					COLUMN_JSON_DATA
-				}, null, null, null);
+	public StationsLoaderCallbacks getLoaderCallback() {
+		return loaderCallback;
 	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		Log.debug("onLoadFinished called");
-		items.clear();
-		cursor.moveToFirst();
-		while (cursor.moveToNext()) {
-			int idx = cursor.getColumnIndex(COLUMN_JSON_DATA);
-			try {
-				JSONObject json = new JSONObject(cursor.getString(idx));
-				items.add(PegelonlineParser.getStationName(json));
-			} catch(JSONException je) {
-				Log.error(android.util.Log.getStackTraceString(je));
-			}
-		}
-		notifyDataSetChanged();
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-	}
-
 }

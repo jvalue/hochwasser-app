@@ -9,11 +9,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.StationsLoaderCallbacks;
 
 public class MapActivity extends Activity implements MapConstants {
 	
 	private MyLocationNewOverlay locationOverlay;
 	private FixedMapView mapView;
+	private StationsOverlay stationsOverlay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,8 +27,17 @@ public class MapActivity extends Activity implements MapConstants {
 
 		locationOverlay = new MyLocationNewOverlay(this, new GpsMyLocationProvider(this), mapView);
 		mapView.getOverlays().add(locationOverlay);
+		
+		stationsOverlay = new StationsOverlay(getApplicationContext());
+		mapView.getOverlays().add(stationsOverlay);
+
+		getLoaderManager().initLoader(
+				StationsLoaderCallbacks.ODS_LOADER_ID,
+				null,
+				stationsOverlay.getLoaderCallback());
 
 		restoreMapState();
+
     }
 
 
@@ -52,7 +63,6 @@ public class MapActivity extends Activity implements MapConstants {
 
 		super.onPause();
 	}
-
 
 
 	private void saveMapState() {

@@ -18,6 +18,7 @@ public final class PegelonlineParser {
 		}
 	}
 
+
 	public static String getServerId(JSONObject object) {
 		if (object == null) throw new NullPointerException("param cannot be null");
 
@@ -28,6 +29,29 @@ public final class PegelonlineParser {
 		}
 	}
 
+
+	public static double getLatitude(JSONObject object) {
+		if (object == null) throw new NullPointerException("param cannot be null");
+
+		try {
+			return object.getDouble("latitude");
+		} catch(JSONException je) {
+			throw new IllegalArgumentException(je);
+		}
+	}
+
+
+	public static double getLongitude(JSONObject object) {
+		if (object == null) throw new NullPointerException("param cannot be null");
+
+		try {
+			return object.getDouble("longitude");
+		} catch(JSONException je) {
+			throw new IllegalArgumentException(je);
+		}
+	}
+
+
 	public static boolean isValidStation(JSONObject object) {
 		try {
 			return getStationName(object) != null;
@@ -35,5 +59,6 @@ public final class PegelonlineParser {
 			return false;
 		}
 	}
+
 
 }

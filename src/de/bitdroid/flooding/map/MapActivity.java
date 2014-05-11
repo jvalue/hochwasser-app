@@ -25,7 +25,10 @@ public class MapActivity extends Activity implements MapConstants {
 		mapView = (FixedMapView) findViewById(R.id.map);
 		mapView.setMultiTouchControls(true);
 
-		locationOverlay = new MyLocationNewOverlay(this, new GpsMyLocationProvider(this), mapView);
+		locationOverlay = new MyLocationNewOverlay(
+				getApplicationContext(), 
+				new GpsMyLocationProvider(getApplicationContext()), 
+				mapView);
 		mapView.getOverlays().add(locationOverlay);
 		
 		stationsOverlay = new StationsOverlay(getApplicationContext());

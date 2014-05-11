@@ -23,16 +23,18 @@ public class MainActivity extends Activity {
 		Button mapButton = (Button) findViewById(R.id.map_button);
 		mapButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, MapActivity.class);
+				Intent intent = new Intent(
+					MainActivity.this.getApplicationContext(), 
+					MapActivity.class);
 				startActivity(intent);
 			}
 		});
 
-		listAdapter = new StationsListAdapter(this);
+		listAdapter = new StationsListAdapter(getApplicationContext());
 		ListView listView = (ListView) findViewById(R.id.content_list);
 		listView.setAdapter(listAdapter);
 
-		SyncUtils.setupSyncAdapter(this);
+		SyncUtils.setupSyncAdapter(getApplicationContext());
 
 		getLoaderManager().initLoader(
 				StationsLoaderCallbacks.ODS_LOADER_ID, 

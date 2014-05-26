@@ -1,7 +1,7 @@
 package de.bitdroid.flooding.ods;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.content.Context;
 
@@ -16,7 +16,7 @@ public final class OdsSourceManager {
 	}
 
 
-	private final List<String> sourceClassNames = new LinkedList<String>();
+	private final Set<String> sourceClassNames = new HashSet<String>();
 
 	public <T extends OdsTableAdapter> void registerSource(Class<T> source) {
 		sourceClassNames.add(source.getName());
@@ -37,8 +37,8 @@ public final class OdsSourceManager {
 
 
 	@SuppressWarnings("unchecked")
-	List<OdsTableAdapter> getSources() {
-		List<OdsTableAdapter> sources = new LinkedList<OdsTableAdapter>();
+	Set<OdsTableAdapter> getSources() {
+		Set<OdsTableAdapter> sources = new HashSet<OdsTableAdapter>();
 		for (String className: sourceClassNames) {
 			try {
 				Class<? extends OdsTableAdapter> sourceClass 

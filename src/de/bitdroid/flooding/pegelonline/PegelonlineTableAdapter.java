@@ -24,7 +24,7 @@ public final class PegelonlineTableAdapter implements OdsTableAdapter {
 		KEY_LEVEL_UNIT = "leveUnit";
 
 	private static final String
-		SOURCE_URL = "http://faui2o2f.cs.fau.de:8080";
+		SOURCE_URL = "http://faui2o2f.cs.fau.de:8080/open-data-service/ods/de/pegelonline/stations";
 
 
 	private static final Map<String, SQLiteType> SCHEMA = new HashMap<String, SQLiteType>();

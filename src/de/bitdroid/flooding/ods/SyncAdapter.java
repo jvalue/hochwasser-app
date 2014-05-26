@@ -39,21 +39,26 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 		Processor processor = new Processor(provider);
 
 		try {
-			RestCall.Builder callBuilder = new RestCall.Builder(
-					RestCall.RequestType.GET, 
-					"http://faui2o2f.cs.fau.de:8080")
-				.path("open-data-service");
 
+			// sync all resources and sources
 			if (resourceId == null) {
-				String resultString = callBuilder 
-					.path("ods/de/pegelonline/stations")
-					.build()
-					.execute();
 
-				processor.processGetAll(resultString);
+				for (OdsTableAdapter source : OdsSourceManager.getInstance().getSources()) {
+					String retString = new RestCall.Builder(
+							RestCall.RequestType.GET,
+							source.getSourceUrl())
+						.build()
+						.execute();
 
+					processor.processGetAll(retString);
+				}
+
+			// sync one resource only
 			} else {
-				String resultString = callBuilder 
+				String resultString = new RestCall.Builder(
+						RestCall.RequestType.GET, 
+						"http://faui2o2f.cs.fau.de:8080")
+					.path("open-data-service")
 					.path("$" + resourceId)
 					.build()
 					.execute();

@@ -11,7 +11,7 @@ import android.preference.PreferenceManager;
 import de.bitdroid.flooding.utils.Log;
 
 
-public final class SyncUtils implements OdsContract {
+final class SyncUtils implements OdsContract {
 
 	private SyncUtils () { }
 

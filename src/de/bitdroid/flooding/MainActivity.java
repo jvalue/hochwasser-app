@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import de.bitdroid.flooding.map.MapActivity;
-import de.bitdroid.flooding.ods.SyncUtils;
+import de.bitdroid.flooding.ods.OdsSourceManager;
 
 public class MainActivity extends Activity {
 
@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
 		ListView listView = (ListView) findViewById(R.id.content_list);
 		listView.setAdapter(listAdapter);
 
-		SyncUtils.setupSyncAdapter(getApplicationContext());
+		OdsSourceManager.getInstance().startMonitoring(getApplicationContext());
 
 		getLoaderManager().initLoader(
 				StationsLoaderCallbacks.ODS_LOADER_ID, 

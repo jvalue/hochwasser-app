@@ -23,6 +23,9 @@ public final class PegelonlineTableAdapter implements OdsTableAdapter {
 		KEY_LEVEL_VALUE = "levelValue",
 		KEY_LEVEL_UNIT = "leveUnit";
 
+	private static final String
+		SOURCE_URL = "http://faui2o2f.cs.fau.de:8080";
+
 
 	private static final Map<String, SQLiteType> SCHEMA = new HashMap<String, SQLiteType>();
 
@@ -35,6 +38,12 @@ public final class PegelonlineTableAdapter implements OdsTableAdapter {
 		SCHEMA.put(KEY_LEVEL_TIMESTAMP, SQLiteType.TEXT);
 		SCHEMA.put(KEY_LEVEL_VALUE, SQLiteType.TEXT);
 		SCHEMA.put(KEY_LEVEL_UNIT, SQLiteType.TEXT);
+	}
+
+
+	@Override
+	public String getSourceUrl() {
+		return SOURCE_URL;
 	}
 
 

@@ -15,6 +15,12 @@ import de.bitdroid.flooding.utils.SQLiteType;
 public interface OdsTableAdapter {
 
 	/**
+	 * Returns the source URL.
+	 */
+	public String getSourceUrl();
+
+
+	/**
 	 * Describes what parts of data should be saved.
 	 */
 	public Map<String, SQLiteType> getSchema(); 

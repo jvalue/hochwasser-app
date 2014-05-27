@@ -41,7 +41,7 @@ public final class OdsContentProvider extends ContentProvider {
 			String[] selectionArgs,
 			String sortOrder) {
 
-		OdsTableAdapter source = OdsTableAdapter.fromUri(uri);
+		OdsSource source = OdsSource.fromUri(uri);
 
 
 		// check if source is being monitored
@@ -57,13 +57,13 @@ public final class OdsContentProvider extends ContentProvider {
 
 
 		// check for manual sync reqeust
-		if (OdsTableAdapter.isSyncUri(uri)) {
+		if (OdsSource.isSyncUri(uri)) {
 			Bundle settingsBundle = new Bundle();
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 			ContentResolver.requestSync(
-					OdsTableAdapter.ACCOUNT,
-					OdsTableAdapter.AUTHORITY,
+					OdsSource.ACCOUNT,
+					OdsSource.AUTHORITY,
 					settingsBundle);
 		}
 
@@ -88,7 +88,7 @@ public final class OdsContentProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues data) {
 
-		OdsTableAdapter source = OdsTableAdapter.fromUri(uri);
+		OdsSource source = OdsSource.fromUri(uri);
 		String tableName = source.toSqlTableName();
 
 		Log.debug("Fetching " + tableName);

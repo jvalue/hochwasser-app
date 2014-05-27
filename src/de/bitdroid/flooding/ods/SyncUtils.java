@@ -1,7 +1,7 @@
 package de.bitdroid.flooding.ods;
 
-import static de.bitdroid.flooding.ods.OdsTableAdapter.ACCOUNT;
-import static de.bitdroid.flooding.ods.OdsTableAdapter.AUTHORITY;
+import static de.bitdroid.flooding.ods.OdsSource.ACCOUNT;
+import static de.bitdroid.flooding.ods.OdsSource.AUTHORITY;
 
 import android.accounts.AccountManager;
 import android.content.ContentResolver;

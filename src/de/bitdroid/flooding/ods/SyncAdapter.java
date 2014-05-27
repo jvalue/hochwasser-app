@@ -50,7 +50,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 				OdsSourceManager sourceManager = OdsSourceManager.getInstance();
 
-				for (OdsTableAdapter source : sourceManager.getSources(context)) {
+				for (OdsSource source : sourceManager.getSources(context)) {
 					Log.debug("... " +  source.getSourceUrl());
 					Processor processor = new Processor(provider, source);
 					String retString = new RestCall.Builder(

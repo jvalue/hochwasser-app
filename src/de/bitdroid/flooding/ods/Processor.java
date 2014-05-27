@@ -27,9 +27,9 @@ import de.bitdroid.flooding.ods.json.PegelonlineParser;
 final class Processor {
 
 	private final ContentProviderClient provider;
-	private final OdsTableAdapter source;
+	private final OdsSource source;
 
-	public Processor(ContentProviderClient provider, OdsTableAdapter source) {
+	public Processor(ContentProviderClient provider, OdsSource source) {
 		this.provider = provider;
 		this.source = source;
 	}
@@ -87,8 +87,8 @@ final class Processor {
 		try {
 			cursor = provider.query(
 					uri,
-					new String[] { OdsTableAdapter.COLUMN_SERVER_ID },
-					OdsTableAdapter.COLUMN_SERVER_ID + " = ?",
+					new String[] { OdsSource.COLUMN_SERVER_ID },
+					OdsSource.COLUMN_SERVER_ID + " = ?",
 					new String[] { serverId },
 					null);
 
@@ -101,8 +101,8 @@ final class Processor {
 
 		// insert db
 		ContentValues data = source.saveData(object);
-		data.put(OdsTableAdapter.COLUMN_SERVER_ID, serverId);
-		data.put(OdsTableAdapter.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
+		data.put(OdsSource.COLUMN_SERVER_ID, serverId);
+		data.put(OdsSource.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
 
 		ContentProviderOperation.Builder builder 
 			= ContentProviderOperation.newInsert(source.toUri());

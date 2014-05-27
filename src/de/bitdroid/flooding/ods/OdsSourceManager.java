@@ -24,7 +24,7 @@ public final class OdsSourceManager {
 	private String odsServerName = "http://faui2o2f.cs.fau.de:8080/open-data-service";
 
 
-	public void registerSource(Context context, OdsTableAdapter source) {
+	public void registerSource(Context context, OdsSource source) {
 		if (context == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
@@ -41,11 +41,11 @@ public final class OdsSourceManager {
 		Log.debug("Registering source");
 	}
 
-	public void unregisterSource(Context context, OdsTableAdapter source) {
+	public void unregisterSource(Context context, OdsSource source) {
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean isSourceRegistered(Context context, OdsTableAdapter source) {
+	public boolean isSourceRegistered(Context context, OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 		return prefs.contains(source.getClass().getName());
@@ -77,15 +77,15 @@ public final class OdsSourceManager {
 	}
 
 
-	Set<OdsTableAdapter> getSources(Context context) {
+	Set<OdsSource> getSources(Context context) {
 		if (context == null) throw new NullPointerException("param cannot be null");
 
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 		Map<String, ?> values = prefs.getAll();
 
-		Set<OdsTableAdapter> sources = new HashSet<OdsTableAdapter>();
+		Set<OdsSource> sources = new HashSet<OdsSource>();
 		for (String key : values.keySet()) {
-			sources.add(OdsTableAdapter.fromClassName(key));
+			sources.add(OdsSource.fromClassName(key));
 		}
 
 		Log.debug("Getting sources (" + sources.size() + ")");

@@ -1,7 +1,7 @@
 package de.bitdroid.flooding;
 
-import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_SERVER_ID;
-import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_SYNC_STATUS;
+import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SERVER_ID;
+import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SYNC_STATUS;
 
 import android.app.LoaderManager;
 import android.content.Context;

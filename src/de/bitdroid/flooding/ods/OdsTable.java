@@ -1,8 +1,8 @@
 package de.bitdroid.flooding.ods;
 
-import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_ID;
-import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_SERVER_ID;
-import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_SYNC_STATUS;
+import static de.bitdroid.flooding.ods.OdsSource.COLUMN_ID;
+import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SERVER_ID;
+import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SYNC_STATUS;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,7 +24,7 @@ public final class OdsTable extends SQLiteOpenHelper {
 	}
 
 
-	void addSource(SQLiteDatabase database, String tableName, OdsTableAdapter source) {
+	void addSource(SQLiteDatabase database, String tableName, OdsSource source) {
 		if (database == null || tableName == null || source == null) 
 				throw new NullPointerException("param cannot be null");
 		

@@ -15,7 +15,7 @@ import de.bitdroid.flooding.utils.SQLiteType;
 /**
  * Adapter that determines what to save of data fetched from the ODS.
  */
-public abstract class OdsTableAdapter {
+public abstract class OdsSource {
 
 	public static final String
 			ACCOUNT_NAME = "OpenDataService",
@@ -84,7 +84,7 @@ public abstract class OdsTableAdapter {
 	}
 
 
-	public static OdsTableAdapter fromUri(Uri uri) {
+	public static OdsSource fromUri(Uri uri) {
 		String path = uri.getPath();
 		
 		// remove sync path
@@ -100,11 +100,11 @@ public abstract class OdsTableAdapter {
 
 
 	@SuppressWarnings("unchecked")
-	static OdsTableAdapter fromClassName(String className) {
+	static OdsSource fromClassName(String className) {
 		Log.debug("Creating instance of " + className);
 		try {
-			Class<? extends OdsTableAdapter> sourceClass 
-					= (Class<? extends OdsTableAdapter>) Class.forName(className);
+			Class<? extends OdsSource> sourceClass 
+					= (Class<? extends OdsSource>) Class.forName(className);
 			return sourceClass.newInstance();
 		} catch (Exception e) {
 			Log.error(android.util.Log.getStackTraceString(e));

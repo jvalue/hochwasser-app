@@ -2,11 +2,13 @@ package de.bitdroid.flooding.ods;
 
 import static de.bitdroid.flooding.ods.OdsSource.ACCOUNT;
 import static de.bitdroid.flooding.ods.OdsSource.AUTHORITY;
+import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SERVER_ID;
 
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -50,17 +52,15 @@ final class SyncUtils {
 	}
 
 
-	/*
-	public static void triggerManualSync(Context context) {
+	public static void triggerManualSync(Context context, OdsSource  source) {
 		Cursor cursor = null;
 		try {
 			cursor = context.getContentResolver().query(
-					BASE_CONTENT_URI.buildUpon().appendPath("sync").build(),
+					source.toSyncUri(),
 					new String[] { COLUMN_SERVER_ID },
 					null, null, null);
 		} finally {
 			cursor.close();
 		}
 	}
-	*/
 }

@@ -1,5 +1,7 @@
 package de.bitdroid.flooding;
 
+import static de.bitdroid.flooding.pegelonline.PegelonlineTableAdapter.COLUMN_STATION_NAME;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -34,17 +35,8 @@ final class StationsListAdapter extends BaseAdapter {
 				if (cursor == null) return;
 				cursor.moveToFirst();
 				while (cursor.moveToNext()) {
-					int idx = cursor.getColumnIndex(OdsSource.COLUMN_SERVER_ID);
+					int idx = cursor.getColumnIndex(COLUMN_STATION_NAME);
 					items.add(cursor.getString(idx));
-					/*
-					int idx = cursor.getColumnIndex(COLUMN_JSON_DATA);
-					try {
-						JSONObject json = new JSONObject(cursor.getString(idx));
-						items.add(PegelonlineParser.getStationName(json));
-					} catch(JSONException je) {
-						Log.error(android.util.Log.getStackTraceString(je));
-					}
-					*/
 				}
 				notifyDataSetChanged();
 			}
@@ -52,6 +44,7 @@ final class StationsListAdapter extends BaseAdapter {
 			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
 		};
 	}
+
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
@@ -66,25 +59,30 @@ final class StationsListAdapter extends BaseAdapter {
 
 	}
 
+
 	@Override
 	public Object getItem(int position) { 
 		return items.get(position);
 	}
+	
 
 	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
+
 	@Override
 	public boolean hasStableIds() {
 		return true;
 	}
 
+
 	@Override
 	public int getCount() {
 		return items.size();
 	}
+
 
 	public StationsLoaderCallbacks getLoaderCallback() {
 		return loaderCallback;

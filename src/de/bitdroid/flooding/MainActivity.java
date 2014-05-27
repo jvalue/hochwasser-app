@@ -36,8 +36,8 @@ public class MainActivity extends Activity {
 		listView.setAdapter(listAdapter);
 
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance();
-		sourceManager.startMonitoring(getApplicationContext());
 		sourceManager.registerSource(getApplicationContext(), new PegelonlineTableAdapter());
+		sourceManager.startMonitoring(getApplicationContext());
 
 
 		getLoaderManager().initLoader(

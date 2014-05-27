@@ -13,15 +13,15 @@ import de.bitdroid.flooding.utils.SQLiteType;
 
 public final class PegelonlineTableAdapter extends OdsSource { 
 
-	private static final String
-		KEY_WATER_NAME = "waterName",
-		KEY_STATION_NAME = "stationName",
-		KEY_STATION_LAT = "stationLat",
-		KEY_STATION_LONG = "stationLong",
-		KEY_STATION_KM = "stationKm",
-		KEY_LEVEL_TIMESTAMP = "levelTimestamp",
-		KEY_LEVEL_VALUE = "levelValue",
-		KEY_LEVEL_UNIT = "leveUnit";
+	public static final String
+		COLUMN_WATER_NAME = "waterName",
+		COLUMN_STATION_NAME = "stationName",
+		COLUMN_STATION_LAT = "stationLat",
+		COLUMN_STATION_LONG = "stationLong",
+		COLUMN_STATION_KM = "stationKm",
+		COLUMN_LEVEL_TIMESTAMP = "levelTimestamp",
+		COLUMN_LEVEL_VALUE = "levelValue",
+		COLUMN_LEVEL_UNIT = "leveUnit";
 
 	private static final String
 		SOURCE_URL = "ods/de/pegelonline/stations";
@@ -30,14 +30,14 @@ public final class PegelonlineTableAdapter extends OdsSource {
 	private static final Map<String, SQLiteType> SCHEMA = new HashMap<String, SQLiteType>();
 
 	static {
-		SCHEMA.put(KEY_WATER_NAME, SQLiteType.TEXT);
-		SCHEMA.put(KEY_STATION_NAME, SQLiteType.TEXT);
-		SCHEMA.put(KEY_STATION_LAT, SQLiteType.REAL);
-		SCHEMA.put(KEY_STATION_LONG, SQLiteType.REAL);
-		SCHEMA.put(KEY_STATION_KM, SQLiteType.REAL);
-		SCHEMA.put(KEY_LEVEL_TIMESTAMP, SQLiteType.TEXT);
-		SCHEMA.put(KEY_LEVEL_VALUE, SQLiteType.TEXT);
-		SCHEMA.put(KEY_LEVEL_UNIT, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_WATER_NAME, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_STATION_NAME, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_STATION_LAT, SQLiteType.REAL);
+		SCHEMA.put(COLUMN_STATION_LONG, SQLiteType.REAL);
+		SCHEMA.put(COLUMN_STATION_KM, SQLiteType.REAL);
+		SCHEMA.put(COLUMN_LEVEL_TIMESTAMP, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_LEVEL_VALUE, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_LEVEL_UNIT, SQLiteType.TEXT);
 	}
 
 
@@ -57,19 +57,19 @@ public final class PegelonlineTableAdapter extends OdsSource {
 	public ContentValues saveData(JSONObject json) {
 		ContentValues values = new ContentValues();
 
-		values.put(KEY_WATER_NAME, json.optJSONObject("water").optString("longname"));
-		values.put(KEY_STATION_NAME, json.optString("longname"));
-		values.put(KEY_STATION_LAT, json.optDouble("latitude"));
-		values.put(KEY_STATION_LONG, json.optDouble("longitude"));
-		values.put(KEY_STATION_KM, json.optDouble("km"));
+		values.put(COLUMN_WATER_NAME, json.optJSONObject("water").optString("longname"));
+		values.put(COLUMN_STATION_NAME, json.optString("longname"));
+		values.put(COLUMN_STATION_LAT, json.optDouble("latitude"));
+		values.put(COLUMN_STATION_LONG, json.optDouble("longitude"));
+		values.put(COLUMN_STATION_KM, json.optDouble("km"));
 
 		JSONObject timeseries = json.optJSONArray("timeseries").optJSONObject(0);
-		values.put(KEY_LEVEL_UNIT, timeseries.optString("unit"));
+		values.put(COLUMN_LEVEL_UNIT, timeseries.optString("unit"));
 
 		JSONObject measurement = timeseries.optJSONObject("currentMeasurement");
 
-		values.put(KEY_LEVEL_TIMESTAMP, measurement.optString("timestamp"));
-		values.put(KEY_LEVEL_VALUE, measurement.optDouble("value"));
+		values.put(COLUMN_LEVEL_TIMESTAMP, measurement.optString("timestamp"));
+		values.put(COLUMN_LEVEL_VALUE, measurement.optDouble("value"));
 
 		return values;
 	}

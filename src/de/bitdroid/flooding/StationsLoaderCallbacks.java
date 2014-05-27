@@ -1,7 +1,7 @@
 package de.bitdroid.flooding;
 
 import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SERVER_ID;
-import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SYNC_STATUS;
+import static de.bitdroid.flooding.pegelonline.PegelonlineTableAdapter.COLUMN_STATION_NAME;
 
 import android.app.LoaderManager;
 import android.content.Context;
@@ -34,7 +34,7 @@ public abstract class StationsLoaderCallbacks implements LoaderManager.LoaderCal
 				new PegelonlineTableAdapter().toUri(),
 				new String[] {
 					COLUMN_SERVER_ID,
-					COLUMN_SYNC_STATUS
+					COLUMN_STATION_NAME
 				}, null, null, null);
 	}
 

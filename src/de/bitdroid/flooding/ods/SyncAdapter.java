@@ -36,7 +36,6 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 		Log.debug("performing sync");
 
 		String resourceId = extras.getString(EXTRA_RESOURCE_ID);
-		Processor processor = new Processor(provider);
 
 		try {
 
@@ -44,6 +43,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			if (resourceId == null) {
 
 				for (OdsTableAdapter source : OdsSourceManager.getInstance().getSources()) {
+					Processor processor = new Processor(provider, source);
 					String retString = new RestCall.Builder(
 							RestCall.RequestType.GET,
 							source.getSourceUrl())
@@ -55,6 +55,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			// sync one resource only
 			} else {
+				/*
 				String resultString = new RestCall.Builder(
 						RestCall.RequestType.GET, 
 						"http://faui2o2f.cs.fau.de:8080")
@@ -64,7 +65,8 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 					.execute();
 
 				processor.processGetSingle(resultString);
-
+				*/
+				throw new UnsupportedOperationException("under construction");
 			}
 
 		} catch (Exception e) {

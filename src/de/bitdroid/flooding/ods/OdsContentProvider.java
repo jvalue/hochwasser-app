@@ -14,17 +14,15 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 
-import de.bitdroid.flooding.utils.Log;
-
 
 public final class OdsContentProvider extends ContentProvider {
 
 
-	private OdsTable odsDatabase;
+	private OdsDatabase odsDatabase;
 
 	@Override
 	public boolean onCreate() {
-		odsDatabase = new OdsTable(getContext());
+		odsDatabase = new OdsDatabase(getContext());
 		return true;
 	}
 

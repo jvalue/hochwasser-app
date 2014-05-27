@@ -12,13 +12,13 @@ import de.bitdroid.flooding.utils.Log;
 
 
 
-public final class OdsTable extends SQLiteOpenHelper {
+final class OdsDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "database.db";
 	private static final int DATABASE_VERSION = 1;
 
 
-	public OdsTable(Context context) {
+	public OdsDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
 	}

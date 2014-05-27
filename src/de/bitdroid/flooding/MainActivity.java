@@ -37,7 +37,8 @@ public class MainActivity extends Activity {
 
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance();
 		sourceManager.startMonitoring(getApplicationContext());
-		sourceManager.registerSource(PegelonlineTableAdapter.class);
+		sourceManager.registerSource(getApplicationContext(), new PegelonlineTableAdapter());
+
 
 		getLoaderManager().initLoader(
 				StationsLoaderCallbacks.ODS_LOADER_ID, 

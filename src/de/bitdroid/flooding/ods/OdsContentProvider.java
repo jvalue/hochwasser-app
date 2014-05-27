@@ -8,42 +8,23 @@ import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 
+import de.bitdroid.flooding.utils.Log;
 
-public final class OdsContentProvider extends ContentProvider implements OdsContract {
 
-	private static final int
-		URI_MATCHER_ALL = 10,
-		URI_MATCHER_ALL_SYNC = 20,
-		URI_MATCHER_SERVER_ID = 30;
-	private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-	static {
-		URI_MATCHER.addURI(
-				AUTHORITY, 
-				BASE_PATH, 
-				URI_MATCHER_ALL);
-		URI_MATCHER.addURI(
-				AUTHORITY, 
-				BASE_PATH + "/" + SYNC_PATH, 
-				URI_MATCHER_ALL_SYNC);
-		URI_MATCHER.addURI(
-				AUTHORITY, 
-				BASE_PATH + "/*", 
-				URI_MATCHER_SERVER_ID);
-	}
+public final class OdsContentProvider extends ContentProvider {
 
-	private OdsTable odsTable;
 
+	private OdsTable odsDatabase;
 
 	@Override
 	public boolean onCreate() {
-		odsTable = new OdsTable(getContext());
+		odsDatabase = new OdsTable(getContext());
 		return true;
 	}
 
@@ -60,33 +41,41 @@ public final class OdsContentProvider extends ContentProvider implements OdsCont
 			String[] selectionArgs,
 			String sortOrder) {
 
+		OdsTableAdapter source = OdsTableAdapter.fromUri(uri);
 
-		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-		// todo check columns
-		queryBuilder.setTables(BASE_PATH);
-		
-		switch (URI_MATCHER.match(uri)) {
-			case URI_MATCHER_ALL_SYNC:
-				Bundle settingsBundle = new Bundle();
-				settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-				settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-				ContentResolver.requestSync(
-						ACCOUNT,
-						AUTHORITY,
-						settingsBundle);
 
-			case URI_MATCHER_ALL:
-				break;
-			case URI_MATCHER_SERVER_ID:
-				queryBuilder.appendWhere(
-						COLUMN_SERVER_ID + "=\"" + uri.getLastPathSegment() + "\"");
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown URI: " + uri);
+		// check if source is being monitored
+		if (!OdsSourceManager.getInstance().isSourceRegistered(getContext(), source))
+			return null;
+
+		// check if values have been inserted
+		String tableName = source.toSqlTableName();
+		Cursor tableCheckCursor = odsDatabase.getReadableDatabase() .rawQuery(
+					"SELECT name FROM sqlite_master WHERE type=? AND name=?",
+					new String[] { "table", tableName });
+		if (tableCheckCursor.getCount() < 1) return null;
+
+
+		// check for manual sync reqeust
+		if (OdsTableAdapter.isSyncUri(uri)) {
+			Bundle settingsBundle = new Bundle();
+			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			ContentResolver.requestSync(
+					OdsTableAdapter.ACCOUNT,
+					OdsTableAdapter.AUTHORITY,
+					settingsBundle);
 		}
 
+		// query db
+		Log.debug("Querying");
+		Log.debug("tableName = " + tableName);
+
+		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+		queryBuilder.setTables(tableName);
+
 		Cursor cursor = queryBuilder.query(
-				odsTable.getReadableDatabase(),
+				odsDatabase.getReadableDatabase(),
 				projection,
 				selection,
 				selectionArgs,
@@ -98,24 +87,27 @@ public final class OdsContentProvider extends ContentProvider implements OdsCont
 
 	@Override
 	public Uri insert(Uri uri, ContentValues data) {
-		switch(URI_MATCHER.match(uri)) {
-			case URI_MATCHER_ALL:
-				long id = odsTable.getWritableDatabase().insert(
-						BASE_PATH,
-						null,
-						data);
 
-				getContext().getContentResolver().notifyChange(uri, null);
-				return BASE_CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+		OdsTableAdapter source = OdsTableAdapter.fromUri(uri);
+		String tableName = source.toSqlTableName();
 
-			default:
-				throw new IllegalArgumentException("Unknown URI: " + uri);
-		}
+		Log.debug("Fetching " + tableName);
+
+		SQLiteDatabase database = odsDatabase.getWritableDatabase();
+		odsDatabase.addSource(database, tableName, source);
+
+		long id = database.insert(
+				tableName,
+				null,
+				data);
+
+		getContext().getContentResolver().notifyChange(uri, null);
+		return uri.buildUpon().appendPath(String.valueOf(id)).build();
 	}
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		return 0;
+		throw new UnsupportedOperationException("under construction");
 	}
 
 	@Override
@@ -124,7 +116,7 @@ public final class OdsContentProvider extends ContentProvider implements OdsCont
 			ContentValues values,
 			String  selection,
 			String[] selectionArgs) {
-		return 0;
+		throw new UnsupportedOperationException("under construction");
 	}
 
 
@@ -132,7 +124,7 @@ public final class OdsContentProvider extends ContentProvider implements OdsCont
 	public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
 			throws OperationApplicationException {
 
-		SQLiteDatabase db = odsTable.getWritableDatabase();
+		SQLiteDatabase db = odsDatabase.getWritableDatabase();
 		db.beginTransaction();
 
 		try {

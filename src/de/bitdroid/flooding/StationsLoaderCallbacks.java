@@ -1,5 +1,8 @@
 package de.bitdroid.flooding;
 
+import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_SERVER_ID;
+import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_SYNC_STATUS;
+
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -7,11 +10,11 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 
-import de.bitdroid.flooding.ods.OdsContract;
+import de.bitdroid.flooding.pegelonline.PegelonlineTableAdapter;
 import de.bitdroid.flooding.utils.Log;
 
 
-public abstract class StationsLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor>, OdsContract {
+public abstract class StationsLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	public static final int ODS_LOADER_ID = 42;
 	private final Context context;
@@ -28,11 +31,10 @@ public abstract class StationsLoaderCallbacks implements LoaderManager.LoaderCal
 		if (id != ODS_LOADER_ID) return null;
 		return new CursorLoader(
 				context,
-				BASE_CONTENT_URI,
+				new PegelonlineTableAdapter().toUri(),
 				new String[] {
 					COLUMN_SERVER_ID,
-					COLUMN_SYNC_STATUS,
-					COLUMN_JSON_DATA
+					COLUMN_SYNC_STATUS
 				}, null, null, null);
 	}
 

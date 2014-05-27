@@ -37,6 +37,7 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 				synchronized(items) {
 					cursor.moveToFirst();
 					while (cursor.moveToNext()) {
+						/*
 						int idx = cursor.getColumnIndex(OdsContract.COLUMN_JSON_DATA);
 						try {
 							JSONObject json = new JSONObject(cursor.getString(idx));
@@ -48,6 +49,7 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 						} catch (Exception je) {
 							Log.error(android.util.Log.getStackTraceString(je));
 						}
+						*/
 					}
 					populate();
 				}

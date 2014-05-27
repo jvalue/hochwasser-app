@@ -24,7 +24,7 @@ import de.bitdroid.flooding.ods.json.PegelonlineParser;
  * Why? Such that clients know what status their data is in, such
  * as synced or currently being synced.
  */
-final class Processor implements OdsContract {
+final class Processor {
 
 	private final ContentProviderClient provider;
 	private final OdsTableAdapter source;
@@ -81,15 +81,18 @@ final class Processor implements OdsContract {
 
 		// query if already present
 		String serverId = PegelonlineParser.getServerId(object);
-		Uri uri = BASE_CONTENT_URI.buildUpon().appendPath(serverId).build();
+		Uri uri = source.toUri();
+
 		Cursor cursor = null;
 		try {
 			cursor = provider.query(
 					uri,
-					new String[] { COLUMN_SERVER_ID },
-					null, null, null);
+					new String[] { OdsTableAdapter.COLUMN_SERVER_ID },
+					OdsTableAdapter.COLUMN_SERVER_ID + " = ?",
+					new String[] { serverId },
+					null);
 
-			if (cursor.getCount() >= 1) return null;
+			if (cursor != null && cursor.getCount() >= 1) return null;
 
 		} finally {
 			if (cursor != null) cursor.close();
@@ -98,11 +101,11 @@ final class Processor implements OdsContract {
 
 		// insert db
 		ContentValues data = source.saveData(object);
-		data.put(COLUMN_SERVER_ID, serverId);
-		data.put(COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
+		data.put(OdsTableAdapter.COLUMN_SERVER_ID, serverId);
+		data.put(OdsTableAdapter.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
 
 		ContentProviderOperation.Builder builder 
-			= ContentProviderOperation.newInsert(BASE_CONTENT_URI);
+			= ContentProviderOperation.newInsert(source.toUri());
 		builder.withValues(data);
 		return builder.build();
 	}

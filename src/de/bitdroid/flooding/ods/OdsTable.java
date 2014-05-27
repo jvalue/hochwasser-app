@@ -1,5 +1,9 @@
 package de.bitdroid.flooding.ods;
 
+import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_ID;
+import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_SERVER_ID;
+import static de.bitdroid.flooding.ods.OdsTableAdapter.COLUMN_SYNC_STATUS;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -8,27 +12,41 @@ import de.bitdroid.flooding.utils.Log;
 
 
 
-public final class OdsTable extends SQLiteOpenHelper implements OdsContract {
+public final class OdsTable extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "database.db";
 	private static final int DATABASE_VERSION = 1;
 
-	private final String DATABASE_CREATE =
-		"create table " + BASE_PATH + " ( "
-		+ COLUMN_ID + " integer primary key autoincrement, "
-		+ COLUMN_SERVER_ID + " text not null, "
-		+ COLUMN_SYNC_STATUS + " text not null, "
-		+ COLUMN_JSON_DATA + " text not null);";
-
 
 	public OdsTable(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
 	}
 
-	@Override
-	public void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE);
+
+	void addSource(SQLiteDatabase database, String tableName, OdsTableAdapter source) {
+		if (database == null || tableName == null || source == null) 
+				throw new NullPointerException("param cannot be null");
+		
+		StringBuilder createBuilder = new StringBuilder(
+			"create table if not exists " + tableName + " ( "
+			+ COLUMN_ID + " integer primary key autoincrement, "
+			+ COLUMN_SERVER_ID + " text not null, "
+			+ COLUMN_SYNC_STATUS + " text not null");
+
+		for (String key : source.getSchema().keySet()) {
+			createBuilder.append(", " + key + " " + source.getSchema().get(key).toString());
+		}
+		createBuilder.append(")");
+
+		database.execSQL(createBuilder.toString());
 	}
+
+
+
+	@Override
+	public void onCreate(SQLiteDatabase database) { }
+
 
 	@Override
 	public void onUpgrade(

@@ -1,17 +1,19 @@
 package de.bitdroid.flooding.ods;
 
+import static de.bitdroid.flooding.ods.OdsTableAdapter.ACCOUNT;
+import static de.bitdroid.flooding.ods.OdsTableAdapter.AUTHORITY;
+
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import de.bitdroid.flooding.utils.Log;
 
 
-final class SyncUtils implements OdsContract {
+final class SyncUtils {
 
 	private SyncUtils () { }
 
@@ -48,6 +50,7 @@ final class SyncUtils implements OdsContract {
 	}
 
 
+	/*
 	public static void triggerManualSync(Context context) {
 		Cursor cursor = null;
 		try {
@@ -59,4 +62,5 @@ final class SyncUtils implements OdsContract {
 			cursor.close();
 		}
 	}
+	*/
 }

@@ -3,9 +3,6 @@ package de.bitdroid.flooding;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
@@ -15,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import de.bitdroid.flooding.ods.json.PegelonlineParser;
+import de.bitdroid.flooding.ods.OdsTableAdapter;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -34,8 +31,12 @@ final class StationsListAdapter extends BaseAdapter {
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				Log.debug("onLoadFinished called");
 				items.clear();
+				if (cursor == null) return;
 				cursor.moveToFirst();
 				while (cursor.moveToNext()) {
+					int idx = cursor.getColumnIndex(OdsTableAdapter.COLUMN_SERVER_ID);
+					items.add(cursor.getString(idx));
+					/*
 					int idx = cursor.getColumnIndex(COLUMN_JSON_DATA);
 					try {
 						JSONObject json = new JSONObject(cursor.getString(idx));
@@ -43,6 +44,7 @@ final class StationsListAdapter extends BaseAdapter {
 					} catch(JSONException je) {
 						Log.error(android.util.Log.getStackTraceString(je));
 					}
+					*/
 				}
 				notifyDataSetChanged();
 			}

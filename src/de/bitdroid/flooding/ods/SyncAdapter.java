@@ -13,9 +13,12 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	public static String EXTRA_RESOURCE_ID = "resourceId";
 
+	private final Context context;
+
 
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
+		this.context = context;
 	}
 
 	public SyncAdapter(
@@ -23,6 +26,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			boolean autoInitialize,
 			boolean allowParallelSyncs) {
 		super(context, autoInitialize, allowParallelSyncs);
+		this.context = context;
 	}
 
 	@Override
@@ -33,7 +37,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			ContentProviderClient provider,
 			SyncResult syncResult) {
 
-		Log.debug("performing sync");
+		Log.debug("Sync started");
 
 		String resourceId = extras.getString(EXTRA_RESOURCE_ID);
 
@@ -42,11 +46,17 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			// sync all resources and sources
 			if (resourceId == null) {
 
-				for (OdsTableAdapter source : OdsSourceManager.getInstance().getSources()) {
+				Log.debug("Syncing all sources");
+
+				OdsSourceManager sourceManager = OdsSourceManager.getInstance();
+
+				for (OdsTableAdapter source : sourceManager.getSources(context)) {
+					Log.debug("... " +  source.getSourceUrl());
 					Processor processor = new Processor(provider, source);
 					String retString = new RestCall.Builder(
 							RestCall.RequestType.GET,
-							source.getSourceUrl())
+							sourceManager.getOdsServerName())
+						.path(source.getSourceUrl())
 						.build()
 						.execute();
 
@@ -55,6 +65,8 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			// sync one resource only
 			} else {
+
+				Log.debug("Syncing single resource");
 				/*
 				String resultString = new RestCall.Builder(
 						RestCall.RequestType.GET, 
@@ -68,6 +80,8 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 				*/
 				throw new UnsupportedOperationException("under construction");
 			}
+
+			Log.debug("Sync finished");
 
 		} catch (Exception e) {
 			syncResult.hasHardError();

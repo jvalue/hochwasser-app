@@ -11,7 +11,7 @@ import de.bitdroid.flooding.ods.OdsTableAdapter;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 
-public final class PegelonlineTableAdapter implements OdsTableAdapter { 
+public final class PegelonlineTableAdapter extends OdsTableAdapter { 
 
 	private static final String
 		KEY_WATER_NAME = "waterName",

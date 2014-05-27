@@ -1,6 +1,6 @@
 package de.bitdroid.flooding;
 
-import static de.bitdroid.flooding.pegelonline.PegelonlineTableAdapter.COLUMN_STATION_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 
 import java.util.LinkedList;
 import java.util.List;

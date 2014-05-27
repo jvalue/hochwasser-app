@@ -1,7 +1,7 @@
 package de.bitdroid.flooding;
 
 import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SERVER_ID;
-import static de.bitdroid.flooding.pegelonline.PegelonlineTableAdapter.COLUMN_STATION_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 
 import android.app.LoaderManager;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 
-import de.bitdroid.flooding.pegelonline.PegelonlineTableAdapter;
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -31,7 +31,7 @@ public abstract class StationsLoaderCallbacks implements LoaderManager.LoaderCal
 		if (id != ODS_LOADER_ID) return null;
 		return new CursorLoader(
 				context,
-				new PegelonlineTableAdapter().toUri(),
+				new PegelOnlineSource().toUri(),
 				new String[] {
 					COLUMN_SERVER_ID,
 					COLUMN_STATION_NAME

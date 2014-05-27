@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.ods.OdsSourceManager;
-import de.bitdroid.flooding.pegelonline.PegelonlineTableAdapter;
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 public class MainActivity extends Activity {
 
@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 		listView.setAdapter(listAdapter);
 
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance();
-		sourceManager.registerSource(getApplicationContext(), new PegelonlineTableAdapter());
+		sourceManager.registerSource(getApplicationContext(), new PegelOnlineSource());
 		sourceManager.startMonitoring(getApplicationContext());
 
 

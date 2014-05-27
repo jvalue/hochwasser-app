@@ -27,6 +27,7 @@ final class StationsListAdapter extends BaseAdapter {
 	public StationsListAdapter(Context context) {
 		if (context == null) throw new NullPointerException("context cannot be null");
 		this.context = context;
+
 		this.loaderCallback = new StationsLoaderCallbacks(context) {
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
@@ -40,8 +41,14 @@ final class StationsListAdapter extends BaseAdapter {
 				}
 				notifyDataSetChanged();
 			}
+
 			@Override
 			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
+
+			@Override
+			protected String[] getColumnNames() {
+				return new String[] { COLUMN_STATION_NAME };
+			}
 		};
 	}
 

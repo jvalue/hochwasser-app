@@ -1,5 +1,9 @@
 package de.bitdroid.flooding.map;
 
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LAT;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LONG;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +53,18 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 					populate();
 				}
 			}
+
 			@Override
 			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
+
+			@Override
+			protected String[] getColumnNames() {
+				return new String[] { 
+					COLUMN_STATION_LAT, 
+					COLUMN_STATION_LONG, 
+					COLUMN_STATION_NAME 
+				};
+			}
 		};
 	}
 

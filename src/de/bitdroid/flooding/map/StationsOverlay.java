@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.osmdroid.api.IMapView;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -33,25 +34,20 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 		this.loaderCallback = new StationsLoaderCallbacks(context) {
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				synchronized(items) {
-					cursor.moveToFirst();
-					while (cursor.moveToNext()) {
-						/*
-						int idx = cursor.getColumnIndex(OdsContract.COLUMN_JSON_DATA);
-						try {
-							JSONObject json = new JSONObject(cursor.getString(idx));
-							String stationName = PegelonlineParser.getStationName(json);
-							GeoPoint point = new GeoPoint(
-									PegelonlineParser.getLatitude(json),
-									PegelonlineParser.getLongitude(json));
-							items.add(new OverlayItem(stationName, stationName, point));
-						} catch (Exception je) {
-							Log.error(android.util.Log.getStackTraceString(je));
-						}
-						*/
-					}
-					populate();
+				cursor.moveToFirst();
+				int latIdx = cursor.getColumnIndex(COLUMN_STATION_LAT);
+				int longIdx = cursor.getColumnIndex(COLUMN_STATION_LONG);
+				int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
+
+				while (cursor.moveToNext()) {
+					GeoPoint point = new GeoPoint(
+							cursor.getDouble(latIdx),
+							cursor.getDouble(longIdx));
+					String stationName = cursor.getString(nameIdx);
+
+					items.add(new OverlayItem(stationName, stationName, point));
 				}
+				populate();
 			}
 
 			@Override
@@ -71,17 +67,13 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected OverlayItem createItem(int idx) {
-		synchronized(items) {
-			return items.get(idx);
-		}
+		return items.get(idx);
 	}
 
 
 	@Override
 	public int size() {
-		synchronized(items) {
-			return items.size();
-		}
+		return items.size();
 	}
 
 

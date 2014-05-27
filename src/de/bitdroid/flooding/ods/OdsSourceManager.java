@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.ods;
 
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ public final class OdsSourceManager {
 
 
 	private final Set<String> sourceClassNames = new HashSet<String>();
+	private String odsServerName = "http://faui2o2f.cs.fau.de:8080/open-data-service";
 
 	public <T extends OdsTableAdapter> void registerSource(Class<T> source) {
 		sourceClassNames.add(source.getName());
@@ -33,6 +35,22 @@ public final class OdsSourceManager {
 
 	public void stopMonitoring(Context context) {
 		throw new UnsupportedOperationException();
+	}
+
+
+	public void setOdsServerName(String odsServerName) {
+		if (odsServerName == null) throw new NullPointerException("param cannot be null");
+		try {
+			URL checkUrl = new URL(odsServerName);
+			checkUrl.toURI();
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
+		this.odsServerName = odsServerName;
+	}
+
+	public String getOdsServerName() {
+		return odsServerName;
 	}
 
 

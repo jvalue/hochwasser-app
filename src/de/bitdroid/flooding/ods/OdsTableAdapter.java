@@ -15,7 +15,7 @@ import de.bitdroid.flooding.utils.SQLiteType;
 public interface OdsTableAdapter {
 
 	/**
-	 * Returns the source URL.
+	 * Returns the source URL NOT including domain name and port.
 	 */
 	public String getSourceUrl();
 

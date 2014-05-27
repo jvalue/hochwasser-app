@@ -8,8 +8,6 @@ import java.util.Set;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import de.bitdroid.flooding.utils.Log;
-
 
 public final class OdsSourceManager {
 	
@@ -31,14 +29,10 @@ public final class OdsSourceManager {
 		String key = source.getClass().getName();
 		String value = source.getSourceUrl();
 
-		Log.debug("Registering " + key + " - " + value);
-
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(key, value);
 		editor.apply();
-
-		Log.debug("Registering source");
 	}
 
 	public void unregisterSource(Context context, OdsSource source) {
@@ -87,8 +81,6 @@ public final class OdsSourceManager {
 		for (String key : values.keySet()) {
 			sources.add(OdsSource.fromClassName(key));
 		}
-
-		Log.debug("Getting sources (" + sources.size() + ")");
 		return sources;
 	}
 }

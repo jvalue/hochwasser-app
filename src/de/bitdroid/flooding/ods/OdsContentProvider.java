@@ -68,9 +68,6 @@ public final class OdsContentProvider extends ContentProvider {
 		}
 
 		// query db
-		Log.debug("Querying");
-		Log.debug("tableName = " + tableName);
-
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 		queryBuilder.setTables(tableName);
 
@@ -90,8 +87,6 @@ public final class OdsContentProvider extends ContentProvider {
 
 		OdsSource source = OdsSource.fromUri(uri);
 		String tableName = source.toSqlTableName();
-
-		Log.debug("Fetching " + tableName);
 
 		SQLiteDatabase database = odsDatabase.getWritableDatabase();
 		odsDatabase.addSource(database, tableName, source);

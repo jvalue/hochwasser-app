@@ -101,7 +101,6 @@ public abstract class OdsSource {
 
 	@SuppressWarnings("unchecked")
 	static OdsSource fromClassName(String className) {
-		Log.debug("Creating instance of " + className);
 		try {
 			Class<? extends OdsSource> sourceClass 
 					= (Class<? extends OdsSource>) Class.forName(className);

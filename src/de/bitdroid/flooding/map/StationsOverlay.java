@@ -3,9 +3,7 @@ package de.bitdroid.flooding.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONObject;
 import org.osmdroid.api.IMapView;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -16,9 +14,6 @@ import android.database.Cursor;
 import android.graphics.Point;
 
 import de.bitdroid.flooding.StationsLoaderCallbacks;
-import de.bitdroid.flooding.ods.OdsContract;
-import de.bitdroid.flooding.ods.json.PegelonlineParser;
-import de.bitdroid.flooding.utils.Log;
 
 
 final class StationsOverlay extends ItemizedOverlay<OverlayItem> {

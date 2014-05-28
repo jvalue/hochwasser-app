@@ -20,7 +20,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 
@@ -40,63 +40,51 @@ public class GraphActivity extends Activity {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
+		final String waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 
-		final LineGraphView graph = new LineGraphView(this, "Water Levels");
+		final LineGraphView graph = new LineGraphView(this, waterName);
 		graph.setDrawBackground(true);
 		graph.setScrollable(true);
+		graph.setScalable(true);
+
 		LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 		layout.addView(graph);
-
-		final String waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 
 		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				if (cursor == null) return;
-				cursor.moveToFirst();
 
+				MeasurementManager manager = new MeasurementManager();
+
+				cursor.moveToFirst();
+				int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
 				int unitIdx = cursor.getColumnIndex(COLUMN_LEVEL_UNIT);
 				int kmIdx = cursor.getColumnIndex(COLUMN_STATION_KM);
 				int valueIdx = cursor.getColumnIndex(COLUMN_LEVEL_VALUE);
 				int zeroValueIdx = cursor.getColumnIndex(COLUMN_LEVEL_ZERO_VALUE);
 				int zeroUnitIdx = cursor.getColumnIndex(COLUMN_LEVEL_ZERO_UNIT);
 
-
-				// some measurements are relative without a relation to make
-				// values absolute --> skip those measurements!
-				int skippedValuesCount = 0;
-
-				List<GraphViewData> data = new ArrayList<GraphViewData>(); 
 				do {
 
-					String unit = cursor.getString(unitIdx);
-
-					double levelValue = UnitConverter.toCm(
+					manager.addMeasurement(
+							cursor.getString(nameIdx),
+							cursor.getDouble(kmIdx),
 							cursor.getDouble(valueIdx),
-							unit);
-
-					String zeroUnit = cursor.getString(zeroUnitIdx);
-					if (zeroUnit != null) {
-						levelValue += UnitConverter.toCm(
-								cursor.getDouble(zeroValueIdx),
-								zeroUnit);
-
-					} else if (UnitConverter.isRelativeCmUnit(unit)) {
-						skippedValuesCount++;
-						continue;
-					}
-
-					data.add(new GraphViewData(cursor.getDouble(kmIdx), levelValue));
+							cursor.getString(unitIdx),
+							cursor.getDouble(zeroValueIdx),
+							cursor.getString(zeroUnitIdx));
 
 				} while(cursor.moveToNext());
 
 				graph.removeAllSeries();
-				graph.addSeries(new GraphViewSeries(data.toArray(new GraphViewData[data.size()])));
+				graph.addSeries(new GraphViewSeries(manager.getAllMeasurements()));
+				graph.setViewPort(manager.getMinRiverKm(), manager.getMaxRiverKm());
 
-
-				if (skippedValuesCount > 0) 
-					Log.warning("Skipped " + skippedValuesCount + " measurements as they were incomplete");
+				int skippedMeasurements = manager.getSkippedMeasurements();
+				if (skippedMeasurements > 0) 
+					Log.warning("Skipped " + skippedMeasurements + " measurements as they were incomplete");
 			}
 
 			@Override
@@ -123,4 +111,94 @@ public class GraphActivity extends Activity {
 
 		getLoaderManager().initLoader(LOADER_ID, null, loader);
     }
+
+
+
+
+	private static class MeasurementManager {
+
+		private double minRiverKm = Double.MAX_VALUE, maxRiverKm = Double.MIN_VALUE;
+		private int skippedValues = 0;
+		private List<Measurement> measurements = new ArrayList<Measurement>();
+
+		public void addMeasurement(
+				String stationName,
+				double riverKm,
+				double value,
+				String unit,
+				double zeroValue,
+				String zeroUnit) {
+
+
+			value = UnitConverter.toCm(value, unit);
+			if (zeroUnit != null) {
+				value += UnitConverter.toCm(zeroValue, zeroUnit);
+			} else if (UnitConverter.isRelativeCmUnit(unit)) {
+				skippedValues++;
+				return;
+			}
+
+			measurements.add(new Measurement(stationName, riverKm, value, unit));
+
+			if (riverKm < minRiverKm) minRiverKm = riverKm;
+			if (riverKm > maxRiverKm) maxRiverKm = riverKm;
+		}
+
+
+		public double getMaxRiverKm() {
+			return maxRiverKm;
+		}
+
+		public double getMinRiverKm() {
+			return minRiverKm;
+		}
+
+		public Measurement[] getAllMeasurements() {
+			return measurements.toArray(new Measurement[measurements.size()]);
+		}
+
+		public int getSkippedMeasurements() {
+			return skippedValues;
+		}
+
+	}
+
+	private static class Measurement implements GraphViewDataInterface {
+
+		private final String stationName;
+		private final double value;
+		private final String unit;
+		private final double riverKm;
+
+		private Measurement(
+				String stationName,
+				double riverKm,
+				double value,
+				String unit) {
+
+			this.stationName = stationName;
+			this.riverKm = riverKm;
+			this.value = value;
+			this.unit = unit;
+		}
+
+
+		@Override
+		public double getX() {
+			return riverKm;
+		}
+
+		@Override
+		public double getY() {
+			return value;
+		}
+
+		public String getStationName() {
+			return stationName;
+		}
+
+		public String getUnit() {
+			return unit;
+		}
+	}
 }

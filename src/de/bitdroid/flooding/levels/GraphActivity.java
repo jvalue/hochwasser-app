@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -35,7 +34,9 @@ public class GraphActivity extends Activity {
 		setContentView(R.layout.graph);
 
 
-		final GraphView graph = new LineGraphView(this, "Water Levels");
+		final LineGraphView graph = new LineGraphView(this, "Water Levels");
+		graph.setDrawBackground(true);
+		graph.setScrollable(true);
 		LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 		layout.addView(graph);
 

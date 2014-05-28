@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
 		listView.setAdapter(listAdapter);
 
 		getLoaderManager().initLoader(
-				StationsLoaderCallbacks.ODS_LOADER_ID, 
+				StationsListAdapter.LOADER_ID,
 				null, 
 				listAdapter.getLoaderCallback());
 

@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.StationsLoaderCallbacks;
 
 public class MapActivity extends Activity implements MapConstants {
 	
@@ -35,7 +34,7 @@ public class MapActivity extends Activity implements MapConstants {
 		mapView.getOverlays().add(stationsOverlay);
 
 		getLoaderManager().initLoader(
-				StationsLoaderCallbacks.ODS_LOADER_ID,
+				StationsOverlay.LOADER_ID,
 				null,
 				stationsOverlay.getLoaderCallback());
 

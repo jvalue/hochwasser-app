@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -14,21 +15,26 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
+import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.Log;
 
 
 final class StationsListAdapter extends BaseAdapter {
+	
+	public static final int LOADER_ID = 42;
 		
 
 	private final List<String> items = new LinkedList<String>();
 	private final Context context;
-	private final StationsLoaderCallbacks loaderCallback;
+	private final AbstractLoaderCallbacks loaderCallback;
 
-	public StationsListAdapter(Context context) {
+	public StationsListAdapter(final Context context) {
 		if (context == null) throw new NullPointerException("context cannot be null");
 		this.context = context;
 
-		this.loaderCallback = new StationsLoaderCallbacks(context) {
+		this.loaderCallback = new AbstractLoaderCallbacks(LOADER_ID) {
+
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				Log.debug("onLoadFinished called");
@@ -46,8 +52,12 @@ final class StationsListAdapter extends BaseAdapter {
 			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
 
 			@Override
-			protected String[] getColumnNames() {
-				return new String[] { COLUMN_STATION_NAME };
+			protected Loader<Cursor> getCursorLoader() {
+				return new CursorLoader(
+						context,
+						new PegelOnlineSource().toUri(),
+						new String[] { COLUMN_STATION_NAME },
+						null, null, null);
 			}
 		};
 	}
@@ -91,7 +101,7 @@ final class StationsListAdapter extends BaseAdapter {
 	}
 
 
-	public StationsLoaderCallbacks getLoaderCallback() {
+	public AbstractLoaderCallbacks getLoaderCallback() {
 		return loaderCallback;
 	}
 }

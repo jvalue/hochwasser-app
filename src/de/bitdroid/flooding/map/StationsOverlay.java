@@ -14,24 +14,29 @@ import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Point;
 
-import de.bitdroid.flooding.StationsLoaderCallbacks;
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
+import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 
 
 final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
+	
+	public static final int LOADER_ID = 43;
 
-	private final StationsLoaderCallbacks loaderCallback;
+	private final AbstractLoaderCallbacks loaderCallback;
 	private final List<OverlayItem> items = new ArrayList<OverlayItem>();
 
-	public StationsOverlay(Context context) {
+	public StationsOverlay(final Context context) {
 		super(
 				context.getResources().getDrawable(android.R.drawable.presence_online), 
 				new ResourceProxyImpl(context));
 
-		this.loaderCallback = new StationsLoaderCallbacks(context) {
+		this.loaderCallback = new AbstractLoaderCallbacks(LOADER_ID) {
+
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				if (cursor == null) return;
@@ -55,12 +60,15 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
 
 			@Override
-			protected String[] getColumnNames() {
-				return new String[] { 
-					COLUMN_STATION_LAT, 
-					COLUMN_STATION_LONG, 
-					COLUMN_STATION_NAME 
-				};
+			protected Loader<Cursor> getCursorLoader() {
+				return new CursorLoader(
+						context,
+						new PegelOnlineSource().toUri(),
+						new String[] {
+							COLUMN_STATION_LAT, 
+							COLUMN_STATION_LONG, 
+							COLUMN_STATION_NAME 
+						}, null, null, null);
 			}
 		};
 	}
@@ -84,7 +92,7 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 
-	public StationsLoaderCallbacks getLoaderCallback() {
+	public AbstractLoaderCallbacks getLoaderCallback() {
 		return loaderCallback;
 	}
 }

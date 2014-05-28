@@ -42,7 +42,7 @@ public final class PegelOnlineSource extends OdsSource {
 
 
 	@Override
-	public String getSourceUrl() {
+	public String getSourceUrlPath() {
 		return SOURCE_URL;
 	}
 

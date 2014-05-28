@@ -34,7 +34,7 @@ public final class OdsSourceManager {
 			throw new NullPointerException("params cannot be null");
 
 		String key = source.getClass().getName();
-		String value = source.getSourceUrl();
+		String value = source.getSourceUrlPath();
 
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();

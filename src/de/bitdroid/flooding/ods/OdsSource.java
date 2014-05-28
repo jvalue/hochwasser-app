@@ -44,7 +44,7 @@ public abstract class OdsSource {
 	/**
 	 * Returns the source URL NOT including domain name and port.
 	 */
-	public abstract String getSourceUrl();
+	public abstract String getSourceUrlPath();
 
 
 	/**

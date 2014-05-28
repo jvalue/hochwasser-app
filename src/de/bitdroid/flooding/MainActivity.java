@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance();
 		sourceManager.registerSource(getApplicationContext(), new PegelOnlineSource());
-		sourceManager.startMonitoring(getApplicationContext());
+		sourceManager.startPeriodicSync(getApplicationContext(), 1000 * 60 * 60);
 
 
 		getLoaderManager().initLoader(

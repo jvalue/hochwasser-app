@@ -27,7 +27,7 @@ public final class OdsSourceManager {
 	 * <br>
 	 * <b>Note:</b> this does not actually trigger synchroniziation but merely marks
 	 * a source to be synchronized. To start periodic synchronizing, use 
-	 * {@link #startMonitoring(android.content.Context)}.
+	 * {@link #startPeriodicSync(android.content.Context)}.
 	 */
 	public void registerSource(Context context, OdsSource source) {
 		if (context == null || source == null) 
@@ -47,7 +47,7 @@ public final class OdsSourceManager {
 	 * Stop monitoring a source and remove all related data from the device.
 	 * <br>
 	 * To additionally stop synchronizing for all sources and shut down the
-	 * SyncAdapter, use {@link #stopMonitoring(android.content.Context)}.
+	 * SyncAdapter, use {@link #stopPeriodicSync(android.content.Context)}.
 	 */
 	public void unregisterSource(Context context, OdsSource source) {
 		throw new UnsupportedOperationException();
@@ -65,18 +65,37 @@ public final class OdsSourceManager {
 
 
 	/**
-	 * Start synchronization for all sources.
+	 * Starts to synchronize all sources on a periodic schedule.
 	 */
-	public void startMonitoring(Context context) {
-		SyncUtils.setupSyncAdapter(context);
+	public void startPeriodicSync(Context context, long pollFrequency) {
+		if (context == null) throw new NullPointerException("param cannot be null");
+		if (pollFrequency <= 0) throw new IllegalArgumentException("pollFrequency must be > 0");
+		if (SyncUtils.isPeriodicSyncScheduled(context)) throw new IllegalStateException("sync already scheduled");
+		addSyncAccount(context);
+		SyncUtils.startPeriodicSync(context, pollFrequency);
 	}
 
 
 	/**
-	 * Stop synchronization for all sources.
+	 * Stops t he periodic synchronization schedule.
 	 */
-	public void stopMonitoring(Context context) {
-		throw new UnsupportedOperationException();
+	public void stopPeriodicSync(Context context) {
+		if (context == null) throw new NullPointerException("param cannot be null");
+		if (!SyncUtils.isPeriodicSyncScheduled(context)) throw new IllegalStateException("sync not scheduled");
+		SyncUtils.stopPeriodicSync(context);
+	}
+
+
+	public boolean isPeriodicSyncScheduled(Context context) {
+		if (context == null) throw new NullPointerException("param cannot be null");
+		return SyncUtils.isPeriodicSyncScheduled(context);
+	}
+
+
+	public void startManualSync(Context context, OdsSource source) {
+		if (context == null || source == null) throw new NullPointerException("param cannot be null");
+		addSyncAccount(context);
+		SyncUtils.startManualSync(context, source);
 	}
 
 
@@ -115,5 +134,11 @@ public final class OdsSourceManager {
 			sources.add(OdsSource.fromClassName(key));
 		}
 		return sources;
+	}
+
+
+
+	private static void addSyncAccount(Context context) {
+		if (!SyncUtils.isAccountAdded(context)) SyncUtils.addAccount(context);
 	}
 }

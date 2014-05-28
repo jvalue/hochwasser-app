@@ -3,8 +3,11 @@ package de.bitdroid.flooding.levels;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.app.ListActivity;
 import android.content.CursorLoader;
@@ -38,12 +41,19 @@ public class LevelsActivity extends ListActivity {
 				cursor.moveToFirst();
 				int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
 
-				Set<String> waterNames = new HashSet<String>();
+				Map<String, Integer> waterNames = new HashMap<String, Integer>();
 				while (cursor.moveToNext()) {
-					waterNames.add(cursor.getString(waterIdx));
+					String name = cursor.getString(waterIdx);
+					if (!waterNames.containsKey(name)) waterNames.put(name, 1);
+					else waterNames.put(name, waterNames.get(name) + 1);
 				}
+				
+				List<String> adapterValues = new LinkedList<String>();
+				for (Entry<String, Integer> e : waterNames.entrySet())
+					adapterValues.add(e.getKey() + " (" + e.getValue() + ")");
+
 				listAdapter.clear();
-				listAdapter.addAll(waterNames);
+				listAdapter.addAll(adapterValues);
 				listAdapter.sort(new Comparator<String>() {
 					@Override
 					public int compare(String s1, String s2) {

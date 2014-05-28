@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-		xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:androidPlot="http://schemas.android.com/apk/lib/com.androidplot.xy"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
 	>
 
-	<com.androidplot.xy.XYPlot
+    <com.androidplot.xy.XYPlot
 		android:id="@+id/graph"
-		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
-		androidPlot:domainLabel="River Km"
-		androidPlot:rangeLabel="Water Level (cm)"
+		android:layout_height="fill_parent"
+		androidPlot.domainLabel="River Km"
+		androidPlot.rangeLabel="Water Level (cm)"
 		androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
 		androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
 		androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
@@ -31,5 +31,4 @@
 		androidPlot.legendWidget.positionMetrics.anchor="right_bottom"
 		androidPlot.graphWidget.gridLinePaint.color="#000000"
 	/>
-
 </LinearLayout>

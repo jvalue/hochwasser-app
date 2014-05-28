@@ -17,9 +17,10 @@ import android.app.Activity;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.LinearLayout;
 
+import com.androidplot.Plot;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.XYPlot;
@@ -44,19 +45,29 @@ public class GraphActivity extends Activity {
 		final String waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 
 		final XYPlot graph = (XYPlot) findViewById(R.id.graph);
+		final MeasurementSeries series = new MeasurementSeries("Cant see me");
+		LineAndPointFormatter seriesFormat = new LineAndPointFormatter();
+		seriesFormat.setPointLabelFormatter(null);
+		seriesFormat.configure(
+				getApplicationContext(), 
+				R.xml.line_point_formatter);
+		graph.addSeries(series, seriesFormat);
+		graph.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
+		graph.getLayoutManager().remove(graph.getLegendWidget());
+		graph.setTitle(waterName);
+		graph.setTicksPerRangeLabel(3);
+		graph.getGraphWidget().setDomainLabelOrientation(-45);
+		graph.setBorderStyle(Plot.BorderStyle.NONE, null, null);
+
+		graph.setBackgroundColor(Color.BLACK);
+		graph.getGraphWidget().getBackgroundPaint().setColor(Color.BLACK);
+		graph.getGraphWidget().getGridBackgroundPaint().setColor(Color.BLACK);
 
 		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				if (cursor == null) return;
-
-				MeasurementSeries series = new MeasurementSeries("The values!");
-				LineAndPointFormatter seriesFormat = new LineAndPointFormatter();
-				seriesFormat.setPointLabelFormatter(new PointLabelFormatter());
-				seriesFormat.configure(
-						getApplicationContext(), 
-						R.xml.line_point_formatter_with_plf);
 
 				cursor.moveToFirst();
 				int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
@@ -66,8 +77,8 @@ public class GraphActivity extends Activity {
 				int zeroValueIdx = cursor.getColumnIndex(COLUMN_LEVEL_ZERO_VALUE);
 				int zeroUnitIdx = cursor.getColumnIndex(COLUMN_LEVEL_ZERO_UNIT);
 
+				series.reset();
 				do {
-
 					series.addMeasurement(
 							cursor.getString(nameIdx),
 							cursor.getDouble(kmIdx),
@@ -78,10 +89,7 @@ public class GraphActivity extends Activity {
 
 				} while(cursor.moveToNext());
 
-
-				graph.addSeries(series, seriesFormat);
-				graph.setTicksPerRangeLabel(3);
-				graph.getGraphWidget().setDomainLabelOrientation(-45);
+				graph.redraw();
 
 				int skippedMeasurements = series.getSkippedMeasurements();
 				if (skippedMeasurements > 0) 
@@ -156,6 +164,14 @@ public class GraphActivity extends Activity {
 			if (value > maxLevel) maxLevel = value;
 		}
 
+		public void reset() {
+			measurements.clear();
+			skippedValues = 0;
+			minLevel = Double.MAX_VALUE;
+			maxLevel = Double.MIN_VALUE;
+			minRiverKm = Double.MAX_VALUE;
+			maxRiverKm = Double.MIN_VALUE;
+		}
 
 		public double getMaxRiverKm() {
 			Log.debug("maxRiverKm = " + maxRiverKm);

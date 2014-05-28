@@ -48,9 +48,9 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 				Log.debug("Syncing all sources");
 
-				OdsSourceManager sourceManager = OdsSourceManager.getInstance();
+				OdsSourceManager sourceManager = OdsSourceManager.getInstance(context);
 
-				for (OdsSource source : sourceManager.getSources(context)) {
+				for (OdsSource source : sourceManager.getSources()) {
 					Log.debug("... " +  source.getSourceUrlPath());
 					Processor processor = new Processor(provider, source);
 					String retString = new RestCall.Builder(

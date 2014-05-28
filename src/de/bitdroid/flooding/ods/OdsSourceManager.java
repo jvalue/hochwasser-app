@@ -13,22 +13,31 @@ public final class OdsSourceManager {
 	
 	private static final String PREFS_NAME = "de.bitdroid.flooding.ods.OdsSourceManager";
 
-	private static final OdsSourceManager instance = new OdsSourceManager();
-	public static OdsSourceManager getInstance() {
-		return instance;
+	private static OdsSourceManager instance;
+	public static OdsSourceManager getInstance(Context context) {
+		if(context == null) throw new NullPointerException("context cannot be null");
+		synchronized(OdsSourceManager.class) {
+			if (instance == null)
+				instance = new OdsSourceManager(context);
+			return instance;
+		}
 	}
 
 
+	private final Context context;
 	private String odsServerName = "http://faui2o2f.cs.fau.de:8080/open-data-service";
+
+	private OdsSourceManager(Context context) {
+		this.context = context;
+	}
 
 
 	/**
 	 * Check whether a source is currently registered for synchronization.
 	 */
-	public boolean isSourceRegisteredForPeriodicSync(Context context, OdsSource source) {
-		if (context == null || source == null) 
-			throw new NullPointerException("param cannot be null");
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+	public boolean isSourceRegisteredForPeriodicSync(OdsSource source) {
+		if (source == null) throw new NullPointerException("param cannot be null");
+		SharedPreferences prefs = getSharedPreferences();
 		return prefs.contains(source.getClass().getName());
 	}
 
@@ -37,19 +46,18 @@ public final class OdsSourceManager {
 	 * Starts to synchronize all sources on a periodic schedule.
 	 */
 	public void startPeriodicSync(
-			Context context, 
 			long pollFrequency,
 			OdsSource ... sources) {
 
-		if (context == null || sources == null) 
+		if (sources == null) 
 			throw new NullPointerException("param cannot be null");
 		if (pollFrequency <= 0) 
 			throw new IllegalArgumentException("pollFrequency must be > 0");
 		if (SyncUtils.isPeriodicSyncScheduled(context)) 
 			throw new IllegalStateException("sync already scheduled");
 
-		addSyncAccount(context);
-		for (OdsSource source : sources) registerSource(context, source);
+		addSyncAccount();
+		for (OdsSource source : sources) registerSource(source);
 		SyncUtils.startPeriodicSync(context, pollFrequency);
 	}
 
@@ -57,28 +65,25 @@ public final class OdsSourceManager {
 	/**
 	 * Stops t he periodic synchronization schedule.
 	 */
-	public void stopPeriodicSync(Context context) {
-		if (context == null) 
-			throw new NullPointerException("param cannot be null");
+	public void stopPeriodicSync() {
 		if (!SyncUtils.isPeriodicSyncScheduled(context)) 
 			throw new IllegalStateException("sync not scheduled");
 
 		SyncUtils.stopPeriodicSync(context);
-		SharedPreferences.Editor editor = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.clear();
 		editor.apply();
 	}
 
 
-	public boolean isPeriodicSyncScheduled(Context context) {
-		if (context == null) throw new NullPointerException("param cannot be null");
+	public boolean isPeriodicSyncScheduled() {
 		return SyncUtils.isPeriodicSyncScheduled(context);
 	}
 
 
-	public void startManualSync(Context context, OdsSource source) {
-		if (context == null || source == null) throw new NullPointerException("param cannot be null");
-		addSyncAccount(context);
+	public void startManualSync( OdsSource source) {
+		if (source == null) throw new NullPointerException("param cannot be null");
+		addSyncAccount();
 		SyncUtils.startManualSync(context, source);
 	}
 
@@ -107,10 +112,8 @@ public final class OdsSourceManager {
 	}
 
 
-	Set<OdsSource> getSources(Context context) {
-		if (context == null) throw new NullPointerException("param cannot be null");
-
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+	Set<OdsSource> getSources() {
+		SharedPreferences prefs = getSharedPreferences();
 		Map<String, ?> values = prefs.getAll();
 
 		Set<OdsSource> sources = new HashSet<OdsSource>();
@@ -122,18 +125,22 @@ public final class OdsSourceManager {
 
 
 
-	private void registerSource(Context context, OdsSource source) {
+	private void registerSource(OdsSource source) {
 		String key = source.getClass().getName();
 		String value = source.getSourceUrlPath();
 
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = prefs.edit();
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putString(key, value);
 		editor.apply();
 	}
 
 
-	private static void addSyncAccount(Context context) {
+	private void addSyncAccount() {
 		if (!SyncUtils.isAccountAdded(context)) SyncUtils.addAccount(context);
+	}
+
+
+	private SharedPreferences getSharedPreferences() {
+		return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 	}
 }

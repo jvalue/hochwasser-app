@@ -6,6 +6,7 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VA
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_KM;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 
 import android.app.Activity;
 import android.content.CursorLoader;
@@ -49,17 +50,23 @@ public class GraphActivity extends Activity {
 				if (cursor == null) return;
 				cursor.moveToFirst();
 
+				int unitIdx = cursor.getColumnIndex(COLUMN_LEVEL_UNIT);
 				int kmIdx = cursor.getColumnIndex(COLUMN_STATION_KM);
 				int valueIdx = cursor.getColumnIndex(COLUMN_LEVEL_VALUE);
 
+				String unit = cursor.getString(unitIdx);
+
 				GraphViewData[] data = new GraphViewData[cursor.getCount()];
-				Log.debug("Length = " + data.length);
 				int i = 0;
 				do {
+					if (!cursor.getString(unitIdx).equals(unit)) {
+						Log.warning("unit changed!");
+						Log.warning("Was " + unit + ", is " + cursor.getString(unitIdx));
+					}
+
 					data[i] = new GraphViewData(
 							cursor.getDouble(kmIdx), 
 							cursor.getDouble(valueIdx));
-					Log.debug(data[i].toString());
 					i++;
 				} while(cursor.moveToNext());
 
@@ -82,8 +89,8 @@ public class GraphActivity extends Activity {
 							COLUMN_LEVEL_TIMESTAMP,
 							COLUMN_LEVEL_VALUE,
 							COLUMN_LEVEL_UNIT
-						}, COLUMN_WATER_NAME + "=?", 
-						new String[] { waterName }, 
+						}, COLUMN_WATER_NAME + "=? AND " + COLUMN_LEVEL_TYPE + "=?", 
+						new String[] { waterName, "W" }, 
 						null);
 			}
 		};

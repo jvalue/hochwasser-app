@@ -1,9 +1,13 @@
 package de.bitdroid.flooding.levels;
 
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import android.app.ListActivity;
@@ -13,11 +17,14 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
+import de.bitdroid.flooding.utils.Log;
 
 public class LevelsActivity extends ListActivity {
 	
@@ -29,12 +36,26 @@ public class LevelsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+		// list adapter
 		listAdapter = new ArrayAdapter<Entry>(
 				getApplicationContext(), 
 				android.R.layout.simple_list_item_1);
-
 		setListAdapter(listAdapter);
 
+
+		// show stations on long click
+		getListView().setLongClickable(true);
+		getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+				Entry e = listAdapter.getItem(position);
+				for (String name : e.getStationNames())
+					Log.debug(name);
+				return true;
+			}
+		});
+
+		// data loader
 		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
 
 			@Override
@@ -42,13 +63,16 @@ public class LevelsActivity extends ListActivity {
 				if (cursor == null) return;
 				cursor.moveToFirst();
 				int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
+				int stationIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
 
 				Map<String, Entry> waterNames = new HashMap<String, Entry>();
-				while (cursor.moveToNext()) {
-					String name = cursor.getString(waterIdx);
-					if (!waterNames.containsKey(name)) waterNames.put(name, new Entry(name));
-					else waterNames.get(name).incStationsCount();
-				}
+				do {
+					String wName = cursor.getString(waterIdx);
+					String sName = cursor.getString(stationIdx);
+
+					if (!waterNames.containsKey(wName)) waterNames.put(wName, new Entry(wName));
+					waterNames.get(wName).addStation(sName);
+				} while (cursor.moveToNext());
 				
 				listAdapter.clear();
 				listAdapter.addAll(waterNames.values());
@@ -69,8 +93,10 @@ public class LevelsActivity extends ListActivity {
 				return new CursorLoader(
 						getApplicationContext(),
 						new PegelOnlineSource().toUri(),
-						new String[] { COLUMN_WATER_NAME },
-						null, null, null);
+						new String[] { COLUMN_WATER_NAME, COLUMN_STATION_NAME },
+						COLUMN_LEVEL_TYPE + "=?", 
+						new String[] { "W" }, 
+						null);
 			}
 		};
 
@@ -93,24 +119,27 @@ public class LevelsActivity extends ListActivity {
 
 	private static final class Entry {
 		private final String waterName;
-		private int stationsCount;
+		private final List<String> stationNames = new LinkedList<String>();
 
 		Entry(String waterName) {
 			this.waterName = waterName;
-			this.stationsCount = 1;
 		}
 
-		void incStationsCount() {
-			stationsCount++;
+		void addStation(String stationName) {
+			this.stationNames.add(stationName);
 		}
 
 		String getWaterName() {
 			return waterName;
 		}
 
+		List<String> getStationNames() {
+			return stationNames;
+		}
+
 		@Override
 		public String toString() {
-			return waterName + " (" + stationsCount + ")";
+			return waterName + " (" + stationNames.size() + ")";
 		}
 	}
 }

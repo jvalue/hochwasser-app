@@ -48,10 +48,15 @@ public final class OdsContentProvider extends ContentProvider {
 
 		// check if values have been inserted
 		String tableName = source.toSqlTableName();
-		Cursor tableCheckCursor = odsDatabase.getReadableDatabase() .rawQuery(
-					"SELECT name FROM sqlite_master WHERE type=? AND name=?",
-					new String[] { "table", tableName });
-		if (tableCheckCursor.getCount() < 1) return null;
+		Cursor tableCheckCursor = null;
+		try {
+			tableCheckCursor = odsDatabase.getReadableDatabase() .rawQuery(
+						"SELECT name FROM sqlite_master WHERE type=? AND name=?",
+						new String[] { "table", tableName });
+			if (tableCheckCursor.getCount() < 1) return null;
+		} finally {
+			if (tableCheckCursor != null) tableCheckCursor.close();
+		}
 
 
 		// check for manual sync reqeust

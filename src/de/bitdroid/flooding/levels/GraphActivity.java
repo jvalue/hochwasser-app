@@ -1,12 +1,17 @@
 package de.bitdroid.flooding.levels;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VALUE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_ZERO_UNIT;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_ZERO_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_KM;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.CursorLoader;
@@ -21,6 +26,7 @@ import com.jjoe64.graphview.LineGraphView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
+import de.bitdroid.flooding.pegelonline.UnitConverter;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.Log;
 
@@ -53,26 +59,44 @@ public class GraphActivity extends Activity {
 				int unitIdx = cursor.getColumnIndex(COLUMN_LEVEL_UNIT);
 				int kmIdx = cursor.getColumnIndex(COLUMN_STATION_KM);
 				int valueIdx = cursor.getColumnIndex(COLUMN_LEVEL_VALUE);
+				int zeroValueIdx = cursor.getColumnIndex(COLUMN_LEVEL_ZERO_VALUE);
+				int zeroUnitIdx = cursor.getColumnIndex(COLUMN_LEVEL_ZERO_UNIT);
 
-				String unit = cursor.getString(unitIdx);
 
-				GraphViewData[] data = new GraphViewData[cursor.getCount()];
-				int i = 0;
+				// some measurements are relative without a relation to make
+				// values absolute --> skip those measurements!
+				int skippedValuesCount = 0;
+
+				List<GraphViewData> data = new ArrayList<GraphViewData>(); 
 				do {
-					if (!cursor.getString(unitIdx).equals(unit)) {
-						Log.warning("unit changed!");
-						Log.warning("Was " + unit + ", is " + cursor.getString(unitIdx));
+
+					String unit = cursor.getString(unitIdx);
+
+					double levelValue = UnitConverter.toCm(
+							cursor.getDouble(valueIdx),
+							unit);
+
+					String zeroUnit = cursor.getString(zeroUnitIdx);
+					if (zeroUnit != null) {
+						levelValue += UnitConverter.toCm(
+								cursor.getDouble(zeroValueIdx),
+								zeroUnit);
+
+					} else if (UnitConverter.isRelativeCmUnit(unit)) {
+						skippedValuesCount++;
+						continue;
 					}
 
-					data[i] = new GraphViewData(
-							cursor.getDouble(kmIdx), 
-							cursor.getDouble(valueIdx));
-					i++;
+					data.add(new GraphViewData(cursor.getDouble(kmIdx), levelValue));
+
 				} while(cursor.moveToNext());
 
-
 				graph.removeAllSeries();
-				graph.addSeries(new GraphViewSeries(data));
+				graph.addSeries(new GraphViewSeries(data.toArray(new GraphViewData[data.size()])));
+
+
+				if (skippedValuesCount > 0) 
+					Log.warning("Skipped " + skippedValuesCount + " measurements as they were incomplete");
 			}
 
 			@Override
@@ -88,7 +112,9 @@ public class GraphActivity extends Activity {
 							COLUMN_STATION_KM,
 							COLUMN_LEVEL_TIMESTAMP,
 							COLUMN_LEVEL_VALUE,
-							COLUMN_LEVEL_UNIT
+							COLUMN_LEVEL_UNIT,
+							COLUMN_LEVEL_ZERO_VALUE,
+							COLUMN_LEVEL_ZERO_UNIT
 						}, COLUMN_WATER_NAME + "=? AND " + COLUMN_LEVEL_TYPE + "=?", 
 						new String[] { waterName, "W" }, 
 						null);

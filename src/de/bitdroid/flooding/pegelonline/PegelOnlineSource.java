@@ -22,7 +22,10 @@ public final class PegelOnlineSource extends OdsSource {
 		COLUMN_LEVEL_TIMESTAMP = "levelTimestamp",
 		COLUMN_LEVEL_VALUE = "levelValue",
 		COLUMN_LEVEL_UNIT = "leveUnit",
-		COLUMN_LEVEL_TYPE = "leveType";
+		COLUMN_LEVEL_TYPE = "leveType",
+		COLUMN_LEVEL_ZERO_VALUE = "levelZeroValue",
+		COLUMN_LEVEL_ZERO_UNIT = "levelZeroUnit";
+
 
 	private static final String
 		SOURCE_URL = "ods/de/pegelonline/stations";
@@ -37,8 +40,10 @@ public final class PegelOnlineSource extends OdsSource {
 		SCHEMA.put(COLUMN_STATION_LONG, SQLiteType.REAL);
 		SCHEMA.put(COLUMN_STATION_KM, SQLiteType.REAL);
 		SCHEMA.put(COLUMN_LEVEL_TIMESTAMP, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_LEVEL_VALUE, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_LEVEL_VALUE, SQLiteType.REAL);
 		SCHEMA.put(COLUMN_LEVEL_UNIT, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_LEVEL_ZERO_VALUE, SQLiteType.REAL);
+		SCHEMA.put(COLUMN_LEVEL_ZERO_UNIT, SQLiteType.TEXT);
 		SCHEMA.put(COLUMN_LEVEL_TYPE, SQLiteType.TEXT);
 	}
 
@@ -70,9 +75,14 @@ public final class PegelOnlineSource extends OdsSource {
 		values.put(COLUMN_LEVEL_TYPE, timeseries.optString("shortname"));
 
 		JSONObject measurement = timeseries.optJSONObject("currentMeasurement");
-
 		values.put(COLUMN_LEVEL_TIMESTAMP, measurement.optString("timestamp"));
 		values.put(COLUMN_LEVEL_VALUE, measurement.optDouble("value"));
+
+		JSONObject gaugeZero = timeseries.optJSONObject("gaugeZero");
+		if (gaugeZero != null) {
+			values.put(COLUMN_LEVEL_ZERO_VALUE, gaugeZero.optDouble("value"));
+			values.put(COLUMN_LEVEL_ZERO_UNIT, gaugeZero.optString("unit"));
+		}
 
 		return values;
 	}

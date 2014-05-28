@@ -34,6 +34,7 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 		this.loaderCallback = new StationsLoaderCallbacks(context) {
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
+				if (cursor == null) return;
 				cursor.moveToFirst();
 				int latIdx = cursor.getColumnIndex(COLUMN_STATION_LAT);
 				int longIdx = cursor.getColumnIndex(COLUMN_STATION_LONG);

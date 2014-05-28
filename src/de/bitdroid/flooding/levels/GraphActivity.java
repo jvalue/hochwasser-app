@@ -81,6 +81,7 @@ public class GraphActivity extends Activity {
 				graph.removeAllSeries();
 				graph.addSeries(new GraphViewSeries(manager.getAllMeasurements()));
 				graph.setViewPort(manager.getMinRiverKm(), manager.getMaxRiverKm());
+				graph.setManualYAxisBounds(manager.getMinLevel(), manager.getMaxLevel());
 
 				int skippedMeasurements = manager.getSkippedMeasurements();
 				if (skippedMeasurements > 0) 
@@ -117,7 +118,9 @@ public class GraphActivity extends Activity {
 
 	private static class MeasurementManager {
 
+		private double minLevel = Double.MAX_VALUE, maxLevel = Double.MIN_VALUE;
 		private double minRiverKm = Double.MAX_VALUE, maxRiverKm = Double.MIN_VALUE;
+
 		private int skippedValues = 0;
 		private List<Measurement> measurements = new ArrayList<Measurement>();
 
@@ -142,15 +145,27 @@ public class GraphActivity extends Activity {
 
 			if (riverKm < minRiverKm) minRiverKm = riverKm;
 			if (riverKm > maxRiverKm) maxRiverKm = riverKm;
+
+			if (value < minLevel) minLevel = value;
+			if (value > maxLevel) maxLevel = value;
 		}
 
 
 		public double getMaxRiverKm() {
+			Log.debug("maxRiverKm = " + maxRiverKm);
 			return maxRiverKm;
 		}
 
 		public double getMinRiverKm() {
 			return minRiverKm;
+		}
+
+		public double getMinLevel() {
+			return minLevel;
+		}
+
+		public double getMaxLevel() {
+			return maxLevel;
 		}
 
 		public Measurement[] getAllMeasurements() {

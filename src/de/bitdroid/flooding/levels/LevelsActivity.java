@@ -4,17 +4,17 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NA
 
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import android.app.ListActivity;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
@@ -22,12 +22,14 @@ import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 public class LevelsActivity extends ListActivity {
 	
 	private static final int LOADER_ID = 44;
+
+	private ArrayAdapter<Entry> listAdapter = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-		final ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(
+		listAdapter = new ArrayAdapter<Entry>(
 				getApplicationContext(), 
 				android.R.layout.simple_list_item_1);
 
@@ -41,23 +43,19 @@ public class LevelsActivity extends ListActivity {
 				cursor.moveToFirst();
 				int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
 
-				Map<String, Integer> waterNames = new HashMap<String, Integer>();
+				Map<String, Entry> waterNames = new HashMap<String, Entry>();
 				while (cursor.moveToNext()) {
 					String name = cursor.getString(waterIdx);
-					if (!waterNames.containsKey(name)) waterNames.put(name, 1);
-					else waterNames.put(name, waterNames.get(name) + 1);
+					if (!waterNames.containsKey(name)) waterNames.put(name, new Entry(name));
+					else waterNames.get(name).incStationsCount();
 				}
 				
-				List<String> adapterValues = new LinkedList<String>();
-				for (Entry<String, Integer> e : waterNames.entrySet())
-					adapterValues.add(e.getKey() + " (" + e.getValue() + ")");
-
 				listAdapter.clear();
-				listAdapter.addAll(adapterValues);
-				listAdapter.sort(new Comparator<String>() {
+				listAdapter.addAll(waterNames.values());
+				listAdapter.sort(new Comparator<Entry>() {
 					@Override
-					public int compare(String s1, String s2) {
-						return s1.compareTo(s2);
+					public int compare(Entry e1, Entry e2) {
+						return e1.getWaterName().compareTo(e2.getWaterName());
 					}
 				});
 				listAdapter.notifyDataSetChanged();
@@ -78,4 +76,41 @@ public class LevelsActivity extends ListActivity {
 
 		getLoaderManager().initLoader(LOADER_ID, null, loader);
     }
+
+
+	@Override
+	protected void onListItemClick(ListView list, View item, int position, long id) {
+		String waterName = listAdapter.getItem(position).getWaterName();
+		Bundle extras = new Bundle();
+		extras.putString(GraphActivity.EXTRA_WATER_NAME, waterName);
+		Intent intent = new Intent(
+				getApplicationContext(),
+				GraphActivity.class);
+		intent.putExtras(extras);
+		startActivity(intent);
+	}
+
+
+	private static final class Entry {
+		private final String waterName;
+		private int stationsCount;
+
+		Entry(String waterName) {
+			this.waterName = waterName;
+			this.stationsCount = 1;
+		}
+
+		void incStationsCount() {
+			stationsCount++;
+		}
+
+		String getWaterName() {
+			return waterName;
+		}
+
+		@Override
+		public String toString() {
+			return waterName + " (" + stationsCount + ")";
+		}
+	}
 }

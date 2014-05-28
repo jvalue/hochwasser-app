@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import de.bitdroid.flooding.levels.LevelsActivity;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+		// OSM
 		Button mapButton = (Button) findViewById(R.id.map_button);
 		mapButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -31,19 +33,33 @@ public class MainActivity extends Activity {
 			}
 		});
 
+
+		// water levels
+		Button levelsButton = (Button) findViewById(R.id.levels_button);
+		levelsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(
+					MainActivity.this.getApplicationContext(),
+					LevelsActivity.class);
+				startActivity(intent);
+			}
+		});
+
+
+		// simple stations list
 		listAdapter = new StationsListAdapter(getApplicationContext());
 		ListView listView = (ListView) findViewById(R.id.content_list);
 		listView.setAdapter(listAdapter);
-
-		OdsSourceManager sourceManager = OdsSourceManager.getInstance(getApplicationContext());
-		if (!sourceManager.isPeriodicSyncScheduled())
-			sourceManager.startPeriodicSync(1000 * 60 * 60, new PegelOnlineSource());
-
 
 		getLoaderManager().initLoader(
 				StationsLoaderCallbacks.ODS_LOADER_ID, 
 				null, 
 				listAdapter.getLoaderCallback());
-    }
 
+
+		// ODS source setup
+		OdsSourceManager sourceManager = OdsSourceManager.getInstance(getApplicationContext());
+		if (!sourceManager.isPeriodicSyncScheduled())
+			sourceManager.startPeriodicSync(1000 * 60 * 60, new PegelOnlineSource());
+    }
 }

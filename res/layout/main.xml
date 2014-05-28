@@ -9,8 +9,16 @@
 		android:id="@+id/map_button"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="Show OSM"
+		android:text="@string/main_btn_map"
 	/>
+
+	<Button
+		android:id="@+id/levels_button"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/main_btn_levels"
+	/>
+
 
 	<ListView
 		android:id="@+id/content_list"

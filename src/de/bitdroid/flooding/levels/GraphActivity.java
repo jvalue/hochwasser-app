@@ -10,6 +10,7 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +55,10 @@ public class GraphActivity extends Activity {
 		graph.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
 		graph.getLayoutManager().remove(graph.getLegendWidget());
 		graph.setTitle(waterName);
-		graph.setTicksPerRangeLabel(3);
-		graph.getGraphWidget().setDomainLabelOrientation(-45);
+		graph.setTicksPerRangeLabel(2);
+		graph.setTicksPerDomainLabel(3);
+		graph.getGraphWidget().setRangeValueFormat(new DecimalFormat("@@##"));
+		graph.getGraphWidget().setDomainValueFormat(new DecimalFormat("@@#"));
 		graph.setBorderStyle(Plot.BorderStyle.NONE, null, null);
 
 		graph.setBackgroundColor(Color.BLACK);

@@ -36,8 +36,8 @@ public class MainActivity extends Activity {
 		listView.setAdapter(listAdapter);
 
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance();
-		sourceManager.registerSource(getApplicationContext(), new PegelOnlineSource());
-		sourceManager.startPeriodicSync(getApplicationContext(), 1000 * 60 * 60);
+		// sourceManager.registerSource(getApplicationContext(), new PegelOnlineSource());
+		sourceManager.startPeriodicSync(getApplicationContext(), 1000 * 60 * 60, new PegelOnlineSource());
 
 
 		getLoaderManager().initLoader(

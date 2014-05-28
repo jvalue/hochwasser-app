@@ -23,42 +23,11 @@ public final class OdsSourceManager {
 
 
 	/**
-	 * Register a source which should be keep in sync with the ODS server.
-	 * <br>
-	 * <b>Note:</b> this does not actually trigger synchroniziation but merely marks
-	 * a source to be synchronized. To start periodic synchronizing, use 
-	 * {@link #startPeriodicSync(android.content.Context)}.
-	 */
-	public void registerSource(Context context, OdsSource source) {
-		if (context == null || source == null) 
-			throw new NullPointerException("params cannot be null");
-
-		String key = source.getClass().getName();
-		String value = source.getSourceUrlPath();
-
-		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(key, value);
-		editor.apply();
-	}
-
-
-	/**
-	 * Stop monitoring a source and remove all related data from the device.
-	 * <br>
-	 * To additionally stop synchronizing for all sources and shut down the
-	 * SyncAdapter, use {@link #stopPeriodicSync(android.content.Context)}.
-	 */
-	public void unregisterSource(Context context, OdsSource source) {
-		throw new UnsupportedOperationException();
-	}
-
-
-	/**
 	 * Check whether a source is currently registered for synchronization.
 	 */
-	public boolean isSourceRegistered(Context context, OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+	public boolean isSourceRegisteredForPeriodicSync(Context context, OdsSource source) {
+		if (context == null || source == null) 
+			throw new NullPointerException("param cannot be null");
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 		return prefs.contains(source.getClass().getName());
 	}
@@ -67,11 +36,20 @@ public final class OdsSourceManager {
 	/**
 	 * Starts to synchronize all sources on a periodic schedule.
 	 */
-	public void startPeriodicSync(Context context, long pollFrequency) {
-		if (context == null) throw new NullPointerException("param cannot be null");
-		if (pollFrequency <= 0) throw new IllegalArgumentException("pollFrequency must be > 0");
-		if (SyncUtils.isPeriodicSyncScheduled(context)) throw new IllegalStateException("sync already scheduled");
+	public void startPeriodicSync(
+			Context context, 
+			long pollFrequency,
+			OdsSource ... sources) {
+
+		if (context == null || sources == null) 
+			throw new NullPointerException("param cannot be null");
+		if (pollFrequency <= 0) 
+			throw new IllegalArgumentException("pollFrequency must be > 0");
+		if (SyncUtils.isPeriodicSyncScheduled(context)) 
+			throw new IllegalStateException("sync already scheduled");
+
 		addSyncAccount(context);
+		for (OdsSource source : sources) registerSource(context, source);
 		SyncUtils.startPeriodicSync(context, pollFrequency);
 	}
 
@@ -80,9 +58,15 @@ public final class OdsSourceManager {
 	 * Stops t he periodic synchronization schedule.
 	 */
 	public void stopPeriodicSync(Context context) {
-		if (context == null) throw new NullPointerException("param cannot be null");
-		if (!SyncUtils.isPeriodicSyncScheduled(context)) throw new IllegalStateException("sync not scheduled");
+		if (context == null) 
+			throw new NullPointerException("param cannot be null");
+		if (!SyncUtils.isPeriodicSyncScheduled(context)) 
+			throw new IllegalStateException("sync not scheduled");
+
 		SyncUtils.stopPeriodicSync(context);
+		SharedPreferences.Editor editor = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
+		editor.clear();
+		editor.apply();
 	}
 
 
@@ -136,6 +120,17 @@ public final class OdsSourceManager {
 		return sources;
 	}
 
+
+
+	private void registerSource(Context context, OdsSource source) {
+		String key = source.getClass().getName();
+		String value = source.getSourceUrlPath();
+
+		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(key, value);
+		editor.apply();
+	}
 
 
 	private static void addSyncAccount(Context context) {

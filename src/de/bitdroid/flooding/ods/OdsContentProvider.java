@@ -43,7 +43,7 @@ public final class OdsContentProvider extends ContentProvider {
 
 
 		// check if source is being monitored
-		if (!OdsSourceManager.getInstance().isSourceRegistered(getContext(), source))
+		if (!OdsSourceManager.getInstance().isSourceRegisteredForPeriodicSync(getContext(), source))
 			return null;
 
 		// check if values have been inserted

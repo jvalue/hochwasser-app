@@ -26,7 +26,7 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.Log;
 
-public class LevelsActivity extends ListActivity {
+public class ChooseRiverActivity extends ListActivity {
 	
 	private static final int LOADER_ID = 44;
 

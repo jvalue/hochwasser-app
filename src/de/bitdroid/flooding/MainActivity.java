@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import de.bitdroid.flooding.levels.LevelsActivity;
+import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(
 					MainActivity.this.getApplicationContext(),
-					LevelsActivity.class);
+					ChooseRiverActivity.class);
 				startActivity(intent);
 			}
 		});

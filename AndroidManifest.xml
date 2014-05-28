@@ -30,7 +30,7 @@
 				  android:label="@string/app_name">
 		</activity>
 
-		<activity android:name=".levels.LevelsActivity"
+		<activity android:name=".levels.ChooseRiverActivity"
 				  android:label="@string/app_name">
 		</activity>
 

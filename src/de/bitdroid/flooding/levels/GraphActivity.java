@@ -20,9 +20,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import com.jjoe64.graphview.GraphViewDataInterface;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.PointLabelFormatter;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -42,13 +43,7 @@ public class GraphActivity extends Activity {
 
 		final String waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 
-		final LineGraphView graph = new LineGraphView(this, waterName);
-		graph.setDrawBackground(true);
-		graph.setScrollable(true);
-		graph.setScalable(true);
-
-		LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-		layout.addView(graph);
+		final XYPlot graph = (XYPlot) findViewById(R.id.graph);
 
 		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
 
@@ -56,7 +51,12 @@ public class GraphActivity extends Activity {
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				if (cursor == null) return;
 
-				MeasurementManager manager = new MeasurementManager();
+				MeasurementSeries series = new MeasurementSeries("The values!");
+				LineAndPointFormatter seriesFormat = new LineAndPointFormatter();
+				seriesFormat.setPointLabelFormatter(new PointLabelFormatter());
+				seriesFormat.configure(
+						getApplicationContext(), 
+						R.xml.line_point_formatter_with_plf);
 
 				cursor.moveToFirst();
 				int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
@@ -68,7 +68,7 @@ public class GraphActivity extends Activity {
 
 				do {
 
-					manager.addMeasurement(
+					series.addMeasurement(
 							cursor.getString(nameIdx),
 							cursor.getDouble(kmIdx),
 							cursor.getDouble(valueIdx),
@@ -78,12 +78,12 @@ public class GraphActivity extends Activity {
 
 				} while(cursor.moveToNext());
 
-				graph.removeAllSeries();
-				graph.addSeries(new GraphViewSeries(manager.getAllMeasurements()));
-				graph.setViewPort(manager.getMinRiverKm(), manager.getMaxRiverKm());
-				graph.setManualYAxisBounds(manager.getMinLevel(), manager.getMaxLevel());
 
-				int skippedMeasurements = manager.getSkippedMeasurements();
+				graph.addSeries(series, seriesFormat);
+				graph.setTicksPerRangeLabel(3);
+				graph.getGraphWidget().setDomainLabelOrientation(-45);
+
+				int skippedMeasurements = series.getSkippedMeasurements();
 				if (skippedMeasurements > 0) 
 					Log.warning("Skipped " + skippedMeasurements + " measurements as they were incomplete");
 			}
@@ -116,13 +116,19 @@ public class GraphActivity extends Activity {
 
 
 
-	private static class MeasurementManager {
+	private static class MeasurementSeries implements XYSeries {
+
+		private final String title;
 
 		private double minLevel = Double.MAX_VALUE, maxLevel = Double.MIN_VALUE;
 		private double minRiverKm = Double.MAX_VALUE, maxRiverKm = Double.MIN_VALUE;
 
 		private int skippedValues = 0;
 		private List<Measurement> measurements = new ArrayList<Measurement>();
+
+		public MeasurementSeries(String title) {
+			this.title = title;
+		}
 
 		public void addMeasurement(
 				String stationName,
@@ -168,17 +174,33 @@ public class GraphActivity extends Activity {
 			return maxLevel;
 		}
 
-		public Measurement[] getAllMeasurements() {
-			return measurements.toArray(new Measurement[measurements.size()]);
-		}
-
 		public int getSkippedMeasurements() {
 			return skippedValues;
 		}
 
+		@Override
+		public Number getX(int idx) {
+			return measurements.get(idx).getRiverKm();
+		}
+		
+		@Override
+		public Number getY(int idx) {
+			return measurements.get(idx).getValue();
+		}
+
+		@Override
+		public int size() {
+			return measurements.size();
+		}
+
+		@Override
+		public String getTitle() {
+			return title;
+		}
+
 	}
 
-	private static class Measurement implements GraphViewDataInterface {
+	private static class Measurement {
 
 		private final String stationName;
 		private final double value;
@@ -197,14 +219,11 @@ public class GraphActivity extends Activity {
 			this.unit = unit;
 		}
 
-
-		@Override
-		public double getX() {
+		public double getRiverKm() {
 			return riverKm;
 		}
 
-		@Override
-		public double getY() {
+		public double getValue() {
 			return value;
 		}
 

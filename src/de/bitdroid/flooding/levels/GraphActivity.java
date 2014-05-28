@@ -22,7 +22,6 @@ import android.os.Bundle;
 
 import com.androidplot.Plot;
 import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 

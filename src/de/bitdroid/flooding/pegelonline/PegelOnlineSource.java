@@ -3,9 +3,11 @@ package de.bitdroid.flooding.pegelonline;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
+import android.util.Pair;
 
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.utils.SQLiteType;
@@ -24,7 +26,13 @@ public final class PegelOnlineSource extends OdsSource {
 		COLUMN_LEVEL_UNIT = "leveUnit",
 		COLUMN_LEVEL_TYPE = "leveType",
 		COLUMN_LEVEL_ZERO_VALUE = "levelZeroValue",
-		COLUMN_LEVEL_ZERO_UNIT = "levelZeroUnit";
+		COLUMN_LEVEL_ZERO_UNIT = "levelZeroUnit",
+		COLUMN_CHARVALUES_MW_VALUE = "mvValue",
+		COLUMN_CHARVALUES_MW_UNIT = "mvUnit",
+		COLUMN_CHARVALUES_MHW_VALUE = "mhwValue",
+		COLUMN_CHARVALUES_MHW_UNIT = "mhwUnit",
+		COLUMN_CHARVALUES_MNW_VALUE = "mnwValue",
+		COLUMN_CHARVALUES_MNW_UNIT = "mnwUnit";
 
 
 	private static final String
@@ -46,6 +54,12 @@ public final class PegelOnlineSource extends OdsSource {
 		SCHEMA.put(COLUMN_LEVEL_ZERO_VALUE, SQLiteType.REAL);
 		SCHEMA.put(COLUMN_LEVEL_ZERO_UNIT, SQLiteType.TEXT);
 		SCHEMA.put(COLUMN_LEVEL_TYPE, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_CHARVALUES_MW_VALUE , SQLiteType.REAL);
+		SCHEMA.put(COLUMN_CHARVALUES_MW_UNIT, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_CHARVALUES_MHW_VALUE , SQLiteType.REAL);
+		SCHEMA.put(COLUMN_CHARVALUES_MHW_UNIT, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_CHARVALUES_MNW_VALUE , SQLiteType.REAL);
+		SCHEMA.put(COLUMN_CHARVALUES_MNW_UNIT, SQLiteType.TEXT);
 	}
 
 
@@ -84,6 +98,32 @@ public final class PegelOnlineSource extends OdsSource {
 			values.put(COLUMN_LEVEL_ZERO_VALUE, gaugeZero.optDouble("value"));
 			values.put(COLUMN_LEVEL_ZERO_UNIT, gaugeZero.optString("unit"));
 		}
+
+		// get charactersitic values
+		Map<String, Pair<String, String>> charValues = new HashMap<String, Pair<String, String>>();
+		charValues.put("MW", new Pair<String, String>(
+					COLUMN_CHARVALUES_MW_VALUE, 
+					COLUMN_CHARVALUES_MW_UNIT));
+		charValues.put("MHW", new Pair<String, String>(
+					COLUMN_CHARVALUES_MHW_VALUE, 
+					COLUMN_CHARVALUES_MHW_UNIT));
+		charValues.put("MNW", new Pair<String, String>(
+					COLUMN_CHARVALUES_MNW_VALUE, 
+					COLUMN_CHARVALUES_MNW_UNIT));
+
+		JSONArray charValuesArray = timeseries.optJSONArray("characteristicValues");
+		if (charValuesArray != null) {
+			for (int i = 0; i < charValuesArray.length(); i++) {
+				JSONObject o =  charValuesArray.optJSONObject(i);
+				String charType = o.optString("shortname");
+				if (charValues.containsKey(charType)) {
+					values.put(charValues.get(charType).first, o.optString("value"));
+					values.put(charValues.get(charType).second, o.optString("unit"));
+				}
+			}
+
+		}
+
 
 		return values;
 	}

@@ -28,7 +28,8 @@ public final class PegelOnlineSource extends OdsSource {
 
 
 	private static final String
-		SOURCE_URL = "ods/de/pegelonline/stations";
+//		SOURCE_URL = "ods/de/pegelonline/stations";
+		SOURCE_URL = "stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true";
 
 
 	private static final Map<String, SQLiteType> SCHEMA = new HashMap<String, SQLiteType>();

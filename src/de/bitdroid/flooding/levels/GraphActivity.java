@@ -17,7 +17,6 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 import java.text.DecimalFormat;
-import java.util.Map;
 
 import android.app.Activity;
 import android.content.CursorLoader;
@@ -25,11 +24,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Pair;
 
 import com.androidplot.Plot;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
+import com.androidplot.xy.XYSeriesFormatter;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -84,8 +84,8 @@ public class GraphActivity extends Activity {
 
 
 
-		for (Map.Entry<XYSeries, LineAndPointFormatter> e : manager.getSeries().entrySet()) {
-			graph.addSeries(e.getKey(), e.getValue());
+		for (Pair<AbstractSeries, XYSeriesFormatter<?>> p : manager.getSeries()) {
+			graph.addSeries(p.first, p.second);
 		}
 
 		graph.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);

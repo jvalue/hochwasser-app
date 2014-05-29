@@ -1,39 +1,42 @@
 package de.bitdroid.flooding.levels;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import android.database.Cursor;
+import android.util.Pair;
 
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.XYSeries;
+import com.androidplot.xy.XYSeriesFormatter;
 
 
 final class SeriesManager {
 	
-	private final Map<AbstractSeries, LineAndPointFormatter> allSeries
-			= new HashMap<AbstractSeries, LineAndPointFormatter>();
+	private final List<Pair<AbstractSeries, XYSeriesFormatter<?>>> allSeries 
+			= new ArrayList<Pair<AbstractSeries, XYSeriesFormatter<?>>>();
 
 
-	public void addSeries(AbstractSeries series, LineAndPointFormatter format) {
-		allSeries.put(series, format);
+	public void addSeries(AbstractSeries series, XYSeriesFormatter<?> formatter) {
+		allSeries.add(new Pair<AbstractSeries, XYSeriesFormatter<?>>(series, formatter));
 	}
 
 	public void removeSeries(AbstractSeries series) {
-		allSeries.remove(series);
+		Iterator<Pair<AbstractSeries, XYSeriesFormatter<?>>> iter = allSeries.iterator();
+		while (iter.hasNext())
+			if (iter.next().first.equals(series)) iter.remove();
 	}
 
-	public Map<XYSeries, LineAndPointFormatter> getSeries() {
-		return new HashMap<XYSeries, LineAndPointFormatter>(allSeries);
+	public List<Pair<AbstractSeries, XYSeriesFormatter<?>>> getSeries() {
+		return allSeries;
 	}
 
 	public void reset() {
-		for (AbstractSeries series : allSeries.keySet())
-			series.reset();
+		for (Pair<AbstractSeries, ?> p : allSeries)
+			p.first.reset();
 	}
 
 	public void addData(Cursor cursor) {
-		for (AbstractSeries series : allSeries.keySet())
-			series.addData(cursor);
+		for (Pair<AbstractSeries, ?> p : allSeries)
+			p.first.addData(cursor);
 	}
 }

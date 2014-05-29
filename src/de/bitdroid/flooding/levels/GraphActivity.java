@@ -40,6 +40,7 @@ import com.androidplot.xy.XYSeriesFormatter;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
+import de.bitdroid.flooding.utils.Log;
 
 public class GraphActivity extends Activity implements OnTouchListener {
 	
@@ -191,19 +192,28 @@ public class GraphActivity extends Activity implements OnTouchListener {
 
     private PointF firstFinger;
     private float distBetweenFingers;
+	private float scrollingPan;
+	private SmoothScrollRunnable scrollRunnable;
+
 
     @Override
     public boolean onTouch(View arg0, MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: // Start gesture
+				cancelScrolling();
                 firstFinger = new PointF(event.getX(), event.getY());
                 mode = ONE_FINGER_DRAG;
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
+				if (mode == ONE_FINGER_DRAG) {
+					scrollRunnable = new SmoothScrollRunnable(scrollingPan);
+					new Thread(scrollRunnable).start();
+				}
                 mode = NONE;
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: // second finger
+				cancelScrolling();
                 distBetweenFingers = spacing(event);
                 // the distance check is done to avoid false alarms
                 if (distBetweenFingers > 5f) {
@@ -211,10 +221,12 @@ public class GraphActivity extends Activity implements OnTouchListener {
 				}
                 break;
             case MotionEvent.ACTION_MOVE:
+				cancelScrolling();
                 if (mode == ONE_FINGER_DRAG) {
                     PointF oldFirstFinger = firstFinger;
                     firstFinger = new PointF(event.getX(), event.getY());
-                    scroll(oldFirstFinger.x - firstFinger.x);
+					scrollingPan = oldFirstFinger.x - firstFinger.x;
+					scroll(scrollingPan);
                     graph.setDomainBoundaries(zoomMinXY.x, zoomMaxXY.x, BoundaryMode.FIXED);
                     graph.redraw();
 
@@ -229,6 +241,8 @@ public class GraphActivity extends Activity implements OnTouchListener {
         }
         return true;
     }
+
+
 
     private void zoom(float scale) {
         float domainSpan = zoomMaxXY.x - zoomMinXY.x;
@@ -268,4 +282,44 @@ public class GraphActivity extends Activity implements OnTouchListener {
         float y = event.getY(0) - event.getY(1);
         return FloatMath.sqrt(x * x + y * y);
     }
+
+	private void cancelScrolling() {
+		if (scrollRunnable != null) scrollRunnable.stopScrolling();
+		scrollRunnable = null;
+	}
+
+
+	private class SmoothScrollRunnable implements Runnable {
+		
+		private static final int STEPS = 30;
+		private static final long REFRESH_RATE = 10;
+
+		private boolean stopped = false;
+		private float pan;
+
+		public SmoothScrollRunnable(float pan) {
+			this.pan = pan;
+		}
+
+		@Override
+		public void run() {
+			float scaleStep = pan / STEPS;
+			for (int i = 0; i < STEPS - 1; i++) {
+				if (stopped) return;
+				pan -= scaleStep;
+				scroll(pan);
+				graph.setDomainBoundaries(zoomMinXY.x, zoomMaxXY.x, BoundaryMode.FIXED);
+				graph.redraw();
+				try {
+					Thread.sleep(REFRESH_RATE);
+				} catch (InterruptedException ie) {
+					Log.warning("Thread was interrupted");
+				}
+			}
+		}
+
+		public synchronized void stopScrolling() {
+			stopped = true;
+		}
+	}
 }

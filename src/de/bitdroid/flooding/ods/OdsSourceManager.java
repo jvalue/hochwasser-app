@@ -12,6 +12,8 @@ import android.content.SharedPreferences;
 public final class OdsSourceManager {
 	
 	private static final String PREFS_NAME = "de.bitdroid.flooding.ods.OdsSourceManager";
+	private static final String KEY_SERVER_NAME = "serverName";
+	private static final String DEFAULT_SERVER_NAME = "http://faui2o2f.cs.fau.de:8080/open-data-service";
 
 	private static OdsSourceManager instance;
 	public static OdsSourceManager getInstance(Context context) {
@@ -25,7 +27,6 @@ public final class OdsSourceManager {
 
 
 	private final Context context;
-	private String odsServerName = "http://faui2o2f.cs.fau.de:8080/open-data-service";
 
 	private OdsSourceManager(Context context) {
 		this.context = context;
@@ -103,12 +104,14 @@ public final class OdsSourceManager {
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}
-		this.odsServerName = odsServerName;
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
+		editor.putString(KEY_SERVER_NAME, odsServerName);
+		editor.apply();
 	}
 
 
 	public String getOdsServerName() {
-		return odsServerName;
+		return getSharedPreferences().getString(KEY_SERVER_NAME, DEFAULT_SERVER_NAME);
 	}
 
 
@@ -118,6 +121,7 @@ public final class OdsSourceManager {
 
 		Set<OdsSource> sources = new HashSet<OdsSource>();
 		for (String key : values.keySet()) {
+			if (key.equals(KEY_SERVER_NAME)) continue;
 			sources.add(OdsSource.fromClassName(key));
 		}
 		return sources;

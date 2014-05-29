@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.bitdroid.flooding.utils.Log;
+
 public final class RestCall {
 
 	public enum RequestType {
@@ -67,6 +69,8 @@ public final class RestCall {
 				urlBuilder.append(key + "=" + parameters.get(key));
 			}
 		}
+
+		Log.debug("Fetching " + urlBuilder.toString());
 
 
 		// create connection

@@ -11,10 +11,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.RemoteException;
-
-import de.bitdroid.flooding.ods.json.PegelonlineParser;
 
 
 /* What is the processor all about?
@@ -76,26 +73,23 @@ final class Processor {
 	private ContentProviderOperation insertIntoProvider(JSONObject object) 
 			throws RemoteException, JSONException {
 
-		// check if object representes meta data
-		if (!PegelonlineParser.isValidStation(object)) return null;
-
 		// query if already present
-		String serverId = PegelonlineParser.getServerId(object);
-		Uri uri = source.toUri();
+		String serverId = object.optString("_id");
+		if (serverId != null) {
+			Cursor cursor = null;
+			try {
+				cursor = provider.query(
+						source.toUri(),
+						new String[] { OdsSource.COLUMN_SERVER_ID },
+						OdsSource.COLUMN_SERVER_ID + " = ?",
+						new String[] { serverId },
+						null);
 
-		Cursor cursor = null;
-		try {
-			cursor = provider.query(
-					uri,
-					new String[] { OdsSource.COLUMN_SERVER_ID },
-					OdsSource.COLUMN_SERVER_ID + " = ?",
-					new String[] { serverId },
-					null);
+				if (cursor != null && cursor.getCount() >= 1) return null;
 
-			if (cursor != null && cursor.getCount() >= 1) return null;
-
-		} finally {
-			if (cursor != null) cursor.close();
+			} finally {
+				if (cursor != null) cursor.close();
+			}
 		}
 
 

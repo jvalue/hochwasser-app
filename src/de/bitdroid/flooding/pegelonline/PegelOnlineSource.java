@@ -32,7 +32,15 @@ public final class PegelOnlineSource extends OdsSource {
 		COLUMN_CHARVALUES_MHW_VALUE = "mhwValue",
 		COLUMN_CHARVALUES_MHW_UNIT = "mhwUnit",
 		COLUMN_CHARVALUES_MNW_VALUE = "mnwValue",
-		COLUMN_CHARVALUES_MNW_UNIT = "mnwUnit";
+		COLUMN_CHARVALUES_MNW_UNIT = "mnwUnit",
+		COLUMN_CHARVALUES_MTNW_VALUE = "mtnwValue",
+		COLUMN_CHARVALUES_MTNW_UNIT = "mtnwUnit",
+		COLUMN_CHARVALUES_MTHW_VALUE = "mthwValue",
+		COLUMN_CHARVALUES_MTHW_UNIT = "mthwUnit",
+		COLUMN_CHARVALUES_HTHW_VALUE = "hthwValue",
+		COLUMN_CHARVALUES_HTHW_UNIT = "hthwUnit",
+		COLUMN_CHARVALUES_NTNW_VALUE = "ntnwValue",
+		COLUMN_CHARVALUES_NTNW_UNIT = "ntnwUnit";
 
 
 	private static final String
@@ -60,6 +68,14 @@ public final class PegelOnlineSource extends OdsSource {
 		SCHEMA.put(COLUMN_CHARVALUES_MHW_UNIT, SQLiteType.TEXT);
 		SCHEMA.put(COLUMN_CHARVALUES_MNW_VALUE , SQLiteType.REAL);
 		SCHEMA.put(COLUMN_CHARVALUES_MNW_UNIT, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_CHARVALUES_MTNW_VALUE, SQLiteType.REAL);
+		SCHEMA.put(COLUMN_CHARVALUES_MTNW_UNIT, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_CHARVALUES_MTHW_VALUE, SQLiteType.REAL);
+		SCHEMA.put(COLUMN_CHARVALUES_MTHW_UNIT, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_CHARVALUES_HTHW_VALUE, SQLiteType.REAL);
+		SCHEMA.put(COLUMN_CHARVALUES_HTHW_UNIT, SQLiteType.TEXT);
+		SCHEMA.put(COLUMN_CHARVALUES_NTNW_VALUE, SQLiteType.REAL);
+		SCHEMA.put(COLUMN_CHARVALUES_NTNW_UNIT, SQLiteType.TEXT);
 	}
 
 
@@ -110,6 +126,18 @@ public final class PegelOnlineSource extends OdsSource {
 		charValues.put("MNW", new Pair<String, String>(
 					COLUMN_CHARVALUES_MNW_VALUE, 
 					COLUMN_CHARVALUES_MNW_UNIT));
+		charValues.put("MThw", new Pair<String, String>(
+					COLUMN_CHARVALUES_MTHW_VALUE,
+					COLUMN_CHARVALUES_MTHW_UNIT));
+		charValues.put("MTnw", new Pair<String, String>(
+					COLUMN_CHARVALUES_MTNW_VALUE,
+					COLUMN_CHARVALUES_MTNW_UNIT));
+		charValues.put("HThw", new Pair<String, String>(
+					COLUMN_CHARVALUES_HTHW_VALUE,
+					COLUMN_CHARVALUES_HTHW_UNIT));
+		charValues.put("NTnw", new Pair<String, String>(
+					COLUMN_CHARVALUES_NTNW_VALUE,
+					COLUMN_CHARVALUES_NTNW_UNIT));
 
 		JSONArray charValuesArray = timeseries.optJSONArray("characteristicValues");
 		if (charValuesArray != null) {

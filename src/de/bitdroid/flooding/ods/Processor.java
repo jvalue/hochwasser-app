@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.ods;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +13,8 @@ import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.RemoteException;
+
+import de.bitdroid.flooding.utils.Log;
 
 
 /* What is the processor all about?
@@ -50,6 +53,7 @@ final class Processor {
 
 		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 		JSONArray json = new JSONArray(jsonString);
+		Log.debug("Fetched " + json.length() + " items from server");
 		for (int i = 0; i < json.length(); i++) {
 			ContentProviderOperation operation = insertIntoProvider(json.getJSONObject(i));
 			if (operation != null) operations.add(operation);
@@ -74,7 +78,7 @@ final class Processor {
 			throws RemoteException, JSONException {
 
 		// query if already present
-		String serverId = object.optString("_id");
+		String serverId = object.optString("_id", null);
 		if (serverId != null) {
 			Cursor cursor = null;
 			try {
@@ -85,11 +89,19 @@ final class Processor {
 						new String[] { serverId },
 						null);
 
-				if (cursor != null && cursor.getCount() >= 1) return null;
+				if (cursor != null && cursor.getCount() >= 1) {
+					// TODO do update instead
+					Log.debug("Not inserting, value already present");
+					return null;
+				}
 
 			} finally {
 				if (cursor != null) cursor.close();
 			}
+
+		// TODO tmp fix for values coming from pegelonline directly
+		} else {
+			serverId = UUID.randomUUID().toString();
 		}
 
 

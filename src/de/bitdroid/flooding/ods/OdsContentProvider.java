@@ -14,6 +14,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 
+import de.bitdroid.flooding.utils.Log;
+
 
 public final class OdsContentProvider extends ContentProvider {
 
@@ -41,10 +43,23 @@ public final class OdsContentProvider extends ContentProvider {
 
 		OdsSource source = OdsSource.fromUri(uri);
 
+		// check for manual sync reqeust
+		if (OdsSource.isSyncUri(uri)) {
+			Bundle settingsBundle = new Bundle();
+			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			ContentResolver.requestSync(
+					OdsSource.ACCOUNT,
+					OdsSource.AUTHORITY,
+					settingsBundle);
+		}
+
 
 		// check if source is being monitored
-		if (!OdsSourceManager.getInstance(getContext()).isSourceRegisteredForPeriodicSync(source))
+		if (!OdsSourceManager.getInstance(getContext()).isSourceRegisteredForPeriodicSync(source)) {
+			Log.warning("Requested content for unregistered source");
 			return null;
+		}
 
 		// check if values have been inserted
 		String tableName = source.toSqlTableName();
@@ -58,17 +73,6 @@ public final class OdsContentProvider extends ContentProvider {
 			if (tableCheckCursor != null) tableCheckCursor.close();
 		}
 
-
-		// check for manual sync reqeust
-		if (OdsSource.isSyncUri(uri)) {
-			Bundle settingsBundle = new Bundle();
-			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			ContentResolver.requestSync(
-					OdsSource.ACCOUNT,
-					OdsSource.AUTHORITY,
-					settingsBundle);
-		}
 
 		// query db
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();

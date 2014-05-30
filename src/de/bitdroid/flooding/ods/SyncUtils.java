@@ -65,7 +65,7 @@ final class SyncUtils {
 					new String[] { COLUMN_SERVER_ID },
 					null, null, null);
 		} finally {
-			cursor.close();
+			if (cursor != null) cursor.close();
 		}
 	}
 

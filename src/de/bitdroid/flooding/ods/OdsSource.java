@@ -35,9 +35,22 @@ public abstract class OdsSource {
 		BASE_PATH = "ods",
 		SYNC_PATH = "sync";
 
-	private static final Uri BASE_CONTENT_URI
-		= new Uri.Builder().scheme("content").authority(AUTHORITY).appendPath(BASE_PATH).build();
 
+	private final Uri baseUri;
+
+	protected OdsSource() {
+		Uri.Builder builder = new Uri.Builder()
+				.scheme("content")
+				.authority(AUTHORITY)
+				.appendPath(BASE_PATH);
+
+		String[] classPaths = getClass().getName().split("\\.");
+		for (String path : classPaths) {
+			builder.appendPath(path);
+		}
+
+		this.baseUri = builder.build();
+	}
 
 
 
@@ -60,19 +73,16 @@ public abstract class OdsSource {
 
 
 	public final Uri toUri() {
-		return BASE_CONTENT_URI
-			.buildUpon()
-			.appendPath(getClass().getName().replaceAll("\\.", "/"))
-			.build();
+		return baseUri;
 	}
 
 	public final Uri toSyncUri() {
-		return BASE_CONTENT_URI
+		return baseUri 
 			.buildUpon()
-			.appendPath(getClass().getName().replaceAll("\\.", "/"))
 			.appendPath(SYNC_PATH)
 			.build();
 	}
+
 
 	final String toSqlTableName() {
 		return getClass().getName().replaceAll("\\.", "_");

@@ -291,8 +291,7 @@ public class GraphActivity extends Activity implements OnTouchListener {
 
 	private class SmoothScrollRunnable implements Runnable {
 		
-		private static final int STEPS = 30;
-		private static final long REFRESH_RATE = 10;
+		private static final long REFRESH_RATE = 5;
 
 		private boolean stopped = false;
 		private float pan;
@@ -303,10 +302,9 @@ public class GraphActivity extends Activity implements OnTouchListener {
 
 		@Override
 		public void run() {
-			float scaleStep = pan / STEPS;
-			for (int i = 0; i < STEPS - 1; i++) {
+			do {
 				if (stopped) return;
-				pan -= scaleStep;
+				pan *= 0.97;
 				scroll(pan);
 				graph.setDomainBoundaries(zoomMinXY.x, zoomMaxXY.x, BoundaryMode.FIXED);
 				graph.redraw();
@@ -315,7 +313,7 @@ public class GraphActivity extends Activity implements OnTouchListener {
 				} catch (InterruptedException ie) {
 					Log.warning("Thread was interrupted");
 				}
-			}
+			} while (Math.abs(pan) > 0.3);
 		}
 
 		public synchronized void stopScrolling() {

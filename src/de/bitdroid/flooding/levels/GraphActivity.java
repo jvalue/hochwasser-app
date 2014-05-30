@@ -1,11 +1,19 @@
 package de.bitdroid.flooding.levels;
 
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MHW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MHW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MNW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MNW_VALUE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MTHW_UNIT;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MTHW_VALUE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MTNW_UNIT;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MTNW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MW_VALUE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_NTNW_UNIT;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_NTNW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UNIT;
@@ -66,8 +74,7 @@ public class GraphActivity extends Activity implements OnTouchListener {
 					COLUMN_STATION_KM, 
 					COLUMN_LEVEL_VALUE, 
 					COLUMN_LEVEL_UNIT),
-				getWaterLevelSeriesFormatter());
-
+				getDefaultFormatter(R.xml.series_water_levels));
 
 		// add characteristic values
 		manager.addSeries(
@@ -76,21 +83,51 @@ public class GraphActivity extends Activity implements OnTouchListener {
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MW_VALUE,
 					COLUMN_CHARVALUES_MW_UNIT),
-				getInfoSeriesFormatter());
+				getDefaultFormatter(R.xml.series_average_levels));
 		manager.addSeries(
 				new SimpleSeries(
 					"MHW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MHW_VALUE,
 					COLUMN_CHARVALUES_MHW_UNIT),
-				getInfoSeriesFormatter());
+				getDefaultFormatter(R.xml.series_average_levels));
 		manager.addSeries(
 				new SimpleSeries(
 					"MNW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MNW_VALUE,
 					COLUMN_CHARVALUES_MNW_UNIT),
-				getInfoSeriesFormatter());
+				getDefaultFormatter(R.xml.series_average_levels));
+
+		// add tild series
+		manager.addSeries(
+				new SimpleSeries(
+					"MTHW",
+					COLUMN_STATION_KM,
+					COLUMN_CHARVALUES_MTHW_VALUE,
+					COLUMN_CHARVALUES_MTHW_UNIT),
+				getDefaultFormatter(R.xml.series_average_tide_values));
+		manager.addSeries(
+				new SimpleSeries(
+					"MTNW",
+					COLUMN_STATION_KM,
+					COLUMN_CHARVALUES_MTNW_VALUE,
+					COLUMN_CHARVALUES_MTNW_UNIT),
+				getDefaultFormatter(R.xml.series_average_tide_values));
+		manager.addSeries(
+				new SimpleSeries(
+					"HTHW",
+					COLUMN_STATION_KM,
+					COLUMN_CHARVALUES_HTHW_VALUE,
+					COLUMN_CHARVALUES_HTHW_UNIT),
+				getDefaultFormatter(R.xml.series_extreme_tide_values));
+		manager.addSeries(
+				new SimpleSeries(
+					"NTNW",
+					COLUMN_STATION_KM,
+					COLUMN_CHARVALUES_NTNW_VALUE,
+					COLUMN_CHARVALUES_NTNW_UNIT),
+				getDefaultFormatter(R.xml.series_extreme_tide_values));
 
 
 
@@ -157,7 +194,15 @@ public class GraphActivity extends Activity implements OnTouchListener {
 							COLUMN_CHARVALUES_MHW_VALUE,
 							COLUMN_CHARVALUES_MHW_UNIT,
 							COLUMN_CHARVALUES_MNW_VALUE,
-							COLUMN_CHARVALUES_MNW_UNIT
+							COLUMN_CHARVALUES_MNW_UNIT,
+							COLUMN_CHARVALUES_MTHW_VALUE,
+							COLUMN_CHARVALUES_MTHW_UNIT,
+							COLUMN_CHARVALUES_MTNW_VALUE,
+							COLUMN_CHARVALUES_MTNW_UNIT,
+							COLUMN_CHARVALUES_HTHW_VALUE,
+							COLUMN_CHARVALUES_HTHW_UNIT,
+							COLUMN_CHARVALUES_NTNW_VALUE,
+							COLUMN_CHARVALUES_NTNW_UNIT
 						}, COLUMN_WATER_NAME + "=? AND " + COLUMN_LEVEL_TYPE + "=?", 
 						new String[] { waterName, "W" }, 
 						null);
@@ -168,13 +213,7 @@ public class GraphActivity extends Activity implements OnTouchListener {
     }
 
 
-	private LineAndPointFormatter getWaterLevelSeriesFormatter() {
-		return getDefaultFormatter(R.xml.series_water_levels);
-	}
 
-	private LineAndPointFormatter getInfoSeriesFormatter() {
-		return getDefaultFormatter(R.xml.series_characteristic_values);
-	}
 
 	private LineAndPointFormatter getDefaultFormatter(int configuration) {
 		LineAndPointFormatter formatter = new LineAndPointFormatter();

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.database.Cursor;
 
 import de.bitdroid.flooding.pegelonline.UnitConverter;
-import de.bitdroid.flooding.utils.Log;
 
 
 class SimpleSeries extends AbstractSeries {
@@ -62,8 +61,6 @@ class SimpleSeries extends AbstractSeries {
 			if (xValue != null && yUnit != null && yValue != null) {
 				xValues.add(xValue);
 				yValues.add(UnitConverter.toCm(yValue, yUnit));
-			} else {
-				Log.warning("Skipped value for " + xValue);
 			}
 		} while(cursor.moveToNext());
 	}

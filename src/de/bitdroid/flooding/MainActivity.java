@@ -60,7 +60,10 @@ public class MainActivity extends Activity {
 		// ODS source setup
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance(getApplicationContext());
 		sourceManager.setOdsServerName("http://pegelonline.wsv.de/webservices/rest-api/v2");
-		if (!sourceManager.isPeriodicSyncScheduled())
-			sourceManager.startPeriodicSync(1000 * 60 * 60, new PegelOnlineSource());
+		PegelOnlineSource source = new PegelOnlineSource();
+		if (!sourceManager.isPeriodicSyncScheduled()) {
+			sourceManager.startManualSync(source);
+			sourceManager.startPeriodicSync(1000 * 60 * 60, source);
+		}
     }
 }

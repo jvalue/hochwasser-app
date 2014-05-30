@@ -11,7 +11,7 @@ import de.bitdroid.flooding.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-	public static String EXTRA_RESOURCE_ID = "resourceId";
+	public static final String EXTRA_SOURCE_NAME = "sourceName";
 
 	private final Context context;
 
@@ -39,47 +39,19 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 		Log.debug("Sync started");
 
-		String resourceId = extras.getString(EXTRA_RESOURCE_ID);
-
 		try {
 
-			// sync all resources and sources
-			if (resourceId == null) {
-
-				Log.debug("Syncing all sources");
-
-				OdsSourceManager sourceManager = OdsSourceManager.getInstance(context);
-
-				for (OdsSource source : sourceManager.getSources()) {
-					Log.debug("... " +  source.getSourceUrlPath());
-					Processor processor = new Processor(provider, source);
-					String retString = new RestCall.Builder(
-							RestCall.RequestType.GET,
-							sourceManager.getOdsServerName())
-						.path(source.getSourceUrlPath())
-						.build()
-						.execute();
-
-					processor.processGetAll(retString);
+			String sourceName = extras.getString(EXTRA_SOURCE_NAME);
+			if (sourceName == null) {
+				// sync all resources and sources
+				for (OdsSource source : OdsSourceManager.getInstance(context).getSources()) {
+					syncSource(provider, source);
 				}
-
-			// sync one resource only
 			} else {
-
-				Log.debug("Syncing single resource");
-				/*
-				String resultString = new RestCall.Builder(
-						RestCall.RequestType.GET, 
-						"http://faui2o2f.cs.fau.de:8080")
-					.path("open-data-service")
-					.path("$" + resourceId)
-					.build()
-					.execute();
-
-				processor.processGetSingle(resultString);
-				*/
-				throw new UnsupportedOperationException("under construction");
+				// sync single source
+				syncSource(provider, OdsSource.fromClassName(sourceName));
 			}
+
 
 			Log.debug("Sync finished");
 
@@ -87,5 +59,22 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			syncResult.hasHardError();
 			Log.error(android.util.Log.getStackTraceString(e));
 		}
+	}
+
+
+	private void syncSource(
+			ContentProviderClient provider, 
+			OdsSource source) throws Exception {
+
+		Log.debug("Syncing " +  source.getSourceUrlPath());
+		Processor processor = new Processor(provider, source);
+		String retString = new RestCall.Builder(
+				RestCall.RequestType.GET,
+				OdsSourceManager.getInstance(context).getOdsServerName())
+			.path(source.getSourceUrlPath())
+			.build()
+			.execute();
+
+		processor.processGetAll(retString);
 	}
 }

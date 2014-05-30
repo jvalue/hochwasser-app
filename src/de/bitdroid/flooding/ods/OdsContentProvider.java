@@ -48,6 +48,7 @@ public final class OdsContentProvider extends ContentProvider {
 			Bundle settingsBundle = new Bundle();
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			settingsBundle.putString(SyncAdapter.EXTRA_SOURCE_NAME, source.getClass().getName());
 			ContentResolver.requestSync(
 					OdsSource.ACCOUNT,
 					OdsSource.AUTHORITY,

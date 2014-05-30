@@ -73,7 +73,7 @@ public final class OdsSourceManager {
 		SyncUtils.stopPeriodicSync(context);
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.clear();
-		editor.apply();
+		editor.commit();
 	}
 
 
@@ -106,7 +106,7 @@ public final class OdsSourceManager {
 		}
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putString(KEY_SERVER_NAME, odsServerName);
-		editor.apply();
+		editor.commit();
 	}
 
 
@@ -135,7 +135,7 @@ public final class OdsSourceManager {
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putString(key, value);
-		editor.apply();
+		editor.commit();
 	}
 
 

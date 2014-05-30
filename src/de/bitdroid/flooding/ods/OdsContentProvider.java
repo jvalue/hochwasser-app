@@ -61,17 +61,10 @@ public final class OdsContentProvider extends ContentProvider {
 			return null;
 		}
 
-		// check if values have been inserted
+		// create table
 		String tableName = source.toSqlTableName();
-		Cursor tableCheckCursor = null;
-		try {
-			tableCheckCursor = odsDatabase.getReadableDatabase() .rawQuery(
-						"SELECT name FROM sqlite_master WHERE type=? AND name=?",
-						new String[] { "table", tableName });
-			if (tableCheckCursor.getCount() < 1) return null;
-		} finally {
-			if (tableCheckCursor != null) tableCheckCursor.close();
-		}
+		SQLiteDatabase database = odsDatabase.getWritableDatabase();
+		odsDatabase.addSource(database, tableName, source);
 
 
 		// query db
@@ -85,7 +78,8 @@ public final class OdsContentProvider extends ContentProvider {
 				selectionArgs,
 				null, null,
 				sortOrder);
-		cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+		cursor.setNotificationUri(getContext().getContentResolver(), source.toUri());
 		return cursor;
 	}
 

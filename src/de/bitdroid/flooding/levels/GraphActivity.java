@@ -153,8 +153,6 @@ public class GraphActivity extends Activity implements OnTouchListener {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				if (cursor == null) return;
-
 				manager.reset();
 				manager.addData(cursor);
 				graph.redraw();

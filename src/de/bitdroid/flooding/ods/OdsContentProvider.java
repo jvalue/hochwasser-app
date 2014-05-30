@@ -14,8 +14,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 
-import de.bitdroid.flooding.utils.Log;
-
 
 public final class OdsContentProvider extends ContentProvider {
 
@@ -55,12 +53,6 @@ public final class OdsContentProvider extends ContentProvider {
 					settingsBundle);
 		}
 
-
-		// check if source is being monitored
-		if (!OdsSourceManager.getInstance(getContext()).isSourceRegisteredForPeriodicSync(source)) {
-			Log.warning("Requested content for unregistered source");
-			return null;
-		}
 
 		// create table
 		String tableName = source.toSqlTableName();

@@ -89,14 +89,14 @@ final class Processor {
 						new String[] { serverId },
 						null);
 
-				if (cursor != null && cursor.getCount() >= 1) {
+				if (cursor.getCount() >= 1) {
 					// TODO do update instead
 					Log.debug("Not inserting, value already present");
 					return null;
 				}
 
 			} finally {
-				if (cursor != null) cursor.close();
+				cursor.close();
 			}
 
 		// TODO tmp fix for values coming from pegelonline directly

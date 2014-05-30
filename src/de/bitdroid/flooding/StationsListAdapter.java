@@ -39,7 +39,6 @@ final class StationsListAdapter extends BaseAdapter {
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				Log.debug("onLoadFinished called");
 				items.clear();
-				if (cursor == null) return;
 				cursor.moveToFirst();
 				while (cursor.moveToNext()) {
 					int idx = cursor.getColumnIndex(COLUMN_STATION_NAME);

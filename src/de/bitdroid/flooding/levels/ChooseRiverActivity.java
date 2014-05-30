@@ -60,7 +60,6 @@ public class ChooseRiverActivity extends ListActivity {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				if (cursor == null) return;
 				cursor.moveToFirst();
 				int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
 				int stationIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);

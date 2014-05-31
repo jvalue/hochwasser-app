@@ -1,7 +1,9 @@
 package de.bitdroid.flooding.levels;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.database.Cursor;
@@ -12,15 +14,21 @@ import com.androidplot.xy.XYSeriesFormatter;
 
 final class SeriesManager {
 	
+	private final List<Pair<AbstractSeries, XYSeriesFormatter<?>>>
+			allSeries = new ArrayList<Pair<AbstractSeries, XYSeriesFormatter<?>>>();
+			
 	private final Map<String, Pair<AbstractSeries, XYSeriesFormatter<?>>> 
 			visibleSeries = new HashMap<String, Pair<AbstractSeries, XYSeriesFormatter<?>>>(),
 			hiddenSeries = new HashMap<String, Pair<AbstractSeries, XYSeriesFormatter<?>>>();
 
 
 	public String addSeries(AbstractSeries series, XYSeriesFormatter<?> formatter) {
-		visibleSeries.put(
-				series.getTitle(),
-				new Pair<AbstractSeries, XYSeriesFormatter<?>>(series, formatter));
+		Pair<AbstractSeries, XYSeriesFormatter<?>> pair 
+				= new Pair<AbstractSeries, XYSeriesFormatter<?>>(series, formatter);
+
+		allSeries.add(pair);
+		visibleSeries.put(series.getTitle(), pair);
+
 		return series.getTitle();
 	}
 
@@ -40,7 +48,13 @@ final class SeriesManager {
 
 
 	public Collection<Pair<AbstractSeries, XYSeriesFormatter<?>>> getVisibleSeries() {
-		return visibleSeries.values();
+		List<Pair<AbstractSeries, XYSeriesFormatter<?>>> ret 
+			= new ArrayList<Pair<AbstractSeries, XYSeriesFormatter<?>>>();
+
+		for (Pair<AbstractSeries, XYSeriesFormatter<?>> p : allSeries)
+			if (visibleSeries.containsValue(p)) ret.add(p);
+
+		return ret;
 	}
 
 

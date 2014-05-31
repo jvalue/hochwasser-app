@@ -10,6 +10,7 @@
 
 	<string name="series_select_dialog_title">Select Series to Display</string>
 	<string name="series_water_levels">Water Levels</string>
+	<string name="series_water_levels_normalized">Normalized Water Levels</string>
 	<string name="series_mw">MW</string>
 	<string name="series_mhw">MHW</string>
 	<string name="series_mnw">MNW</string>

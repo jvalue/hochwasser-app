@@ -274,19 +274,33 @@ public class GraphActivity extends Activity {
 		List<Pair<AbstractSeries, Integer>> series 
 				= new ArrayList<Pair<AbstractSeries, Integer>>();
 
+		AbstractSeries normalizedSeries = new NormalizedSeries(
+				getString(R.string.series_water_levels_normalized),
+				COLUMN_STATION_KM,
+				COLUMN_LEVEL_VALUE,
+				COLUMN_LEVEL_UNIT,
+				COLUMN_CHARVALUES_MHW_VALUE,
+				COLUMN_CHARVALUES_MHW_UNIT,
+				COLUMN_CHARVALUES_MW_VALUE,
+				COLUMN_CHARVALUES_MW_UNIT,
+				COLUMN_CHARVALUES_MNW_VALUE,
+				COLUMN_CHARVALUES_MNW_UNIT);
+
 		series.add(new Pair<AbstractSeries, Integer>(
-					new NormalizedSeries(
-						"Normalized",
-						COLUMN_STATION_KM,
-						COLUMN_LEVEL_VALUE,
-						COLUMN_LEVEL_UNIT,
-						COLUMN_CHARVALUES_MHW_VALUE,
-						COLUMN_CHARVALUES_MHW_UNIT,
-						COLUMN_CHARVALUES_MW_VALUE,
-						COLUMN_CHARVALUES_MW_UNIT,
-						COLUMN_CHARVALUES_MNW_VALUE,
-						COLUMN_CHARVALUES_MNW_UNIT),
+					normalizedSeries,
 					R.xml.series_water_levels));
+
+		series.add(new Pair<AbstractSeries, Integer>(
+					new ConstantSeries(getString(R.string.series_mhw), normalizedSeries, 1),
+					R.xml.series_average_levels));
+
+		series.add(new Pair<AbstractSeries, Integer>(
+					new ConstantSeries(getString(R.string.series_mw), normalizedSeries, 0.5),
+					R.xml.series_average_levels));
+
+		series.add(new Pair<AbstractSeries, Integer>(
+					new ConstantSeries(getString(R.string.series_mnw), normalizedSeries, 0),
+					R.xml.series_average_levels));
 
 		return series;
 	}

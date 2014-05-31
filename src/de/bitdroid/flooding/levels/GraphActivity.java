@@ -174,8 +174,8 @@ public class GraphActivity extends Activity implements OnTouchListener {
 				graphMaxXY = new PointF(
 						graph.getCalculatedMaxX().floatValue(), 
 						graph.getCalculatedMaxY().floatValue());
-				zoomMinXY = new PointF(graphMinXY.x, graphMinXY.y);
-				zoomMaxXY = new PointF(graphMaxXY.x, graphMaxXY.y);
+				if (zoomMinXY == null) zoomMinXY = new PointF(graphMinXY.x, graphMinXY.y);
+				if (zoomMaxXY == null) zoomMaxXY = new PointF(graphMaxXY.x, graphMaxXY.y);
 
 				graph.setRangeBoundaries(graphMinXY.y, graphMaxXY.y, BoundaryMode.FIXED);
 
@@ -275,10 +275,16 @@ public class GraphActivity extends Activity implements OnTouchListener {
 	}
 
 
+	private static final String 
+			EXTRA_ZOOM_MIN = "zoomMin",
+			EXTRA_ZOOM_MAX = "zoomMax";
+
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
 		manager.saveVisibleSeries(state);
+		storePoint(state, EXTRA_ZOOM_MIN, zoomMinXY);
+		storePoint(state, EXTRA_ZOOM_MAX, zoomMaxXY);
 	}
 
 
@@ -286,7 +292,23 @@ public class GraphActivity extends Activity implements OnTouchListener {
 	protected void onRestoreInstanceState(Bundle state) {
 		super.onRestoreInstanceState(state);
 		manager.restoreVisibleSeries(state);
+		zoomMinXY = restorePoint(state, EXTRA_ZOOM_MIN); 
+		zoomMaxXY = restorePoint(state, EXTRA_ZOOM_MAX); 
+        graph.setDomainBoundaries(zoomMinXY.x, zoomMaxXY.x, BoundaryMode.FIXED);
 		updateSeries();
+	}
+
+
+
+	private void storePoint(Bundle state, String key, PointF point) {
+		state.putFloat(key + "x", point.x);
+		state.putFloat(key + "y", point.y);
+	}
+
+	private PointF restorePoint(Bundle state, String key) {
+		return new PointF(
+				state.getFloat(key + "x"),
+				state.getFloat(key + "y"));
 	}
 
 

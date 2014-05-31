@@ -6,7 +6,8 @@
 	<string name="main_btn_levels">Show water levels</string>
 
 	<string name="menu_graph_select_series">Series to display</string>
-	<string name="menu_graph_normalize">Normalize Plot</string>
+	<string name="menu_graph_normalize">Show normalized plot</string>
+	<string name="menu_graph_regular">Show regular plot</string>
 
 	<string name="series_select_dialog_title">Select Series to Display</string>
 	<string name="series_water_levels">Water Levels</string>

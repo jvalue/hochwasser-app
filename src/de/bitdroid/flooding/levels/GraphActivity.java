@@ -129,6 +129,17 @@ public class GraphActivity extends Activity {
 
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		if (showingRegularSeries) 
+			menu.findItem(R.id.normalize).setTitle(getString(R.string.menu_graph_normalize));
+		else 
+			menu.findItem(R.id.normalize).setTitle(getString(R.string.menu_graph_regular));
+		return true;
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
 			case R.id.select_series:

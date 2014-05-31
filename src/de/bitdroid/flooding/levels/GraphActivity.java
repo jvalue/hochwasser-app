@@ -80,7 +80,7 @@ public class GraphActivity extends Activity implements OnTouchListener {
 		// regular water level (relative values)
 		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
-					"Water levels",
+					getString(R.string.series_water_levels),
 					COLUMN_STATION_KM, 
 					COLUMN_LEVEL_VALUE, 
 					COLUMN_LEVEL_UNIT),
@@ -89,21 +89,21 @@ public class GraphActivity extends Activity implements OnTouchListener {
 		// add characteristic values
 		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
-					"MW",
+					getString(R.string.series_mw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MW_VALUE,
 					COLUMN_CHARVALUES_MW_UNIT),
 				getDefaultFormatter(R.xml.series_average_levels)));
 		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
-					"MHW",
+					getString(R.string.series_mhw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MHW_VALUE,
 					COLUMN_CHARVALUES_MHW_UNIT),
 				getDefaultFormatter(R.xml.series_average_levels)));
 		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
-					"MNW",
+					getString(R.string.series_mnw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MNW_VALUE,
 					COLUMN_CHARVALUES_MNW_UNIT),
@@ -112,28 +112,28 @@ public class GraphActivity extends Activity implements OnTouchListener {
 		// add tild series
 		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
-					"MTHW",
+					getString(R.string.series_mthw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MTHW_VALUE,
 					COLUMN_CHARVALUES_MTHW_UNIT),
 				getDefaultFormatter(R.xml.series_average_tide_values)));
 		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
-					"MTNW",
+					getString(R.string.series_mtnw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MTNW_VALUE,
 					COLUMN_CHARVALUES_MTNW_UNIT),
 				getDefaultFormatter(R.xml.series_average_tide_values)));
 		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
-					"HTHW",
+					getString(R.string.series_hthw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_HTHW_VALUE,
 					COLUMN_CHARVALUES_HTHW_UNIT),
 				getDefaultFormatter(R.xml.series_extreme_tide_values)));
 		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
-					"NTNW",
+					getString(R.string.series_ntnw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_NTNW_VALUE,
 					COLUMN_CHARVALUES_NTNW_UNIT),
@@ -242,7 +242,7 @@ public class GraphActivity extends Activity implements OnTouchListener {
 				}
 
 				new AlertDialog.Builder(this)
-					.setTitle("Select series")
+					.setTitle(getString(R.string.series_select_dialog_title))
 					.setMultiChoiceItems(
 							items,
 							selectedItems, 
@@ -253,8 +253,8 @@ public class GraphActivity extends Activity implements OnTouchListener {
 							selectedItems[idx] = checked;
 						}
 					})
-					.setNegativeButton("Cancel", null)
-					.setPositiveButton("Ok" , new DialogInterface.OnClickListener() {
+					.setNegativeButton(getString(R.string.btn_cancel), null)
+					.setPositiveButton(getString(R.string.btn_ok) , new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
 							for (int i = 0; i < selectedItems.length; i++) {

@@ -262,11 +262,7 @@ public class GraphActivity extends Activity implements OnTouchListener {
 								if (selectedItems[i]) manager.makeSeriesVisible(seriesKey);
 								else manager.makeSeriesHidden(seriesKey);
 							}
-							graph.clear();
-							for (Pair<AbstractSeries, XYSeriesFormatter<?>> p : manager.getVisibleSeries()) {
-								graph.addSeries(p.first, p.second);
-							}
-							graph.redraw();
+							updateSeries();
 						}
 					}).create().show();
 
@@ -279,6 +275,21 @@ public class GraphActivity extends Activity implements OnTouchListener {
 	}
 
 
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		manager.saveVisibleSeries(state);
+	}
+
+
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState(state);
+		manager.restoreVisibleSeries(state);
+		updateSeries();
+	}
+
+
 
 
 	private LineAndPointFormatter getDefaultFormatter(int configuration) {
@@ -286,6 +297,14 @@ public class GraphActivity extends Activity implements OnTouchListener {
 		formatter.setPointLabelFormatter(null);
 		formatter.configure(getApplicationContext(), configuration);
 		return formatter;
+	}
+
+
+	private void updateSeries() {
+		graph.clear();
+		for (Pair<AbstractSeries, XYSeriesFormatter<?>> p : manager.getVisibleSeries())
+			graph.addSeries(p.first, p.second);
+		graph.redraw();
 	}
 
 

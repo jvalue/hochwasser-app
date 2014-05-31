@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Pair;
 
 import com.androidplot.xy.XYSeriesFormatter;
@@ -76,5 +77,28 @@ final class SeriesManager {
 			p.first.addData(cursor);
 		for (Pair<AbstractSeries, ?> p : hiddenSeries.values())
 			p.first.addData(cursor);
+	}
+
+
+
+	private static final String EXTRA_VISIBLE_SERIES = "visibleSeries";
+	public void saveVisibleSeries(Bundle state) {
+		int count = 0;
+		for (String key : visibleSeries.keySet()) { 
+			state.putString(EXTRA_VISIBLE_SERIES + count, key);
+			count++;
+		}
+	}
+
+
+	public void restoreVisibleSeries(Bundle state) {	
+		hiddenSeries.putAll(visibleSeries);
+		visibleSeries.clear();
+		String key;
+		int count = 0;
+		while ((key = state.getString(EXTRA_VISIBLE_SERIES + count, null)) != null) {
+			makeSeriesVisible(key);
+			count++;
+		}
 	}
 }

@@ -80,6 +80,14 @@ final class SeriesManager {
 	}
 
 
+	public List<String> getSeriesKeys() {
+		List<String> ret = new ArrayList<String>();
+		for (Pair<AbstractSeries, ?> p : allSeries)
+			ret.add(p.first.getTitle());
+		return ret;
+	}
+
+
 
 	private static final String EXTRA_VISIBLE_SERIES = "visibleSeries";
 	public void saveVisibleSeries(Bundle state) {

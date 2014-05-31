@@ -25,7 +25,6 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -65,8 +64,6 @@ public class GraphActivity extends Activity implements OnTouchListener {
 
 	private XYPlot graph;
 	private PointF zoomMinXY, zoomMaxXY, graphMinXY, graphMaxXY;
-
-	private final List<String> seriesKeys = new ArrayList<String>();
 	private final SeriesManager manager = new SeriesManager();
 	
     @Override
@@ -78,66 +75,66 @@ public class GraphActivity extends Activity implements OnTouchListener {
 		graph = (XYPlot) findViewById(R.id.graph);
 
 		// regular water level (relative values)
-		seriesKeys.add(manager.addSeries(
+		manager.addSeries(
 				new SimpleSeries(
 					getString(R.string.series_water_levels),
 					COLUMN_STATION_KM, 
 					COLUMN_LEVEL_VALUE, 
 					COLUMN_LEVEL_UNIT),
-				getDefaultFormatter(R.xml.series_water_levels)));
+				getDefaultFormatter(R.xml.series_water_levels));
 
 		// add characteristic values
-		seriesKeys.add(manager.addSeries(
+		manager.addSeries(
 				new SimpleSeries(
 					getString(R.string.series_mw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MW_VALUE,
 					COLUMN_CHARVALUES_MW_UNIT),
-				getDefaultFormatter(R.xml.series_average_levels)));
-		seriesKeys.add(manager.addSeries(
+				getDefaultFormatter(R.xml.series_average_levels));
+		manager.addSeries(
 				new SimpleSeries(
 					getString(R.string.series_mhw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MHW_VALUE,
 					COLUMN_CHARVALUES_MHW_UNIT),
-				getDefaultFormatter(R.xml.series_average_levels)));
-		seriesKeys.add(manager.addSeries(
+				getDefaultFormatter(R.xml.series_average_levels));
+		manager.addSeries(
 				new SimpleSeries(
 					getString(R.string.series_mnw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MNW_VALUE,
 					COLUMN_CHARVALUES_MNW_UNIT),
-				getDefaultFormatter(R.xml.series_average_levels)));
+				getDefaultFormatter(R.xml.series_average_levels));
 
 		// add tild series
-		seriesKeys.add(manager.addSeries(
+		manager.addSeries(
 				new SimpleSeries(
 					getString(R.string.series_mthw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MTHW_VALUE,
 					COLUMN_CHARVALUES_MTHW_UNIT),
-				getDefaultFormatter(R.xml.series_average_tide_values)));
-		seriesKeys.add(manager.addSeries(
+				getDefaultFormatter(R.xml.series_average_tide_values));
+		manager.addSeries(
 				new SimpleSeries(
 					getString(R.string.series_mtnw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MTNW_VALUE,
 					COLUMN_CHARVALUES_MTNW_UNIT),
-				getDefaultFormatter(R.xml.series_average_tide_values)));
-		seriesKeys.add(manager.addSeries(
+				getDefaultFormatter(R.xml.series_average_tide_values));
+		manager.addSeries(
 				new SimpleSeries(
 					getString(R.string.series_hthw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_HTHW_VALUE,
 					COLUMN_CHARVALUES_HTHW_UNIT),
-				getDefaultFormatter(R.xml.series_extreme_tide_values)));
-		seriesKeys.add(manager.addSeries(
+				getDefaultFormatter(R.xml.series_extreme_tide_values));
+		manager.addSeries(
 				new SimpleSeries(
 					getString(R.string.series_ntnw),
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_NTNW_VALUE,
 					COLUMN_CHARVALUES_NTNW_UNIT),
-				getDefaultFormatter(R.xml.series_extreme_tide_values)));
+				getDefaultFormatter(R.xml.series_extreme_tide_values));
 
 
 
@@ -233,6 +230,7 @@ public class GraphActivity extends Activity implements OnTouchListener {
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
 			case R.id.select_series:
+				List<String> seriesKeys = manager.getSeriesKeys();
 				final String[] items = seriesKeys.toArray(new String[seriesKeys.size()]);
 				final boolean[] selectedItems = new boolean[seriesKeys.size()];
 				int i = 0;

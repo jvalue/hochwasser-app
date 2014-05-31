@@ -38,6 +38,11 @@ final class Processor {
 	public void processGetAll(String jsonString) 
 			throws RemoteException, JSONException, OperationApplicationException {
 
+		// delete all entries
+		int deleteCount = provider.delete(source.toUri(), null, null);
+		Log.debug("Removed " + deleteCount + " rows");
+
+		// insert new entries
 		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 		JSONArray json = new JSONArray(jsonString);
 		Log.debug("Fetched " + json.length() + " items from server");

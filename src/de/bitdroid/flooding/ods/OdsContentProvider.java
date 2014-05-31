@@ -96,7 +96,18 @@ public final class OdsContentProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		throw new UnsupportedOperationException("under construction");
+
+		// deletes all rows
+		OdsSource source = OdsSource.fromUri(uri);
+		String tableName = source.toSqlTableName();
+
+		SQLiteDatabase database = odsDatabase.getWritableDatabase();
+		odsDatabase.addSource(database, tableName, source);
+
+		return database.delete(
+				tableName,
+				"1",
+				null);
 	}
 
 	@Override

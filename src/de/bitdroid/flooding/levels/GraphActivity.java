@@ -40,7 +40,6 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.androidplot.xy.XYPlot;
 
@@ -54,6 +53,8 @@ public class GraphActivity extends Activity {
 	private static final int LOADER_ID = 44;
 
 	private WaterGraph graph;
+	private boolean showingRegularSeries = true;
+	private Cursor levelData;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,82 +65,23 @@ public class GraphActivity extends Activity {
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
 		this.graph = new WaterGraph(graphView, waterName, getApplicationContext());
 
-		// regular water level (relative values)
-		List<Pair<AbstractSeries, Integer>> seriesList 
-				= new ArrayList<Pair<AbstractSeries, Integer>>();
-		seriesList.add(new Pair<AbstractSeries, Integer>(
-					new SimpleSeries(
-						getString(R.string.series_water_levels),
-						COLUMN_STATION_KM, 
-						COLUMN_LEVEL_VALUE, 
-						COLUMN_LEVEL_UNIT),
-					R.xml.series_water_levels));
 
-		// add characteristic values
-		seriesList.add(new Pair<AbstractSeries, Integer>(
-					new SimpleSeries(
-						getString(R.string.series_mw),
-						COLUMN_STATION_KM,
-						COLUMN_CHARVALUES_MW_VALUE,
-						COLUMN_CHARVALUES_MW_UNIT),
-					R.xml.series_average_levels));
-		seriesList.add(new Pair<AbstractSeries, Integer>(
-					new SimpleSeries(
-						getString(R.string.series_mhw),
-						COLUMN_STATION_KM,
-						COLUMN_CHARVALUES_MHW_VALUE,
-						COLUMN_CHARVALUES_MHW_UNIT),
-					R.xml.series_average_levels));
-		seriesList.add(new Pair<AbstractSeries, Integer>(
-					new SimpleSeries(
-						getString(R.string.series_mnw),
-						COLUMN_STATION_KM,
-						COLUMN_CHARVALUES_MNW_VALUE,
-						COLUMN_CHARVALUES_MNW_UNIT),
-					R.xml.series_average_levels));
-
-		// add tild series
-		seriesList.add(new Pair<AbstractSeries, Integer>(
-					new SimpleSeries(
-						getString(R.string.series_mthw),
-						COLUMN_STATION_KM,
-						COLUMN_CHARVALUES_MTHW_VALUE,
-						COLUMN_CHARVALUES_MTHW_UNIT),
-					R.xml.series_average_tide_values));
-		seriesList.add(new Pair<AbstractSeries, Integer>(
-					new SimpleSeries(
-						getString(R.string.series_mtnw),
-						COLUMN_STATION_KM,
-						COLUMN_CHARVALUES_MTNW_VALUE,
-						COLUMN_CHARVALUES_MTNW_UNIT),
-					R.xml.series_average_tide_values));
-		seriesList.add(new Pair<AbstractSeries, Integer>(
-					new SimpleSeries(
-						getString(R.string.series_hthw),
-						COLUMN_STATION_KM,
-						COLUMN_CHARVALUES_HTHW_VALUE,
-						COLUMN_CHARVALUES_HTHW_UNIT),
-					R.xml.series_extreme_tide_values));
-		seriesList.add(new Pair<AbstractSeries, Integer>(
-					new SimpleSeries(
-						getString(R.string.series_ntnw),
-						COLUMN_STATION_KM,
-						COLUMN_CHARVALUES_NTNW_VALUE,
-						COLUMN_CHARVALUES_NTNW_UNIT),
-					R.xml.series_extreme_tide_values));
-
-		graph.setSeries(seriesList);
+		if (showingRegularSeries) graph.setSeries(getRegularSeries());
+		else graph.setSeries(getNormalizedSeries());
 
 
 		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
+				GraphActivity.this.levelData = cursor;
 				graph.setData(cursor);
 			}
 
 			@Override
-			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
+			protected void onLoaderResetHelper(Loader<Cursor> loader) {
+				GraphActivity.this.levelData = null;
+			}
 
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
@@ -225,16 +167,22 @@ public class GraphActivity extends Activity {
 
 				return true;
 			case R.id.normalize:
-				Toast.makeText(this, "Stub", Toast.LENGTH_SHORT).show();
+				if (showingRegularSeries) graph.setSeries(getNormalizedSeries());
+				else graph.setSeries(getRegularSeries());
+				this.showingRegularSeries = !showingRegularSeries;
+				if (levelData != null) graph.setData(levelData);
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
 	}
 
+	
+	private static final String EXTRA_SHOWING_REGULAR_SERIES = "showingRegularSeries";
 
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
+		state.putBoolean(EXTRA_SHOWING_REGULAR_SERIES, showingRegularSeries);
 		graph.saveState(state);
 	}
 
@@ -242,6 +190,105 @@ public class GraphActivity extends Activity {
 	@Override
 	protected void onRestoreInstanceState(Bundle state) {
 		super.onRestoreInstanceState(state);
+		this.showingRegularSeries = state.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
+		if (!showingRegularSeries) {
+			graph.setSeries(getNormalizedSeries());
+			if (levelData != null) graph.setData(levelData);
+		}
 		graph.restoreState(state);
 	}
+
+
+
+
+	private List<Pair<AbstractSeries, Integer>> getRegularSeries() {
+		// regular water level (relative values)
+		List<Pair<AbstractSeries, Integer>> seriesList 
+				= new ArrayList<Pair<AbstractSeries, Integer>>();
+		seriesList.add(new Pair<AbstractSeries, Integer>(
+					new SimpleSeries(
+						getString(R.string.series_water_levels),
+						COLUMN_STATION_KM, 
+						COLUMN_LEVEL_VALUE, 
+						COLUMN_LEVEL_UNIT),
+					R.xml.series_water_levels));
+
+		// add characteristic values
+		seriesList.add(new Pair<AbstractSeries, Integer>(
+					new SimpleSeries(
+						getString(R.string.series_mw),
+						COLUMN_STATION_KM,
+						COLUMN_CHARVALUES_MW_VALUE,
+						COLUMN_CHARVALUES_MW_UNIT),
+					R.xml.series_average_levels));
+		seriesList.add(new Pair<AbstractSeries, Integer>(
+					new SimpleSeries(
+						getString(R.string.series_mhw),
+						COLUMN_STATION_KM,
+						COLUMN_CHARVALUES_MHW_VALUE,
+						COLUMN_CHARVALUES_MHW_UNIT),
+					R.xml.series_average_levels));
+		seriesList.add(new Pair<AbstractSeries, Integer>(
+					new SimpleSeries(
+						getString(R.string.series_mnw),
+						COLUMN_STATION_KM,
+						COLUMN_CHARVALUES_MNW_VALUE,
+						COLUMN_CHARVALUES_MNW_UNIT),
+					R.xml.series_average_levels));
+
+		// add tild series
+		seriesList.add(new Pair<AbstractSeries, Integer>(
+					new SimpleSeries(
+						getString(R.string.series_mthw),
+						COLUMN_STATION_KM,
+						COLUMN_CHARVALUES_MTHW_VALUE,
+						COLUMN_CHARVALUES_MTHW_UNIT),
+					R.xml.series_average_tide_values));
+		seriesList.add(new Pair<AbstractSeries, Integer>(
+					new SimpleSeries(
+						getString(R.string.series_mtnw),
+						COLUMN_STATION_KM,
+						COLUMN_CHARVALUES_MTNW_VALUE,
+						COLUMN_CHARVALUES_MTNW_UNIT),
+					R.xml.series_average_tide_values));
+		seriesList.add(new Pair<AbstractSeries, Integer>(
+					new SimpleSeries(
+						getString(R.string.series_hthw),
+						COLUMN_STATION_KM,
+						COLUMN_CHARVALUES_HTHW_VALUE,
+						COLUMN_CHARVALUES_HTHW_UNIT),
+					R.xml.series_extreme_tide_values));
+		seriesList.add(new Pair<AbstractSeries, Integer>(
+					new SimpleSeries(
+						getString(R.string.series_ntnw),
+						COLUMN_STATION_KM,
+						COLUMN_CHARVALUES_NTNW_VALUE,
+						COLUMN_CHARVALUES_NTNW_UNIT),
+					R.xml.series_extreme_tide_values));
+		
+		return seriesList;
+	}
+
+
+	private List<Pair<AbstractSeries, Integer>> getNormalizedSeries() {
+		List<Pair<AbstractSeries, Integer>> series 
+				= new ArrayList<Pair<AbstractSeries, Integer>>();
+
+		series.add(new Pair<AbstractSeries, Integer>(
+					new NormalizedSeries(
+						"Normalized",
+						COLUMN_STATION_KM,
+						COLUMN_LEVEL_VALUE,
+						COLUMN_LEVEL_UNIT,
+						COLUMN_CHARVALUES_MHW_VALUE,
+						COLUMN_CHARVALUES_MHW_UNIT,
+						COLUMN_CHARVALUES_MW_VALUE,
+						COLUMN_CHARVALUES_MW_UNIT,
+						COLUMN_CHARVALUES_MNW_VALUE,
+						COLUMN_CHARVALUES_MNW_UNIT),
+					R.xml.series_water_levels));
+
+		return series;
+	}
+
 }

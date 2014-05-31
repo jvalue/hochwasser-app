@@ -41,12 +41,13 @@ class SimpleSeries extends AbstractSeries {
 		return xValues.size();
 	}
 
-
-	public void reset() {
+	@Override
+	protected void reset() {
 		xValues.clear();
 		yValues.clear();
 	}
 
+	@Override
 	protected void addData(Cursor cursor) {
 		cursor.moveToFirst();
 		int xIdx = cursor.getColumnIndex(xValueColumn);

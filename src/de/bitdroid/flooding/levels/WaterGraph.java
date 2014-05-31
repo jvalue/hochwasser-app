@@ -69,8 +69,9 @@ final class WaterGraph implements OnTouchListener {
 	public void setData(Cursor data) {
 		manager.reset();
 		manager.setData(data);
-		graph.redraw();
 
+		graph.setRangeBoundaries(null, null, BoundaryMode.AUTO);
+		graph.setDomainBoundaries(null, null, BoundaryMode.AUTO);
 		graph.calculateMinMaxVals();
 		graphMinXY = new PointF(
 				graph.getCalculatedMinX().floatValue(),
@@ -78,10 +79,11 @@ final class WaterGraph implements OnTouchListener {
 		graphMaxXY = new PointF(
 				graph.getCalculatedMaxX().floatValue(),
 				graph.getCalculatedMaxY().floatValue());
-		if (zoomMinXY == null) zoomMinXY = new PointF(graphMinXY.x, graphMinXY.y);
-		if (zoomMaxXY == null) zoomMaxXY = new PointF(graphMaxXY.x, graphMaxXY.y);
+		zoomMinXY = new PointF(graphMinXY.x, graphMinXY.y);
+		zoomMaxXY = new PointF(graphMaxXY.x, graphMaxXY.y);
 
 		graph.setRangeBoundaries(graphMinXY.y, graphMaxXY.y, BoundaryMode.FIXED);
+		graph.redraw();
 	}
 
 

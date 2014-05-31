@@ -35,19 +35,6 @@ final class Processor {
 	}
 
 
-	public void processGetSingle(String jsonString) 
-			throws RemoteException, JSONException, OperationApplicationException {
-
-		JSONObject json = new JSONObject(jsonString);
-		ContentProviderOperation operation = insertIntoProvider(json);
-		if (operation != null) {
-			ArrayList<ContentProviderOperation> operations 
-				= new ArrayList<ContentProviderOperation>();
-			operations.add(operation);
-			provider.applyBatch(operations);
-		}
-	}
-
 	public void processGetAll(String jsonString) 
 			throws RemoteException, JSONException, OperationApplicationException {
 

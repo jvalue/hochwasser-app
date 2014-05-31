@@ -25,9 +25,13 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -35,9 +39,13 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.FloatMath;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.Toast;
 
 import com.androidplot.Plot;
 import com.androidplot.xy.BoundaryMode;
@@ -57,6 +65,9 @@ public class GraphActivity extends Activity implements OnTouchListener {
 
 	private XYPlot graph;
 	private PointF zoomMinXY, zoomMaxXY, graphMinXY, graphMaxXY;
+
+	private final List<String> seriesKeys = new ArrayList<String>();
+	private final SeriesManager manager = new SeriesManager();
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,73 +76,72 @@ public class GraphActivity extends Activity implements OnTouchListener {
 
 		final String waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 		graph = (XYPlot) findViewById(R.id.graph);
-		final SeriesManager manager = new SeriesManager();
 
 		// regular water level (relative values)
-		manager.addSeries(
+		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
 					"Water levels",
 					COLUMN_STATION_KM, 
 					COLUMN_LEVEL_VALUE, 
 					COLUMN_LEVEL_UNIT),
-				getDefaultFormatter(R.xml.series_water_levels));
+				getDefaultFormatter(R.xml.series_water_levels)));
 
 		// add characteristic values
-		manager.addSeries(
+		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
 					"MW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MW_VALUE,
 					COLUMN_CHARVALUES_MW_UNIT),
-				getDefaultFormatter(R.xml.series_average_levels));
-		manager.addSeries(
+				getDefaultFormatter(R.xml.series_average_levels)));
+		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
 					"MHW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MHW_VALUE,
 					COLUMN_CHARVALUES_MHW_UNIT),
-				getDefaultFormatter(R.xml.series_average_levels));
-		manager.addSeries(
+				getDefaultFormatter(R.xml.series_average_levels)));
+		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
 					"MNW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MNW_VALUE,
 					COLUMN_CHARVALUES_MNW_UNIT),
-				getDefaultFormatter(R.xml.series_average_levels));
+				getDefaultFormatter(R.xml.series_average_levels)));
 
 		// add tild series
-		manager.addSeries(
+		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
 					"MTHW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MTHW_VALUE,
 					COLUMN_CHARVALUES_MTHW_UNIT),
-				getDefaultFormatter(R.xml.series_average_tide_values));
-		manager.addSeries(
+				getDefaultFormatter(R.xml.series_average_tide_values)));
+		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
 					"MTNW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_MTNW_VALUE,
 					COLUMN_CHARVALUES_MTNW_UNIT),
-				getDefaultFormatter(R.xml.series_average_tide_values));
-		manager.addSeries(
+				getDefaultFormatter(R.xml.series_average_tide_values)));
+		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
 					"HTHW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_HTHW_VALUE,
 					COLUMN_CHARVALUES_HTHW_UNIT),
-				getDefaultFormatter(R.xml.series_extreme_tide_values));
-		manager.addSeries(
+				getDefaultFormatter(R.xml.series_extreme_tide_values)));
+		seriesKeys.add(manager.addSeries(
 				new SimpleSeries(
 					"NTNW",
 					COLUMN_STATION_KM,
 					COLUMN_CHARVALUES_NTNW_VALUE,
 					COLUMN_CHARVALUES_NTNW_UNIT),
-				getDefaultFormatter(R.xml.series_extreme_tide_values));
+				getDefaultFormatter(R.xml.series_extreme_tide_values)));
 
 
 
-		for (Pair<AbstractSeries, XYSeriesFormatter<?>> p : manager.getSeries()) {
+		for (Pair<AbstractSeries, XYSeriesFormatter<?>> p : manager.getVisibleSeries()) {
 			graph.addSeries(p.first, p.second);
 		}
 
@@ -209,6 +219,64 @@ public class GraphActivity extends Activity implements OnTouchListener {
 
 		getLoaderManager().initLoader(LOADER_ID, null, loader);
     }
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.graph_menu, menu);
+		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch(menuItem.getItemId()) {
+			case R.id.select_series:
+				final String[] items = seriesKeys.toArray(new String[seriesKeys.size()]);
+				final boolean[] selectedItems = new boolean[seriesKeys.size()];
+				int i = 0;
+				for (String item : items) {
+					if (manager.isVisible(item)) selectedItems[i] = true;
+					i++;
+				}
+
+				new AlertDialog.Builder(this)
+					.setTitle("Select series")
+					.setMultiChoiceItems(
+							items,
+							selectedItems, 
+							new DialogInterface.OnMultiChoiceClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int idx, boolean checked) {
+							selectedItems[idx] = checked;
+						}
+					})
+					.setNegativeButton("Cancel", null)
+					.setPositiveButton("Ok" , new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							for (int i = 0; i < selectedItems.length; i++) {
+								String seriesKey = items[i];
+								if (selectedItems[i]) manager.makeSeriesVisible(seriesKey);
+								else manager.makeSeriesHidden(seriesKey);
+							}
+							graph.clear();
+							for (Pair<AbstractSeries, XYSeriesFormatter<?>> p : manager.getVisibleSeries()) {
+								graph.addSeries(p.first, p.second);
+							}
+							graph.redraw();
+						}
+					}).create().show();
+
+				return true;
+			case R.id.normalize:
+				Toast.makeText(this, "Stub", Toast.LENGTH_SHORT).show();
+				return true;
+		}
+		return super.onOptionsItemSelected(menuItem);
+	}
 
 
 

@@ -4,4 +4,7 @@
 
 	<string name="main_btn_map">Show OSM</string>
 	<string name="main_btn_levels">Show water levels</string>
+
+	<string name="menu_graph_select_series">Series to display</string>
+	<string name="menu_graph_normalize">Normalize Plot</string>
 </resources>

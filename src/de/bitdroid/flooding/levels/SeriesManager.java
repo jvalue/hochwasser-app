@@ -48,6 +48,18 @@ final class SeriesManager {
 	}
 
 
+	public void hideAllSeries() {
+		hiddenSeries.putAll(visibleSeries);
+		visibleSeries.clear();
+	}
+
+
+	public void showAllSeries() {
+		visibleSeries.putAll(visibleSeries);
+		hiddenSeries.clear();
+	}
+
+
 	public Collection<Pair<AbstractSeries, XYSeriesFormatter<?>>> getVisibleSeries() {
 		List<Pair<AbstractSeries, XYSeriesFormatter<?>>> ret 
 			= new ArrayList<Pair<AbstractSeries, XYSeriesFormatter<?>>>();
@@ -72,7 +84,7 @@ final class SeriesManager {
 	}
 
 
-	public void addData(Cursor cursor) {
+	public void setData(Cursor cursor) {
 		for (Pair<AbstractSeries, ?> p : visibleSeries.values())
 			p.first.addData(cursor);
 		for (Pair<AbstractSeries, ?> p : hiddenSeries.values())

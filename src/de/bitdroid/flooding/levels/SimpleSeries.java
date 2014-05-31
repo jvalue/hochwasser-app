@@ -1,17 +1,12 @@
 package de.bitdroid.flooding.levels;
 
-import java.util.ArrayList;
-
 import android.database.Cursor;
 
 import de.bitdroid.flooding.pegelonline.UnitConverter;
 
 
-class SimpleSeries extends AbstractSeries {
+class SimpleSeries extends AbstractListSeries {
 
-	private final ArrayList<Number> 
-			xValues = new ArrayList<Number>(),
-			yValues = new ArrayList<Number>();
 	private final String xValueColumn, yValueColumn, yUnitColumn;
 
 	public SimpleSeries(
@@ -27,28 +22,7 @@ class SimpleSeries extends AbstractSeries {
 	}
 
 	@Override
-	public Number getX(int idx) {
-		return xValues.get(idx);
-	}
-
-	@Override
-	public Number getY(int idx) {
-		return yValues.get(idx);
-	}
-
-	@Override
-	public int size() {
-		return xValues.size();
-	}
-
-	@Override
-	protected void reset() {
-		xValues.clear();
-		yValues.clear();
-	}
-
-	@Override
-	protected void addData(Cursor cursor) {
+	public void addData(Cursor cursor) {
 		cursor.moveToFirst();
 		int xIdx = cursor.getColumnIndex(xValueColumn);
 		int yUnitIdx = cursor.getColumnIndex(yUnitColumn);
@@ -60,8 +34,7 @@ class SimpleSeries extends AbstractSeries {
 			String yUnit = cursor.getString(yUnitIdx);
 
 			if (xValue != null && yUnit != null && yValue != null) {
-				xValues.add(xValue);
-				yValues.add(UnitConverter.toCm(yValue, yUnit));
+				addValues(xValue, UnitConverter.toCm(yValue, yUnit));
 			}
 		} while(cursor.moveToNext());
 	}

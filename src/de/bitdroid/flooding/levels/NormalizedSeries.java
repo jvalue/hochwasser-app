@@ -1,18 +1,12 @@
 package de.bitdroid.flooding.levels;
 
-import java.util.ArrayList;
-
 import android.database.Cursor;
 
 import de.bitdroid.flooding.pegelonline.UnitConverter;
 import de.bitdroid.flooding.utils.Log;
 
 
-class NormalizedSeries extends AbstractSeries {
-
-	private final ArrayList<Number>
-			xValues = new ArrayList<Number>(),
-			yValues = new ArrayList<Number>();
+class NormalizedSeries extends AbstractListSeries {
 
 	private final String 
 			xValueColumn, 
@@ -47,29 +41,9 @@ class NormalizedSeries extends AbstractSeries {
 		this.relativeLowerUnitColumn = relativeLowerUnitColumn;
 	}
 
-	@Override
-	public Number getX(int idx) {
-		return xValues.get(idx);
-	}
 
 	@Override
-	public Number getY(int idx) {
-		return yValues.get(idx);
-	}
-
-	@Override
-	public int size() {
-		return xValues.size();
-	}
-
-	@Override
-	protected void reset() {
-		xValues.clear();
-		yValues.clear();
-	}
-
-	@Override
-	protected void addData(Cursor cursor) {
+	public void addData(Cursor cursor) {
 		Log.debug("Setting data for normalized one");
 		cursor.moveToFirst();
 
@@ -88,9 +62,7 @@ class NormalizedSeries extends AbstractSeries {
 			if (yValue > mid) normalized = 0.5 * (1 + ((yValue.doubleValue() - mid.doubleValue()) / (upper.doubleValue() - mid.doubleValue())));
 			else normalized = 0.5 * ((yValue.doubleValue() - lower.doubleValue())  / (mid.doubleValue() - lower.doubleValue()));
 
-			xValues.add(xValue);
-			yValues.add(normalized);
-			Log.debug(xValue + ", " + normalized);
+			addValues(xValue, normalized);
 
 		} while (cursor.moveToNext());
 	}

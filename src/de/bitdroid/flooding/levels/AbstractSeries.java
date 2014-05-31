@@ -18,7 +18,7 @@ abstract class AbstractSeries implements XYSeries {
 		return title;
 	}
 
-	protected abstract void addData(Cursor data);
-	protected abstract void reset();
+	public abstract void addData(Cursor data);
+	public abstract void reset();
 
 }

@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
+import de.bitdroid.flooding.monitor.MonitorService;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
@@ -65,5 +66,9 @@ public class MainActivity extends Activity {
 			sourceManager.startManualSync(source);
 			sourceManager.startPeriodicSync(1000 * 60 * 60, source);
 		}
+
+
+		// testing
+		startService(new Intent(this, MonitorService.class));
     }
 }

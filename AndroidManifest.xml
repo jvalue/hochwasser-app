@@ -67,5 +67,8 @@
 					android:name="android.content.SyncAdapter"
 					android:resource="@xml/syncadapter" />
 		</service>
+
+		<service android:name=".monitor.MonitorService">
+		</service>
 	</application>
 </manifest>

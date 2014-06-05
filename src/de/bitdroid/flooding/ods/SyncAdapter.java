@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncResult;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import de.bitdroid.flooding.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
+	public static final String ACTION_SYNC_FINISH = "de.bitdroid.flooding.ods.ACTION_SYNC_FINISH";
 	public static final String EXTRA_SOURCE_NAME = "sourceName";
 
 	private final Context context;
@@ -52,7 +54,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 				syncSource(provider, OdsSource.fromClassName(sourceName));
 			}
 
-
+			context.sendBroadcast(new Intent(ACTION_SYNC_FINISH));
 			Log.debug("Sync finished");
 
 		} catch (Exception e) {

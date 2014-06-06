@@ -1,5 +1,7 @@
 package de.bitdroid.flooding.ods;
 
+import org.json.JSONObject;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
@@ -7,36 +9,36 @@ import android.test.AndroidTestCase;
 
 public final class OdsContentProviderTest extends AndroidTestCase {
 
-	public void testBasicCrudOperations() {
-		// put something in
-		mContext.getContentResolver().insert(
-				OdsContentProvider.CONTENT_URI, 
-				createContentValues("12345"));
+	public void testInsertGet() {
+		OdsSource source = new DummySource();
+		JSONObject json = new JSONObject();
+
+		ContentValues data1 = source.saveData(json);
+		data1.put(OdsSource.COLUMN_SERVER_ID, "12345");
+		data1.put(OdsSource.COLUMN_SYNC_STATUS, "synced");
+
+		ContentValues data2 = source.saveData(json);
+		data2.put(OdsSource.COLUMN_SERVER_ID, "6789");
+		data2.put(OdsSource.COLUMN_SYNC_STATUS, "fail");
 
 		mContext.getContentResolver().insert(
-				OdsContentProvider.CONTENT_URI, 
-				createContentValues("23456"));
+				source.toUri(),
+				data1);
+
+		mContext.getContentResolver().insert(
+				source.toUri(),
+				data2);
 
 
 		// get something out
 		Cursor cursor = mContext.getContentResolver().query(
-				OdsContentProvider.CONTENT_URI,
-				OdsTable.COLUMN_NAMES,
+				source.toUri(),
+				new String[] { OdsSource.COLUMN_SERVER_ID },
 				null, null, null);
 
 		int count = cursor.getCount();
 		assertTrue("Found " + count + " elements but was expecting 2", count == 2);
 
 		cursor.close();
-	}
-
-
-	private ContentValues createContentValues(String serverId) {
-		ContentValues values = new ContentValues();
-		values.put(OdsTable.COLUMN_SERVER_ID, serverId);
-		values.put(OdsTable.COLUMN_HTTP_STATUS, "transmitted");
-		values.put(OdsTable.COLUMN_SYNC_STATUS, "synced");
-		values.put(OdsTable.COLUMN_JSON_DATA, "foo bar bar foo");
-		return values;
 	}
 }

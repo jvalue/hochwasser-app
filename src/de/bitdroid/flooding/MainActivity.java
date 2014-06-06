@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
-import de.bitdroid.flooding.monitor.MonitorService;
+import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
@@ -69,6 +70,12 @@ public class MainActivity extends Activity {
 
 
 		// testing
-		startService(new Intent(this, MonitorService.class));
+		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
+		if (monitor.isBeingMonitored(source)) {
+			Toast.makeText(this, "Already monitoring", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(this, "Starting monitoring", Toast.LENGTH_SHORT).show();
+			monitor.startMonitoring(source);
+		}
     }
 }

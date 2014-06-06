@@ -12,8 +12,10 @@ import de.bitdroid.flooding.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-	public static final String ACTION_SYNC_FINISH = "de.bitdroid.flooding.ods.ACTION_SYNC_FINISH";
-	public static final String EXTRA_SOURCE_NAME = "sourceName";
+	public static final String 
+			ACTION_SYNC_FINISH = "de.bitdroid.flooding.ods.ACTION_SYNC_FINISH",
+			ACTION_SYNC_ALL_FINISH = "de.bitdroid.flooding.ods.ACTION_SYNC_ALL_FINISH",
+			EXTRA_SOURCE_NAME = "EXTRA_SOURCE_NAME";
 
 	private final Context context;
 
@@ -48,13 +50,17 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 				// sync all resources and sources
 				for (OdsSource source : OdsSourceManager.getInstance(context).getSources()) {
 					syncSource(provider, source);
+					sendSyncFinishBroadcast(source);
 				}
+
 			} else {
 				// sync single source
-				syncSource(provider, OdsSource.fromClassName(sourceName));
+				OdsSource source = OdsSource.fromClassName(sourceName);
+				syncSource(provider, source);
+				sendSyncFinishBroadcast(source);
 			}
 
-			context.sendBroadcast(new Intent(ACTION_SYNC_FINISH));
+			sendSyncFinishBroadcast(null);
 			Log.debug("Sync finished");
 
 		} catch (Exception e) {
@@ -78,5 +84,16 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			.execute();
 
 		processor.processGetAll(retString);
+	}
+
+
+	private void sendSyncFinishBroadcast(OdsSource source) {
+		if (source != null) {
+			Intent syncFinishIntent = new Intent(ACTION_SYNC_FINISH);
+			syncFinishIntent.putExtra(EXTRA_SOURCE_NAME, source.getClass().getName());
+			context.sendBroadcast(syncFinishIntent);
+		} else {
+			context.sendBroadcast(new Intent(ACTION_SYNC_ALL_FINISH));
+		}
 	}
 }

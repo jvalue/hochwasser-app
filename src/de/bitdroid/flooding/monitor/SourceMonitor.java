@@ -1,10 +1,11 @@
 package de.bitdroid.flooding.monitor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -17,6 +18,8 @@ public final class SourceMonitor {
 	public final static String COLUMN_ID = "_id";
 	public final static String COLUMN_MONITOR_TIMESTAMP = "monitorTimestamp";
 
+	private final static String PREFS_NAME = "de.bitdroid.flooding.monitor.SourceMonitor";
+
 
 	private static SourceMonitor instance;
 	public static SourceMonitor getInstance(Context context) {
@@ -26,8 +29,6 @@ public final class SourceMonitor {
 	}
 
 
-	private final Map<String, OdsSource> monitoredSource 
-		= new HashMap<String, OdsSource>(); // save in prefs...
 	private final MonitorDatabase monitorDatabase;
 	private final Context context;
 
@@ -41,7 +42,9 @@ public final class SourceMonitor {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		if (isBeingMonitored(source)) throw new IllegalArgumentException("Already being monitored");
 
-		monitoredSource.put(source.getClass().getName(), source);
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
+		editor.putString(source.getClass().getName(), "").commit();
+
 		monitorDatabase.addSource(monitorDatabase.getWritableDatabase(), getTableName(source), source);
 		context.startService(getServiceIntent(source, true));
 	}
@@ -51,14 +54,28 @@ public final class SourceMonitor {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		if (!isBeingMonitored(source)) throw new IllegalArgumentException("Not monitored");
 
-		monitoredSource.remove(source.getClass().getName());
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
+		editor.remove(source.getClass().getName()).commit();
+
 		context.startService(getServiceIntent(source, false));
 	}
 
 
 	public boolean isBeingMonitored(OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
-		return monitoredSource.containsKey(source.getClass().getName());
+		return getSharedPreferences().contains(source.getClass().getName());
+	}
+
+
+	public Set<OdsSource> getMonitoredSources() {
+		Set<OdsSource> ret = new HashSet<OdsSource>();
+
+		SharedPreferences prefs = getSharedPreferences();
+		for (String className : prefs.getAll().keySet()) {
+			ret.add(OdsSource.fromClassName(className));
+		}
+
+		return ret;
 	}
 
 
@@ -92,9 +109,11 @@ public final class SourceMonitor {
 
 
 	private Intent getServiceIntent(OdsSource source, boolean startMonitoring) {
-		Intent intent = new Intent(context, MonitorService.class);
-		intent.putExtra(MonitorService.EXTRA_SOURCE_NAME, source.getClass().getName());
-		intent.putExtra(MonitorService.EXTRA_REGISTER_SOURCE, startMonitoring);
-		return intent;
+		return new Intent(context, MonitorService.class);
+	}
+
+
+	private SharedPreferences getSharedPreferences() {
+		return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 	}
 }

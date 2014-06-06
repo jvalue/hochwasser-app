@@ -1,7 +1,6 @@
 package de.bitdroid.flooding.monitor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -16,11 +15,7 @@ import de.bitdroid.flooding.ods.SyncAdapter;
 
 public final class MonitorService extends Service {
 
-	public static final String 
-			EXTRA_SOURCE_NAME = "EXTRA_SOURCE_NAME",
-			EXTRA_REGISTER_SOURCE = "EXTRA_REGISTER_SOURCE";
 
-	private final Map<String, OdsSource> sources = new HashMap<String, OdsSource>();
 	private BroadcastReceiver syncListener;
 
 
@@ -32,24 +27,15 @@ public final class MonitorService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		String sourceName = intent.getExtras().getString(EXTRA_SOURCE_NAME);
-		boolean register = intent.getExtras().getBoolean(EXTRA_REGISTER_SOURCE);
+		Set<OdsSource> sources = SourceMonitor.getInstance(this).getMonitoredSources();
 
-		if (register) {
-			OdsSource source = OdsSource.fromClassName(sourceName);
-			sources.put(sourceName, source);
-
-			// first source added?
-			if (sources.size() == 1) {
+		if (sources.size() > 0) {
+			if (syncListener == null) {
 				syncListener = new SyncListener();
 				registerReceiver(syncListener, new IntentFilter(SyncAdapter.ACTION_SYNC_FINISH));
 			}
-
 		} else {
-			sources.remove(sourceName);
-
-			// last source removed?
-			if (sources.size() == 0) {
+			if (syncListener != null) {
 				unregisterReceiver(syncListener);
 				syncListener = null;
 			}
@@ -75,7 +61,8 @@ public final class MonitorService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String sourceName = intent.getExtras().getString(SyncAdapter.EXTRA_SOURCE_NAME);
-			if (sources.containsKey(sourceName)) {
+			OdsSource source = OdsSource.fromClassName(sourceName);
+			if (SourceMonitor.getInstance(MonitorService.this).isBeingMonitored(source)) {
 				Toast.makeText(
 						context, 
 						"Sync finished!", 

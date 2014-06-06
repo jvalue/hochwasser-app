@@ -84,7 +84,7 @@ public abstract class OdsSource {
 	}
 
 
-	final String toSqlTableName() {
+	public final String toSqlTableName() {
 		return getClass().getName().replaceAll("\\.", "_");
 	}
 
@@ -110,7 +110,7 @@ public abstract class OdsSource {
 
 
 	@SuppressWarnings("unchecked")
-	static OdsSource fromClassName(String className) {
+	public static OdsSource fromClassName(String className) {
 		try {
 			Class<? extends OdsSource> sourceClass 
 					= (Class<? extends OdsSource>) Class.forName(className);

@@ -68,7 +68,12 @@
 					android:resource="@xml/syncadapter" />
 		</service>
 
-		<service android:name=".monitor.MonitorService">
-		</service>
+		<receiver
+				android:name=".monitor.MonitorSyncListener">
+			<intent-filter>
+				<action android:name="de.bitdroid.flooding.ods.ACTION_SYNC_FINISH"/>
+			</intent-filter>
+		</receiver>
+
 	</application>
 </manifest>

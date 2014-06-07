@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -45,8 +44,7 @@ public final class SourceMonitor {
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putString(source.getClass().getName(), "").commit();
 
-		monitorDatabase.addSource(monitorDatabase.getWritableDatabase(), getTableName(source), source);
-		context.startService(getServiceIntent(source, true));
+		monitorDatabase.addSource(monitorDatabase.getWritableDatabase(), source.toSqlTableName(), source);
 	}
 
 
@@ -57,7 +55,6 @@ public final class SourceMonitor {
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.remove(source.getClass().getName()).commit();
 
-		context.startService(getServiceIntent(source, false));
 	}
 
 
@@ -86,7 +83,7 @@ public final class SourceMonitor {
 			String[] selectionArgs,
 			String sortOrder) {
 		
-		String tableName = getTableName(source);
+		String tableName = source.toSqlTableName();
 		SQLiteDatabase database = monitorDatabase.getWritableDatabase();
 
 		monitorDatabase.addSource(database, tableName, source);
@@ -100,16 +97,6 @@ public final class SourceMonitor {
 				selectionArgs,
 				null, null,
 				sortOrder);
-	}
-
-
-	private String getTableName(OdsSource source) {
-		return source.toSqlTableName() + "_MONITOR";
-	}
-
-
-	private Intent getServiceIntent(OdsSource source, boolean startMonitoring) {
-		return new Intent(context, MonitorService.class);
 	}
 
 

@@ -4,10 +4,39 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.test.AndroidTestCase;
+import android.test.ProviderTestCase2;
+import android.test.mock.MockContentResolver;
+
+import de.bitdroid.flooding.utils.Log;
 
 
-public final class OdsContentProviderTest extends AndroidTestCase {
+public final class OdsContentProviderTest extends ProviderTestCase2<OdsContentProvider> {
+
+	private MockContentResolver contentResolver;
+
+	public OdsContentProviderTest(Class<OdsContentProvider> providerClass, String authority) {
+		super(providerClass, authority);
+	}
+
+
+	public OdsContentProviderTest() {
+		super(OdsContentProvider.class, OdsSource.AUTHORITY);
+	}
+
+
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+		contentResolver = getMockContentResolver();
+	}
+
+
+	@Override
+	public void tearDown() throws Exception {
+		super.tearDown();
+		contentResolver = null;
+	}
+
 
 	public void testInsertGet() {
 		OdsSource source = new DummySource();
@@ -21,17 +50,17 @@ public final class OdsContentProviderTest extends AndroidTestCase {
 		data2.put(OdsSource.COLUMN_SERVER_ID, "6789");
 		data2.put(OdsSource.COLUMN_SYNC_STATUS, "fail");
 
-		mContext.getContentResolver().insert(
+		contentResolver.insert(
 				source.toUri(),
 				data1);
 
-		mContext.getContentResolver().insert(
+		contentResolver.insert(
 				source.toUri(),
 				data2);
 
 
 		// get something out
-		Cursor cursor = mContext.getContentResolver().query(
+		Cursor cursor = contentResolver.query(
 				source.toUri(),
 				new String[] { OdsSource.COLUMN_SERVER_ID },
 				null, null, null);

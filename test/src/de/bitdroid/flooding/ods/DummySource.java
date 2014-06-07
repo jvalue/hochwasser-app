@@ -25,9 +25,20 @@ public final class DummySource extends OdsSource {
 	}
 
 
+	private final String sourceUrl;
+
+	public DummySource() {
+		sourceUrl = "some/path/to/somewhere";
+	}
+
+	public DummySource(String sourceUrl) {
+		this.sourceUrl = sourceUrl;
+	}
+
+
 	@Override
 	public String getSourceUrlPath() {
-		return "some/path/to/somewhere";
+		return sourceUrl;
 	}
 
 

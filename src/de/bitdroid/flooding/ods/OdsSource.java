@@ -109,6 +109,33 @@ public abstract class OdsSource {
 	}
 
 
+	@Override
+	public boolean equals(Object other) {
+		if (other == null || !(other instanceof OdsSource)) return false;
+		OdsSource source = (OdsSource) other;
+		return equals(getSourceUrlPath(), source.getSourceUrlPath())
+			&& equals(getSchema(), source.getSchema());
+	}
+
+
+	private boolean equals(Object o1, Object o2) {
+		if (o1 == null && o2 == null) return true;
+		if (o1 == null || o2 == null) return false;
+		return o1.equals(o2);
+	}
+
+
+
+	@Override
+	public int hashCode() {
+		final int MULT = 13;
+		int hash = 11;
+		hash = hash * MULT + (getSourceUrlPath() == null ? 0 : getSourceUrlPath().hashCode());
+		hash = hash * MULT + (getSchema() == null ? 0 : getSchema().hashCode());
+		return hash;
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public static OdsSource fromClassName(String className) {
 		try {

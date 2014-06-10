@@ -64,7 +64,7 @@ public final class OdsSourceManager {
 
 
 	/**
-	 * Stops t he periodic synchronization schedule.
+	 * Stops the periodic synchronization schedule.
 	 */
 	public void stopPeriodicSync() {
 		if (!SyncUtils.isPeriodicSyncScheduled(context)) 
@@ -77,12 +77,21 @@ public final class OdsSourceManager {
 	}
 
 
+	/**
+	 * Returns whether a periodic sync is scheduled for execution.
+	 */
 	public boolean isPeriodicSyncScheduled() {
 		return SyncUtils.isPeriodicSyncScheduled(context);
 	}
 
 
-	public void startManualSync( OdsSource source) {
+	/**
+	 * Starts a manual sync for one source.
+	 * <br>
+	 * Note: do NOT use this as your primary way of fetching data from the server,
+	 * as it requires more battery life.
+	 */
+	public void startManualSync(OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		addSyncAccount();
 		SyncUtils.startManualSync(context, source);
@@ -110,6 +119,10 @@ public final class OdsSourceManager {
 	}
 
 
+	/**
+	 * Returns the ODS server name currently being used for all interaction with
+	 * the ODS server.
+	 */
 	public String getOdsServerName() {
 		return getSharedPreferences().getString(KEY_SERVER_NAME, DEFAULT_SERVER_NAME);
 	}

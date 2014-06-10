@@ -115,7 +115,7 @@ public final class OdsSourceManager {
 	}
 
 
-	Set<OdsSource> getSources() {
+	Set<OdsSource> getPeriodicSyncSources() {
 		SharedPreferences prefs = getSharedPreferences();
 		Map<String, ?> values = prefs.getAll();
 

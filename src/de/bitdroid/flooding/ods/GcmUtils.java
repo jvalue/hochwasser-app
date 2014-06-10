@@ -26,19 +26,19 @@ final class GcmUtilities {
 
 
 
-	static void registerSource(Context context, String source) throws GcmException {
+	static void registerSource(Context context, OdsSource source) throws GcmException {
 		sourceRegistrationHelper(context, source, true);
 	}
 
 
-	static void unregisterSource(Context context, String source) throws GcmException {
+	static void unregisterSource(Context context, OdsSource source) throws GcmException {
 		sourceRegistrationHelper(context, source, false);
 	}
 
 
 	private static void sourceRegistrationHelper(
 			Context context,
-			String source,
+			OdsSource source,
 			boolean register) throws GcmException {
 
 		if (context == null || source == null)
@@ -47,16 +47,21 @@ final class GcmUtilities {
 		try {
 			// register with google
 			String clientId = getClientId(context);
-			if (clientId == null) clientId = GoogleCloudMessaging
-				.getInstance(context)
-				.register(getSenderId(context));
+			if (clientId == null) {
+				clientId = GoogleCloudMessaging
+						.getInstance(context)
+						.register(getSenderId(context));
+				SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+				editor.putString(PREFS_KEY_CLIENTID, clientId);
+				editor.commit();
+			}
 
 			// register on ods server
 			RestCall.Builder builder = new RestCall.Builder(
 					RestCall.RequestType.POST,
 					OdsSourceManager.getInstance(context).getOdsServerName())
 				.parameter(PARAM_CLIENTID, clientId)
-				.parameter(PARAM_SOURCE, source);
+				.parameter(PARAM_SOURCE, source.getSourceUrlPath());
 
 			if (register) builder.path(PATH_REGISTER);
 			else builder.path(PATH_UNREGISTER);
@@ -69,14 +74,19 @@ final class GcmUtilities {
 			Log.warning(android.util.Log.getStackTraceString(re));
 			throw new GcmException(re);
 		}
+
+		SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+		if (register) editor.putString(source.getClass().getName(), "");
+		else editor.remove(source.getClass().getName());
+		editor.commit();
 	}
 
 
-	static boolean isSourceRegistered(Context context, String source) {
+	static boolean isSourceRegistered(Context context, OdsSource source) {
 		if (context == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
-		return getSharedPreferences(context).contains(source);
+		return getSharedPreferences(context).contains(source.getClass().getName());
 	}
 
 

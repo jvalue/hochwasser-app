@@ -11,7 +11,7 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.utils.Log;
 
 
-final class GcmUtilities {
+final class GcmUtils {
 
 	private static final String 
 		PATH_REGISTER = "register",
@@ -132,5 +132,5 @@ final class GcmUtilities {
 		}
 	}
 
-	private GcmUtilities() { }
+	private GcmUtils() { }
 }

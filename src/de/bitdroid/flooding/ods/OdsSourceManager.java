@@ -86,6 +86,59 @@ public final class OdsSourceManager {
 
 
 	/**
+	 * Registering a source for automatic updates will sync this source
+	 * every time data on the ODS for this source changes.
+	 * <br>
+	 * You should check first how often this source changes on the ODS. If the
+	 * update intervals are too frequent, consider using a periodic sync instead.
+	 * <br>
+	 * This request will cause network operations. Make sure not to call it from
+	 * the main thread.
+	 */
+	public void registerForOdsUpdates(OdsSource source) throws GcmException {
+		if (source == null) throw new NullPointerException("param cannot be null");
+		if (GcmUtils.isSourceRegistered(context, source)) throw new IllegalStateException("Already registered");
+
+		GcmUtils.registerSource(context, source);
+	}
+
+
+	/**
+	 * Stops a source from receiving automatic updates each time the source
+	 * is updated on the ODS server.
+	 * <br>
+	 * This request will cause network operations. Make sure not to call it from
+	 * the main thread.
+	 */
+	public void unregisterFromOdsUpdates(OdsSource source) throws GcmException {
+		if (source == null) throw new NullPointerException("param cannot be null");
+		if (!GcmUtils.isSourceRegistered(context, source)) throw new IllegalStateException("Not registered");
+
+		GcmUtils.unregisterSource(context, source);
+	}
+
+
+	/**
+	 * Check whether a source is registered for push notifications whenever the
+	 * source on the ODS changes.
+	 */
+	public boolean isSourceRegisteredForOdsUpdates(OdsSource source) {
+		if (source == null) throw new NullPointerException("param cannot be null");
+		return GcmUtils.isSourceRegistered(context, source);
+	}
+
+
+	/**
+	 * Get all sources that are registered for push notifications when data on the
+	 * ODS changes.
+	 */
+	public Set<OdsSource> getRegisteredSource() {
+		return GcmUtils.getRegisteredSources(context);
+	}
+
+
+
+	/**
 	 * Starts a manual sync for one source.
 	 * <br>
 	 * Note: do NOT use this as your primary way of fetching data from the server,

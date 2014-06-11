@@ -1,6 +1,9 @@
 package de.bitdroid.flooding.ods;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -87,6 +90,17 @@ final class GcmUtils {
 			throw new NullPointerException("params cannot be null");
 
 		return getSharedPreferences(context).contains(source.getClass().getName());
+	}
+
+
+	static Set<OdsSource> getRegisteredSources(Context context) {
+		Set<OdsSource> sources = new HashSet<OdsSource>();
+		Map<String,?> values = getSharedPreferences(context).getAll();
+		for (String key : values.keySet()) {
+			if (key.equals(PREFS_KEY_CLIENTID)) continue;
+			sources.add(OdsSource.fromClassName(key));
+		}
+		return sources;
 	}
 
 

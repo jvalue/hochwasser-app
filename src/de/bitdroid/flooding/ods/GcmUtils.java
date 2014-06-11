@@ -82,7 +82,11 @@ final class GcmUtils {
 
 		SharedPreferences.Editor editor = getSharedPreferences(context).edit();
 		if (register) editor.putString(source.getClass().getName(), "");
-		else editor.remove(source.getClass().getName());
+		else {
+			SharedPreferences prefs = getSharedPreferences(context);
+			if (prefs.getAll().size() == 2) editor.clear();
+			else editor.remove(source.getClass().getName());
+		}
 		editor.commit();
 	}
 

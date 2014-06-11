@@ -19,6 +19,13 @@
 		android:text="@string/main_btn_levels"
 	/>
 
+	<Button
+		android:id="@+id/gcm_button"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/main_btn_gcm"
+	/>
+
 
 	<ListView
 		android:id="@+id/content_list"

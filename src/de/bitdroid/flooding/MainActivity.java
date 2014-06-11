@@ -48,6 +48,18 @@ public class MainActivity extends Activity {
 		});
 
 
+		// gcm test 
+		Button gcmButton = (Button) findViewById(R.id.gcm_button);
+		gcmButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(
+					MainActivity.this.getApplicationContext(),
+					GcmTestActivity.class);
+				startActivity(intent);
+			}
+		});
+
+
 		// simple stations list
 		listAdapter = new StationsListAdapter(getApplicationContext());
 		ListView listView = (ListView) findViewById(R.id.content_list);

@@ -48,7 +48,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			String sourceName = extras.getString(EXTRA_SOURCE_NAME);
 			if (sourceName == null) {
 				// sync all resources and sources
-				for (OdsSource source : OdsSourceManager.getInstance(context).getPeriodicSyncSources()) {
+				for (OdsSource source : OdsSourceManager.getInstance(context).getPollingSources()) {
 					syncSource(provider, source);
 					sendSyncFinishBroadcast(source);
 				}

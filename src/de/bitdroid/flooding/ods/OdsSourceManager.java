@@ -36,7 +36,7 @@ public final class OdsSourceManager {
 	/**
 	 * Check whether a source is currently registered for synchronization.
 	 */
-	public boolean isSourceRegisteredForPeriodicSync(OdsSource source) {
+	public boolean isRegisteredForPolling(OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		SharedPreferences prefs = getSharedPreferences();
 		return prefs.contains(source.getClass().getName());
@@ -46,7 +46,7 @@ public final class OdsSourceManager {
 	/**
 	 * Starts to synchronize all sources on a periodic schedule.
 	 */
-	public void startPeriodicSync(
+	public void startPolling(
 			long pollFrequency,
 			OdsSource ... sources) {
 
@@ -66,7 +66,7 @@ public final class OdsSourceManager {
 	/**
 	 * Stops the periodic synchronization schedule.
 	 */
-	public void stopPeriodicSync() {
+	public void stopPolling() {
 		if (!SyncUtils.isPeriodicSyncScheduled(context)) 
 			throw new IllegalStateException("sync not scheduled");
 
@@ -80,8 +80,24 @@ public final class OdsSourceManager {
 	/**
 	 * Returns whether a periodic sync is scheduled for execution.
 	 */
-	public boolean isPeriodicSyncScheduled() {
+	public boolean isPollingActive() {
 		return SyncUtils.isPeriodicSyncScheduled(context);
+	}
+
+
+	/**
+	 * Returns all sources currently registered to receive polling updates.
+	 */
+	public Set<OdsSource> getPollingSources() {
+		SharedPreferences prefs = getSharedPreferences();
+		Map<String, ?> values = prefs.getAll();
+
+		Set<OdsSource> sources = new HashSet<OdsSource>();
+		for (String key : values.keySet()) {
+			if (key.equals(KEY_SERVER_NAME)) continue;
+			sources.add(OdsSource.fromClassName(key));
+		}
+		return sources;
 	}
 
 
@@ -95,7 +111,7 @@ public final class OdsSourceManager {
 	 * This request will cause network operations. Make sure not to call it from
 	 * the main thread.
 	 */
-	public void registerForOdsUpdates(OdsSource source) throws GcmException {
+	public void startPushNotifications(OdsSource source) throws GcmException {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		if (GcmUtils.isSourceRegistered(context, source)) throw new IllegalStateException("Already registered");
 
@@ -110,7 +126,7 @@ public final class OdsSourceManager {
 	 * This request will cause network operations. Make sure not to call it from
 	 * the main thread.
 	 */
-	public void unregisterFromOdsUpdates(OdsSource source) throws GcmException {
+	public void stopPushNotifications(OdsSource source) throws GcmException {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		if (!GcmUtils.isSourceRegistered(context, source)) throw new IllegalStateException("Not registered");
 
@@ -122,7 +138,7 @@ public final class OdsSourceManager {
 	 * Check whether a source is registered for push notifications whenever the
 	 * source on the ODS changes.
 	 */
-	public boolean isSourceRegisteredForOdsUpdates(OdsSource source) {
+	public boolean isRegisteredForPushNotifications(OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		return GcmUtils.isSourceRegistered(context, source);
 	}
@@ -132,7 +148,7 @@ public final class OdsSourceManager {
 	 * Get all sources that are registered for push notifications when data on the
 	 * ODS changes.
 	 */
-	public Set<OdsSource> getRegisteredSource() {
+	public Set<OdsSource> getPushNotificationSources() {
 		return GcmUtils.getRegisteredSources(context);
 	}
 
@@ -178,19 +194,6 @@ public final class OdsSourceManager {
 	 */
 	public String getOdsServerName() {
 		return getSharedPreferences().getString(KEY_SERVER_NAME, DEFAULT_SERVER_NAME);
-	}
-
-
-	Set<OdsSource> getPeriodicSyncSources() {
-		SharedPreferences prefs = getSharedPreferences();
-		Map<String, ?> values = prefs.getAll();
-
-		Set<OdsSource> sources = new HashSet<OdsSource>();
-		for (String key : values.keySet()) {
-			if (key.equals(KEY_SERVER_NAME)) continue;
-			sources.add(OdsSource.fromClassName(key));
-		}
-		return sources;
 	}
 
 

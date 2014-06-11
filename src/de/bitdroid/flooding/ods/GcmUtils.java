@@ -17,6 +17,7 @@ import de.bitdroid.flooding.utils.Log;
 final class GcmUtils {
 
 	private static final String 
+		PATH_NOTIFICATIONS = "notifications",
 		PATH_REGISTER = "register",
 		PATH_UNREGISTER = "unregister";
 
@@ -64,7 +65,8 @@ final class GcmUtils {
 					RestCall.RequestType.POST,
 					OdsSourceManager.getInstance(context).getOdsServerName())
 				.parameter(PARAM_CLIENTID, clientId)
-				.parameter(PARAM_SOURCE, source.getSourceUrlPath());
+				.parameter(PARAM_SOURCE, formatSourceString(source))
+				.path(PATH_NOTIFICATIONS);
 
 			if (register) builder.path(PATH_REGISTER);
 			else builder.path(PATH_UNREGISTER);
@@ -118,6 +120,12 @@ final class GcmUtils {
 		// TODO 
 		// - Reregister source on app version change
 		return getSharedPreferences(context).getString(PREFS_KEY_CLIENTID, null);
+	}
+
+
+	private static String formatSourceString(OdsSource source) {
+		String string = source.getSourceUrlPath();
+		return string.replaceAll("/", "_");
 	}
 
 

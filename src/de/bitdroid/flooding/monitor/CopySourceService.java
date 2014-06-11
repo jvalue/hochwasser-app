@@ -28,7 +28,7 @@ public final class CopySourceService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		String sourceName = intent.getExtras().getString(EXTRA_SOURCE_NAME);
-		OdsSource source = OdsSource.fromClassName(sourceName);
+		OdsSource source = OdsSource.fromString(sourceName);
 
 		Map<String, SQLiteType> schema = source.getSchema();
 		Set<String> sourceColumns = new HashSet<String>(schema.keySet());

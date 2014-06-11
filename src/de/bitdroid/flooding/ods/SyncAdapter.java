@@ -55,7 +55,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			} else {
 				// sync single source
-				OdsSource source = OdsSource.fromClassName(sourceName);
+				OdsSource source = OdsSource.fromString(sourceName);
 				syncSource(provider, source);
 				sendSyncFinishBroadcast(source);
 			}

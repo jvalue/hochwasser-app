@@ -39,7 +39,7 @@ public final class OdsSourceManager {
 	public boolean isRegisteredForPolling(OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		SharedPreferences prefs = getSharedPreferences();
-		return prefs.contains(source.getClass().getName());
+		return prefs.contains(source.toString());
 	}
 
 
@@ -95,7 +95,7 @@ public final class OdsSourceManager {
 		Set<OdsSource> sources = new HashSet<OdsSource>();
 		for (String key : values.keySet()) {
 			if (key.equals(KEY_SERVER_NAME)) continue;
-			sources.add(OdsSource.fromClassName(key));
+			sources.add(OdsSource.fromString(key));
 		}
 		return sources;
 	}
@@ -199,7 +199,7 @@ public final class OdsSourceManager {
 
 
 	private void registerSource(OdsSource source) {
-		String key = source.getClass().getName();
+		String key = source.toString();
 		String value = source.getSourceUrlPath();
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();

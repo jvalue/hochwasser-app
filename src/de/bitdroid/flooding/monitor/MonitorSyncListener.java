@@ -14,7 +14,7 @@ public final class MonitorSyncListener extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String sourceName = intent.getExtras().getString(SyncAdapter.EXTRA_SOURCE_NAME);
-		OdsSource source = OdsSource.fromClassName(sourceName);
+		OdsSource source = OdsSource.fromString(sourceName);
 		if (SourceMonitor.getInstance(context).isBeingMonitored(source)) {
 			Toast.makeText(
 					context, 
@@ -23,7 +23,7 @@ public final class MonitorSyncListener extends BroadcastReceiver {
 				.show();
 
 			Intent serviceIntent = new Intent(context, CopySourceService.class);
-			serviceIntent.putExtra(CopySourceService.EXTRA_SOURCE_NAME, source.getClass().getName());
+			serviceIntent.putExtra(CopySourceService.EXTRA_SOURCE_NAME, source.toString());
 			context.startService(serviceIntent);
 		}
 	}

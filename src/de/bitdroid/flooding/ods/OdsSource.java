@@ -8,7 +8,6 @@ import android.accounts.Account;
 import android.content.ContentValues;
 import android.net.Uri;
 
-import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 
@@ -105,7 +104,7 @@ public abstract class OdsSource {
 		// remove base path
 		path = path.substring(BASE_PATH.length() + 2);
 
-		return fromClassName(path.replaceAll("/", "."));
+		return fromString(path.replaceAll("/", "."));
 	}
 
 
@@ -137,15 +136,21 @@ public abstract class OdsSource {
 
 
 	@SuppressWarnings("unchecked")
-	public static OdsSource fromClassName(String className) {
+	public static OdsSource fromString(String source) {
+		if (source == null) throw new NullPointerException("param cannot be null");
 		try {
 			Class<? extends OdsSource> sourceClass 
-					= (Class<? extends OdsSource>) Class.forName(className);
+					= (Class<? extends OdsSource>) Class.forName(source);
 			return sourceClass.newInstance();
 		} catch (Exception e) {
-			Log.error(android.util.Log.getStackTraceString(e));
-			return null;
+			throw new IllegalArgumentException("param is not a valid source", e);
 		}
+	}
+
+
+	@Override
+	public String toString() {
+		return getClass().getName();
 	}
 
 }

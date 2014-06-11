@@ -42,7 +42,7 @@ public final class SourceMonitor {
 		if (isBeingMonitored(source)) throw new IllegalArgumentException("Already being monitored");
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
-		editor.putString(source.getClass().getName(), "").commit();
+		editor.putString(source.toString(), "").commit();
 
 		monitorDatabase.addSource(monitorDatabase.getWritableDatabase(), source.toSqlTableName(), source);
 	}
@@ -53,14 +53,14 @@ public final class SourceMonitor {
 		if (!isBeingMonitored(source)) throw new IllegalArgumentException("Not monitored");
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
-		editor.remove(source.getClass().getName()).commit();
+		editor.remove(source.toString()).commit();
 
 	}
 
 
 	public boolean isBeingMonitored(OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
-		return getSharedPreferences().contains(source.getClass().getName());
+		return getSharedPreferences().contains(source.toString());
 	}
 
 
@@ -69,7 +69,7 @@ public final class SourceMonitor {
 
 		SharedPreferences prefs = getSharedPreferences();
 		for (String className : prefs.getAll().keySet()) {
-			ret.add(OdsSource.fromClassName(className));
+			ret.add(OdsSource.fromString(className));
 		}
 
 		return ret;

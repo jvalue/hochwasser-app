@@ -81,11 +81,11 @@ final class GcmUtils {
 		}
 
 		SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-		if (register) editor.putString(source.getClass().getName(), "");
+		if (register) editor.putString(source.toString(), "");
 		else {
 			SharedPreferences prefs = getSharedPreferences(context);
 			if (prefs.getAll().size() == 2) editor.clear();
-			else editor.remove(source.getClass().getName());
+			else editor.remove(source.toString());
 		}
 		editor.commit();
 	}
@@ -95,7 +95,7 @@ final class GcmUtils {
 		if (context == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
-		return getSharedPreferences(context).contains(source.getClass().getName());
+		return getSharedPreferences(context).contains(source.toString());
 	}
 
 
@@ -104,7 +104,7 @@ final class GcmUtils {
 		Map<String,?> values = getSharedPreferences(context).getAll();
 		for (String key : values.keySet()) {
 			if (key.equals(PREFS_KEY_CLIENTID)) continue;
-			sources.add(OdsSource.fromClassName(key));
+			sources.add(OdsSource.fromString(key));
 		}
 		return sources;
 	}

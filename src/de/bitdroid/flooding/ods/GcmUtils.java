@@ -107,30 +107,5 @@ final class GcmUtils {
 	}
 
 
-
-
-
-	public static class GcmException extends Exception {
-
-		public static final long serialVersionUID = 42L;
-
-		private final String exceptionMsg;
-
-		GcmException(Exception e) {
-			super(e);
-			exceptionMsg = null;
-		}
-
-		GcmException(String exceptionMsg) {
-			this.exceptionMsg = exceptionMsg;
-		}
-
-		@Override
-		public String getMessage() {
-			if (exceptionMsg == null) return getCause().getMessage();
-			else return exceptionMsg;
-		}
-	}
-
 	private GcmUtils() { }
 }

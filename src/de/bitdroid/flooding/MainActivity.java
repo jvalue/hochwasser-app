@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
 
 		// ODS source setup
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance(getApplicationContext());
-		sourceManager.setOdsServerName("http://pegelonline.wsv.de/webservices/rest-api/v2");
+		sourceManager.setOdsServerName("http://192.168.178.93:8182");
 		PegelOnlineSource source = new PegelOnlineSource();
 		if (!sourceManager.isPollingActive()) {
 			sourceManager.startManualSync(source);

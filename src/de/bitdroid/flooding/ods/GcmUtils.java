@@ -65,7 +65,7 @@ final class GcmUtils {
 					RestCall.RequestType.POST,
 					OdsSourceManager.getInstance(context).getOdsServerName())
 				.parameter(PARAM_CLIENTID, clientId)
-				.parameter(PARAM_SOURCE, formatSourceString(source))
+				.parameter(PARAM_SOURCE, source.getSourceId())
 				.path(PATH_NOTIFICATIONS);
 
 			if (register) builder.path(PATH_REGISTER);
@@ -124,12 +124,6 @@ final class GcmUtils {
 		// TODO 
 		// - Reregister source on app version change
 		return getSharedPreferences(context).getString(PREFS_KEY_CLIENTID, null);
-	}
-
-
-	private static String formatSourceString(OdsSource source) {
-		String string = source.getSourceUrlPath();
-		return string.replaceAll("/", "_");
 	}
 
 

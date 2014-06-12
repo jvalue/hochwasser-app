@@ -66,6 +66,12 @@ public abstract class OdsSource {
 
 
 	/**
+	 * Returns the name of this source on the ODS. See name field when viewing metadata.
+	 */
+	public abstract String getSourceId();
+
+
+	/**
 	 * Fetch parts that should be stored.
 	 */
 	public abstract ContentValues saveData(JSONObject jsonObject);

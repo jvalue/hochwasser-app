@@ -49,6 +49,12 @@ public final class DummySource extends OdsSource {
 
 
 	@Override
+	public String getSourceId() {
+		return "dummy";
+	}
+
+
+	@Override
 	public ContentValues saveData(JSONObject json) {
 		return new ContentValues();
 	}

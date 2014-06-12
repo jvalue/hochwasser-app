@@ -33,7 +33,6 @@ public final class GcmBroadcastReceiver extends BroadcastReceiver {
 				String debug = intent.getStringExtra(DATA_KEY_DEBUG);
 				if (debug != null && !debug.equals("") && Boolean.valueOf(debug)) {
 					handleDebug(context, intent);
-					return;
 				}
 			}
 

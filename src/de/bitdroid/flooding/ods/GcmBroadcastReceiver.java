@@ -1,5 +1,7 @@
 package de.bitdroid.flooding.ods;
 
+import java.util.Set;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +32,20 @@ public final class GcmBroadcastReceiver extends BroadcastReceiver {
 			String messageType = GoogleCloudMessaging.getInstance(context).getMessageType(intent);
 
 			if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+
+				// sync sources
+				String sourceString = intent.getStringExtra(DATA_KEY_SOURCE);
+				if (sourceString != null) {
+					OdsSourceManager manager = OdsSourceManager.getInstance(context);
+					Set<OdsSource> sources = manager.getPushNotificationSources();
+					for (OdsSource source : sources) {
+						if (!source.getSourceId().equals(sourceString)) continue;
+						manager.startManualSync(source);
+					}
+				}
+
+
+				// debug output
 				String debug = intent.getStringExtra(DATA_KEY_DEBUG);
 				if (debug != null && !debug.equals("") && Boolean.valueOf(debug)) {
 					handleDebug(context, intent);

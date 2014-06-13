@@ -8,4 +8,8 @@
 		android:id="@+id/normalize"
 		android:title="@string/menu_graph_normalize"
 	/>
+	<item 
+		android:id="@+id/timestamp"
+		android:title="@string/menu_graph_timestamp"
+	/>
 </menu>

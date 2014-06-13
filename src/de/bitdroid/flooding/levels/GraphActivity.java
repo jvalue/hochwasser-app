@@ -44,6 +44,7 @@ import android.view.MenuItem;
 import com.androidplot.xy.XYPlot;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 
@@ -175,13 +176,28 @@ public class GraphActivity extends Activity {
 							
 						}
 					}).create().show();
-
 				return true;
+
 			case R.id.normalize:
 				if (showingRegularSeries) graph.setSeries(getNormalizedSeries());
 				else graph.setSeries(getRegularSeries());
 				this.showingRegularSeries = !showingRegularSeries;
 				if (levelData != null) graph.setData(levelData);
+				return true;
+
+			case R.id.timestamp:
+				final String[] timestamps = SourceMonitor
+					.getInstance(getApplicationContext())
+					.getAvailableTimestamps(new PegelOnlineSource())
+					.toArray(new String[0]);
+
+				new AlertDialog.Builder(this)
+					.setTitle(getString(R.string.series_monitor_dialog_title))
+					.setSingleChoiceItems(timestamps, 0, null)
+					.setNegativeButton(getString(R.string.btn_cancel), null)
+					.setPositiveButton(getString(R.string.btn_ok), null)
+					.create().show();
+
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

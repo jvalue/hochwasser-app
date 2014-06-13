@@ -6,6 +6,8 @@
 	<string name="main_btn_levels">Show water levels</string>
 	<string name="main_btn_gcm">GCM Test</string>
 
+	<string name="menu_main_settings">Settings</string>
+
 	<string name="menu_graph_select_series">Series to display</string>
 	<string name="menu_graph_normalize">Show normalized plot</string>
 	<string name="menu_graph_regular">Show regular plot</string>
@@ -23,4 +25,10 @@
 
 	<string name="btn_ok">Ok</string>
 	<string name="btn_cancel">Cancel</string>
+
+	<string name="prefs_cat_ods">Open Data Service</string>
+	<string name="prefs_cat_ods_key">open_data_servic</string>
+	<string name="prefs_ods_servername">Servername</string>
+	<string name="prefs_ods_servername_key">server_name</string>
+	<string name="prefs_ods_servername_summary">The ODS Servername, port and base URL.</string>
 </resources>

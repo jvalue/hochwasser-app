@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.utils.Log;
 
 
 public final class SourceMonitor {
@@ -45,6 +46,8 @@ public final class SourceMonitor {
 		editor.putString(source.toString(), "").commit();
 
 		monitorDatabase.addSource(monitorDatabase.getWritableDatabase(), source.toSqlTableName(), source);
+
+		Log.debug("Starting SourceMonitor for " + source.getSourceId());
 	}
 
 
@@ -55,6 +58,7 @@ public final class SourceMonitor {
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.remove(source.toString()).commit();
 
+		Log.debug("Stopping SourceMonitor for " + source.getSourceId());
 	}
 
 

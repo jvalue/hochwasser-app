@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
+import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
@@ -88,14 +90,8 @@ public class MainActivity extends Activity {
 		}
 
 
-		// testing
-		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
-		if (monitor.isBeingMonitored(source)) {
-			Toast.makeText(this, "Already monitoring", Toast.LENGTH_SHORT).show();
-		} else {
-			Toast.makeText(this, "Starting monitoring", Toast.LENGTH_SHORT).show();
-			monitor.startMonitoring(source);
-		}
+		// monitor setup (should only execute on first run)
+		checkForSourceMonitor(source);
     }
 
 
@@ -128,8 +124,6 @@ public class MainActivity extends Activity {
 	}
 
 
-
-
 	private boolean arePlayServicesAvailable() {
 		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if (status == ConnectionResult.SUCCESS) return true;
@@ -142,4 +136,15 @@ public class MainActivity extends Activity {
 		return false;
 	}
 
+
+	private void checkForSourceMonitor(OdsSource source) {
+		boolean enabled = PreferenceManager
+			.getDefaultSharedPreferences(getApplicationContext())
+			.getBoolean(getString(R.string.prefs_ods_monitor_key), false);
+
+		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
+		if (enabled && monitor.isBeingMonitored(source)) {
+			monitor.startMonitoring(source);
+		}
+	}
 }

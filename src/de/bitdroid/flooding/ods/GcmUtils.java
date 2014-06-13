@@ -7,6 +7,8 @@ import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -26,7 +28,9 @@ final class GcmUtils {
 		PARAM_SOURCE = "source";
 
 	private static final String PREFS_NAME = "GcmUtilities";
-	private static final String PREFS_KEY_CLIENTID = "clientId";
+	private static final String 
+		PREFS_KEY_CLIENTID = "clientId",
+		PREFS_KEY_APP_VERSION = "appVersion";
 
 
 
@@ -57,6 +61,7 @@ final class GcmUtils {
 						.register(getSenderId(context));
 				SharedPreferences.Editor editor = getSharedPreferences(context).edit();
 				editor.putString(PREFS_KEY_CLIENTID, clientId);
+				editor.putInt(PREFS_KEY_APP_VERSION, getAppVersion(context));
 				editor.commit();
 			}
 
@@ -103,7 +108,7 @@ final class GcmUtils {
 		Set<OdsSource> sources = new HashSet<OdsSource>();
 		Map<String,?> values = getSharedPreferences(context).getAll();
 		for (String key : values.keySet()) {
-			if (key.equals(PREFS_KEY_CLIENTID)) continue;
+			if (key.equals(PREFS_KEY_CLIENTID) || key.equals(PREFS_KEY_APP_VERSION)) continue;
 			sources.add(OdsSource.fromString(key));
 		}
 		return sources;
@@ -121,10 +126,27 @@ final class GcmUtils {
 
 
 	private static String getClientId(Context context) {
-		// TODO 
-		// - Reregister source on app version change
-		return getSharedPreferences(context).getString(PREFS_KEY_CLIENTID, null);
+		SharedPreferences prefs = getSharedPreferences(context);
+
+		int savedVersion = prefs.getInt(PREFS_KEY_APP_VERSION, Integer.MIN_VALUE);
+		int currentVersion = getAppVersion(context);
+		if (savedVersion < currentVersion) return null;
+
+		return prefs.getString(PREFS_KEY_CLIENTID, null);
 	}
+
+
+	private static int getAppVersion(Context context) {
+		try {
+			PackageInfo info = context
+				.getPackageManager()
+				.getPackageInfo(context.getPackageName(), 0);
+			return info.versionCode;
+		} catch (NameNotFoundException nnfe) {
+			throw new RuntimeException(nnfe);
+		}
+	}
+	
 
 
 	private GcmUtils() { }

@@ -39,7 +39,7 @@ public final class RestException extends Exception {
 		} else if (code == HttpURLConnection.HTTP_NOT_FOUND) {
 			return "The requested resource is not available";
 		} else if (code >= 500 && code <= 600) {
-			return "Unable to connec to the servers";
+			return "Unable to connect to the servers";
 		}
 		return "Unknown error (" + code + ")";
 	}

@@ -5,9 +5,9 @@ public enum SQLiteType {
 
 	INTEGER("INTEGER"),
 	REAL("REAL"),
-	TEXT("TEXT");
-
-	// TODO include reference keys to other tables?
+	TEXT("TEXT"),
+	BLOB("BLOB"),
+	NULL("NULL");
 
 
 	private final String stringValue;

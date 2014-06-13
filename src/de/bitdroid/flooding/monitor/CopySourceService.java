@@ -98,6 +98,13 @@ public final class CopySourceService extends IntentService {
 				Double doubl = cursor.getDouble(colIdx);
 				values.put(key, doubl);
 				break;
+			case BLOB:
+				byte[] bytes = cursor.getBlob(colIdx);
+				values.put(key, bytes);
+				break;
+			case NULL:
+				values.putNull(key);
+				break;
 		}
 	}
 }

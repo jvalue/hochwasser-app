@@ -116,7 +116,11 @@ public final class OdsContentProvider extends ContentProvider {
 			ContentValues values,
 			String  selection,
 			String[] selectionArgs) {
-		throw new UnsupportedOperationException("under construction");
+
+		OdsSource source = OdsSource.fromUri(uri);
+		String tableName = source.toSqlTableName();
+
+		return odsDatabase.getWritableDatabase().update(tableName, values, selection, selectionArgs);
 	}
 
 

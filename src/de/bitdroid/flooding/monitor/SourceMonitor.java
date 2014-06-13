@@ -1,6 +1,8 @@
 package de.bitdroid.flooding.monitor;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import android.content.Context;
@@ -88,7 +90,7 @@ public final class SourceMonitor {
 			String sortOrder) {
 		
 		String tableName = source.toSqlTableName();
-		SQLiteDatabase database = monitorDatabase.getWritableDatabase();
+		SQLiteDatabase database = monitorDatabase.getReadableDatabase();
 
 		monitorDatabase.addSource(database, tableName, source);
 
@@ -101,6 +103,27 @@ public final class SourceMonitor {
 				selectionArgs,
 				null, null,
 				sortOrder);
+	}
+
+
+	public List<String> getAvailableTimestamps(OdsSource source) {
+		List<String> timestamps = new LinkedList<String>();
+
+		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+		builder.setTables(source.toSqlTableName());
+
+		Cursor cursor = monitorDatabase.getReadableDatabase().rawQuery(
+				"SELECT " + COLUMN_MONITOR_TIMESTAMP + " FROM " 
+				+ source.toSqlTableName() + " GROUP BY " + COLUMN_MONITOR_TIMESTAMP, 
+				null);
+
+		if (cursor.getCount() == 0) return timestamps;
+		cursor.moveToFirst();
+		do {
+			timestamps.add(cursor.getString(0));
+		} while (cursor.moveToNext());
+
+		return timestamps;
 	}
 
 

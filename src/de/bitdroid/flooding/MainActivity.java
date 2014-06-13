@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -143,7 +142,7 @@ public class MainActivity extends Activity {
 			.getBoolean(getString(R.string.prefs_ods_monitor_key), false);
 
 		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
-		if (enabled && monitor.isBeingMonitored(source)) {
+		if (enabled && !monitor.isBeingMonitored(source)) {
 			monitor.startMonitoring(source);
 		}
 	}

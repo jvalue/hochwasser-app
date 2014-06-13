@@ -1,7 +1,6 @@
 package de.bitdroid.flooding.ods;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,38 +68,45 @@ final class Processor {
 	private ContentProviderOperation insertIntoProvider(JSONObject object) 
 			throws RemoteException, JSONException {
 
-		// query if already present
 		String serverId = object.optString("_id", null);
-		if (serverId != null) {
-			Cursor cursor = null;
-			try {
-				cursor = provider.query(
-						source.toUri(),
-						new String[] { OdsSource.COLUMN_SERVER_ID },
-						OdsSource.COLUMN_SERVER_ID + " = ?",
-						new String[] { serverId },
-						null);
-
-				if (cursor.getCount() >= 1) {
-					// TODO do update instead
-					Log.debug("Not inserting, value already present");
-					return null;
-				}
-
-			} finally {
-				cursor.close();
-			}
-		}
-
-
-		// insert db
 		ContentValues data = source.saveData(object);
 		data.put(OdsSource.COLUMN_SERVER_ID, serverId);
 		data.put(OdsSource.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
 
-		ContentProviderOperation.Builder builder 
-			= ContentProviderOperation.newInsert(source.toUri());
-		builder.withValues(data);
-		return builder.build();
+		// query if already present
+		Cursor cursor = null;
+		try {
+			cursor = provider.query(
+					source.toUri(),
+					new String[] { OdsSource.COLUMN_ID, OdsSource.COLUMN_SERVER_ID },
+					OdsSource.COLUMN_SERVER_ID + " = ?",
+					new String[] { serverId },
+					null);
+
+			// update data 
+			if (cursor.getCount() >= 1) {
+				cursor.moveToFirst();
+				String id = cursor.getString(0);
+				data.put(OdsSource.COLUMN_ID, id);
+
+				if (cursor.getCount() > 1) {
+					Log.warning("Found multiple objects in db with server id " + serverId);
+				}
+
+				return ContentProviderOperation
+					.newUpdate(source.toUri())
+					.withValues(data)
+					.build();
+
+			// insert new data
+			} else {
+				return ContentProviderOperation
+					.newInsert(source.toUri())
+					.withValues(data)
+					.build();
+			}
+		} finally {
+			if (cursor != null) cursor.close();
+		}
 	}
 }

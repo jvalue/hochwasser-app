@@ -1,6 +1,7 @@
 package de.bitdroid.flooding;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
@@ -113,6 +117,28 @@ public class MainActivity extends Activity {
 				startActivity(settingsIntent);
 				return true;
 		}
+		return false;
+	}
+
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (!arePlayServicesAvailable()) finish();
+	}
+
+
+
+
+	private boolean arePlayServicesAvailable() {
+		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		if (status == ConnectionResult.SUCCESS) return true;
+
+		if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, this, 42);
+			dialog.show();
+		}
+
 		return false;
 	}
 

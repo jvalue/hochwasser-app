@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import de.bitdroid.flooding.ods.OdsSourceManager;
 
@@ -13,6 +12,7 @@ public final class MainPreferencesActivity extends PreferenceActivity
 	implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);

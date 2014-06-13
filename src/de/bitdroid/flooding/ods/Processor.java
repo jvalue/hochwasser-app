@@ -90,10 +90,6 @@ final class Processor {
 			} finally {
 				cursor.close();
 			}
-
-		// TODO tmp fix for values coming from pegelonline directly
-		} else {
-			serverId = UUID.randomUUID().toString();
 		}
 
 

@@ -95,15 +95,14 @@ public class MainActivity extends Activity {
 						.getDefaultSharedPreferences(getApplicationContext())
 						.getString(getString(R.string.prefs_ods_servername_key), null));
 		}
-		PegelOnlineSource source = new PegelOnlineSource();
 		if (!sourceManager.isPollingActive()) {
-			sourceManager.startManualSync(source);
-			sourceManager.startPolling(1000 * 60 * 60, source);
+			sourceManager.startManualSync(PegelOnlineSource.INSTANCE);
+			sourceManager.startPolling(1000 * 60 * 60, PegelOnlineSource.INSTANCE);
 		}
 
 
 		// monitor setup (should only execute on first run)
-		checkForSourceMonitor(source);
+		checkForSourceMonitor(PegelOnlineSource.INSTANCE);
     }
 
 
@@ -127,14 +126,13 @@ public class MainActivity extends Activity {
 
 			case R.id.select_about:
 				OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
-				PegelOnlineSource source = new PegelOnlineSource();
 
 				new AlertDialog.Builder(this)
 					.setTitle(R.string.main_dialog_info_title)
 					.setMessage(getString(R.string.main_dialog_info_msg,
-								formatTime(manager.getLastSync(source)),
-								formatTime(manager.getLastSuccessfulSync(source)),
-								formatTime(manager.getLastFailedSync(source))))
+								formatTime(manager.getLastSync(PegelOnlineSource.INSTANCE)),
+								formatTime(manager.getLastSuccessfulSync(PegelOnlineSource.INSTANCE)),
+								formatTime(manager.getLastFailedSync(PegelOnlineSource.INSTANCE))))
 					.setPositiveButton(R.string.btn_ok, null)
 					.show();
 

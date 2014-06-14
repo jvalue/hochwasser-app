@@ -92,7 +92,7 @@ public class GraphActivity extends Activity {
 			protected Loader<Cursor> getCursorLoader() {
 				return new CursorLoader(
 						getApplicationContext(),
-						new PegelOnlineSource().toUri(),
+						PegelOnlineSource.INSTANCE.toUri(),
 						new String[] { 
 							COLUMN_STATION_NAME,
 							COLUMN_STATION_KM,
@@ -194,7 +194,7 @@ public class GraphActivity extends Activity {
 				List<String> timestamps = new LinkedList<String>();
 				for (String time : SourceMonitor
 						.getInstance(getApplicationContext())
-						.getAvailableTimestamps(new PegelOnlineSource())) {
+						.getAvailableTimestamps(PegelOnlineSource.INSTANCE)) {
 
 					timestamps.add(formatter.format(new Date(Long.valueOf(time))));
 				}

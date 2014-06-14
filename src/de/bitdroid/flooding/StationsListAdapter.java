@@ -54,7 +54,7 @@ final class StationsListAdapter extends BaseAdapter {
 			protected Loader<Cursor> getCursorLoader() {
 				return new CursorLoader(
 						context,
-						new PegelOnlineSource().toUri(),
+						PegelOnlineSource.INSTANCE.toUri(),
 						new String[] { COLUMN_STATION_NAME },
 						null, null, null);
 			}

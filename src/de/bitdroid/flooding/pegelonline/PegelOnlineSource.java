@@ -15,6 +15,8 @@ import de.bitdroid.flooding.utils.SQLiteType;
 
 public final class PegelOnlineSource extends OdsSource { 
 
+	public static final PegelOnlineSource INSTANCE = new PegelOnlineSource();
+
 	public static final String
 		COLUMN_WATER_NAME = "waterName",
 		COLUMN_STATION_NAME = "stationName",

@@ -62,7 +62,7 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 			protected Loader<Cursor> getCursorLoader() {
 				return new CursorLoader(
 						context,
-						new PegelOnlineSource().toUri(),
+						PegelOnlineSource.INSTANCE.toUri(),
 						new String[] {
 							COLUMN_STATION_LAT, 
 							COLUMN_STATION_LONG, 

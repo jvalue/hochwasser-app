@@ -48,11 +48,10 @@ public final class MainPreferencesActivity extends PreferenceActivity {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
-				PegelOnlineSource source = new PegelOnlineSource();
 				boolean start = (Boolean) newValue;
-				if (start != monitor.isBeingMonitored(source)) {
-					if (start) monitor.startMonitoring(source);
-					else monitor.stopMonitoring(source);
+				if (start != monitor.isBeingMonitored(PegelOnlineSource.INSTANCE)) {
+					if (start) monitor.startMonitoring(PegelOnlineSource.INSTANCE);
+					else monitor.stopMonitoring(PegelOnlineSource.INSTANCE);
 				}
 				return true;
 			}

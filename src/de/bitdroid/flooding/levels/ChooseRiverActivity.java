@@ -94,7 +94,7 @@ public class ChooseRiverActivity extends ListActivity {
 			protected Loader<Cursor> getCursorLoader() {
 				return new CursorLoader(
 						getApplicationContext(),
-						new PegelOnlineSource().toUri(),
+						PegelOnlineSource.INSTANCE.toUri(),
 						new String[] { COLUMN_WATER_NAME, COLUMN_STATION_NAME },
 						COLUMN_LEVEL_TYPE + "=?", 
 						new String[] { "W" }, 

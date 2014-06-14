@@ -21,15 +21,13 @@ public class GcmTestActivity extends Activity {
         setContentView(R.layout.gcm);
 
 
-		final PegelOnlineSource source = new PegelOnlineSource();
-
 		// register 
 		Button registerButton = (Button) findViewById(R.id.register_button);
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				new RegistrationTask(
 					GcmTestActivity.this.getApplicationContext(),
-					source, true).execute();
+					PegelOnlineSource.INSTANCE, true).execute();
 			}
 		});
 
@@ -40,7 +38,7 @@ public class GcmTestActivity extends Activity {
 			public void onClick(View v) {
 				new RegistrationTask(
 					GcmTestActivity.this.getApplicationContext(),
-					source, false).execute();
+					PegelOnlineSource.INSTANCE, false).execute();
 			}
 		});
 	}

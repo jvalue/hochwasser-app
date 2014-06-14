@@ -1,73 +1,62 @@
 package de.bitdroid.flooding;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 
-public final class MainPreferencesActivity extends PreferenceActivity 
-	implements SharedPreferences.OnSharedPreferenceChangeListener {
+public final class MainPreferencesActivity extends PreferenceActivity {
 
 	@Override
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
-	}
 
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		PreferenceManager
-			.getDefaultSharedPreferences(getApplicationContext())
-			.registerOnSharedPreferenceChangeListener(this);
-	}
-
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		PreferenceManager
-			.getDefaultSharedPreferences(getApplicationContext())
-			.unregisterOnSharedPreferenceChangeListener(this);
-	}
-
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		if (updateServerName(prefs, key)) return;
-		if (updateMonitoring(prefs, key)) return;
-	}
-
-
-	private boolean updateServerName(SharedPreferences prefs, String key) {
-		if (key.equals(getString(R.string.prefs_ods_servername_key))) {
-			String serverName = prefs.getString(key, null);
-			OdsSourceManager.getInstance(getApplicationContext()).setOdsServerName(serverName);
-			return true;
-		}
-		return false;
-	}
-
-
-	private boolean updateMonitoring(SharedPreferences prefs, String key) {
-		if (key.equals(getString(R.string.prefs_ods_monitor_key))) {
-			SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
-			PegelOnlineSource source = new PegelOnlineSource();
-			boolean start = prefs.getBoolean(key, false);
-			if (start != monitor.isBeingMonitored(source)) {
-				if (start) monitor.startMonitoring(source);
-				else monitor.stopMonitoring(source);
+		// ods servername
+		Preference servername = findPreference(getString(R.string.prefs_ods_servername_key));
+		servername.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				try {
+					OdsSourceManager
+						.getInstance(getApplicationContext())
+						.setOdsServerName(newValue.toString());
+					return true;
+				} catch (IllegalArgumentException iae) {
+					Toast.makeText(
+						getApplicationContext(), 
+						getString(R.string.error_invalid_server_url), 
+						Toast.LENGTH_LONG)
+						.show();
+					return false;
+				}
 			}
-			return true;
-		}
-		return false;
+		});
+
+
+		// source monitoring
+		Preference monitoring = findPreference(getString(R.string.prefs_ods_monitor_key));
+		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
+				PegelOnlineSource source = new PegelOnlineSource();
+				boolean start = (Boolean) newValue;
+				if (start != monitor.isBeingMonitored(source)) {
+					if (start) monitor.startMonitoring(source);
+					else monitor.stopMonitoring(source);
+				}
+				return true;
+			}
+		});
 	}
 
 }

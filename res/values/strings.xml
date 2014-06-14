@@ -37,4 +37,6 @@
 	<string name="prefs_ods_monitor">Monitor PegelOnline Source</string>
 	<string name="prefs_ods_monitor_key">monitor</string>
 	<string name="prefs_ods_monitor_summary">Make a copy of the source DB each it is updated.</string>
+
+	<string name="error_invalid_server_url">Invalid server url!</string>
 </resources>

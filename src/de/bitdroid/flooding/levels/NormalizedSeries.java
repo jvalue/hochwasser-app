@@ -3,7 +3,6 @@ package de.bitdroid.flooding.levels;
 import android.database.Cursor;
 
 import de.bitdroid.flooding.pegelonline.UnitConverter;
-import de.bitdroid.flooding.utils.Log;
 
 
 class NormalizedSeries extends AbstractListSeries {
@@ -44,7 +43,7 @@ class NormalizedSeries extends AbstractListSeries {
 
 	@Override
 	public void addData(Cursor cursor) {
-		Log.debug("Setting data for normalized one");
+		if (cursor.getCount() == 0) return;
 		cursor.moveToFirst();
 
 		int xIdx = cursor.getColumnIndex(xValueColumn);

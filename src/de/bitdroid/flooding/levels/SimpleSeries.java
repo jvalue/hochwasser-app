@@ -23,6 +23,7 @@ class SimpleSeries extends AbstractListSeries {
 
 	@Override
 	public void addData(Cursor cursor) {
+		if (cursor.getCount() == 0) return;
 		cursor.moveToFirst();
 		int xIdx = cursor.getColumnIndex(xValueColumn);
 		int yUnitIdx = cursor.getColumnIndex(yUnitColumn);

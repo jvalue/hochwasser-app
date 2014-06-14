@@ -37,12 +37,14 @@ public final class CopySourceService extends IntentService {
 		Cursor cursor = null;
 		SQLiteDatabase database = null;
 		
+		int copyCount = 0;
 		try {
 			cursor = getContentResolver().query(
 					source.toUri(),
 					sourceColumns.toArray(new String[sourceColumns.size()]),
 					null, null, null);
 
+			if (cursor.getCount() == 0) return;
 
 			database = new MonitorDatabase(getApplicationContext()).getWritableDatabase();
 
@@ -51,7 +53,6 @@ public final class CopySourceService extends IntentService {
 			String[] cursorColumns = cursor.getColumnNames();
 
 			cursor.moveToFirst();
-			int count = 0;
 			do {
 				ContentValues values = new ContentValues();
 				values.put(SourceMonitor.COLUMN_MONITOR_TIMESTAMP, timeStamp);
@@ -65,15 +66,14 @@ public final class CopySourceService extends IntentService {
 				}
 
 				database.insert(source.toSqlTableName(), null, values);
-				count++;
+				copyCount++;
 			} while (cursor.moveToNext());
-			Log.debug("Inserted " + count + " entries into monitor db");
 
 		} finally {
 			if (cursor != null) cursor.close();
 			if (database != null) database.close();
+			Log.debug("Inserted " + copyCount + " entries into monitor db");
 		}
-
 	}
 
 

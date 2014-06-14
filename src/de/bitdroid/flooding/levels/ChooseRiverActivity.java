@@ -60,18 +60,21 @@ public class ChooseRiverActivity extends ListActivity {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				cursor.moveToFirst();
 				int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
 				int stationIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
 
 				Map<String, Entry> waterNames = new HashMap<String, Entry>();
-				do {
-					String wName = cursor.getString(waterIdx);
-					String sName = cursor.getString(stationIdx);
 
-					if (!waterNames.containsKey(wName)) waterNames.put(wName, new Entry(wName));
-					waterNames.get(wName).addStation(sName);
-				} while (cursor.moveToNext());
+				if (cursor.getCount() > 0) {
+					cursor.moveToFirst();
+					do {
+						String wName = cursor.getString(waterIdx);
+						String sName = cursor.getString(stationIdx);
+
+						if (!waterNames.containsKey(wName)) waterNames.put(wName, new Entry(wName));
+						waterNames.get(wName).addStation(sName);
+					} while (cursor.moveToNext());
+				}
 				
 				listAdapter.clear();
 				listAdapter.addAll(waterNames.values());

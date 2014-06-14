@@ -29,32 +29,20 @@ public final class SyncStatusListener extends BroadcastReceiver {
 	}
 
 
-	/**
-	 * Returns a timestamp representing the last successful sync of this source,
-	 * or null if none was recorded.
-	 */
-	static Calendar getLastSucccessfulSync(Context context, OdsSource source) {
+	static Calendar getLastSuccessfulSync(Context context, OdsSource source) {
 		return getTimestamp(context, source, true);
 	}
 
 
-	/**
-	 * Returns a timestamp representing the last sync of this source,
-	 * or null if it has never been synced.
-	 */
 	static Calendar getLastFailedSync(Context context, OdsSource source) {
 		return getTimestamp(context, source, false);
 	}
 
 
-	/**
-	 * Convenience method for getting the last sync for the supplied source.
-	 * @return null if no sync ever occured.
-	 */
 	static Calendar getLastSync(Context context, OdsSource source) {
 		Calendar lastSuccess, lastFailure;
 		synchronized(LOCK) {
-			lastSuccess = getLastSucccessfulSync(context, source);
+			lastSuccess = getLastSuccessfulSync(context, source);
 			lastFailure = getLastFailedSync(context, source);
 		}
 

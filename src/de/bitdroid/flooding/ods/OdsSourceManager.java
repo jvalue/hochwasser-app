@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.ods;
 
 import java.net.URL;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -193,6 +194,36 @@ public final class OdsSourceManager {
 	 */
 	public String getOdsServerName() {
 		return getSharedPreferences().getString(KEY_SERVER_NAME, null);
+	}
+
+
+	/**
+	 * Returns a timestamp representing the last successful sync of this source,
+	 * or null if none was recorded.
+	 */
+	public Calendar getLastSuccesfulSync(OdsSource source) {
+		if (source == null) throw new NullPointerException("param cannot be null");
+		return SyncStatusListener.getLastSuccessfulSync(context, source);
+	}
+
+
+	/**
+	 * Returns a timestamp representing the last sync of this source,
+	 * or null if it has never been synced.
+	 */
+	public Calendar getLastFailedSync(OdsSource source) {
+		if (source == null) throw new NullPointerException("param cannot be null");
+		return SyncStatusListener.getLastFailedSync(context, source);
+	}
+
+
+	/**
+	 * Convenience method for getting the last sync for the supplied source.
+	 * @return null if no sync ever occured.
+	 */
+	public Calendar getLastSync(OdsSource source) {
+		if (source == null) throw new NullPointerException("param cannot be null");
+		return SyncStatusListener.getLastSync(context, source);
 	}
 
 

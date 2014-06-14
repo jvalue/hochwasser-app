@@ -201,7 +201,7 @@ public final class OdsSourceManager {
 	 * Returns a timestamp representing the last successful sync of this source,
 	 * or null if none was recorded.
 	 */
-	public Calendar getLastSuccesfulSync(OdsSource source) {
+	public Calendar getLastSuccessfulSync(OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
 		return SyncStatusListener.getLastSuccessfulSync(context, source);
 	}

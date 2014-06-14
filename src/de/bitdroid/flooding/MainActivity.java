@@ -1,6 +1,10 @@
 package de.bitdroid.flooding;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -120,6 +124,21 @@ public class MainActivity extends Activity {
 						MainPreferencesActivity.class);
 				startActivity(settingsIntent);
 				return true;
+
+			case R.id.select_about:
+				OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
+				PegelOnlineSource source = new PegelOnlineSource();
+
+				new AlertDialog.Builder(this)
+					.setTitle(R.string.main_dialog_info_title)
+					.setMessage(getString(R.string.main_dialog_info_msg,
+								formatTime(manager.getLastSync(source)),
+								formatTime(manager.getLastSuccessfulSync(source)),
+								formatTime(manager.getLastFailedSync(source))))
+					.setPositiveButton(R.string.btn_ok, null)
+					.show();
+
+				return true;
 		}
 		return false;
 	}
@@ -154,5 +173,14 @@ public class MainActivity extends Activity {
 		if (enabled && !monitor.isBeingMonitored(source)) {
 			monitor.startMonitoring(source);
 		}
+	}
+
+
+	private final static SimpleDateFormat dateFormatter 
+		= new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+
+	private String formatTime(Calendar time) {
+		if (time == null) return getString(R.string.main_dialog_info_never);
+		else return dateFormatter.format(time.getTime());
 	}
 }

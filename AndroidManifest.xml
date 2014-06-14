@@ -86,6 +86,14 @@
 		</service>
 
 		<receiver
+				android:name=".ods.SyncStatusListener">
+			<intent-filter>
+				<action android:name="de.bitdroid.flooding.ods.ACTION_SYNC_FINISH"/>
+			</intent-filter>
+		</receiver>
+
+
+		<receiver
 				android:name=".monitor.MonitorSyncListener">
 			<intent-filter>
 				<action android:name="de.bitdroid.flooding.ods.ACTION_SYNC_FINISH"/>

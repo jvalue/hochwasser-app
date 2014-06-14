@@ -194,8 +194,8 @@ public class GraphActivity extends Activity {
 				new AlertDialog.Builder(this)
 					.setTitle(getString(R.string.series_monitor_dialog_title))
 					.setSingleChoiceItems(timestamps, 0, null)
-					.setNegativeButton(getString(R.string.btn_cancel), null)
-					.setPositiveButton(getString(R.string.btn_ok), null)
+					.setNegativeButton(R.string.btn_cancel, null)
+					.setPositiveButton(R.string.btn_ok, null)
 					.create().show();
 
 				return true;

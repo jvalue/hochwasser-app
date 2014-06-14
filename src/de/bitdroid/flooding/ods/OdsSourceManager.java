@@ -13,7 +13,6 @@ public final class OdsSourceManager {
 	
 	private static final String PREFS_NAME = "de.bitdroid.flooding.ods.OdsSourceManager";
 	private static final String KEY_SERVER_NAME = "serverName";
-	private static final String DEFAULT_SERVER_NAME = "http://faui2o2f.cs.fau.de:8080/open-data-service";
 
 	private static OdsSourceManager instance;
 	public static OdsSourceManager getInstance(Context context) {
@@ -193,7 +192,7 @@ public final class OdsSourceManager {
 	 * the ODS server.
 	 */
 	public String getOdsServerName() {
-		return getSharedPreferences().getString(KEY_SERVER_NAME, DEFAULT_SERVER_NAME);
+		return getSharedPreferences().getString(KEY_SERVER_NAME, null);
 	}
 
 

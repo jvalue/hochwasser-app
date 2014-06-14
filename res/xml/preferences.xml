@@ -7,7 +7,8 @@
 		<EditTextPreference
 				android:title="@string/prefs_ods_servername"
 				android:key="@string/prefs_ods_servername_key"
-				android:summary="@string/prefs_ods_servername_summary"/>
+				android:summary="@string/prefs_ods_servername_summary"
+				android:defaultValue="@string/prefs_ods_servername_default"/>
 
 		<CheckBoxPreference
 				android:title="@string/prefs_ods_monitor"

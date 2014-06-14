@@ -81,7 +81,16 @@ public class MainActivity extends Activity {
 
 		// ODS source setup
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance(getApplicationContext());
-		sourceManager.setOdsServerName("http://192.168.178.93:8182");
+		if (sourceManager.getOdsServerName() == null) {
+			PreferenceManager.setDefaultValues(
+					getApplicationContext(),
+					R.xml.preferences,
+					false);
+			sourceManager.setOdsServerName(
+					PreferenceManager
+						.getDefaultSharedPreferences(getApplicationContext())
+						.getString(getString(R.string.prefs_ods_servername_key), null));
+		}
 		PegelOnlineSource source = new PegelOnlineSource();
 		if (!sourceManager.isPollingActive()) {
 			sourceManager.startManualSync(source);

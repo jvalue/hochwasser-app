@@ -24,8 +24,12 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -186,14 +190,19 @@ public class GraphActivity extends Activity {
 				return true;
 
 			case R.id.timestamp:
-				final String[] timestamps = SourceMonitor
-					.getInstance(getApplicationContext())
-					.getAvailableTimestamps(new PegelOnlineSource())
-					.toArray(new String[0]);
+				SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+				List<String> timestamps = new LinkedList<String>();
+				for (String time : SourceMonitor
+						.getInstance(getApplicationContext())
+						.getAvailableTimestamps(new PegelOnlineSource())) {
+
+					timestamps.add(formatter.format(new Date(Long.valueOf(time))));
+				}
+				Collections.sort(timestamps);
 
 				new AlertDialog.Builder(this)
 					.setTitle(getString(R.string.series_monitor_dialog_title))
-					.setSingleChoiceItems(timestamps, 0, null)
+					.setSingleChoiceItems(timestamps.toArray(new String[timestamps.size()]), 0, null)
 					.setNegativeButton(R.string.btn_cancel, null)
 					.setPositiveButton(R.string.btn_ok, null)
 					.create().show();

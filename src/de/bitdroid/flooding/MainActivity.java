@@ -175,7 +175,7 @@ public class MainActivity extends Activity {
 
 
 	private final static SimpleDateFormat dateFormatter 
-		= new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+		= new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
 	private String formatTime(Calendar time) {
 		if (time == null) return getString(R.string.main_dialog_info_never);

@@ -190,7 +190,7 @@ public class GraphActivity extends Activity {
 				return true;
 
 			case R.id.timestamp:
-				SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 				List<String> timestamps = new LinkedList<String>();
 				for (String time : SourceMonitor
 						.getInstance(getApplicationContext())

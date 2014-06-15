@@ -6,7 +6,10 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -15,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -22,6 +26,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
+import de.bitdroid.flooding.ods.GcmIntentService;
+import de.bitdroid.flooding.ods.GcmStatus;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -159,6 +165,13 @@ public class MainActivity extends Activity {
 		if (enabled && !monitor.isBeingMonitored(source)) {
 			monitor.startMonitoring(source);
 		}
+
+		OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
+		GcmStatus status = manager.getPushNotificationsRegistrationStatus(source);
+		if (!status.equals(GcmStatus.REGISTERED)) {
+			registerReceiver(gcmReceiver, new IntentFilter(GcmIntentService.ACTION_GCM_FINISH));
+			manager.startPushNotifications(source);
+		}
 	}
 
 
@@ -169,4 +182,16 @@ public class MainActivity extends Activity {
 		if (time == null) return getString(R.string.main_dialog_info_never);
 		else return dateFormatter.format(time.getTime());
 	}
+
+
+	private static final BroadcastReceiver gcmReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String source = intent.getStringExtra(GcmIntentService.EXTRA_SOURCE);
+			String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
+			boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
+
+			Toast.makeText(context, "source = " + source + "\nerrorMsg = " + errorMsg + "\nregister = " + register, Toast.LENGTH_LONG).show();
+		}
+	};
 }

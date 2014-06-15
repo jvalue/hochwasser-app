@@ -12,7 +12,7 @@ import de.bitdroid.flooding.utils.Log;
 
 public final class GcmIntentService extends IntentService {
 
-	public final String ACTION_GCM_FINISH = "de.bitdroid.flooding.ods.ACTION_GCM_FINISH";
+	public static final String ACTION_GCM_FINISH = "de.bitdroid.flooding.ods.ACTION_GCM_FINISH";
 
 	public static final String
 		EXTRA_SOURCE = "EXTRA_SOURCE",

@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import de.bitdroid.flooding.ods.OdsSource;
-import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -55,10 +54,6 @@ public final class SourceMonitor {
 				source.toSqlTableName(), 
 				source);
 
-		OdsSourceManager manager = OdsSourceManager.getInstance(context);
-		if (!manager.isRegisteredForPushNotifications(source))
-			manager.startPushNotifications(source);
-
 		Log.debug("Starting SourceMonitor for " + source.getSourceId());
 	}
 
@@ -71,10 +66,6 @@ public final class SourceMonitor {
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.remove(source.toString()).commit();
-
-		OdsSourceManager manager = OdsSourceManager.getInstance(context);
-		if (manager.isRegisteredForPushNotifications(source))
-			manager.stopPushNotifications(source);
 
 		Log.debug("Stopping SourceMonitor for " + source.getSourceId());
 	}

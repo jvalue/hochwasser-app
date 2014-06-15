@@ -43,9 +43,12 @@ final class GcmUtils extends BroadcastReceiver {
 			OdsSource source,
 			boolean register) {
 
-		if (context == null || source == null)
-			throw new NullPointerException("params cannot be null");
+		// mark task pending
+		SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+		if (register) editor.putString(source.toString(), GcmStatus.PENDING_REGISTRATION.name());
+		else editor.putString(source.toString(), GcmStatus.PENDING_UNREGISTRATION.name());
 
+		// execute in background
 		Intent registrationIntent = new Intent(context, GcmIntentService.class);
 		registrationIntent.putExtra(GcmIntentService.EXTRA_SOURCE, source.toString());
 		registrationIntent.putExtra(GcmIntentService.EXTRA_REGISTER, register);
@@ -55,20 +58,23 @@ final class GcmUtils extends BroadcastReceiver {
 	}
 
 
-	static boolean isSourceRegistered(Context context, OdsSource source) {
-		if (context == null || source == null) 
-			throw new NullPointerException("params cannot be null");
-
-		return getSharedPreferences(context).contains(source.toString());
+	static GcmStatus getRegistrationStatus(Context context, OdsSource source) {
+		String status = getSharedPreferences(context).getString(source.toString(), null);
+		if (status == null) return GcmStatus.UNREGISTERED;
+		else return GcmStatus.valueOf(status);
 	}
 
 
 	static Set<OdsSource> getRegisteredSources(Context context) {
 		Set<OdsSource> sources = new HashSet<OdsSource>();
 		Map<String,?> values = getSharedPreferences(context).getAll();
-		for (String key : values.keySet()) {
-			if (key.equals(PREFS_KEY_CLIENTID) || key.equals(PREFS_KEY_APP_VERSION)) continue;
-			sources.add(OdsSource.fromString(key));
+		for (Map.Entry<String, ?> e : values.entrySet()) {
+			if (e.getKey().equals(PREFS_KEY_CLIENTID) 
+					|| e.getKey().equals(PREFS_KEY_APP_VERSION)) 
+				continue;
+
+			GcmStatus status = GcmStatus.valueOf(e.getValue().toString());
+			if (status.equals(GcmStatus.REGISTERED)) sources.add(OdsSource.fromString(e.getKey()));
 		}
 		return sources;
 	}
@@ -91,18 +97,13 @@ final class GcmUtils extends BroadcastReceiver {
 			editor.commit();
 		}
 
-		// save registered source
-		if (errorMsg != null) {
-			OdsSource source = OdsSource.fromString(sourceString);
-			SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-			if (register) editor.putString(source.toString(), "");
-			else {
-				SharedPreferences prefs = getSharedPreferences(context);
-				if (prefs.getAll().size() == 2) editor.clear();
-				else editor.remove(source.toString());
-			}
-			editor.commit();
-		}
+		// clear pending flag
+		if (errorMsg != null) register = !register;
+
+		SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+		if (register) editor.putString(sourceString, GcmStatus.REGISTERED.name());
+		else editor.putString(sourceString, GcmStatus.UNREGISTERED.name());
+		editor.commit();
 	}
 
 

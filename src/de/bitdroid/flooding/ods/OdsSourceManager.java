@@ -114,7 +114,8 @@ public final class OdsSourceManager {
 	public void startPushNotifications(OdsSource source) {
 		if (source == null) 
 			throw new NullPointerException("param cannot be null");
-		if (GcmUtils.isSourceRegistered(context, source)) 
+		GcmStatus status = GcmUtils.getRegistrationStatus(context, source);
+		if (!status.equals(GcmStatus.UNREGISTERED))
 			throw new IllegalStateException("Already registered");
 
 		GcmUtils.registerSource(context, source);
@@ -131,8 +132,9 @@ public final class OdsSourceManager {
 	public void stopPushNotifications(OdsSource source) {
 		if (source == null) 
 			throw new NullPointerException("param cannot be null");
-		if (!GcmUtils.isSourceRegistered(context, source)) 
-			throw new IllegalStateException("Not registered");
+		GcmStatus status = GcmUtils.getRegistrationStatus(context, source);
+		if (!status.equals(GcmStatus.REGISTERED))
+			throw new IllegalStateException("Already registered");
 
 		GcmUtils.unregisterSource(context, source);
 	}
@@ -142,9 +144,9 @@ public final class OdsSourceManager {
 	 * Check whether a source is registered for push notifications whenever the
 	 * source on the ODS changes.
 	 */
-	public boolean isRegisteredForPushNotifications(OdsSource source) {
+	public GcmStatus getPushNotificationsRegistrationStatus(OdsSource source) {
 		if (source == null) throw new NullPointerException("param cannot be null");
-		return GcmUtils.isSourceRegistered(context, source);
+		return GcmUtils.getRegistrationStatus(context, source);
 	}
 
 

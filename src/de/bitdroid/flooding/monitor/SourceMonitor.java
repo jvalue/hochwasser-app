@@ -11,7 +11,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
+import de.bitdroid.flooding.ods.GcmRegistrationListener;
 import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -40,25 +42,40 @@ public final class SourceMonitor {
 	}
 
 
-	public void startMonitoring(OdsSource source)  {
-		if (source == null) throw new NullPointerException("param cannot be null");
-		if (isBeingMonitored(source)) throw new IllegalArgumentException("Already being monitored");
+	public void startMonitoring(OdsSource source, GcmRegistrationListener listener)  {
+		if (source == null || listener == null) 
+			throw new NullPointerException("param cannot be null");
+		if (isBeingMonitored(source)) 
+			throw new IllegalArgumentException("Already being monitored");
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putString(source.toString(), "").commit();
 
-		monitorDatabase.addSource(monitorDatabase.getWritableDatabase(), source.toSqlTableName(), source);
+		monitorDatabase.addSource(
+				monitorDatabase.getWritableDatabase(), 
+				source.toSqlTableName(), 
+				source);
+
+		OdsSourceManager manager = OdsSourceManager.getInstance(context);
+		if (!manager.isRegisteredForPushNotifications(source))
+			manager.startPushNotifications(source, listener);
 
 		Log.debug("Starting SourceMonitor for " + source.getSourceId());
 	}
 
 
-	public void stopMonitoring(OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
-		if (!isBeingMonitored(source)) throw new IllegalArgumentException("Not monitored");
+	public void stopMonitoring(OdsSource source, GcmRegistrationListener listener) {
+		if (source == null || listener == null) 
+			throw new NullPointerException("param cannot be null");
+		if (!isBeingMonitored(source)) 
+			throw new IllegalArgumentException("Not monitored");
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.remove(source.toString()).commit();
+
+		OdsSourceManager manager = OdsSourceManager.getInstance(context);
+		if (manager.isRegisteredForPushNotifications(source))
+			manager.stopPushNotifications(source, listener);
 
 		Log.debug("Stopping SourceMonitor for " + source.getSourceId());
 	}

@@ -57,12 +57,14 @@ public class GcmTestActivity extends Activity {
 
 		@Override
 		protected GcmException doInBackground(Void... param) {
+			/*
 			try {
 				if (register) OdsSourceManager.getInstance(context).startPushNotifications(source);
 				else OdsSourceManager.getInstance(context).stopPushNotifications(source);
 			} catch (GcmException ge) {
 				return ge;
 			}
+			*/
 			return null;
 		}
 

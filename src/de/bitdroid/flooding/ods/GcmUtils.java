@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.AsyncTask;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -34,13 +35,21 @@ final class GcmUtils {
 
 
 
-	static void registerSource(Context context, OdsSource source) throws GcmException {
-		sourceRegistrationHelper(context, source, true);
+	static void registerSource(
+			Context context, 
+			OdsSource source, 
+			GcmRegistrationListener listener) {
+
+		new RegistrationTask(context, source, true, listener).execute();
 	}
 
 
-	static void unregisterSource(Context context, OdsSource source) throws GcmException {
-		sourceRegistrationHelper(context, source, false);
+	static void unregisterSource(
+			Context context, 
+			OdsSource source,
+			GcmRegistrationListener listener) {
+
+		new RegistrationTask(context, source, false, listener).execute();
 	}
 
 
@@ -150,4 +159,41 @@ final class GcmUtils {
 
 
 	private GcmUtils() { }
+
+
+	private static final class RegistrationTask extends AsyncTask<Void, Void, GcmException> {
+		private final Context context;
+		private final OdsSource source;
+		private final boolean register;
+		private final GcmRegistrationListener listener;
+
+		public RegistrationTask(
+				Context context, 
+				OdsSource source, 
+				boolean register, 
+				GcmRegistrationListener listener) {
+
+			this.context = context;
+			this.source = source;
+			this.register = register;
+			this.listener = listener;
+		}
+
+		@Override
+		protected GcmException doInBackground(Void... param) {
+			try {
+				sourceRegistrationHelper(context, source, register);
+				return null;
+			} catch (GcmException ge) {
+				return ge;
+			}
+		}
+				
+		@Override
+		protected void onPostExecute(GcmException ge) {
+			if (ge == null) listener.onSuccess();
+			else listener.onFailure(ge);
+		}
+	}
+
 }

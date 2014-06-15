@@ -7,6 +7,7 @@ import android.preference.PreferenceActivity;
 import android.widget.Toast;
 
 import de.bitdroid.flooding.monitor.SourceMonitor;
+import de.bitdroid.flooding.ods.GcmException;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
@@ -47,12 +48,24 @@ public final class MainPreferencesActivity extends PreferenceActivity {
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				/*
 				SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
 				boolean start = (Boolean) newValue;
 				if (start != monitor.isBeingMonitored(PegelOnlineSource.INSTANCE)) {
-					if (start) monitor.startMonitoring(PegelOnlineSource.INSTANCE);
-					else monitor.stopMonitoring(PegelOnlineSource.INSTANCE);
+					try {
+						if (start) monitor.startMonitoring(PegelOnlineSource.INSTANCE);
+						else monitor.stopMonitoring(PegelOnlineSource.INSTANCE);
+						return true;
+					} catch (GcmException ge) {
+						Toast.makeText(
+								getApplicationContext(), 
+								getString(R.string.error_monitoring_failed, ge.getMessage()), 
+								Toast.LENGTH_LONG)
+							.show();
+						return false;
+					}
 				}
+				*/
 				return true;
 			}
 		});

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -22,6 +23,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
+import de.bitdroid.flooding.ods.GcmException;
+import de.bitdroid.flooding.ods.GcmRegistrationListener;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -169,7 +172,18 @@ public class MainActivity extends Activity {
 
 		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
 		if (enabled && !monitor.isBeingMonitored(source)) {
-			monitor.startMonitoring(source);
+			monitor.startMonitoring(source, new  GcmRegistrationListener() {
+				@Override
+				public void onSuccess() { }
+				@Override
+				public void onFailure(GcmException ge) {
+					Toast.makeText(
+							getApplicationContext(),
+							getString(R.string.error_monitoring_failed, ge.getMessage()),
+							Toast.LENGTH_LONG)
+						.show();
+				}
+			});
 		}
 	}
 

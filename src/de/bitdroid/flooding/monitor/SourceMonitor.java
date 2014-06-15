@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
-import de.bitdroid.flooding.ods.GcmRegistrationListener;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.utils.Log;
@@ -42,8 +41,8 @@ public final class SourceMonitor {
 	}
 
 
-	public void startMonitoring(OdsSource source, GcmRegistrationListener listener)  {
-		if (source == null || listener == null) 
+	public void startMonitoring(OdsSource source)  {
+		if (source == null) 
 			throw new NullPointerException("param cannot be null");
 		if (isBeingMonitored(source)) 
 			throw new IllegalArgumentException("Already being monitored");
@@ -58,14 +57,14 @@ public final class SourceMonitor {
 
 		OdsSourceManager manager = OdsSourceManager.getInstance(context);
 		if (!manager.isRegisteredForPushNotifications(source))
-			manager.startPushNotifications(source, listener);
+			manager.startPushNotifications(source);
 
 		Log.debug("Starting SourceMonitor for " + source.getSourceId());
 	}
 
 
-	public void stopMonitoring(OdsSource source, GcmRegistrationListener listener) {
-		if (source == null || listener == null) 
+	public void stopMonitoring(OdsSource source) {
+		if (source == null) 
 			throw new NullPointerException("param cannot be null");
 		if (!isBeingMonitored(source)) 
 			throw new IllegalArgumentException("Not monitored");
@@ -75,7 +74,7 @@ public final class SourceMonitor {
 
 		OdsSourceManager manager = OdsSourceManager.getInstance(context);
 		if (manager.isRegisteredForPushNotifications(source))
-			manager.stopPushNotifications(source, listener);
+			manager.stopPushNotifications(source);
 
 		Log.debug("Stopping SourceMonitor for " + source.getSourceId());
 	}

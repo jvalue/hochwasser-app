@@ -111,13 +111,13 @@ public final class OdsSourceManager {
 	 * This request will cause network operations. Make sure not to call it from
 	 * the main thread.
 	 */
-	public void startPushNotifications(OdsSource source, GcmRegistrationListener listener) {
-		if (source == null || listener == null) 
+	public void startPushNotifications(OdsSource source) {
+		if (source == null) 
 			throw new NullPointerException("param cannot be null");
 		if (GcmUtils.isSourceRegistered(context, source)) 
 			throw new IllegalStateException("Already registered");
 
-		GcmUtils.registerSource(context, source, listener);
+		GcmUtils.registerSource(context, source);
 	}
 
 
@@ -128,13 +128,13 @@ public final class OdsSourceManager {
 	 * This request will cause network operations. Make sure not to call it from
 	 * the main thread.
 	 */
-	public void stopPushNotifications(OdsSource source, GcmRegistrationListener listener) {
-		if (source == null || listener == null) 
+	public void stopPushNotifications(OdsSource source) {
+		if (source == null) 
 			throw new NullPointerException("param cannot be null");
 		if (!GcmUtils.isSourceRegistered(context, source)) 
 			throw new IllegalStateException("Not registered");
 
-		GcmUtils.unregisterSource(context, source, listener);
+		GcmUtils.unregisterSource(context, source);
 	}
 
 

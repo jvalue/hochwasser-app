@@ -85,13 +85,22 @@
 					android:resource="@xml/syncadapter" />
 		</service>
 
+		<service android:name=".ods.GcmIntentService">
+		</service>
+
+		<receiver 
+				android:name=".ods.GcmUtils">
+			<intent-filter>
+				<action android:name="de.bitdroid.flooding.ods.ACTION_GCM_FINISH"/>
+			</intent-filter>
+		</receiver>
+
 		<receiver
 				android:name=".ods.SyncStatusListener">
 			<intent-filter>
 				<action android:name="de.bitdroid.flooding.ods.ACTION_SYNC_FINISH"/>
 			</intent-filter>
 		</receiver>
-
 
 		<receiver
 				android:name=".monitor.MonitorSyncListener">
@@ -102,7 +111,6 @@
 
 		<service android:name=".monitor.CopySourceService">
 		</service>
-
 
 		<receiver
 				android:name=".ods.GcmBroadcastReceiver">

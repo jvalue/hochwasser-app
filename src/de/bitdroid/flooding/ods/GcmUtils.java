@@ -14,7 +14,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import de.bitdroid.flooding.R;
 
 
-final class GcmUtils extends BroadcastReceiver {
+public final class GcmUtils extends BroadcastReceiver {
 
 	private static final String PREFS_NAME = "GcmUtilities";
 	private static final String 

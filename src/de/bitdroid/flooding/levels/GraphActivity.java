@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.levels;
 
+import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_MONITOR_TIMESTAMP;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MHW_UNIT;
@@ -35,7 +36,6 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
@@ -90,9 +90,15 @@ public class GraphActivity extends Activity {
 
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
-				return new CursorLoader(
+				List<Long> timestamps = SourceMonitor
+					.getInstance(getApplicationContext())
+					.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
+
+				long latestTimestamp = Collections.max(timestamps);
+
+				return new MonitorSourceLoader(
 						getApplicationContext(),
-						PegelOnlineSource.INSTANCE.toUri(),
+						PegelOnlineSource.INSTANCE,
 						new String[] { 
 							COLUMN_STATION_NAME,
 							COLUMN_STATION_KM,
@@ -115,8 +121,10 @@ public class GraphActivity extends Activity {
 							COLUMN_CHARVALUES_HTHW_UNIT,
 							COLUMN_CHARVALUES_NTNW_VALUE,
 							COLUMN_CHARVALUES_NTNW_UNIT
-						}, COLUMN_WATER_NAME + "=? AND " + COLUMN_LEVEL_TYPE + "=?", 
-						new String[] { waterName, "W" }, 
+						}, COLUMN_WATER_NAME + "=? AND " 
+							+ COLUMN_LEVEL_TYPE + "=? AND " 
+							+ COLUMN_MONITOR_TIMESTAMP + "=?",
+						new String[] { waterName, "W", String.valueOf(latestTimestamp) }, 
 						null);
 			}
 		};

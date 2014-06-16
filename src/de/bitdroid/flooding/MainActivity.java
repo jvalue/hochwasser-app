@@ -9,7 +9,6 @@ import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -26,7 +25,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
-import de.bitdroid.flooding.ods.GcmIntentService;
+import de.bitdroid.flooding.ods.AbstractGcmRegistrationReceiver;
 import de.bitdroid.flooding.ods.GcmStatus;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
@@ -169,7 +168,7 @@ public class MainActivity extends Activity {
 		OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
 		GcmStatus status = manager.getPushNotificationsRegistrationStatus(source);
 		if (!status.equals(GcmStatus.REGISTERED)) {
-			registerReceiver(gcmReceiver, new IntentFilter(GcmIntentService.ACTION_GCM_FINISH));
+			registerReceiver(gcmReceiver, AbstractGcmRegistrationReceiver.getIntentFilter());
 			manager.startPushNotifications(source);
 		}
 	}
@@ -184,14 +183,20 @@ public class MainActivity extends Activity {
 	}
 
 
-	private static final BroadcastReceiver gcmReceiver = new BroadcastReceiver() {
+	private static final BroadcastReceiver gcmReceiver = new AbstractGcmRegistrationReceiver() {
 		@Override
-		public void onReceive(Context context, Intent intent) {
-			String source = intent.getStringExtra(GcmIntentService.EXTRA_SOURCE);
-			String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
-			boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
+		public void onReceive(
+				Context context, 
+				OdsSource source, 
+				boolean register, 
+				String errorMsg) {
 
-			Toast.makeText(context, "source = " + source + "\nerrorMsg = " + errorMsg + "\nregister = " + register, Toast.LENGTH_LONG).show();
+			Toast.makeText(
+					context, 
+					"source = " + source + "\nerrorMsg = " 
+					+ errorMsg + "\nregister = " + register, 
+					Toast.LENGTH_LONG)
+				.show();
 		}
 	};
 }

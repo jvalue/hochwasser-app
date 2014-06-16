@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -76,26 +77,37 @@ public class MainActivity extends Activity {
 				listAdapter.getLoaderCallback());
 
 
-		// ODS source setup
+		// load default pref values
+		PreferenceManager.setDefaultValues(
+				getApplicationContext(),
+				R.xml.preferences,
+				false);
+		SharedPreferences prefs = PreferenceManager
+			.getDefaultSharedPreferences(getApplicationContext());
+
+
+		// set ODS server name
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance(getApplicationContext());
 		if (sourceManager.getOdsServerName() == null) {
-			PreferenceManager.setDefaultValues(
-					getApplicationContext(),
-					R.xml.preferences,
-					false);
 			sourceManager.setOdsServerName(
-					PreferenceManager
-						.getDefaultSharedPreferences(getApplicationContext())
-						.getString(getString(R.string.prefs_ods_servername_key), null));
-		}
-		if (!sourceManager.isPollingActive()) {
-			sourceManager.startManualSync(PegelOnlineSource.INSTANCE);
-			sourceManager.startPolling(1000 * 60 * 60, PegelOnlineSource.INSTANCE);
+					prefs.getString(getString(R.string.prefs_ods_servername_key), null));
 		}
 
 
-		// monitor setup (should only execute on first run)
-		checkForSourceMonitor(PegelOnlineSource.INSTANCE);
+		// monitor setup
+		OdsSource source = PegelOnlineSource.INSTANCE;
+		boolean enabled = prefs.getBoolean(getString(R.string.prefs_ods_monitor_key), false);
+		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
+		if (enabled && !monitor.isBeingMonitored(source)) {
+			monitor.startMonitoring(source);
+		}
+
+		OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
+		GcmStatus status = manager.getPushNotificationsRegistrationStatus(source);
+		if (!status.equals(GcmStatus.REGISTERED)) {
+			registerReceiver(gcmReceiver, AbstractGcmRegistrationReceiver.getIntentFilter());
+			manager.startPushNotifications(source);
+		}
     }
 
 
@@ -154,24 +166,6 @@ public class MainActivity extends Activity {
 		return false;
 	}
 
-
-	private void checkForSourceMonitor(OdsSource source) {
-		boolean enabled = PreferenceManager
-			.getDefaultSharedPreferences(getApplicationContext())
-			.getBoolean(getString(R.string.prefs_ods_monitor_key), false);
-
-		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
-		if (enabled && !monitor.isBeingMonitored(source)) {
-			monitor.startMonitoring(source);
-		}
-
-		OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
-		GcmStatus status = manager.getPushNotificationsRegistrationStatus(source);
-		if (!status.equals(GcmStatus.REGISTERED)) {
-			registerReceiver(gcmReceiver, AbstractGcmRegistrationReceiver.getIntentFilter());
-			manager.startPushNotifications(source);
-		}
-	}
 
 
 	private final static SimpleDateFormat dateFormatter 

@@ -6,8 +6,6 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -26,7 +23,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import de.bitdroid.flooding.levels.ChooseRiverActivity;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
-import de.bitdroid.flooding.ods.AbstractGcmRegistrationReceiver;
 import de.bitdroid.flooding.ods.GcmStatus;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
@@ -105,7 +101,6 @@ public class MainActivity extends Activity {
 		OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
 		GcmStatus status = manager.getPushNotificationsRegistrationStatus(source);
 		if (!status.equals(GcmStatus.REGISTERED)) {
-			registerReceiver(gcmReceiver, AbstractGcmRegistrationReceiver.getIntentFilter());
 			manager.startPushNotifications(source);
 		}
     }
@@ -176,21 +171,4 @@ public class MainActivity extends Activity {
 		else return dateFormatter.format(time.getTime());
 	}
 
-
-	private static final BroadcastReceiver gcmReceiver = new AbstractGcmRegistrationReceiver() {
-		@Override
-		public void onReceive(
-				Context context, 
-				OdsSource source, 
-				boolean register, 
-				String errorMsg) {
-
-			Toast.makeText(
-					context, 
-					"source = " + source + "\nerrorMsg = " 
-					+ errorMsg + "\nregister = " + register, 
-					Toast.LENGTH_LONG)
-				.show();
-		}
-	};
 }

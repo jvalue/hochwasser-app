@@ -192,11 +192,11 @@ public class GraphActivity extends Activity {
 			case R.id.timestamp:
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 				List<String> timestamps = new LinkedList<String>();
-				for (String time : SourceMonitor
+				for (long time : SourceMonitor
 						.getInstance(getApplicationContext())
 						.getAvailableTimestamps(PegelOnlineSource.INSTANCE)) {
 
-					timestamps.add(formatter.format(new Date(Long.valueOf(time))));
+					timestamps.add(formatter.format(new Date(time)));
 				}
 				Collections.sort(timestamps);
 

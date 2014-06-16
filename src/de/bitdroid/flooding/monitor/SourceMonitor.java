@@ -113,8 +113,8 @@ public final class SourceMonitor {
 	}
 
 
-	public List<String> getAvailableTimestamps(OdsSource source) {
-		List<String> timestamps = new LinkedList<String>();
+	public List<Long> getAvailableTimestamps(OdsSource source) {
+		List<Long> timestamps = new LinkedList<Long>();
 
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		builder.setTables(source.toSqlTableName());
@@ -127,7 +127,7 @@ public final class SourceMonitor {
 		if (cursor.getCount() == 0) return timestamps;
 		cursor.moveToFirst();
 		do {
-			timestamps.add(cursor.getString(0));
+			timestamps.add(cursor.getLong(0));
 		} while (cursor.moveToNext());
 
 		return timestamps;

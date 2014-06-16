@@ -83,7 +83,7 @@ public class GraphActivity extends Activity {
 			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
 		currentTimestamp = Collections.max(timestamps);
 
-		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
+		AbstractLoaderCallbacks loaderCallbacks = new AbstractLoaderCallbacks(LOADER_ID) {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
@@ -99,7 +99,7 @@ public class GraphActivity extends Activity {
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
 
-				GraphActivity.this.loader = new MonitorSourceLoader(
+				return new MonitorSourceLoader(
 						getApplicationContext(),
 						PegelOnlineSource.INSTANCE,
 						new String[] { 
@@ -129,12 +129,12 @@ public class GraphActivity extends Activity {
 						new String[] { waterName, "W" },
 						null,
 						currentTimestamp);
-
-					return GraphActivity.this.loader;
 			}
 		};
 
-		getLoaderManager().initLoader(LOADER_ID, null, loader);
+		getLoaderManager().initLoader(LOADER_ID, null, loaderCallbacks);
+		Loader<Cursor> cursorLoader = getLoaderManager().getLoader(LOADER_ID);
+		this.loader = (MonitorSourceLoader) cursorLoader;
     }
 
 

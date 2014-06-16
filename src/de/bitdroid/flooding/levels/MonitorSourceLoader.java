@@ -1,9 +1,10 @@
 package de.bitdroid.flooding.levels;
 
+import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_MONITOR_TIMESTAMP;
+
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
-
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.ods.OdsSource;
 
@@ -18,6 +19,7 @@ final class MonitorSourceLoader extends AsyncTaskLoader<Cursor> {
 	private final String sortOrder;
 
 	private Cursor cursor;
+	private long timestamp;
 
 	public MonitorSourceLoader(
 			Context context,
@@ -25,7 +27,8 @@ final class MonitorSourceLoader extends AsyncTaskLoader<Cursor> {
 			String[] projection,
 			String selection,
 			String[] selectionArgs,
-			String sortOrder) {
+			String sortOrder,
+			long timestamp) {
 
 		super(context);
 
@@ -35,11 +38,29 @@ final class MonitorSourceLoader extends AsyncTaskLoader<Cursor> {
 		this.selection = selection;
 		this.selectionArgs = selectionArgs;
 		this.sortOrder = sortOrder;
+
+		this.timestamp = timestamp;
 	}
 
 
 	@Override
 	public Cursor loadInBackground() {
+		String selection = this.selection;
+		String[] selectionArgs = this.selectionArgs;
+
+		String timestampSelection = COLUMN_MONITOR_TIMESTAMP + "=?";
+		String timestampArg = String.valueOf(timestamp);
+
+		if (selection == null) selection = timestampSelection;
+		else selection = selection + " AND " + timestampSelection;
+
+		if (selectionArgs == null) selectionArgs = new String[] { timestampArg };
+		else {
+			selectionArgs = new String[selectionArgs.length + 1];
+			System.arraycopy(this.selectionArgs, 0, selectionArgs, 0, this.selectionArgs.length);
+			selectionArgs[selectionArgs.length - 1] = timestampArg;
+		}
+
 		return SourceMonitor
 			.getInstance(context)
 			.query(source, projection, selection, selectionArgs, sortOrder);
@@ -92,6 +113,12 @@ final class MonitorSourceLoader extends AsyncTaskLoader<Cursor> {
 
 		release(cursor);
 		cursor = null;
+	}
+
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+		onContentChanged();
 	}
 
 

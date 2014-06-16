@@ -1,6 +1,5 @@
 package de.bitdroid.flooding.levels;
 
-import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_MONITOR_TIMESTAMP;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MHW_UNIT;
@@ -55,25 +54,34 @@ import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 public class GraphActivity extends Activity {
 	
 	public static final String EXTRA_WATER_NAME = "waterName";
+
 	private static final int LOADER_ID = 44;
 
 	private WaterGraph graph;
 	private boolean showingRegularSeries = true;
 	private Cursor levelData;
+
+	private MonitorSourceLoader loader;
+	private long currentTimestamp;
 	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
+		// setup graph
 		final String waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
 		this.graph = new WaterGraph(graphView, waterName, getApplicationContext());
-
-
 		if (showingRegularSeries) graph.setSeries(getRegularSeries());
 		else graph.setSeries(getNormalizedSeries());
 
+		// get latest timestamp
+		List<Long> timestamps = SourceMonitor
+			.getInstance(getApplicationContext())
+			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
+		currentTimestamp = Collections.max(timestamps);
 
 		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
 
@@ -90,13 +98,8 @@ public class GraphActivity extends Activity {
 
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
-				List<Long> timestamps = SourceMonitor
-					.getInstance(getApplicationContext())
-					.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
 
-				long latestTimestamp = Collections.max(timestamps);
-
-				return new MonitorSourceLoader(
+				GraphActivity.this.loader = new MonitorSourceLoader(
 						getApplicationContext(),
 						PegelOnlineSource.INSTANCE,
 						new String[] { 
@@ -122,10 +125,12 @@ public class GraphActivity extends Activity {
 							COLUMN_CHARVALUES_NTNW_VALUE,
 							COLUMN_CHARVALUES_NTNW_UNIT
 						}, COLUMN_WATER_NAME + "=? AND " 
-							+ COLUMN_LEVEL_TYPE + "=? AND " 
-							+ COLUMN_MONITOR_TIMESTAMP + "=?",
-						new String[] { waterName, "W", String.valueOf(latestTimestamp) }, 
-						null);
+							+ COLUMN_LEVEL_TYPE + "=?",
+						new String[] { waterName, "W" },
+						null,
+						currentTimestamp);
+
+					return GraphActivity.this.loader;
 			}
 		};
 
@@ -198,21 +203,45 @@ public class GraphActivity extends Activity {
 				return true;
 
 			case R.id.timestamp:
-				SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
-				List<String> timestamps = new LinkedList<String>();
-				for (long time : SourceMonitor
-						.getInstance(getApplicationContext())
-						.getAvailableTimestamps(PegelOnlineSource.INSTANCE)) {
+				final List<Long> timestamps = SourceMonitor
+					.getInstance(getApplicationContext())
+					.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
 
-					timestamps.add(formatter.format(new Date(time)));
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
+				List<String> stringTimestamps = new LinkedList<String>();
+				for (long time : timestamps) {
+					stringTimestamps.add(formatter.format(new Date(time)));
 				}
+
+				Collections.sort(stringTimestamps);
 				Collections.sort(timestamps);
+
+				final long originalTimestamp = currentTimestamp;
+				int selectedTimestamp = timestamps.indexOf(currentTimestamp);
 
 				new AlertDialog.Builder(this)
 					.setTitle(getString(R.string.series_monitor_dialog_title))
-					.setSingleChoiceItems(timestamps.toArray(new String[timestamps.size()]), 0, null)
-					.setNegativeButton(R.string.btn_cancel, null)
-					.setPositiveButton(R.string.btn_ok, null)
+					.setSingleChoiceItems(
+							stringTimestamps.toArray(new String[timestamps.size()]), 
+							selectedTimestamp,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int idx) {
+									currentTimestamp = timestamps.get(idx);
+								}
+							})
+					.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int idx) {
+							currentTimestamp = originalTimestamp;
+						}
+					})
+					.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int idx) {
+							loader.setTimestamp(currentTimestamp);
+						}
+					})
 					.create().show();
 
 				return true;
@@ -221,12 +250,15 @@ public class GraphActivity extends Activity {
 	}
 
 	
-	private static final String EXTRA_SHOWING_REGULAR_SERIES = "showingRegularSeries";
+	private static final String 
+		EXTRA_SHOWING_REGULAR_SERIES = "showingRegularSeries",
+		EXTRA_TIMESTAMP = "EXTRA_TIMESTAMP";
 
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
 		state.putBoolean(EXTRA_SHOWING_REGULAR_SERIES, showingRegularSeries);
+		state.putLong(EXTRA_TIMESTAMP, currentTimestamp);
 		graph.saveState(state);
 	}
 
@@ -234,12 +266,18 @@ public class GraphActivity extends Activity {
 	@Override
 	protected void onRestoreInstanceState(Bundle state) {
 		super.onRestoreInstanceState(state);
+
+		// restore series
 		this.showingRegularSeries = state.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
 		if (!showingRegularSeries) {
 			graph.setSeries(getNormalizedSeries());
 			if (levelData != null) graph.setData(levelData);
 		}
 		graph.restoreState(state);
+
+		// restore timestamp
+		currentTimestamp = state.getLong(EXTRA_TIMESTAMP);
+		if (loader != null) loader.setTimestamp(currentTimestamp);
 	}
 
 

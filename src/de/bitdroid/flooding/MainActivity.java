@@ -30,6 +30,8 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 public class MainActivity extends Activity {
 
+	private final String PREFS_KEY_FIRST_START = "FIRST_START";
+
 	private StationsListAdapter listAdapter;
 	
 
@@ -103,6 +105,18 @@ public class MainActivity extends Activity {
 		if (!status.equals(GcmStatus.REGISTERED)) {
 			manager.startPushNotifications(source);
 		}
+
+	
+		// start first manual sync
+		boolean firstStart = prefs.getBoolean(PREFS_KEY_FIRST_START, true);
+		if (firstStart) {
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putBoolean(PREFS_KEY_FIRST_START, false);
+			editor.commit();
+
+			manager.startManualSync(source);
+		}
+
     }
 
 

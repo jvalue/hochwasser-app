@@ -10,5 +10,8 @@
 	<item 
 		android:id="@+id/select_settings"
 		android:title="@string/menu_main_settings"
+		android:hint="@string/menu_main_about"
+		android:showAsAction="ifRoom"
+		android:icon="@drawable/ic_action_settings"
 	/>
 </menu>

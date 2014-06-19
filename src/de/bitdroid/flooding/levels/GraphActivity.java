@@ -91,8 +91,7 @@ public class GraphActivity extends Activity {
 
 			@Override
 			public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
-				currentTimestamp = timestamps.get(progress);
-				loader.setTimestamp(currentTimestamp);
+				setTimestamp(timestamps.get(progress));
 			}
 
 			@Override
@@ -250,21 +249,16 @@ public class GraphActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int idx) {
-									currentTimestamp = timestamps.get(idx);
+									setTimestamp(timestamps.get(idx));
 								}
 							})
 					.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int idx) {
-							currentTimestamp = originalTimestamp;
+							setTimestamp(originalTimestamp);
 						}
 					})
-					.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int idx) {
-							loader.setTimestamp(currentTimestamp);
-						}
-					})
+					.setPositiveButton(R.string.btn_ok, null)
 					.create().show();
 
 				return true;
@@ -421,6 +415,12 @@ public class GraphActivity extends Activity {
 					R.xml.series_average_levels));
 
 		return series;
+	}
+
+
+	private void setTimestamp(long newTimestamp) {
+		currentTimestamp = newTimestamp;
+		loader.setTimestamp(currentTimestamp);
 	}
 
 }

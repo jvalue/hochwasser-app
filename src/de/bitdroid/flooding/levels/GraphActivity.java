@@ -91,7 +91,7 @@ public class GraphActivity extends Activity {
 
 			@Override
 			public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
-				setTimestamp(timestamps.get(progress));
+				if (fromUser) setTimestamp(timestamps.get(progress));
 			}
 
 			@Override
@@ -250,12 +250,14 @@ public class GraphActivity extends Activity {
 								@Override
 								public void onClick(DialogInterface dialog, int idx) {
 									setTimestamp(timestamps.get(idx));
+									updateScrollbar();
 								}
 							})
 					.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int idx) {
 							setTimestamp(originalTimestamp);
+							updateScrollbar();
 						}
 					})
 					.setPositiveButton(R.string.btn_ok, null)
@@ -421,6 +423,16 @@ public class GraphActivity extends Activity {
 	private void setTimestamp(long newTimestamp) {
 		currentTimestamp = newTimestamp;
 		loader.setTimestamp(currentTimestamp);
+	}
+
+	
+	private void updateScrollbar() {
+		final List<Long> timestamps = SourceMonitor
+			.getInstance(getApplicationContext())
+			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
+		Collections.sort(timestamps);
+		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
+		seekbar.setProgress(timestamps.indexOf(currentTimestamp));
 	}
 
 }

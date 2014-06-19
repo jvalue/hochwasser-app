@@ -50,12 +50,14 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				cursor.moveToFirst();
+				if (cursor.getCount() == 0) return;
+
 				int latIdx = cursor.getColumnIndex(COLUMN_STATION_LAT);
 				int longIdx = cursor.getColumnIndex(COLUMN_STATION_LONG);
 				int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
 				int kmIdx = cursor.getColumnIndex(COLUMN_STATION_KM);
 
-				while (cursor.moveToNext()) {
+				do {
 					String stationName = cursor.getString(nameIdx);
 					double km = cursor.getDouble(kmIdx);
 					double lat = cursor.getDouble(latIdx);
@@ -64,7 +66,7 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 					GeoPoint point = new GeoPoint(lat, lon);
 					overlayItems.add(new OverlayItem(stationName, stationName, point));
 					stationItems.add(new Station(stationName, km, lat, lon));
-				}
+				} while (cursor.moveToNext());
 				populate();
 			}
 

@@ -19,4 +19,11 @@
 		android:hint="@string/menu_graph_seekbar"
 		android:icon="@drawable/ic_action_time"
 	/>
+	<item 
+		android:id="@+id/map"
+		android:showAsAction="always"
+		android:title="@string/menu_graph_map"
+		android:hint="@string/menu_graph_map"
+		android:icon="@drawable/ic_action_map"
+	/>
 </menu>

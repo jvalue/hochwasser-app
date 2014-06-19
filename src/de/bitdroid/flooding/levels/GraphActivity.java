@@ -36,6 +36,7 @@ import java.util.Set;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ import android.widget.SeekBar;
 import com.androidplot.xy.XYPlot;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
@@ -63,6 +65,7 @@ public class GraphActivity extends Activity {
 	private boolean showingRegularSeries = true;
 	private boolean showingSeekbar = false;
 	private Cursor levelData;
+	private String waterName;
 
 	private MonitorSourceLoader loader;
 	private long currentTimestamp;
@@ -74,7 +77,7 @@ public class GraphActivity extends Activity {
 		setContentView(R.layout.graph);
 
 		// setup graph
-		final String waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
+		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
 		this.graph = new WaterGraph(graphView, waterName, getApplicationContext());
 		if (showingRegularSeries) graph.setSeries(getRegularSeries());
@@ -268,6 +271,12 @@ public class GraphActivity extends Activity {
 				SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
 				if (showingSeekbar) seekbar.setVisibility(View.VISIBLE);
 				else seekbar.setVisibility(View.GONE);
+				return true;
+
+			case R.id.map:
+				Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
+				mapIntent.putExtra(MapActivity.EXTRA_WATER_NAME, waterName);
+				startActivity(mapIntent);
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

@@ -3,6 +3,7 @@ package de.bitdroid.flooding.map;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LAT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LONG;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 	private final AbstractLoaderCallbacks loaderCallback;
 	private final List<OverlayItem> items = new ArrayList<OverlayItem>();
 
-	public StationsOverlay(final Context context) {
+	public StationsOverlay(final Context context, final String waterName) {
 		super(
 				context.getResources().getDrawable(android.R.drawable.presence_online), 
 				new ResourceProxyImpl(context));
@@ -60,6 +61,13 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
+				String selection = null;
+				String[] selectionParams = null;
+				if (waterName != null) {
+					selection = COLUMN_WATER_NAME + "=?";
+					selectionParams = new String[] { waterName };
+				}
+
 				return new CursorLoader(
 						context,
 						PegelOnlineSource.INSTANCE.toUri(),
@@ -67,7 +75,8 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 							COLUMN_STATION_LAT, 
 							COLUMN_STATION_LONG, 
 							COLUMN_STATION_NAME 
-						}, null, null, null);
+						}, 
+						selection, selectionParams, null);
 			}
 		};
 	}

@@ -11,6 +11,8 @@ import android.os.Bundle;
 import de.bitdroid.flooding.R;
 
 public class MapActivity extends Activity implements MapConstants {
+
+	public static final String EXTRA_WATER_NAME = "EXTRA_WATER_NAME";
 	
 	private MyLocationNewOverlay locationOverlay;
 	private FixedMapView mapView;
@@ -21,6 +23,8 @@ public class MapActivity extends Activity implements MapConstants {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
 
+		String waterName = getIntent().getStringExtra(EXTRA_WATER_NAME);
+
 		mapView = (FixedMapView) findViewById(R.id.map);
 		mapView.setMultiTouchControls(true);
 
@@ -30,7 +34,7 @@ public class MapActivity extends Activity implements MapConstants {
 				mapView);
 		mapView.getOverlays().add(locationOverlay);
 		
-		stationsOverlay = new StationsOverlay(getApplicationContext());
+		stationsOverlay = new StationsOverlay(getApplicationContext(), waterName);
 		mapView.getOverlays().add(stationsOverlay);
 
 		getLoaderManager().initLoader(

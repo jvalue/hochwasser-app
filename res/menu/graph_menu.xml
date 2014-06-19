@@ -16,5 +16,7 @@
 		android:id="@+id/seekbar"
 		android:showAsAction="always"
 		android:title="@string/menu_graph_seekbar"
+		android:hint="@string/menu_graph_seekbar"
+		android:icon="@drawable/ic_action_time"
 	/>
 </menu>

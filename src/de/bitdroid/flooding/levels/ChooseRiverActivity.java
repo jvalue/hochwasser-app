@@ -1,8 +1,8 @@
 package de.bitdroid.flooding.levels;
 
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,17 +11,26 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ListActivity;
+import android.app.Service;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
+import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.Log;
@@ -31,10 +40,28 @@ public class ChooseRiverActivity extends ListActivity {
 	private static final int LOADER_ID = 44;
 
 	private ArrayAdapter<Entry> listAdapter = null;
+	private EditText searchBox = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		setContentView(R.layout.select_water);
+
+		// search box
+		searchBox = (EditText) findViewById(R.id.search);
+		searchBox.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {
+				listAdapter.getFilter().filter(text);
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence text, int arg1, int arg2, int arg3) { }
+
+			@Override
+			public void afterTextChanged(Editable e) { }
+		});
 
 		// list adapter
 		listAdapter = new ArrayAdapter<Entry>(
@@ -42,10 +69,10 @@ public class ChooseRiverActivity extends ListActivity {
 				android.R.layout.simple_list_item_1);
 		setListAdapter(listAdapter);
 
-
 		// show stations on long click
 		getListView().setLongClickable(true);
 		getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 				Entry e = listAdapter.getItem(position);
@@ -116,6 +143,35 @@ public class ChooseRiverActivity extends ListActivity {
 				GraphActivity.class);
 		intent.putExtras(extras);
 		startActivity(intent);
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.select_water_menu, menu);
+		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch(menuItem.getItemId()) {
+			case R.id.search:
+				InputMethodManager inputManager 
+					= (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+				if (searchBox.getVisibility() == View.GONE) {
+					searchBox.setVisibility(View.VISIBLE);
+					inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+					inputManager.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT);
+					searchBox.requestFocus();
+				} else {
+					searchBox.setVisibility(View.GONE);
+					inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+				}
+				return true;
+		}
+		return super.onOptionsItemSelected(menuItem);
 	}
 
 

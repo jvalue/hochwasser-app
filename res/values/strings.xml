@@ -17,6 +17,8 @@
 	<string name="menu_graph_timestamp">Select time stamp</string>
 	<string name="menu_graph_seekbar">Timestamp</string>
 
+	<string name="menu_select_water_search">Search</string>
+
 	<string name="series_select_dialog_title">Select Series to Display</string>
 	<string name="series_monitor_dialog_title">Select a Timestamp to Display</string>
 	<string name="series_water_levels">Water Levels</string>

@@ -80,10 +80,30 @@ public class GraphActivity extends Activity {
 		if (showingRegularSeries) graph.setSeries(getRegularSeries());
 		else graph.setSeries(getNormalizedSeries());
 
-		// get latest timestamp
-		List<Long> timestamps = SourceMonitor
+		// setup seekbar
+		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
+		final List<Long> timestamps = SourceMonitor
 			.getInstance(getApplicationContext())
 			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
+		Collections.sort(timestamps);
+		seekbar.setMax(timestamps.size() - 1);
+		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+			@Override
+			public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
+				long timestamp = timestamps.get(progress);
+				loader.setTimestamp(timestamp);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekbar) { }
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekbar) { }
+		});
+
+
+		// get latest timestamp
 		currentTimestamp = Collections.max(timestamps);
 
 		AbstractLoaderCallbacks loaderCallbacks = new AbstractLoaderCallbacks(LOADER_ID) {

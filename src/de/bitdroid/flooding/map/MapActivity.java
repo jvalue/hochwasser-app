@@ -34,7 +34,7 @@ public class MapActivity extends Activity implements MapConstants {
 				mapView);
 		mapView.getOverlays().add(locationOverlay);
 		
-		stationsOverlay = new StationsOverlay(getApplicationContext(), waterName);
+		stationsOverlay = new StationsOverlay(getApplicationContext(), this, waterName);
 		mapView.getOverlays().add(stationsOverlay);
 
 		getLoaderManager().initLoader(

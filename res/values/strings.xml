@@ -8,6 +8,9 @@
 	<string name="main_dialog_info_msg">Last Sync:\t%1$s\nLast Success:\t%2$s\nLast Failure:\t%3$s</string>
 	<string name="main_dialog_info_never">never</string>
 
+	<string name="map_dialog_station_info_title">Station Info</string>
+	<string name="map_dialog_station_info">%1$s\nRiver km %2$.3f\nLatitude %3$f\nLongitude %4$f</string>
+
 	<string name="menu_main_settings">Settings</string>
 	<string name="menu_main_about">Sync Status</string>
 

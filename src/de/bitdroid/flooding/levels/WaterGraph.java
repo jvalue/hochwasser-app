@@ -1,6 +1,8 @@
 package de.bitdroid.flooding.levels;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -28,10 +30,11 @@ final class WaterGraph implements OnTouchListener {
 	
 	private final XYPlot graph;
 	private final Context context;
+	private final String graphName;
+	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
 	private SeriesManager manager;
 	private PointF zoomMinXY, zoomMaxXY, graphMinXY, graphMaxXY;
-
 
 
 	public WaterGraph(
@@ -41,11 +44,11 @@ final class WaterGraph implements OnTouchListener {
 
 		this.graph = graph;
 		this.context = context;
+		this.graphName = graphName;
 
 		graph.setOnTouchListener(this);
 		graph.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
 		graph.getLayoutManager().remove(graph.getLegendWidget());
-		graph.setTitle(graphName);
 		graph.setTicksPerRangeLabel(2);
 		graph.setTicksPerDomainLabel(3);
 		graph.getGraphWidget().setRangeValueFormat(new DecimalFormat("@@##"));
@@ -66,10 +69,11 @@ final class WaterGraph implements OnTouchListener {
 	}
 
 
-	public void setData(Cursor data) {
+	public void setData(Cursor data, long timestamp) {
 		manager.reset();
 		manager.setData(data);
 
+		graph.setTitle(graphName + " (" + dateFormatter.format(new Date(timestamp)) + ")");
 		graph.setRangeBoundaries(null, null, BoundaryMode.AUTO);
 		graph.setDomainBoundaries(null, null, BoundaryMode.AUTO);
 		graph.calculateMinMaxVals();

@@ -110,7 +110,7 @@ public class GraphActivity extends Activity {
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				GraphActivity.this.levelData = cursor;
-				graph.setData(cursor);
+				graph.setData(cursor, currentTimestamp);
 			}
 
 			@Override
@@ -221,7 +221,7 @@ public class GraphActivity extends Activity {
 				if (showingRegularSeries) graph.setSeries(getNormalizedSeries());
 				else graph.setSeries(getRegularSeries());
 				this.showingRegularSeries = !showingRegularSeries;
-				if (levelData != null) graph.setData(levelData);
+				if (levelData != null) graph.setData(levelData, currentTimestamp);
 				return true;
 
 			case R.id.timestamp:
@@ -299,7 +299,7 @@ public class GraphActivity extends Activity {
 		this.showingRegularSeries = state.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
 		if (!showingRegularSeries) {
 			graph.setSeries(getNormalizedSeries());
-			if (levelData != null) graph.setData(levelData);
+			if (levelData != null) graph.setData(levelData, currentTimestamp);
 		}
 		graph.restoreState(state);
 

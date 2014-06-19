@@ -51,7 +51,7 @@ public final class MainPreferencesActivity extends PreferenceActivity {
 				SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
 				OdsSource source = PegelOnlineSource.INSTANCE;
 
-				if (monitor.isBeingMonitored(source)) monitor.startMonitoring(source);
+				if (!monitor.isBeingMonitored(source)) monitor.startMonitoring(source);
 				else monitor.stopMonitoring(source);
 
 				return true;

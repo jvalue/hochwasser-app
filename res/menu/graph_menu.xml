@@ -12,4 +12,9 @@
 		android:id="@+id/timestamp"
 		android:title="@string/menu_graph_timestamp"
 	/>
+	<item 
+		android:id="@+id/seekbar"
+		android:showAsAction="always"
+		android:title="@string/menu_graph_seekbar"
+	/>
 </menu>

@@ -10,7 +10,8 @@
     <com.androidplot.xy.XYPlot
 		android:id="@+id/graph"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
 		androidPlot.domainLabel="Location along River (km)"
 		androidPlot.rangeLabel="Water Level (cm)"
 		androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
@@ -26,4 +27,13 @@
 		androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
 		androidPlot.graphWidget.gridLinePaint.color="#000000"
 	/>
+
+	<SeekBar
+		android:id="@+id/seekbar"
+		android:max="100"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+	/>
+
 </LinearLayout>

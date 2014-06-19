@@ -43,6 +43,8 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.SeekBar;
 
 import com.androidplot.xy.XYPlot;
 
@@ -59,6 +61,7 @@ public class GraphActivity extends Activity {
 
 	private WaterGraph graph;
 	private boolean showingRegularSeries = true;
+	private boolean showingSeekbar = false;
 	private Cursor levelData;
 
 	private MonitorSourceLoader loader;
@@ -245,20 +248,29 @@ public class GraphActivity extends Activity {
 					.create().show();
 
 				return true;
+
+			case R.id.seekbar:
+				showingSeekbar = !showingSeekbar;
+				SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
+				if (showingSeekbar) seekbar.setVisibility(View.VISIBLE);
+				else seekbar.setVisibility(View.GONE);
+				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
 	}
 
 	
 	private static final String 
-		EXTRA_SHOWING_REGULAR_SERIES = "showingRegularSeries",
-		EXTRA_TIMESTAMP = "EXTRA_TIMESTAMP";
+		EXTRA_SHOWING_REGULAR_SERIES = "EXTRA_SHOWING_REGULAR_SERIES",
+		EXTRA_TIMESTAMP = "EXTRA_TIMESTAMP",
+		EXTRA_SHOWING_SEEKBAR = "EXTRA_SHOWING_SEEKBAR";
 
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
 		state.putBoolean(EXTRA_SHOWING_REGULAR_SERIES, showingRegularSeries);
 		state.putLong(EXTRA_TIMESTAMP, currentTimestamp);
+		state.putBoolean(EXTRA_SHOWING_SEEKBAR, showingSeekbar);
 		graph.saveState(state);
 	}
 
@@ -278,6 +290,10 @@ public class GraphActivity extends Activity {
 		// restore timestamp
 		currentTimestamp = state.getLong(EXTRA_TIMESTAMP);
 		if (loader != null) loader.setTimestamp(currentTimestamp);
+
+		// restore seekbar
+		showingSeekbar = state.getBoolean(EXTRA_SHOWING_SEEKBAR);
+		if (showingSeekbar) findViewById(R.id.seekbar).setVisibility(View.VISIBLE);
 	}
 
 

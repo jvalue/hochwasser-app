@@ -91,8 +91,8 @@ public class GraphActivity extends Activity {
 
 			@Override
 			public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
-				long timestamp = timestamps.get(progress);
-				loader.setTimestamp(timestamp);
+				currentTimestamp = timestamps.get(progress);
+				loader.setTimestamp(currentTimestamp);
 			}
 
 			@Override

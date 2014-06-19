@@ -15,10 +15,8 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -27,7 +25,7 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 
-public class MapActivity extends Activity implements MapConstants {
+public class MapActivity extends Activity {
 
 	public static final String EXTRA_WATER_NAME = "EXTRA_WATER_NAME";
 
@@ -122,55 +120,45 @@ public class MapActivity extends Activity implements MapConstants {
 				StationsOverlay.LOADER_ID,
 				null,
 				loaderCallback);
-
-		// restore map orientation
-		restoreMapState();
     }
 
-
-	@Override
-	public void onStop() {
-
-		saveMapState();
-		super.onStop();
-	}
 
 
 	@Override
 	public void onResume() {
-		locationOverlay.enableMyLocation();
-
 		super.onResume();
+		locationOverlay.enableMyLocation();
 	}
 
 	
 	@Override
 	public void onPause() {
-		locationOverlay.disableMyLocation();
-
 		super.onPause();
+		locationOverlay.disableMyLocation();
 	}
 
 
-	private void saveMapState() {
-		SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
-		editor.putInt(PREFS_SCROLL_X, mapView.getScrollX());
-		editor.putInt(PREFS_SCROLL_Y, mapView.getScrollY());
-		editor.putInt(PREFS_ZOOM_LEVEL, mapView.getZoomLevel());
-		editor.commit();
+	private static final String
+		EXTRA_SCROLL_X = "EXTRA_SCROLL_X",
+		EXTRA_SCROLL_Y = "EXTRA_SCROLL_Y",
+		EXTRA_ZOOM_LEVEL = "EXTRA_ZOOM_LEVEL";
+
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		state.putInt(EXTRA_SCROLL_X, mapView.getScrollX());
+		state.putInt(EXTRA_SCROLL_Y, mapView.getScrollY());
+		state.putInt(EXTRA_ZOOM_LEVEL, mapView.getZoomLevel());
 	}
 
-	private void restoreMapState() {
-		/*
-		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-		mapView.getController().setZoom(prefs.getInt(PREFS_ZOOM_LEVEL, 1));
+
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState(state);
+		mapView.getController().setZoom(state.getInt(EXTRA_ZOOM_LEVEL, 1));
 		mapView.scrollTo(
-				prefs.getInt(PREFS_SCROLL_X, 0),
-				prefs.getInt(PREFS_SCROLL_Y, 0));
-
-		Toast.makeText(this, "Zoom = " + mapView.getZoomLevel(), Toast.LENGTH_LONG).show();
-		Toast.makeText(this, "Loc = " + mapView.getScrollX() + ", " + mapView.getScrollY(), Toast.LENGTH_LONG).show();
-		*/
+				state.getInt(EXTRA_SCROLL_X, 0),
+				state.getInt(EXTRA_SCROLL_Y, 0));
 	}
 
 

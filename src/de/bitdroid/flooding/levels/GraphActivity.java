@@ -228,15 +228,13 @@ public class GraphActivity extends Activity {
 				final List<Long> timestamps = SourceMonitor
 					.getInstance(getApplicationContext())
 					.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
+				Collections.sort(timestamps);
 
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 				List<String> stringTimestamps = new LinkedList<String>();
 				for (long time : timestamps) {
 					stringTimestamps.add(formatter.format(new Date(time)));
 				}
-
-				Collections.sort(stringTimestamps);
-				Collections.sort(timestamps);
 
 				final long originalTimestamp = currentTimestamp;
 				int selectedTimestamp = timestamps.indexOf(currentTimestamp);

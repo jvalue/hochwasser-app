@@ -135,6 +135,12 @@ public class ChooseRiverActivity extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView list, View item, int position, long id) {
+		// hide keyboard
+		InputMethodManager inputManager 
+			= (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+
+		// start graph activity
 		String waterName = listAdapter.getItem(position).getWaterName();
 		Bundle extras = new Bundle();
 		extras.putString(GraphActivity.EXTRA_WATER_NAME, waterName);

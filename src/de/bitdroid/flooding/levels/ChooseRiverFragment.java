@@ -42,72 +42,16 @@ public class ChooseRiverFragment extends ListFragment {
 	private static final int LOADER_ID = 44;
 
 	private ArrayAdapter<Entry> listAdapter = null;
+	private AbstractLoaderCallbacks loader = null;
 	private EditText searchBox = null;
 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// menu
 		setHasOptionsMenu(true);
-
-		// list adapter
-		listAdapter = new ArrayAdapter<Entry>(
-				getActivity().getApplicationContext(), 
-				android.R.layout.simple_list_item_1);
-		setListAdapter(listAdapter);
-
-		// data loader
-		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
-
-			@Override
-			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
-				int stationIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
-
-				Map<String, Entry> waterNames = new HashMap<String, Entry>();
-
-				if (cursor.getCount() > 0) {
-					cursor.moveToFirst();
-					do {
-						String wName = cursor.getString(waterIdx);
-						String sName = cursor.getString(stationIdx);
-
-						if (!waterNames.containsKey(wName)) waterNames.put(wName, new Entry(wName));
-						waterNames.get(wName).addStation(sName);
-					} while (cursor.moveToNext());
-				}
-				
-				listAdapter.clear();
-				listAdapter.addAll(waterNames.values());
-				listAdapter.sort(new Comparator<Entry>() {
-					@Override
-					public int compare(Entry e1, Entry e2) {
-						return e1.getWaterName().compareTo(e2.getWaterName());
-					}
-				});
-				listAdapter.notifyDataSetChanged();
-			}
-
-			@Override
-			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
-
-			@Override
-			protected Loader<Cursor> getCursorLoader() {
-				return new CursorLoader(
-						getActivity().getApplicationContext(),
-						PegelOnlineSource.INSTANCE.toUri(),
-						new String[] { COLUMN_WATER_NAME, COLUMN_STATION_NAME },
-						COLUMN_LEVEL_TYPE + "=?", 
-						new String[] { "W" }, 
-						null);
-			}
-		};
-
-		getLoaderManager().initLoader(LOADER_ID, null, loader);
 	}
-	
+
 
     @Override
 	public View onCreateView(
@@ -151,6 +95,79 @@ public class ChooseRiverFragment extends ListFragment {
 		return view;
     }
 
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		Log.debug("Called onActivityCreated");
+
+		// list adapter
+		listAdapter = new ArrayAdapter<Entry>(
+				getActivity().getApplicationContext(), 
+				android.R.layout.simple_list_item_1);
+		setListAdapter(listAdapter);
+
+		// data loader
+		loader = new AbstractLoaderCallbacks(LOADER_ID) {
+
+			@Override
+			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
+				Log.debug("Called onLoadFinishedHelper");
+				int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
+				int stationIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
+
+				Map<String, Entry> waterNames = new HashMap<String, Entry>();
+
+				Log.debug("... with " + cursor.getCount() + " elements");
+
+				if (cursor.getCount() > 0) {
+					cursor.moveToFirst();
+					do {
+						String wName = cursor.getString(waterIdx);
+						String sName = cursor.getString(stationIdx);
+
+						if (!waterNames.containsKey(wName)) waterNames.put(wName, new Entry(wName));
+						waterNames.get(wName).addStation(sName);
+					} while (cursor.moveToNext());
+				}
+				
+				listAdapter.clear();
+				listAdapter.addAll(waterNames.values());
+				listAdapter.sort(new Comparator<Entry>() {
+					@Override
+					public int compare(Entry e1, Entry e2) {
+						return e1.getWaterName().compareTo(e2.getWaterName());
+					}
+				});
+				Log.debug("listAdapter.notifyDataSetChanged");
+				listAdapter.notifyDataSetChanged();
+			}
+
+			@Override
+			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
+
+			@Override
+			protected Loader<Cursor> getCursorLoader() {
+				Log.debug("Called getCursorLoader");
+				return new CursorLoader(
+						getActivity().getApplicationContext(),
+						PegelOnlineSource.INSTANCE.toUri(),
+						new String[] { COLUMN_WATER_NAME, COLUMN_STATION_NAME },
+						COLUMN_LEVEL_TYPE + "=?", 
+						new String[] { "W" }, 
+						null);
+			}
+		};
+	}
+
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		getLoaderManager().initLoader(LOADER_ID, null, loader);
+	}
+	
 
 	@Override
 	public void onListItemClick(ListView list, View item, int position, long id) {

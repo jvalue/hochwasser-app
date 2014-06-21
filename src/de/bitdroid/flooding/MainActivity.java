@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.SharedPreferences;
@@ -14,8 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -63,6 +60,7 @@ public class MainActivity extends Activity {
 		fragments[1] = new AlarmsFragment();
 		fragments[2] = new ChooseRiverFragment();
 		fragments[3] = new SettingsFragment();
+		fragments[4] = new AboutFragment();
 
 		// set drawer shadow
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -173,44 +171,10 @@ public class MainActivity extends Activity {
 
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu);
-		return true;
-	}
-
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-		// disable / enable entries
-		menu.findItem(R.id.select_about).setVisible(drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-
-		switch(item.getItemId()) { 
-			case R.id.select_about:
-				OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
-
-				new AlertDialog.Builder(this)
-					.setTitle(R.string.main_dialog_info_title)
-					.setMessage(getString(R.string.main_dialog_info_msg,
-								formatTime(manager.getLastSync(PegelOnlineSource.INSTANCE)),
-								formatTime(manager.getLastSuccessfulSync(PegelOnlineSource.INSTANCE)),
-								formatTime(manager.getLastFailedSync(PegelOnlineSource.INSTANCE))))
-					.setPositiveButton(R.string.btn_ok, null)
-					.show();
-
-				return true;
-		}
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -258,15 +222,6 @@ public class MainActivity extends Activity {
 		}
 
 		return false;
-	}
-
-
-	private final static SimpleDateFormat dateFormatter 
-		= new SimpleDateFormat("dd/M/yyyy hh:mm a");
-
-	private String formatTime(Calendar time) {
-		if (time == null) return getString(R.string.main_dialog_info_never);
-		else return dateFormatter.format(time.getTime());
 	}
 
 }

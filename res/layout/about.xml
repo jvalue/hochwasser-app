@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	>
+
+	<TableRow
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		>
+
+		<TextView
+			android:id="@+id/sync_last"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/sync_last"
+		/>
+		<TextView
+			android:id="@+id/sync_last_value"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+		/>
+
+	</TableRow>
+
+	<TableRow
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		>
+
+		<TextView
+			android:id="@+id/sync_last_success"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/sync_last_success"
+		/>
+		<TextView
+			android:id="@+id/sync_last_success_value"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+		/>
+
+	</TableRow>
+
+	<TableRow
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		>
+
+		<TextView
+			android:id="@+id/sync_last_failure"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/sync_last_failure"
+		/>
+		<TextView
+			android:id="@+id/sync_last_failure_value"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+		/>
+
+	</TableRow>
+
+</TableLayout>

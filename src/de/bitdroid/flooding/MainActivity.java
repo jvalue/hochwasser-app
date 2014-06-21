@@ -1,8 +1,5 @@
 package de.bitdroid.flooding;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -41,8 +38,6 @@ public class MainActivity extends Activity {
 	private CharSequence drawerTitle, fragmentTitle;
 
 	private String[] navItems;
-	private Fragment[] fragments;
-
 	private int currentNavItem = 0;
 
     @Override
@@ -55,12 +50,6 @@ public class MainActivity extends Activity {
 		drawerList = (ListView) findViewById(R.id.menu);
 
 		navItems = getResources().getStringArray(R.array.nav_items);
-		fragments = new Fragment[navItems.length];
-		fragments[0] = new NewsFragment();
-		fragments[1] = new AlarmsFragment();
-		fragments[2] = new ChooseRiverFragment();
-		fragments[3] = new SettingsFragment();
-		fragments[4] = new AboutFragment();
 
 		// set drawer shadow
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -205,7 +194,14 @@ public class MainActivity extends Activity {
 
 	private void navigateTo(int position) {
 		currentNavItem = position;
-		getFragmentManager().beginTransaction().replace(R.id.frame, fragments[position]).commit();
+
+		Fragment fragment = null;
+		if (position == 0) fragment = new NewsFragment();
+		else if (position == 1) fragment = new AlarmsFragment();
+		else if (position == 2) fragment = new ChooseRiverFragment();
+		else if (position == 3) fragment = new SettingsFragment();
+		else if (position == 4) fragment = new AboutFragment();
+		getFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
 		drawerList.setItemChecked(position, true);
 		setTitle(navItems[position]);
 		drawerLayout.closeDrawer(drawerList);

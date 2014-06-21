@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ListFragment;
+import android.app.LoaderManager;
 import android.app.Service;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -34,15 +35,13 @@ import android.widget.ListView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.Log;
 
-public class ChooseRiverFragment extends ListFragment {
+public class ChooseRiverFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	
 	private static final int LOADER_ID = 44;
 
 	private ArrayAdapter<Entry> listAdapter = null;
-	private AbstractLoaderCallbacks loader = null;
 	private EditText searchBox = null;
 
 
@@ -100,72 +99,18 @@ public class ChooseRiverFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Log.debug("Called onActivityCreated");
-
 		// list adapter
 		listAdapter = new ArrayAdapter<Entry>(
 				getActivity().getApplicationContext(), 
 				android.R.layout.simple_list_item_1);
 		setListAdapter(listAdapter);
-
-		// data loader
-		loader = new AbstractLoaderCallbacks(LOADER_ID) {
-
-			@Override
-			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				Log.debug("Called onLoadFinishedHelper");
-				int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
-				int stationIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
-
-				Map<String, Entry> waterNames = new HashMap<String, Entry>();
-
-				Log.debug("... with " + cursor.getCount() + " elements");
-
-				if (cursor.getCount() > 0) {
-					cursor.moveToFirst();
-					do {
-						String wName = cursor.getString(waterIdx);
-						String sName = cursor.getString(stationIdx);
-
-						if (!waterNames.containsKey(wName)) waterNames.put(wName, new Entry(wName));
-						waterNames.get(wName).addStation(sName);
-					} while (cursor.moveToNext());
-				}
-				
-				listAdapter.clear();
-				listAdapter.addAll(waterNames.values());
-				listAdapter.sort(new Comparator<Entry>() {
-					@Override
-					public int compare(Entry e1, Entry e2) {
-						return e1.getWaterName().compareTo(e2.getWaterName());
-					}
-				});
-				Log.debug("listAdapter.notifyDataSetChanged");
-				listAdapter.notifyDataSetChanged();
-			}
-
-			@Override
-			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
-
-			@Override
-			protected Loader<Cursor> getCursorLoader() {
-				Log.debug("Called getCursorLoader");
-				return new CursorLoader(
-						getActivity().getApplicationContext(),
-						PegelOnlineSource.INSTANCE.toUri(),
-						new String[] { COLUMN_WATER_NAME, COLUMN_STATION_NAME },
-						COLUMN_LEVEL_TYPE + "=?", 
-						new String[] { "W" }, 
-						null);
-			}
-		};
 	}
 
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		getLoaderManager().initLoader(LOADER_ID, null, loader);
+		getLoaderManager().initLoader(LOADER_ID, null, this);
 	}
 	
 
@@ -212,6 +157,59 @@ public class ChooseRiverFragment extends ListFragment {
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
+	}
+
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+		if (id != LOADER_ID) return null;
+
+		return new CursorLoader(
+				getActivity().getApplicationContext(),
+				PegelOnlineSource.INSTANCE.toUri(),
+				new String[] { COLUMN_WATER_NAME, COLUMN_STATION_NAME },
+				COLUMN_LEVEL_TYPE + "=?", 
+				new String[] { "W" }, 
+				null);
+	}
+
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		if (loader.getId() != LOADER_ID) return;
+
+		int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
+		int stationIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
+
+		Map<String, Entry> waterNames = new HashMap<String, Entry>();
+
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			do {
+				String wName = cursor.getString(waterIdx);
+				String sName = cursor.getString(stationIdx);
+
+				if (!waterNames.containsKey(wName)) waterNames.put(wName, new Entry(wName));
+				waterNames.get(wName).addStation(sName);
+			} while (cursor.moveToNext());
+		}
+		
+		listAdapter.clear();
+		listAdapter.addAll(waterNames.values());
+		listAdapter.sort(new Comparator<Entry>() {
+			@Override
+			public int compare(Entry e1, Entry e2) {
+				return e1.getWaterName().compareTo(e2.getWaterName());
+			}
+		});
+		listAdapter.notifyDataSetChanged();
+	}
+
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		listAdapter.clear();
+		listAdapter.notifyDataSetChanged();
 	}
 
 

@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import android.app.ListActivity;
+import android.app.ListFragment;
 import android.app.Service;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -19,10 +19,12 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -35,52 +37,26 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.Log;
 
-public class ChooseRiverActivity extends ListActivity {
+public class ChooseRiverFragment extends ListFragment {
 	
 	private static final int LOADER_ID = 44;
 
 	private ArrayAdapter<Entry> listAdapter = null;
 	private EditText searchBox = null;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-		setContentView(R.layout.select_water);
 
-		// search box
-		searchBox = (EditText) findViewById(R.id.search);
-		searchBox.addTextChangedListener(new TextWatcher() {
 
-			@Override
-			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {
-				listAdapter.getFilter().filter(text);
-			}
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-			@Override
-			public void beforeTextChanged(CharSequence text, int arg1, int arg2, int arg3) { }
-
-			@Override
-			public void afterTextChanged(Editable e) { }
-		});
+		// menu
+		setHasOptionsMenu(true);
 
 		// list adapter
 		listAdapter = new ArrayAdapter<Entry>(
-				getApplicationContext(), 
+				getActivity().getApplicationContext(), 
 				android.R.layout.simple_list_item_1);
 		setListAdapter(listAdapter);
-
-		// show stations on long click
-		getListView().setLongClickable(true);
-		getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-				Entry e = listAdapter.getItem(position);
-				for (String name : e.getStationNames())
-					Log.debug(name);
-				return true;
-			}
-		});
 
 		// data loader
 		AbstractLoaderCallbacks loader = new AbstractLoaderCallbacks(LOADER_ID) {
@@ -120,7 +96,7 @@ public class ChooseRiverActivity extends ListActivity {
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
 				return new CursorLoader(
-						getApplicationContext(),
+						getActivity().getApplicationContext(),
 						PegelOnlineSource.INSTANCE.toUri(),
 						new String[] { COLUMN_WATER_NAME, COLUMN_STATION_NAME },
 						COLUMN_LEVEL_TYPE + "=?", 
@@ -130,14 +106,57 @@ public class ChooseRiverActivity extends ListActivity {
 		};
 
 		getLoaderManager().initLoader(LOADER_ID, null, loader);
+	}
+	
+
+    @Override
+	public View onCreateView(
+			LayoutInflater inflater,
+			ViewGroup container,
+			Bundle savedInstanceState) {
+
+
+		View view = inflater.inflate(R.layout.select_water, container, false);
+
+		// search box
+		searchBox = (EditText) view.findViewById(R.id.search);
+		searchBox.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {
+				listAdapter.getFilter().filter(text);
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence text, int arg1, int arg2, int arg3) { }
+
+			@Override
+			public void afterTextChanged(Editable e) { }
+		});
+
+		// show stations on long click
+		ListView listView = (ListView) view.findViewById(android.R.id.list);
+		listView.setLongClickable(true);
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+				Entry e = listAdapter.getItem(position);
+				for (String name : e.getStationNames())
+					Log.debug(name);
+				return true;
+			}
+		});
+
+		return view;
     }
 
 
 	@Override
-	protected void onListItemClick(ListView list, View item, int position, long id) {
+	public void onListItemClick(ListView list, View item, int position, long id) {
 		// hide keyboard
 		InputMethodManager inputManager 
-			= (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+			= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
 		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
 		// start graph activity
@@ -145,7 +164,7 @@ public class ChooseRiverActivity extends ListActivity {
 		Bundle extras = new Bundle();
 		extras.putString(GraphActivity.EXTRA_WATER_NAME, waterName);
 		Intent intent = new Intent(
-				getApplicationContext(),
+				getActivity().getApplicationContext(),
 				GraphActivity.class);
 		intent.putExtras(extras);
 		startActivity(intent);
@@ -153,10 +172,8 @@ public class ChooseRiverActivity extends ListActivity {
 
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.select_water_menu, menu);
-		return true;
 	}
 
 
@@ -164,8 +181,8 @@ public class ChooseRiverActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
 			case R.id.search:
-				InputMethodManager inputManager 
-					= (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+				InputMethodManager inputManager = (InputMethodManager) getActivity()
+					.getSystemService(Service.INPUT_METHOD_SERVICE);
 				if (searchBox.getVisibility() == View.GONE) {
 					searchBox.setVisibility(View.VISIBLE);
 					inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);

@@ -6,23 +6,29 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
+import android.app.Fragment;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import de.bitdroid.flooding.levels.ChooseRiverActivity;
-import de.bitdroid.flooding.map.MapActivity;
+import de.bitdroid.flooding.alarms.AlarmsFragment;
+import de.bitdroid.flooding.levels.ChooseRiverFragment;
 import de.bitdroid.flooding.monitor.SourceMonitor;
+import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.ods.GcmStatus;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
@@ -32,48 +38,72 @@ public class MainActivity extends Activity {
 
 	private final String PREFS_KEY_FIRST_START = "FIRST_START";
 
-	private StationsListAdapter listAdapter;
-	
+	private DrawerLayout drawerLayout;
+	private ListView drawerList;
+	private ActionBarDrawerToggle drawerToggle;
+	private CharSequence drawerTitle, fragmentTitle;
+
+	private String[] navItems;
+	private Fragment[] fragments;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-		// OSM
-		Button mapButton = (Button) findViewById(R.id.map_button);
-		mapButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(
-					MainActivity.this.getApplicationContext(), 
-					MapActivity.class);
-				startActivity(intent);
+		drawerTitle = fragmentTitle = getTitle();
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+		drawerList = (ListView) findViewById(R.id.menu);
+
+		navItems = getResources().getStringArray(R.array.nav_items);
+		fragments = new Fragment[navItems.length];
+		fragments[0] = new NewsFragment();
+		fragments[1] = new AlarmsFragment();
+		fragments[2] = new ChooseRiverFragment();
+		fragments[3] = new SettingsFragment();
+
+		// set drawer shadow
+		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+		// set nav items
+		drawerList.setAdapter(new ArrayAdapter<String>(
+					getApplicationContext(),
+					R.layout.nav_item,
+					navItems));
+		drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				navigateTo(position);
 			}
 		});
 
+		// app icon toggles drawer
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
 
-		// water levels
-		Button levelsButton = (Button) findViewById(R.id.levels_button);
-		levelsButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(
-					MainActivity.this.getApplicationContext(),
-					ChooseRiverActivity.class);
-				startActivity(intent);
+		// drawer listener for options menus and title
+		drawerToggle = new ActionBarDrawerToggle(
+				this,
+				drawerLayout,
+				R.drawable.ic_drawer,
+				R.string.nav_open,
+				R.string.nav_close) {
+			@Override
+			public void onDrawerClosed(View view) {
+				getActionBar().setTitle(fragmentTitle);
+				invalidateOptionsMenu();
 			}
-		});
 
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				getActionBar().setTitle(drawerTitle);
+				invalidateOptionsMenu();
+			}
+		};
+		drawerLayout.setDrawerListener(drawerToggle);
 
-		// simple stations list
-		listAdapter = new StationsListAdapter(getApplicationContext());
-		ListView listView = (ListView) findViewById(R.id.content_list);
-		listView.setAdapter(listAdapter);
-
-		getLoaderManager().initLoader(
-				StationsListAdapter.LOADER_ID,
-				null, 
-				listAdapter.getLoaderCallback());
-
+		// move to home screen
+		navigateTo(0);
 
 		// load default pref values
 		PreferenceManager.setDefaultValues(
@@ -116,8 +146,40 @@ public class MainActivity extends Activity {
 
 			manager.startManualSync(source);
 		}
+	}
 
-    }
+
+	@Override
+	public void setTitle(CharSequence title) {
+		fragmentTitle = title;
+		getActionBar().setTitle(title);
+	}
+
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		drawerToggle.syncState();
+	}
+
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		drawerToggle.onConfigurationChanged(newConfig);
+	}
+
+
+
+	private void navigateTo(int position) {
+		getFragmentManager().beginTransaction().replace(R.id.frame, fragments[position]).commit();
+		drawerList.setItemChecked(position, true);
+		setTitle(navItems[position]);
+		drawerLayout.closeDrawer(drawerList);
+	}
+
+
+
 
 
 	@Override
@@ -129,15 +191,21 @@ public class MainActivity extends Activity {
 
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		switch(menuItem.getItemId()) { 
-			case R.id.select_settings:
-				Intent settingsIntent = new Intent(
-						getApplicationContext(),
-						MainPreferencesActivity.class);
-				startActivity(settingsIntent);
-				return true;
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+		// disable / enable entries
+		menu.findItem(R.id.select_about).setVisible(drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
+	}
 
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (drawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+
+		switch(item.getItemId()) { 
 			case R.id.select_about:
 				OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
 
@@ -152,7 +220,8 @@ public class MainActivity extends Activity {
 
 				return true;
 		}
-		return false;
+
+		return super.onOptionsItemSelected(item);
 	}
 
 

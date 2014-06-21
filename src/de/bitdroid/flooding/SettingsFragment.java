@@ -3,7 +3,7 @@ package de.bitdroid.flooding;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
 import de.bitdroid.flooding.monitor.SourceMonitor;
@@ -12,10 +12,9 @@ import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 
-public final class MainPreferencesActivity extends PreferenceActivity {
+public final class SettingsFragment extends PreferenceFragment {
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
@@ -28,12 +27,12 @@ public final class MainPreferencesActivity extends PreferenceActivity {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				try {
 					OdsSourceManager
-						.getInstance(getApplicationContext())
+						.getInstance(getActivity().getApplicationContext())
 						.setOdsServerName(newValue.toString());
 					return true;
 				} catch (IllegalArgumentException iae) {
 					Toast.makeText(
-						getApplicationContext(), 
+						getActivity().getApplicationContext(), 
 						getString(R.string.error_invalid_server_url), 
 						Toast.LENGTH_LONG)
 						.show();
@@ -48,7 +47,8 @@ public final class MainPreferencesActivity extends PreferenceActivity {
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
+				SourceMonitor monitor = SourceMonitor
+					.getInstance(getActivity().getApplicationContext());
 				OdsSource source = PegelOnlineSource.INSTANCE;
 
 				if (!monitor.isBeingMonitored(source)) monitor.startMonitoring(source);

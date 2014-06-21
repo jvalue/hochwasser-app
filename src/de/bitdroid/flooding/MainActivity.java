@@ -46,6 +46,8 @@ public class MainActivity extends Activity {
 	private String[] navItems;
 	private Fragment[] fragments;
 
+	private int currentNavItem = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +105,7 @@ public class MainActivity extends Activity {
 		drawerLayout.setDrawerListener(drawerToggle);
 
 		// move to home screen
-		navigateTo(0);
+		navigateTo(currentNavItem);
 
 		// load default pref values
 		PreferenceManager.setDefaultValues(
@@ -170,18 +172,6 @@ public class MainActivity extends Activity {
 	}
 
 
-
-	private void navigateTo(int position) {
-		getFragmentManager().beginTransaction().replace(R.id.frame, fragments[position]).commit();
-		drawerList.setItemChecked(position, true);
-		setTitle(navItems[position]);
-		drawerLayout.closeDrawer(drawerList);
-	}
-
-
-
-
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -232,6 +222,32 @@ public class MainActivity extends Activity {
 	}
 
 
+	private static final String EXTRA_CURRENT_NAV_ITEM = "EXTRA_CURRENT_NAV_ITEM";
+
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		state.putInt(EXTRA_CURRENT_NAV_ITEM, currentNavItem);
+	}
+	
+
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState(state);
+		currentNavItem = state.getInt(EXTRA_CURRENT_NAV_ITEM);
+		navigateTo(currentNavItem);
+	}
+
+
+	private void navigateTo(int position) {
+		currentNavItem = position;
+		getFragmentManager().beginTransaction().replace(R.id.frame, fragments[position]).commit();
+		drawerList.setItemChecked(position, true);
+		setTitle(navItems[position]);
+		drawerLayout.closeDrawer(drawerList);
+	}
+
+
 	private boolean arePlayServicesAvailable() {
 		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if (status == ConnectionResult.SUCCESS) return true;
@@ -243,7 +259,6 @@ public class MainActivity extends Activity {
 
 		return false;
 	}
-
 
 
 	private final static SimpleDateFormat dateFormatter 

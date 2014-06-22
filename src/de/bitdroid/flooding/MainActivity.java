@@ -115,8 +115,10 @@ public class MainActivity extends Activity {
 		drawerLayout.setDrawerListener(drawerToggle);
 
 		// move to home screen
-		navigateTo(currentNavItem);
-		setTitle(fragmentTitle);
+		if (savedInstanceState == null) {
+			navigateTo(currentNavItem);
+			setTitle(fragmentTitle);
+		}
 
 		// load default pref values
 		PreferenceManager.setDefaultValues(
@@ -216,8 +218,8 @@ public class MainActivity extends Activity {
 	protected void onRestoreInstanceState(Bundle state) {
 		super.onRestoreInstanceState(state);
 		currentNavItem = state.getInt(EXTRA_CURRENT_NAV_ITEM);
-		navigateTo(currentNavItem);
-		setTitle(fragmentTitle);
+		fragmentTitle = navItems[currentNavItem];
+		if (!drawerLayout.isDrawerOpen(drawerMenu)) setTitle(fragmentTitle);
 	}
 
 

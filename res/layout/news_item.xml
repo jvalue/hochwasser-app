@@ -3,18 +3,24 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+	android:layout_margin="10dp"
+	android:paddingLeft="6dp"
+	android:paddingRight="6dp"
+	android:paddingTop="4dp"
+	android:paddingBottom="6dp"
+	android:background="@drawable/news_background"
 	>
 
 	<TextView
 		android:id="@+id/news_title"
-		android:layout_width="fill_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		style="@android:style/TextAppearance.Large"
 	/>
 
 	<TextView
 		android:id="@+id/news_timestamp"
-		android:layout_width="fill_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		style="@android:style/TextAppearance.Small"
 	/>

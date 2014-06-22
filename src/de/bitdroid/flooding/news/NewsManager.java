@@ -1,7 +1,9 @@
 package de.bitdroid.flooding.news;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import android.app.NotificationManager;
@@ -28,8 +30,8 @@ public final class NewsManager {
 	}
 
 
-	private final List<NewsItem> unreadItems = new LinkedList<NewsItem>();
-	private final List<NewsItem> readItems = new LinkedList<NewsItem>();
+	private final Map<String, NewsItem> unreadItems = new HashMap<String, NewsItem>();
+	private final Map<String, NewsItem> readItems = new HashMap<String, NewsItem>();
 	private final Context context;
 
 
@@ -42,24 +44,31 @@ public final class NewsManager {
 
 	public List<NewsItem> getAllItems() {
 		List<NewsItem> ret = new LinkedList<NewsItem>();
-		ret.addAll(readItems);
-		ret.addAll(unreadItems);
+		ret.addAll(readItems.values());
+		ret.addAll(unreadItems.values());
 		return ret;
 	}
 
 
 	public List<NewsItem> getUnreadItems() {
-		return new LinkedList<NewsItem>(unreadItems);
+		return new LinkedList<NewsItem>(unreadItems.values());
 	}
 
 
 	public List<NewsItem> getReadItems() {
-		return new LinkedList<NewsItem>(readItems);
+		return new LinkedList<NewsItem>(readItems.values());
+	}
+
+
+	public NewsItem getById(String id) {
+		Assert.assertNotNull(id);
+		if (unreadItems.containsKey(id)) return unreadItems.get(id);
+		else return readItems.get(id);
 	}
 
 
 	public void markAllItemsRead() {
-		readItems.addAll(unreadItems);
+		readItems.putAll(unreadItems);
 		unreadItems.clear();
 
 		NotificationManager manager 
@@ -77,7 +86,7 @@ public final class NewsManager {
 				content, 
 				System.currentTimeMillis());
 
-		unreadItems.add(item);
+		unreadItems.put(item.getId(), item);
 
 		if (!showNotification) return item;
 
@@ -110,10 +119,12 @@ public final class NewsManager {
 
 	public void removeItem(NewsItem item) {
 		Assert.assertNotNull(item);
-		Assert.assertTrue(unreadItems.contains(item) || readItems.contains(item), "item not present");
+		Assert.assertTrue(
+				unreadItems.containsKey(item.getId()) || readItems.containsKey(item.getId()), 
+				"item not present");
 
-		unreadItems.remove(item);
-		readItems.remove(item);
+		unreadItems.remove(item.getId());
+		readItems.remove(item.getId());
 	}
 
 }

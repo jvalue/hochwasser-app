@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -33,7 +34,8 @@ public class MainActivity extends Activity {
 	private final String PREFS_KEY_FIRST_START = "FIRST_START";
 
 	private DrawerLayout drawerLayout;
-	private ListView drawerList;
+	private LinearLayout drawerMenu;
+	private ListView drawerMenuList;
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence drawerTitle, fragmentTitle;
 
@@ -47,7 +49,8 @@ public class MainActivity extends Activity {
 
 		drawerTitle = fragmentTitle = getTitle();
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-		drawerList = (ListView) findViewById(R.id.menu);
+		drawerMenu = (LinearLayout) findViewById(R.id.menu);
+		drawerMenuList = (ListView) findViewById(R.id.menu_entries);
 
 		navItems = getResources().getStringArray(R.array.nav_items);
 
@@ -55,11 +58,11 @@ public class MainActivity extends Activity {
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		// set nav items
-		drawerList.setAdapter(new ArrayAdapter<String>(
+		drawerMenuList.setAdapter(new ArrayAdapter<String>(
 					getApplicationContext(),
 					R.layout.nav_item,
 					navItems));
-		drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+		drawerMenuList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				navigateTo(position);
@@ -202,9 +205,9 @@ public class MainActivity extends Activity {
 		else if (position == 3) fragment = new SettingsFragment();
 		else if (position == 4) fragment = new AboutFragment();
 		getFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
-		drawerList.setItemChecked(position, true);
+		drawerMenuList.setItemChecked(position, true);
 		setTitle(navItems[position]);
-		drawerLayout.closeDrawer(drawerList);
+		drawerLayout.closeDrawer(drawerMenu);
 	}
 
 

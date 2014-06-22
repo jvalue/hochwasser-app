@@ -2,6 +2,7 @@ package de.bitdroid.flooding.news;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -70,7 +71,12 @@ public final class NewsManager {
 	public NewsItem addItem(String title, String content, boolean showNotification) {
 		Assert.assertNotNull(title, content);
 
-		NewsItem item = new NewsItem(title, content, System.currentTimeMillis());
+		NewsItem item = new NewsItem(
+				UUID.randomUUID().toString(), 
+				title, 
+				content, 
+				System.currentTimeMillis());
+
 		unreadItems.add(item);
 
 		if (!showNotification) return item;

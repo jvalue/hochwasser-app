@@ -6,13 +6,20 @@ import de.bitdroid.flooding.utils.Assert;
 public final class NewsItem {
 
 	private final String title, content;
+	private final String id;
 	private final long timestamp;
 
-	NewsItem(String title, String content, long timestamp) {
-		Assert.assertNotNull(title, content);
+	NewsItem(String id, String title, String content, long timestamp) {
+		Assert.assertNotNull(id, title, content);
+		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.timestamp = timestamp;
+	}
+
+
+	public String getId() {
+		return id;
 	}
 
 
@@ -41,7 +48,8 @@ public final class NewsItem {
 	public boolean equals(Object other) {
 		if (other == null || !(other instanceof NewsItem)) return false;
 		NewsItem item = (NewsItem) other;
-		return title.equals(item.title) 
+		return id.equals(item.id)
+			&& title.equals(item.title) 
 			&& content.equals(item.content)
 			&& timestamp == item.timestamp;
 	}
@@ -51,6 +59,7 @@ public final class NewsItem {
 	public int hashCode() {
 		final int MULT = 17;
 		int hash = 13;
+		hash = hash + MULT * id.hashCode();
 		hash = hash + MULT * title.hashCode();
 		hash = hash + MULT * content.hashCode();
 		hash = hash + MULT * Long.valueOf(timestamp).hashCode();

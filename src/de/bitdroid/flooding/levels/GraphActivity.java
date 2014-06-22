@@ -76,6 +76,10 @@ public class GraphActivity extends Activity {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
+		// enable action bar back button
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+
 		// setup graph
 		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
@@ -199,6 +203,10 @@ public class GraphActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
+			case android.R.id.home:
+				finish();
+				return true;
+
 			case R.id.select_series:
 				List<String> seriesKeys = graph.getSeriesKeys();
 				final String[] items = seriesKeys.toArray(new String[seriesKeys.size()]);

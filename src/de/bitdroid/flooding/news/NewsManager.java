@@ -26,7 +26,8 @@ public final class NewsManager {
 	}
 
 
-	private final List<NewsItem> items = new LinkedList<NewsItem>();
+	private final List<NewsItem> unreadItems = new LinkedList<NewsItem>();
+	private final List<NewsItem> readItems = new LinkedList<NewsItem>();
 	private final Context context;
 
 
@@ -37,8 +38,31 @@ public final class NewsManager {
 	}
 
 
-	public List<NewsItem> getItems() {
-		return new LinkedList<NewsItem>(items);
+	public List<NewsItem> getAllItems() {
+		List<NewsItem> ret = new LinkedList<NewsItem>();
+		ret.addAll(readItems);
+		ret.addAll(unreadItems);
+		return ret;
+	}
+
+
+	public List<NewsItem> getUnreadItems() {
+		return new LinkedList<NewsItem>(unreadItems);
+	}
+
+
+	public List<NewsItem> getReadItems() {
+		return new LinkedList<NewsItem>(readItems);
+	}
+
+
+	public void markAllItemsRead() {
+		readItems.addAll(unreadItems);
+		unreadItems.clear();
+
+		NotificationManager manager 
+			= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.cancel(NOTIFICATION_ID);
 	}
 
 
@@ -46,7 +70,7 @@ public final class NewsManager {
 		if (title == null || content == null) 
 			throw new NullPointerException("params cannot be null");
 
-		addItem(title, content);
+		unreadItems.add(new NewsItem(title, content, System.currentTimeMillis()));
 
 		if (!showNotification) return;
 
@@ -65,6 +89,7 @@ public final class NewsManager {
 			.setContentTitle(title)
 			.setContentText(content)
 			.setAutoCancel(true)
+			.setNumber(unreadItems.size())
 			.setContentIntent(pendingIntent);
 
 
@@ -77,7 +102,6 @@ public final class NewsManager {
 	public void addItem(String title, String content) {
 		if (title == null || content == null) 
 			throw new NullPointerException("params cannot be null");
-		items.add(new NewsItem(title, content, System.currentTimeMillis()));
 	}
 
 }

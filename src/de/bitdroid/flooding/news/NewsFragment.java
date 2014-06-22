@@ -20,13 +20,21 @@ public final class NewsFragment extends Fragment {
 			ViewGroup container, 
 			Bundle savedInstanceState) {
 
+		// view
 		View view = inflater.inflate(R.layout.news, container, false);
-
 		ListView listView = (ListView) view.findViewById(R.id.list);
 		ListAdapter listAdapter = new NewsListAdapter(getActivity().getApplicationContext());
 		listView.setAdapter(listAdapter);
 
 		return view;
+	}
+
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		NewsManager.getInstance(getActivity().getApplicationContext()).markAllItemsRead();
 	}
 
 }

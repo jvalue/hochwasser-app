@@ -25,7 +25,7 @@ final class NewsListAdapter extends ArrayAdapter<NewsItem> {
 	public NewsListAdapter(Context context) {
 		super(context, R.layout.news_item);
 
-		this.items.addAll(NewsManager.getInstance(context).getItems());
+		this.items.addAll(NewsManager.getInstance(context).getAllItems());
 		this.context = context;
 
 		addAll(items);

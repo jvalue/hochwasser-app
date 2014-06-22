@@ -26,7 +26,10 @@
 	<uses-permission android:name="de.bitdroid.flooding.permission.C2D_MESSAGE" />
 
 
-	<application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+	<application 
+			android:label="@string/app_name" 
+			android:icon="@drawable/ic_launcher"
+			android:logo="@drawable/ic_menu_home">
 		<activity android:name="MainActivity"
 				  android:label="@string/app_name">
 			<intent-filter>

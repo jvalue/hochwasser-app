@@ -9,6 +9,8 @@ import java.util.Set;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import de.bitdroid.flooding.utils.Assert;
+
 
 public final class OdsSourceManager {
 	
@@ -17,7 +19,7 @@ public final class OdsSourceManager {
 
 	private static OdsSourceManager instance;
 	public static OdsSourceManager getInstance(Context context) {
-		if(context == null) throw new NullPointerException("context cannot be null");
+		Assert.assertNotNull(context);
 		synchronized(OdsSourceManager.class) {
 			if (instance == null)
 				instance = new OdsSourceManager(context);
@@ -37,7 +39,7 @@ public final class OdsSourceManager {
 	 * Check whether a source is currently registered for synchronization.
 	 */
 	public boolean isRegisteredForPolling(OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		SharedPreferences prefs = getSharedPreferences();
 		return prefs.contains(source.toString());
 	}
@@ -50,12 +52,9 @@ public final class OdsSourceManager {
 			long pollFrequency,
 			OdsSource ... sources) {
 
-		if (sources == null) 
-			throw new NullPointerException("param cannot be null");
-		if (pollFrequency <= 0) 
-			throw new IllegalArgumentException("pollFrequency must be > 0");
-		if (SyncUtils.isPeriodicSyncScheduled(context)) 
-			throw new IllegalStateException("sync already scheduled");
+		Assert.assertNotNull((Object) sources);
+		Assert.assertTrue(pollFrequency > 0, "pollFrequency must be > 0");
+		Assert.assertFalse(SyncUtils.isPeriodicSyncScheduled(context), "sync already scheduled");
 
 		addSyncAccount();
 		for (OdsSource source : sources) registerSource(source);
@@ -67,8 +66,7 @@ public final class OdsSourceManager {
 	 * Stops the periodic synchronization schedule.
 	 */
 	public void stopPolling() {
-		if (!SyncUtils.isPeriodicSyncScheduled(context)) 
-			throw new IllegalStateException("sync not scheduled");
+		Assert.assertTrue(SyncUtils.isPeriodicSyncScheduled(context), "sync not scheduled");
 
 		SyncUtils.stopPeriodicSync(context);
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
@@ -112,11 +110,9 @@ public final class OdsSourceManager {
 	 * the main thread.
 	 */
 	public void startPushNotifications(OdsSource source) {
-		if (source == null) 
-			throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		GcmStatus status = GcmUtils.getRegistrationStatus(context, source);
-		if (!status.equals(GcmStatus.UNREGISTERED))
-			throw new IllegalStateException("Already registered");
+		Assert.assertEquals(status, GcmStatus.UNREGISTERED, "Already registered");
 
 		GcmUtils.registerSource(context, source);
 	}
@@ -130,11 +126,9 @@ public final class OdsSourceManager {
 	 * the main thread.
 	 */
 	public void stopPushNotifications(OdsSource source) {
-		if (source == null) 
-			throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		GcmStatus status = GcmUtils.getRegistrationStatus(context, source);
-		if (!status.equals(GcmStatus.REGISTERED))
-			throw new IllegalStateException("Already registered");
+		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
 
 		GcmUtils.unregisterSource(context, source);
 	}
@@ -145,7 +139,7 @@ public final class OdsSourceManager {
 	 * source on the ODS changes.
 	 */
 	public GcmStatus getPushNotificationsRegistrationStatus(OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		return GcmUtils.getRegistrationStatus(context, source);
 	}
 
@@ -167,7 +161,7 @@ public final class OdsSourceManager {
 	 * as it requires more battery life.
 	 */
 	public void startManualSync(OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		addSyncAccount();
 		SyncUtils.startManualSync(context, source);
 	}
@@ -181,7 +175,7 @@ public final class OdsSourceManager {
 	 * URL for accessing the ODS server.
 	 */
 	public void setOdsServerName(String odsServerName) {
-		if (odsServerName == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(odsServerName);
 		try {
 			URL checkUrl = new URL(odsServerName);
 			checkUrl.toURI();
@@ -208,7 +202,7 @@ public final class OdsSourceManager {
 	 * or null if none was recorded.
 	 */
 	public Calendar getLastSuccessfulSync(OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		return SyncStatusListener.getLastSuccessfulSync(context, source);
 	}
 
@@ -218,7 +212,7 @@ public final class OdsSourceManager {
 	 * or null if it has never been synced.
 	 */
 	public Calendar getLastFailedSync(OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		return SyncStatusListener.getLastFailedSync(context, source);
 	}
 
@@ -228,7 +222,7 @@ public final class OdsSourceManager {
 	 * @return null if no sync ever occured.
 	 */
 	public Calendar getLastSync(OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		return SyncStatusListener.getLastSync(context, source);
 	}
 

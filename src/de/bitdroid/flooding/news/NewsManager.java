@@ -12,6 +12,7 @@ import android.support.v4.app.TaskStackBuilder;
 
 import de.bitdroid.flooding.MainActivity;
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.utils.Assert;
 
 
 public final class NewsManager {
@@ -20,7 +21,7 @@ public final class NewsManager {
 	private static NewsManager instance;
 
 	public static NewsManager getInstance(Context context) {
-		if (context == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(context);
 		if (instance == null) instance = new NewsManager(context);
 		return instance;
 	}
@@ -67,8 +68,7 @@ public final class NewsManager {
 
 
 	public NewsItem addItem(String title, String content, boolean showNotification) {
-		if (title == null || content == null) 
-			throw new NullPointerException("params cannot be null");
+		Assert.assertNotNull(title, content);
 
 		NewsItem item = new NewsItem(title, content, System.currentTimeMillis());
 		unreadItems.add(item);
@@ -103,10 +103,8 @@ public final class NewsManager {
 
 
 	public void removeItem(NewsItem item) {
-		if (item == null) 
-			throw new NullPointerException("param cannot be null");
-		if (!unreadItems.contains(item) && !readItems.contains(item)) 
-			throw new IllegalArgumentException("item not present");
+		Assert.assertNotNull(item);
+		Assert.assertTrue(unreadItems.contains(item) || readItems.contains(item), "item not present");
 
 		unreadItems.remove(item);
 		readItems.remove(item);

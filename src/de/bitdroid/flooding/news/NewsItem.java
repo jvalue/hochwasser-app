@@ -1,5 +1,7 @@
 package de.bitdroid.flooding.news;
 
+import de.bitdroid.flooding.utils.Assert;
+
 
 public final class NewsItem {
 
@@ -7,8 +9,7 @@ public final class NewsItem {
 	private final long timestamp;
 
 	NewsItem(String title, String content, long timestamp) {
-		if (title == null || content == null) 
-			throw new NullPointerException("params cannot be null");
+		Assert.assertNotNull(title, content);
 		this.title = title;
 		this.content = content;
 		this.timestamp = timestamp;

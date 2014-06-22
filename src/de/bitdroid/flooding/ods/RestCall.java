@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
 public final class RestCall {
@@ -125,36 +126,34 @@ public final class RestCall {
 		private boolean built = false;
 
 		public Builder(final RequestType requestType, final String baseUrl) {
-			if (requestType == null || baseUrl == null)
-				throw new NullPointerException("params cannot be null");
-
+			Assert.assertNotNull(requestType, baseUrl);
 			this.requestType = requestType;
 			this.baseUrl = baseUrl;
 		}
 
 		public Builder path(String path) {
-			if (path == null) throw new NullPointerException("path cannot be null");
-			if (built) throw new IllegalStateException("already built");
+			Assert.assertNotNull(path);
+			Assert.assertFalse(built, "already built");
 			paths.add(path);
 			return this;
 		}
 
 		public Builder parameter(String key, String value) {
-			if (key == null || value == null) throw new NullPointerException("params cannot be null");
-			if (built) throw new IllegalStateException("already built");
+			Assert.assertNotNull(key, value);
+			Assert.assertFalse(built, "already built");
 			parameters.put(key, value);
 			return this;
 		}
 
 		public Builder header(String key, String value) {
-			if (key == null || value == null) throw new NullPointerException("params cannot be null");
-			if (built) throw new IllegalStateException("already built");
+			Assert.assertNotNull(key, value);
+			Assert.assertFalse(built, "already built");
 			headers.put(key, value);
 			return this;
 		}
 
 		public RestCall build() {
-			if (built) throw new IllegalStateException("already built");
+			Assert.assertFalse(built, "already built");
 			built = true;
 			return new RestCall(requestType, baseUrl, paths, parameters, headers);
 		}

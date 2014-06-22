@@ -3,6 +3,8 @@ package de.bitdroid.flooding.pegelonline;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.bitdroid.flooding.utils.Assert;
+
 
 public final class UnitConverter {
 
@@ -29,6 +31,8 @@ public final class UnitConverter {
 	public static double toCm(
 			double value,
 			String unit) {
+
+		Assert.assertNotNull(unit);
 
 		unit = unit.toLowerCase();
 		

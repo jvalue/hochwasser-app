@@ -8,6 +8,7 @@ import android.accounts.Account;
 import android.content.ContentValues;
 import android.net.Uri;
 
+import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 
@@ -143,7 +144,7 @@ public abstract class OdsSource {
 
 	@SuppressWarnings("unchecked")
 	public static OdsSource fromString(String source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		try {
 			Class<? extends OdsSource> sourceClass 
 					= (Class<? extends OdsSource>) Class.forName(source);

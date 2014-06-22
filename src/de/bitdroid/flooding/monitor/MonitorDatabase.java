@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.SQLiteType;
 
@@ -26,8 +27,7 @@ final class MonitorDatabase extends SQLiteOpenHelper {
 
 
 	void addSource(SQLiteDatabase database, String tableName, OdsSource source) {
-		if (database == null || tableName == null || source == null)
-			throw new NullPointerException("params cannot be null");
+		Assert.assertNotNull(database, tableName, source);
 
 		StringBuilder builder = new StringBuilder(
 				"create table if not exists " + tableName + " ( "

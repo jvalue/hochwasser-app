@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -25,7 +26,7 @@ public final class SourceMonitor {
 
 	private static SourceMonitor instance;
 	public static SourceMonitor getInstance(Context context) {
-		if (context == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(context);
 		if (instance == null) instance = new SourceMonitor(context);
 		return instance;
 	}
@@ -41,10 +42,8 @@ public final class SourceMonitor {
 
 
 	public void startMonitoring(OdsSource source)  {
-		if (source == null) 
-			throw new NullPointerException("param cannot be null");
-		if (isBeingMonitored(source)) 
-			throw new IllegalArgumentException("Already being monitored");
+		Assert.assertNotNull(source);
+		Assert.assertFalse(isBeingMonitored(source), "Already being monitored");
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putString(source.toString(), "").commit();
@@ -59,10 +58,8 @@ public final class SourceMonitor {
 
 
 	public void stopMonitoring(OdsSource source) {
-		if (source == null) 
-			throw new NullPointerException("param cannot be null");
-		if (!isBeingMonitored(source)) 
-			throw new IllegalArgumentException("Not monitored");
+		Assert.assertNotNull(source);
+		Assert.assertTrue(isBeingMonitored(source), "Not monitored");
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.remove(source.toString()).commit();
@@ -72,7 +69,7 @@ public final class SourceMonitor {
 
 
 	public boolean isBeingMonitored(OdsSource source) {
-		if (source == null) throw new NullPointerException("param cannot be null");
+		Assert.assertNotNull(source);
 		return getSharedPreferences().contains(source.toString());
 	}
 

@@ -99,6 +99,7 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		NewsItem item = listAdapter.getItem(position);
 		if (checked) selectedItems.add(item);
 		else selectedItems.remove(item);
+		mode.setTitle(getActivity().getString(R.string.news_selected, selectedItems.size()));
 	}
 
 }

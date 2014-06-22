@@ -168,17 +168,11 @@ public class GraphActivity extends Activity {
 
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
-	}
-
-
-	@Override
-	public void onPause() {
-		super.onPause();
+	public void onBackPressed() {
+		super.onBackPressed();
 		overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
 	}
+
 
 
 	@Override
@@ -205,6 +199,7 @@ public class GraphActivity extends Activity {
 		switch(menuItem.getItemId()) {
 			case android.R.id.home:
 				finish();
+				overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
 				return true;
 
 			case R.id.select_series:

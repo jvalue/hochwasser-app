@@ -130,6 +130,9 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 				GraphActivity.class);
 		intent.putExtras(extras);
 		startActivity(intent);
+		getActivity().overridePendingTransition(
+				R.anim.slide_enter_from_right, 
+				R.anim.slide_exit_to_left);
 	}
 
 

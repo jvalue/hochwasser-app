@@ -98,6 +98,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onDrawerSlide(View drawerView, float offset) {
+				super.onDrawerSlide(drawerView, offset);
 				CharSequence title = null;
 				int alpha = 0;
 				if (offset <= 0.5) {

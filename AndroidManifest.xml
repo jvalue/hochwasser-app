@@ -39,6 +39,10 @@
 				  android:label="@string/app_name">
 		</activity>
 
+		<activity android:name=".levels.GraphActivity"
+				  android:label="@string/app_name">
+		</activity>
+
 		<service android:name=".ods.AuthenticatorService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>

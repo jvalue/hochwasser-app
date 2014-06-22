@@ -14,6 +14,7 @@ import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.app.Service;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -123,11 +124,12 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 		// start graph activity
 		String waterName = listAdapter.getItem(position).getWaterName();
 		Bundle extras = new Bundle();
-		extras.putString(GraphFragment.EXTRA_WATER_NAME, waterName);
-
-		GraphFragment fragment = new GraphFragment();
-		fragment.setArguments(extras);
-		getFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
+		extras.putString(GraphActivity.EXTRA_WATER_NAME, waterName);
+		Intent intent = new Intent(
+				getActivity().getApplicationContext(),
+				GraphActivity.class);
+		intent.putExtras(extras);
+		startActivity(intent);
 	}
 
 

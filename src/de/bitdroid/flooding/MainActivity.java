@@ -51,14 +51,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+		drawerTitle = fragmentTitle = getTitle();
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 		drawerMenu = (LinearLayout) findViewById(R.id.menu);
 		drawerMenuList = (ListView) findViewById(R.id.menu_entries);
 		titleView = (TextView) findViewById(Resources.getSystem().getIdentifier("action_bar_title", "id", "android"));
 
 		navItems = getResources().getStringArray(R.array.nav_items);
-		drawerTitle = getTitle();
-		fragmentTitle = navItems[currentNavItem];
 
 		// set drawer shadow
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -115,10 +114,7 @@ public class MainActivity extends Activity {
 		drawerLayout.setDrawerListener(drawerToggle);
 
 		// move to home screen
-		if (savedInstanceState == null) {
-			navigateTo(currentNavItem);
-			setTitle(fragmentTitle);
-		}
+		navigateTo(currentNavItem);
 
 		// load default pref values
 		PreferenceManager.setDefaultValues(
@@ -218,8 +214,7 @@ public class MainActivity extends Activity {
 	protected void onRestoreInstanceState(Bundle state) {
 		super.onRestoreInstanceState(state);
 		currentNavItem = state.getInt(EXTRA_CURRENT_NAV_ITEM);
-		fragmentTitle = navItems[currentNavItem];
-		if (!drawerLayout.isDrawerOpen(drawerMenu)) setTitle(fragmentTitle);
+		navigateTo(currentNavItem);
 	}
 
 

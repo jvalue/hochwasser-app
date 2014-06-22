@@ -9,9 +9,7 @@
 		android:id="@+id/list"
 		android:layout_height="fill_parent"
 		android:layout_width="match_parent"
-		android:dividerHeight="6dp"
 		android:layout_margin="6dp"
-		android:divider="@android:color/transparent"
 	/>
 
 </LinearLayout>

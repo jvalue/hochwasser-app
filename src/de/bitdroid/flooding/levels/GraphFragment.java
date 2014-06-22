@@ -33,18 +33,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 
 import com.androidplot.xy.XYPlot;
@@ -55,7 +57,8 @@ import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 
-public class GraphActivity extends Activity {
+
+public final class GraphFragment extends Fragment {
 	
 	public static final String EXTRA_WATER_NAME = "waterName";
 
@@ -74,19 +77,29 @@ public class GraphActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		setContentView(R.layout.graph);
+		setHasOptionsMenu(true);
+	}
+
+	
+	@Override
+	public View onCreateView(
+			LayoutInflater inflater,
+			ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.graph, container, false);
 
 		// setup graph
-		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
-		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
-		this.graph = new WaterGraph(graphView, waterName, getApplicationContext());
+		waterName = getArguments().getString(EXTRA_WATER_NAME);
+		XYPlot graphView = (XYPlot) view.findViewById(R.id.graph);
+		this.graph = new WaterGraph(graphView, waterName, getActivity().getApplicationContext());
 		if (showingRegularSeries) graph.setSeries(getRegularSeries());
 		else graph.setSeries(getNormalizedSeries());
 
 		// setup seekbar
-		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
+		SeekBar seekbar = (SeekBar) view.findViewById(R.id.seekbar);
 		final List<Long> timestamps = SourceMonitor
-			.getInstance(getApplicationContext())
+			.getInstance(getActivity().getApplicationContext())
 			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
 		Collections.sort(timestamps);
 		seekbar.setMax(timestamps.size() - 1);
@@ -112,20 +125,20 @@ public class GraphActivity extends Activity {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				GraphActivity.this.levelData = cursor;
+				GraphFragment.this.levelData = cursor;
 				graph.setData(cursor, currentTimestamp);
 			}
 
 			@Override
 			protected void onLoaderResetHelper(Loader<Cursor> loader) {
-				GraphActivity.this.levelData = null;
+				GraphFragment.this.levelData = null;
 			}
 
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
 
 				return new MonitorSourceLoader(
-						getApplicationContext(),
+						getActivity().getApplicationContext(),
 						PegelOnlineSource.INSTANCE,
 						new String[] { 
 							COLUMN_STATION_NAME,
@@ -160,25 +173,45 @@ public class GraphActivity extends Activity {
 		getLoaderManager().initLoader(LOADER_ID, null, loaderCallbacks);
 		Loader<Cursor> cursorLoader = getLoaderManager().getLoader(LOADER_ID);
 		this.loader = (MonitorSourceLoader) cursorLoader;
+
+
+		// restore state
+		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_TIMESTAMP)) {
+			// restore series
+			this.showingRegularSeries 
+				= savedInstanceState.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
+			if (!showingRegularSeries) {
+				graph.setSeries(getNormalizedSeries());
+				if (levelData != null) graph.setData(levelData, currentTimestamp);
+			}
+			graph.restoreState(savedInstanceState);
+
+			// restore timestamp
+			currentTimestamp = savedInstanceState.getLong(EXTRA_TIMESTAMP);
+			if (loader != null) loader.setTimestamp(currentTimestamp);
+
+			// restore seekbar
+			showingSeekbar = savedInstanceState.getBoolean(EXTRA_SHOWING_SEEKBAR);
+			if (showingSeekbar) view.findViewById(R.id.seekbar).setVisibility(View.VISIBLE);
+		}
+
+		return view;
     }
 
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.graph_menu, menu);
-		return true;
 	}
 
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
+	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		if (showingRegularSeries) 
 			menu.findItem(R.id.normalize).setTitle(getString(R.string.menu_graph_normalize));
 		else 
 			menu.findItem(R.id.normalize).setTitle(getString(R.string.menu_graph_regular));
-		return true;
 	}
 
 
@@ -195,7 +228,7 @@ public class GraphActivity extends Activity {
 					i++;
 				}
 
-				new AlertDialog.Builder(this)
+				new AlertDialog.Builder(this.getActivity())
 					.setTitle(getString(R.string.series_select_dialog_title))
 					.setMultiChoiceItems(
 							items,
@@ -229,7 +262,7 @@ public class GraphActivity extends Activity {
 
 			case R.id.timestamp:
 				final List<Long> timestamps = SourceMonitor
-					.getInstance(getApplicationContext())
+					.getInstance(getActivity().getApplicationContext())
 					.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
 				Collections.sort(timestamps);
 
@@ -242,7 +275,7 @@ public class GraphActivity extends Activity {
 				final long originalTimestamp = currentTimestamp;
 				int selectedTimestamp = timestamps.indexOf(currentTimestamp);
 
-				new AlertDialog.Builder(this)
+				new AlertDialog.Builder(getActivity())
 					.setTitle(getString(R.string.series_monitor_dialog_title))
 					.setSingleChoiceItems(
 							stringTimestamps.toArray(new String[timestamps.size()]), 
@@ -268,13 +301,15 @@ public class GraphActivity extends Activity {
 
 			case R.id.seekbar:
 				showingSeekbar = !showingSeekbar;
-				SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
+				SeekBar seekbar = (SeekBar) getView().findViewById(R.id.seekbar);
 				if (showingSeekbar) seekbar.setVisibility(View.VISIBLE);
 				else seekbar.setVisibility(View.GONE);
 				return true;
 
 			case R.id.map:
-				Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
+				Intent mapIntent = new Intent(
+						getActivity().getApplicationContext(), 
+						MapActivity.class);
 				mapIntent.putExtra(MapActivity.EXTRA_WATER_NAME, waterName);
 				startActivity(mapIntent);
 				return true;
@@ -289,37 +324,13 @@ public class GraphActivity extends Activity {
 		EXTRA_SHOWING_SEEKBAR = "EXTRA_SHOWING_SEEKBAR";
 
 	@Override
-	protected void onSaveInstanceState(Bundle state) {
+	public void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
 		state.putBoolean(EXTRA_SHOWING_REGULAR_SERIES, showingRegularSeries);
 		state.putLong(EXTRA_TIMESTAMP, currentTimestamp);
 		state.putBoolean(EXTRA_SHOWING_SEEKBAR, showingSeekbar);
 		graph.saveState(state);
 	}
-
-
-	@Override
-	protected void onRestoreInstanceState(Bundle state) {
-		super.onRestoreInstanceState(state);
-
-		// restore series
-		this.showingRegularSeries = state.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
-		if (!showingRegularSeries) {
-			graph.setSeries(getNormalizedSeries());
-			if (levelData != null) graph.setData(levelData, currentTimestamp);
-		}
-		graph.restoreState(state);
-
-		// restore timestamp
-		currentTimestamp = state.getLong(EXTRA_TIMESTAMP);
-		if (loader != null) loader.setTimestamp(currentTimestamp);
-
-		// restore seekbar
-		showingSeekbar = state.getBoolean(EXTRA_SHOWING_SEEKBAR);
-		if (showingSeekbar) findViewById(R.id.seekbar).setVisibility(View.VISIBLE);
-	}
-
-
 
 
 	private List<Pair<AbstractSeries, Integer>> getRegularSeries() {
@@ -435,10 +446,10 @@ public class GraphActivity extends Activity {
 	
 	private void updateScrollbar() {
 		final List<Long> timestamps = SourceMonitor
-			.getInstance(getApplicationContext())
+			.getInstance(getActivity().getApplicationContext())
 			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
 		Collections.sort(timestamps);
-		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
+		SeekBar seekbar = (SeekBar) getView().findViewById(R.id.seekbar);
 		seekbar.setProgress(timestamps.indexOf(currentTimestamp));
 	}
 

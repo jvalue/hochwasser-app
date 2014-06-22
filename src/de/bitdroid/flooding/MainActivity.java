@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -39,6 +41,7 @@ public class MainActivity extends Activity {
 	private ListView drawerMenuList;
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence drawerTitle, fragmentTitle;
+	private TextView titleView;
 
 	private String[] navItems;
 	private int currentNavItem = 0;
@@ -52,6 +55,7 @@ public class MainActivity extends Activity {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 		drawerMenu = (LinearLayout) findViewById(R.id.menu);
 		drawerMenuList = (ListView) findViewById(R.id.menu_entries);
+		titleView = (TextView) findViewById(Resources.getSystem().getIdentifier("action_bar_title", "id", "android"));
 
 		navItems = getResources().getStringArray(R.array.nav_items);
 
@@ -83,14 +87,28 @@ public class MainActivity extends Activity {
 				R.string.nav_close) {
 			@Override
 			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(fragmentTitle);
 				invalidateOptionsMenu();
 			}
 
 			@Override
 			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(drawerTitle);
 				invalidateOptionsMenu();
+			}
+
+			@Override
+			public void onDrawerSlide(View drawerView, float offset) {
+				CharSequence title = null;
+				int alpha = 0;
+				if (offset <= 0.5) {
+					alpha = (int) ((0.5 - offset) * 2 * 255);
+					title = fragmentTitle;
+				} else {
+					alpha = (int) ((offset - 0.5) * 2 * 255);
+					title = drawerTitle;
+				}
+
+				titleView.setText(title);
+				titleView.setTextColor(titleView.getTextColors().withAlpha(alpha));
 			}
 		};
 		drawerLayout.setDrawerListener(drawerToggle);
@@ -139,13 +157,6 @@ public class MainActivity extends Activity {
 
 			manager.startManualSync(source);
 		}
-	}
-
-
-	@Override
-	public void setTitle(CharSequence title) {
-		fragmentTitle = title;
-		getActionBar().setTitle(title);
 	}
 
 
@@ -218,7 +229,7 @@ public class MainActivity extends Activity {
 		else if (position == 4) fragment = new AboutFragment();
 		getFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
 		drawerMenuList.setItemChecked(position, true);
-		setTitle(navItems[position]);
+		fragmentTitle = navItems[position];
 		drawerLayout.closeDrawer(drawerMenu);
 	}
 

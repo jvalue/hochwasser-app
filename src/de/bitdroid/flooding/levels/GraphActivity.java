@@ -164,6 +164,20 @@ public class GraphActivity extends Activity {
 
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
+	}
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
+	}
+
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.graph_menu, menu);

@@ -8,6 +8,7 @@
 	android:paddingRight="6dp"
 	android:paddingTop="4dp"
 	android:paddingBottom="6dp"
+	android:background="?android:attr/activatedBackgroundIndicator"
 	>
 
 	<LinearLayout

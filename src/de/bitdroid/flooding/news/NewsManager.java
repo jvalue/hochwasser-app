@@ -66,13 +66,14 @@ public final class NewsManager {
 	}
 
 
-	public void addItem(String title, String content, boolean showNotification) {
+	public NewsItem addItem(String title, String content, boolean showNotification) {
 		if (title == null || content == null) 
 			throw new NullPointerException("params cannot be null");
 
-		unreadItems.add(new NewsItem(title, content, System.currentTimeMillis()));
+		NewsItem item = new NewsItem(title, content, System.currentTimeMillis());
+		unreadItems.add(item);
 
-		if (!showNotification) return;
+		if (!showNotification) return item;
 
 		// show user notification
 		Intent intent = new Intent(context, MainActivity.class);
@@ -96,12 +97,19 @@ public final class NewsManager {
 		NotificationManager manager 
 			= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(NOTIFICATION_ID, builder.build());
+
+		return item;
 	}
 
 
-	public void addItem(String title, String content) {
-		if (title == null || content == null) 
-			throw new NullPointerException("params cannot be null");
+	public void removeItem(NewsItem item) {
+		if (item == null) 
+			throw new NullPointerException("param cannot be null");
+		if (!unreadItems.contains(item) && !readItems.contains(item)) 
+			throw new IllegalArgumentException("item not present");
+
+		unreadItems.remove(item);
+		readItems.remove(item);
 	}
 
 }

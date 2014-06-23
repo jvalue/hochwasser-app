@@ -26,4 +26,11 @@
 		android:hint="@string/menu_graph_map"
 		android:icon="@drawable/ic_action_map"
 	/>
+	<item 
+		android:id="@+id/help"
+		android:showAsAction="ifRoom"
+		android:title="@string/menu_graph_help"
+		android:hint="@string/menu_graph_help"
+		android:icon="@drawable/ic_action_help"
+	/>
 </menu>

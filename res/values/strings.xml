@@ -25,6 +25,7 @@
 	<string name="menu_graph_timestamp">Select time stamp</string>
 	<string name="menu_graph_seekbar">Timestamp</string>
 	<string name="menu_graph_map">Map</string>
+	<string name="menu_graph_help">Help</string>
 
 	<string name="menu_select_water_search">Search</string>
 

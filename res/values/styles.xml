@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="CustomShowcaseTheme" parent="ShowcaseView">
+		<item name="sv_backgroundColor">#BB000000</item>
+		<item name="sv_tintButtonColor">false</item>
+	</style>
+
+</resources>

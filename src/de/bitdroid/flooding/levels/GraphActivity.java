@@ -53,12 +53,17 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
 import com.androidplot.xy.XYPlot;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
+import de.bitdroid.flooding.utils.ShowcaseSeries;
 
 public class GraphActivity extends Activity {
 	
@@ -492,17 +497,44 @@ public class GraphActivity extends Activity {
 
 
 	private void showHelpOverlay() {
-		final View helpView = LayoutInflater
-			.from(getBaseContext())
-			.inflate(R.layout.graph_help, null);
-		frameLayout.addView(helpView);
-		helpView.setOnTouchListener(new View.OnTouchListener() {
-
+		new ShowcaseSeries() {
 			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				frameLayout.removeView(helpView);
-				return true;
+			public ShowcaseView getShowcase(int id) {
+				Activity activity = GraphActivity.this;
+				Target target;
+				switch(id) {
+					case 0:
+						target = new ActionItemTarget(activity, R.id.seekbar);
+						return new ShowcaseView.Builder(activity)
+							.setTarget(target)
+							.setContentTitle(R.string.help_graph_timestamps_title)
+							.setContentText(R.string.help_graph_timestamps_content)
+							.doNotBlockTouches()
+							.setStyle(R.style.CustomShowcaseTheme)
+							.build();
+
+					case 1:
+						target = new ActionItemTarget(activity, R.id.map);
+						return new ShowcaseView.Builder(activity)
+							.setTarget(target)
+							.setContentTitle(R.string.help_graph_map_title)
+							.setContentText(R.string.help_graph_map_content)
+							.doNotBlockTouches()
+							.setStyle(R.style.CustomShowcaseTheme)
+							.build();
+
+					case 2:
+						target = new ActionViewTarget(activity, ActionViewTarget.Type.OVERFLOW);
+						return new ShowcaseView.Builder(activity)
+							.setTarget(target)
+							.setContentTitle(R.string.help_graph_normalize_title)
+							.setContentText(R.string.help_graph_normalize_content)
+							.doNotBlockTouches()
+							.setStyle(R.style.CustomShowcaseTheme)
+							.build();
+				}
+				return null;
 			}
-		});
+		}.start();
 	}
 }

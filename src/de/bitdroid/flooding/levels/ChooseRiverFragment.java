@@ -205,14 +205,13 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 				return e1.getWaterName().compareTo(e2.getWaterName());
 			}
 		});
-		listAdapter.notifyDataSetChanged();
+		listAdapter.getFilter().filter("");
 	}
 
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		listAdapter.clear();
-		listAdapter.notifyDataSetChanged();
 	}
 
 

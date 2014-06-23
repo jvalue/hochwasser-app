@@ -35,16 +35,21 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
 import com.androidplot.xy.XYPlot;
@@ -61,6 +66,7 @@ public class GraphActivity extends Activity {
 
 	private static final int LOADER_ID = 44;
 
+	private FrameLayout frameLayout;
 	private WaterGraph graph;
 	private boolean showingRegularSeries = true;
 	private boolean showingSeekbar = false;
@@ -74,7 +80,10 @@ public class GraphActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		setContentView(R.layout.graph);
+
+		frameLayout = new FrameLayout(this);
+		frameLayout.addView(LayoutInflater.from(getBaseContext()).inflate(R.layout.graph, null));
+		setContentView(frameLayout);
 
 		// enable action bar back button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -164,6 +173,9 @@ public class GraphActivity extends Activity {
 		getLoaderManager().initLoader(LOADER_ID, null, loaderCallbacks);
 		Loader<Cursor> cursorLoader = getLoaderManager().getLoader(LOADER_ID);
 		this.loader = (MonitorSourceLoader) cursorLoader;
+
+		// if first start show helper screen
+		if (firstStart()) showHelpOverlay();
     }
 
 
@@ -294,6 +306,10 @@ public class GraphActivity extends Activity {
 				Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
 				mapIntent.putExtra(MapActivity.EXTRA_WATER_NAME, waterName);
 				startActivity(mapIntent);
+				return true;
+
+			case R.id.help:
+				showHelpOverlay();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
@@ -459,4 +475,34 @@ public class GraphActivity extends Activity {
 		seekbar.setProgress(timestamps.indexOf(currentTimestamp));
 	}
 
+
+	private static final String PREFS_NAME = "de.bitdroid.flooding.levels.GraphActivity";
+	private static final String KEY_FIRST_START = "KEY_FIRST_START";
+
+	private boolean firstStart() {
+		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+		boolean firstStart = prefs.getBoolean(KEY_FIRST_START, true);
+		if (!firstStart) return false;
+
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean(KEY_FIRST_START, false);
+		editor.commit();
+		return true;
+	}
+
+
+	private void showHelpOverlay() {
+		final View helpView = LayoutInflater
+			.from(getBaseContext())
+			.inflate(R.layout.graph_help, null);
+		frameLayout.addView(helpView);
+		helpView.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				frameLayout.removeView(helpView);
+				return true;
+			}
+		});
+	}
 }

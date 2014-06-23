@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:androidPlot="http://schemas.android.com/apk/lib/com.androidplot.xy"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="#DD000000"
+		android:padding="10dp"
+	>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:text="@string/help_graph_title"
+		android:paddingTop="10dp"
+		style="@android:style/TextAppearance.Medium"
+	/>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:text="@string/help_graph_timestamps"
+		android:paddingTop="10dp"
+		style="@android:style/TextAppearance.Medium"
+	/>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:text="@string/help_graph_normalize"
+		android:paddingTop="10dp"
+		style="@android:style/TextAppearance.Medium"
+	/>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:text="@string/help_graph_map"
+		android:paddingTop="10dp"
+		style="@android:style/TextAppearance.Medium"
+	/>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:text="@string/help_graph_series"
+		android:paddingTop="10dp"
+		style="@android:style/TextAppearance.Medium"
+	/>
+
+</LinearLayout>

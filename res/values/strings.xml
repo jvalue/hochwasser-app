@@ -22,9 +22,9 @@
 	<string name="menu_graph_select_series">Series to display</string>
 	<string name="menu_graph_normalize">Show normalized plot</string>
 	<string name="menu_graph_regular">Show regular plot</string>
-	<string name="menu_graph_timestamp">Select time stamp</string>
-	<string name="menu_graph_seekbar">Timestamp</string>
-	<string name="menu_graph_map">Map</string>
+	<string name="menu_graph_timestamp">Select timestamp from list</string>
+	<string name="menu_graph_seekbar">Select timestamp</string>
+	<string name="menu_graph_map">Show Map</string>
 	<string name="menu_graph_help">Help</string>
 
 	<string name="menu_select_water_search">Search</string>

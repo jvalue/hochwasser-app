@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -15,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 	private CharSequence drawerTitle, fragmentTitle;
 	private TextView titleView;
 
-	private String[] navItems;
+	private NavItem[] navItems;
 	private int currentNavItem = 0;
 
     @Override
@@ -56,18 +56,21 @@ public class MainActivity extends Activity {
 		drawerMenuList = (ListView) findViewById(R.id.menu_entries);
 		titleView = (TextView) findViewById(Resources.getSystem().getIdentifier("action_bar_title", "id", "android"));
 
-		navItems = getResources().getStringArray(R.array.nav_items);
-		fragmentTitle = navItems[currentNavItem];
+		String[] navTitles = getResources().getStringArray(R.array.nav_titles);
+		TypedArray navIcons = getResources().obtainTypedArray(R.array.nav_icons);
+		fragmentTitle = navTitles[currentNavItem];
 		drawerTitle = getTitle();
+
+		navItems = new NavItem[navTitles.length];
+		for (int i = 0; i < navItems.length; i++) {
+			navItems[i] = new NavItem(navTitles[i], navIcons.getResourceId(i, -1));
+		}
 
 		// set drawer shadow
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		// set nav items
-		drawerMenuList.setAdapter(new ArrayAdapter<String>(
-					getApplicationContext(),
-					R.layout.nav_item,
-					navItems));
+		drawerMenuList.setAdapter(new NavListAdapter(getApplicationContext(), navItems));
 		drawerMenuList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -233,7 +236,7 @@ public class MainActivity extends Activity {
 		else if (position == 4) fragment = new AboutFragment();
 		getFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
 		drawerMenuList.setItemChecked(position, true);
-		fragmentTitle = navItems[position];
+		fragmentTitle = navItems[position].getTitle();
 		drawerLayout.closeDrawer(drawerMenu);
 	}
 

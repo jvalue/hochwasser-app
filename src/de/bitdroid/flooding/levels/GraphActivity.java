@@ -43,13 +43,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
 import com.androidplot.xy.XYPlot;
@@ -71,7 +68,6 @@ public class GraphActivity extends Activity {
 
 	private static final int LOADER_ID = 44;
 
-	private FrameLayout frameLayout;
 	private WaterGraph graph;
 	private boolean showingRegularSeries = true;
 	private boolean showingSeekbar = false;
@@ -85,10 +81,7 @@ public class GraphActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-		frameLayout = new FrameLayout(this);
-		frameLayout.addView(LayoutInflater.from(getBaseContext()).inflate(R.layout.graph, null));
-		setContentView(frameLayout);
+		setContentView(R.layout.graph);
 
 		// enable action bar back button
 		getActionBar().setDisplayHomeAsUpEnabled(true);

@@ -51,5 +51,6 @@ final class NewsListAdapter extends ArrayAdapter<NewsItem> {
 		clear();
 		addAll(NewsManager.getInstance(context).getAllItems());
 		super.notifyDataSetChanged();
+		setNotifyOnChange(false);
 	}
 }

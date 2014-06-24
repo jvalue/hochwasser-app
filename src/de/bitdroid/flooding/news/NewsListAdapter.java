@@ -96,6 +96,7 @@ final class NewsListAdapter extends BaseAdapter {
 		items.clear();
 		items.addAll(manager.getAllItems());
 		Collections.sort(items);
+		notifyDataSetChanged();
 	}
 
 }

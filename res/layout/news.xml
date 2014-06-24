@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
 	>
 
-	<ListView
+	<de.timroes.android.listview.EnhancedListView
 		android:id="@+id/list"
 		android:layout_height="fill_parent"
 		android:layout_width="match_parent"

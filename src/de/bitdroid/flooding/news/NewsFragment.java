@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import de.bitdroid.flooding.R;
+import de.timroes.android.listview.EnhancedListView;
 
 
 public final class NewsFragment extends Fragment implements AbsListView.MultiChoiceModeListener {
@@ -33,11 +34,22 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 		// view
 		View view = inflater.inflate(R.layout.news, container, false);
-		ListView listView = (ListView) view.findViewById(R.id.list);
+		EnhancedListView listView = (EnhancedListView) view.findViewById(R.id.list);
 		listAdapter = new NewsListAdapter(getActivity().getApplicationContext());
 		listView.setAdapter(listAdapter);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(this);
+
+		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable  onDismiss(EnhancedListView listView, int pos) {
+				NewsItem item = listAdapter.getItem(pos);
+				NewsManager.getInstance(getActivity().getApplicationContext()).removeItem(item);
+				listAdapter.notifyDataSetChanged();
+				return null;
+			}
+		});
+		listView.enableSwipeToDismiss();
 
 		return view;
 	}

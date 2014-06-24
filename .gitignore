@@ -5,3 +5,4 @@ gen/
 *.swo
 build.xml
 googleApiKey.xml
+mirror

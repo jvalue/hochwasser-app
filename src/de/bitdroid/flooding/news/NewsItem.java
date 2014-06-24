@@ -8,13 +8,23 @@ public final class NewsItem implements Comparable<NewsItem> {
 	private final String title, content;
 	private final String id;
 	private final long timestamp;
+	private final boolean navigationEnabled;
+	private final int navigationPos;
 
-	NewsItem(String id, String title, String content, long timestamp) {
-		Assert.assertNotNull(id, title, content);
+	private NewsItem(
+			String id, 
+			String title, 
+			String content, 
+			long timestamp,
+			boolean navigationEnabled,
+			int navigationPos) {
+
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.timestamp = timestamp;
+		this.navigationEnabled = navigationEnabled;
+		this.navigationPos = navigationPos;
 	}
 
 
@@ -38,10 +48,15 @@ public final class NewsItem implements Comparable<NewsItem> {
 	}
 
 
-	@Override
-	public String toString() {
-		return title + ": " + content + " (" + timestamp + ")";
+	public boolean isNavigationEnabled() {
+		return navigationEnabled;
 	}
+
+
+	public int getNavigationPos() {
+		return navigationPos;
+	}
+
 
 	
 	@Override
@@ -51,7 +66,9 @@ public final class NewsItem implements Comparable<NewsItem> {
 		return id.equals(item.id)
 			&& title.equals(item.title) 
 			&& content.equals(item.content)
-			&& timestamp == item.timestamp;
+			&& timestamp == item.timestamp
+			&& navigationEnabled == item.navigationEnabled
+			&& navigationPos == item.navigationPos;
 	}
 
 	
@@ -63,6 +80,8 @@ public final class NewsItem implements Comparable<NewsItem> {
 		hash = hash + MULT * title.hashCode();
 		hash = hash + MULT * content.hashCode();
 		hash = hash + MULT * Long.valueOf(timestamp).hashCode();
+		hash = hash + MULT * (navigationEnabled ? 1 : 0);
+		hash = hash + MULT * Integer.valueOf(navigationPos).hashCode();
 		return hash;
 	}
 
@@ -70,6 +89,41 @@ public final class NewsItem implements Comparable<NewsItem> {
 	@Override
 	public int compareTo(NewsItem other) {
 		return new Long(timestamp).compareTo(other.timestamp);
+	}
+
+
+	public static class Builder {
+
+		private final String id, title, content;
+		private final long timestamp;
+		private boolean navigationEnabled = false;
+		private int navigationPos = -1;
+
+		public Builder(String id, String title, String content, long timestamp) {
+			Assert.assertNotNull(id, title, content);
+			this.id = id;
+			this.title = title;
+			this.content = content;
+			this.timestamp = timestamp;
+		}
+
+
+		public Builder setNavigationPos(int navigationPos) {
+			navigationEnabled = true;
+			this.navigationPos = navigationPos;
+			return this;
+		}
+
+
+		public Builder disableNavigation() {
+			navigationEnabled = false;
+			return this;
+		}
+
+
+		public NewsItem build() {
+			return new NewsItem(id, title, content, timestamp, navigationEnabled, navigationPos);
+		}
 	}
 
 }

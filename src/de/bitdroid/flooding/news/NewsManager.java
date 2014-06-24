@@ -79,11 +79,12 @@ public final class NewsManager {
 
 	public NewsItem addItem(String title, String content, boolean showNotification) {
 		Assert.assertNotNull(title, content);
-		NewsItem item = new NewsItem(
+		NewsItem item = new NewsItem.Builder(
 				UUID.randomUUID().toString(), 
 				title, 
 				content, 
-				System.currentTimeMillis());
+				System.currentTimeMillis())
+			.build();
 		addItem(item, showNotification);
 		return item;
 	}

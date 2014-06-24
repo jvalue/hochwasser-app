@@ -68,6 +68,7 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 			}
 		});
 		listView.enableSwipeToDismiss();
+		listView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
 
 		// enable navigation to other fragments
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

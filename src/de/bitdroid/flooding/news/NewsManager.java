@@ -79,16 +79,20 @@ public final class NewsManager {
 
 	public NewsItem addItem(String title, String content, boolean showNotification) {
 		Assert.assertNotNull(title, content);
-
 		NewsItem item = new NewsItem(
 				UUID.randomUUID().toString(), 
 				title, 
 				content, 
 				System.currentTimeMillis());
+		addItem(item, showNotification);
+		return item;
+	}
 
+
+	public void addItem(NewsItem item, boolean showNotification) {
 		unreadItems.put(item.getId(), item);
 
-		if (!showNotification) return item;
+		if (!showNotification) return;
 
 		// show user notification
 		Intent intent = new Intent(context, MainActivity.class);
@@ -102,8 +106,8 @@ public final class NewsManager {
 
 		NotificationCompat.Builder builder =  new NotificationCompat.Builder(context)
 			.setSmallIcon(R.drawable.ic_menu_home)
-			.setContentTitle(title)
-			.setContentText(content)
+			.setContentTitle(item.getTitle())
+			.setContentText(item.getContent())
 			.setAutoCancel(true)
 			.setNumber(unreadItems.size())
 			.setContentIntent(pendingIntent);
@@ -112,8 +116,6 @@ public final class NewsManager {
 		NotificationManager manager 
 			= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(NOTIFICATION_ID, builder.build());
-
-		return item;
 	}
 
 

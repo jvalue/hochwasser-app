@@ -82,15 +82,16 @@ public class GraphActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
+		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 
 		// enable action bar back button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
+		setTitle(waterName);
 
 		// setup graph
-		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
-		this.graph = new WaterGraph(graphView, waterName, getApplicationContext());
+		this.graph = new WaterGraph(graphView, getApplicationContext());
 		if (showingRegularSeries) graph.setSeries(getRegularSeries());
 		else graph.setSeries(getNormalizedSeries());
 

@@ -30,7 +30,6 @@ final class WaterGraph implements OnTouchListener {
 	
 	private final XYPlot graph;
 	private final Context context;
-	private final String graphName;
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
 	private SeriesManager manager;
@@ -39,12 +38,10 @@ final class WaterGraph implements OnTouchListener {
 
 	public WaterGraph(
 			XYPlot graph, 
-			String graphName, 
 			Context context) {
 
 		this.graph = graph;
 		this.context = context;
-		this.graphName = graphName;
 
 		graph.setOnTouchListener(this);
 		graph.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
@@ -73,7 +70,7 @@ final class WaterGraph implements OnTouchListener {
 		manager.reset();
 		manager.setData(data);
 
-		graph.setTitle(graphName + " (" + dateFormatter.format(new Date(timestamp)) + ")");
+		graph.setTitle(dateFormatter.format(new Date(timestamp)));
 		graph.setRangeBoundaries(null, null, BoundaryMode.AUTO);
 		graph.setDomainBoundaries(null, null, BoundaryMode.AUTO);
 		graph.calculateMinMaxVals();

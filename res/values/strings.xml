@@ -28,6 +28,8 @@
 
 	<string name="menu_select_water_search">Search</string>
 
+	<string name="waters_empty">No data found. Loading might take a little while when first starting the app.</string>
+
 
 	<string name="series_select_dialog_title">Select Series to Display</string>
 	<string name="series_monitor_dialog_title">Select a Timestamp to Display</string>

@@ -79,6 +79,7 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 
 		// show stations on long click
 		ListView listView = (ListView) view.findViewById(android.R.id.list);
+		listView.setEmptyView(view.findViewById(R.id.empty));
 		listView.setLongClickable(true);
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 

@@ -26,6 +26,7 @@ import de.timroes.android.listview.EnhancedListView;
 public final class NewsFragment extends Fragment implements AbsListView.MultiChoiceModeListener {
 
 	private NewsListAdapter listAdapter;
+	private EnhancedListView listView;
 
 	@Override
 	public View onCreateView(
@@ -35,7 +36,7 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 		// view
 		View view = inflater.inflate(R.layout.news, container, false);
-		EnhancedListView listView = (EnhancedListView) view.findViewById(R.id.list);
+		listView = (EnhancedListView) view.findViewById(R.id.list);
 		listAdapter = new NewsListAdapter(getActivity().getApplicationContext());
 		listView.setAdapter(listAdapter);
 
@@ -111,12 +112,16 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 		MenuInflater inflater = mode.getMenuInflater();
 		inflater.inflate(R.menu.news_list_menu, menu);
+		listView.disableSwipeToDismiss();
 		return true;
 	}
 
 
 	@Override
-	public void onDestroyActionMode(ActionMode mode) { }
+	public void onDestroyActionMode(ActionMode mode) {
+		listView.enableSwipeToDismiss();
+		selectedItems.clear();
+	}
 
 
 	@Override

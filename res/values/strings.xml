@@ -25,7 +25,6 @@
 	<string name="menu_graph_timestamp">Select timestamp from list</string>
 	<string name="menu_graph_seekbar">Select timestamp</string>
 	<string name="menu_graph_map">Show Map</string>
-	<string name="menu_graph_help">Help</string>
 
 	<string name="menu_select_water_search">Search</string>
 
@@ -45,6 +44,7 @@
 
 	<string name="btn_ok">Ok</string>
 	<string name="btn_cancel">Cancel</string>
+	<string name="help">Help</string>
 
 	<string name="prefs_cat_ods">Open Data Service</string>
 	<string name="prefs_cat_ods_key">open_data_servic</string>

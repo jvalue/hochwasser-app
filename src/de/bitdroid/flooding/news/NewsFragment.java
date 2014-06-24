@@ -30,6 +30,13 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	private NewsListAdapter listAdapter;
 	private EnhancedListView listView;
 
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
 	@Override
 	public View onCreateView(
 			LayoutInflater inflater, 
@@ -90,6 +97,24 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	}
 
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.news_menu, menu);
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch(menuItem.getItemId()) {
+			case R.id.news:
+				addHelperNews();
+				return true;
+		}
+		return super.onOptionsItemSelected(menuItem);
+	}
+
+
+
 	private final List<NewsItem> selectedItems = new LinkedList<NewsItem>();
 
 	@Override
@@ -116,7 +141,7 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	@Override
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 		MenuInflater inflater = mode.getMenuInflater();
-		inflater.inflate(R.menu.news_list_menu, menu);
+		inflater.inflate(R.menu.news_action_mode_menu, menu);
 		listView.disableSwipeToDismiss();
 		return true;
 	}

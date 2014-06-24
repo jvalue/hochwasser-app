@@ -221,16 +221,16 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	private void addHelperNews() {
 		NewsManager manager = NewsManager.getInstance(getActivity().getApplicationContext());
 		manager.addItem(new NewsItem.Builder(
-				"Alarms",
-				"If you want to be alarmed when water levels reach a certain level, head over to the alarms section!",
+				getString(R.string.news_intro_alarms_title),
+				getString(R.string.news_intro_alarms_content),
 				System.currentTimeMillis())
 			.setNavigationPos(1)
 			.build(),
 			false);
 
 		manager.addItem(new NewsItem.Builder(
-				"Data",
-				"Want more details about the current water sitation? Check our the data section!",
+				getString(R.string.news_intro_data_title),
+				getString(R.string.news_intro_data_content),
 				System.currentTimeMillis())
 			.setNavigationPos(2)
 			.build(),

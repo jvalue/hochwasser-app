@@ -69,7 +69,7 @@ public final class NewsItem implements Comparable<NewsItem> {
 
 	@Override
 	public int compareTo(NewsItem other) {
-		return new Long(timestamp).compareTo(timestamp);
+		return new Long(timestamp).compareTo(other.timestamp);
 	}
 
 }

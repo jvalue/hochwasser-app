@@ -2,6 +2,7 @@ package de.bitdroid.flooding.news;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -29,6 +30,7 @@ final class NewsListAdapter extends BaseAdapter {
 		this.context = context;
 		this.manager = NewsManager.getInstance(context);
 		this.items.addAll(manager.getAllItems());
+		Collections.sort(items);
 	}
 
 
@@ -75,6 +77,7 @@ final class NewsListAdapter extends BaseAdapter {
 		Assert.assertNotNull(item);
 		manager.addItem(item, false);
 		items.add(item);
+		Collections.sort(items);
 		notifyDataSetChanged();
 	}
 
@@ -92,6 +95,7 @@ final class NewsListAdapter extends BaseAdapter {
 	public void notifyDataSetInvalidated() {
 		items.clear();
 		items.addAll(manager.getAllItems());
+		Collections.sort(items);
 	}
 
 }

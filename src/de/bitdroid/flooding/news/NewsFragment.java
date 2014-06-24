@@ -41,8 +41,14 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
-				listAdapter.removeItem(listAdapter.getItem(pos));
-				return null;
+				final NewsItem item = listAdapter.getItem(pos);
+				listAdapter.removeItem(item);
+				return new EnhancedListView.Undoable() {
+					@Override
+					public void undo() {
+						listAdapter.addItem(item);
+					}
+				};
 			}
 		});
 		listView.enableSwipeToDismiss();

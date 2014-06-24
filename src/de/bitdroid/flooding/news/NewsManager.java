@@ -17,6 +17,7 @@ import android.support.v4.app.TaskStackBuilder;
 import de.bitdroid.flooding.MainActivity;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.flooding.utils.Log;
 
 
 public final class NewsManager {
@@ -42,25 +43,6 @@ public final class NewsManager {
 		this.dbHelper = new NewsDatabase(context);
 
 		readAllItemsFromDb();
-
-		/*
-		// TODO
-		addItem(new NewsItem.Builder(
-				"Alarms",
-				"If you want to be alarmed when water levels reach a certain level, head over to the alarms section!",
-				System.currentTimeMillis())
-			.setNavigationPos(1)
-			.build(),
-			true);
-
-		addItem(new NewsItem.Builder(
-				"Data",
-				"Want more details about the current water sitation? Check our the data section!",
-				System.currentTimeMillis())
-			.setNavigationPos(2)
-			.build(),
-			true);
-			*/
 	}
 
 
@@ -140,11 +122,9 @@ public final class NewsManager {
 				unreadItems.contains(item) || readItems.contains(item),
 				"item not present");
 
-		boolean read = false;
-		if (unreadItems.remove(item)) read = false;
-		if (readItems.remove(item)) read = true;
-
-		deleteItemFromDb(item, read);
+		unreadItems.remove(item);
+		readItems.remove(item);
+		deleteItemFromDb(item);
 	}
 
 
@@ -167,25 +147,41 @@ public final class NewsManager {
 	}
 
 
-	private void deleteItemFromDb(NewsItem item, boolean read) {
+	private void deleteItemFromDb(NewsItem item) {
 		SQLiteDatabase database = null;
 		try {
 			database = dbHelper.getWritableDatabase();
-			database.delete(NewsDatabase.TABLE_NAME,
+			String d = 
 					NewsDatabase.COLUMN_TITLE + "=? AND "
 					+ NewsDatabase.COLUMN_CONTENT + "=? AND "
 					+ NewsDatabase.COLUMN_TIMESTAMP + "=? AND "
 					+ NewsDatabase.COLUMN_NAVIGATION_ENABLED + "=? AND "
-					+ NewsDatabase.COLUMN_NAVIGATION_POS + "=? AND "
-					+ NewsDatabase.COLUMN_READ + "=?",
+					+ NewsDatabase.COLUMN_NAVIGATION_POS + "=?";
+			Log.debug(d);
+			String[] s = new String[] {
+						item.getTitle(),
+						item.getContent(),
+						String.valueOf(item.getTimestamp()),
+						String.valueOf(item.isNavigationEnabled() ? 1 : 0),
+						String.valueOf(item.getNavigationPos())
+					};
+			for (String st : s) Log.debug(st);
+
+			int count = database.delete(NewsDatabase.TABLE_NAME,
+					NewsDatabase.COLUMN_TITLE + "=? AND "
+					+ NewsDatabase.COLUMN_CONTENT + "=? AND "
+					+ NewsDatabase.COLUMN_TIMESTAMP + "=? AND "
+					+ NewsDatabase.COLUMN_NAVIGATION_ENABLED + "=? AND "
+					+ NewsDatabase.COLUMN_NAVIGATION_POS + "=?",
 					new String[] {
 						item.getTitle(),
 						item.getContent(),
 						String.valueOf(item.getTimestamp()),
 						String.valueOf(item.isNavigationEnabled() ? 1 : 0),
 						String.valueOf(item.getNavigationPos()),
-						String.valueOf(read ? 1 : 0)
 					});
+
+			Log.debug("DELETED " + count + " ITEMS");
 
 		} finally {
 			if (database != null) database.close();

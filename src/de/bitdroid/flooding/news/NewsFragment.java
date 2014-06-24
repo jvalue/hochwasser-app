@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -82,6 +84,9 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		NewsManager.getInstance(getActivity().getApplicationContext()).markAllItemsRead();
+
+
+		if (firstStart()) addHelperNews();
 	}
 
 
@@ -138,4 +143,41 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		mode.setTitle(getActivity().getString(R.string.news_selected, selectedItems.size()));
 	}
 
+
+	private static final String PREFS_NAME = "de.bitdroid.flooding.news.NewsFragment";
+	private static final String KEY_FIRST_START = "KEY_FIRST_START";
+
+	private boolean firstStart() {
+		SharedPreferences prefs = getActivity().getSharedPreferences(
+				PREFS_NAME, 
+				Context.MODE_PRIVATE);
+		boolean firstStart = prefs.getBoolean(KEY_FIRST_START, true);
+		if (!firstStart) return false;
+
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean(KEY_FIRST_START, false);
+		editor.commit();
+		return true;
+	}
+
+
+	private void addHelperNews() {
+		NewsManager manager = NewsManager.getInstance(getActivity().getApplicationContext());
+		manager.addItem(new NewsItem.Builder(
+				"Alarms",
+				"If you want to be alarmed when water levels reach a certain level, head over to the alarms section!",
+				System.currentTimeMillis())
+			.setNavigationPos(1)
+			.build(),
+			false);
+
+		manager.addItem(new NewsItem.Builder(
+				"Data",
+				"Want more details about the current water sitation? Check our the data section!",
+				System.currentTimeMillis())
+			.setNavigationPos(2)
+			.build(),
+			false);
+		listAdapter.notifyDataSetInvalidated();
+	}
 }

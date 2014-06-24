@@ -3,6 +3,7 @@ package de.bitdroid.flooding.news;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +21,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
 import de.bitdroid.flooding.MainActivity;
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.utils.ShowcaseSeries;
 import de.timroes.android.listview.EnhancedListView;
 
 
@@ -29,6 +36,7 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 	private NewsListAdapter listAdapter;
 	private EnhancedListView listView;
+	private ShowcaseView currentShowcaseView;
 
 
 	@Override
@@ -95,7 +103,17 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		NewsManager.getInstance(getActivity().getApplicationContext()).markAllItemsRead();
 
 
-		if (firstStart()) addHelperNews();
+		if (firstStart()) {
+			addHelperNews();
+			showHelperOverlay();
+		}
+	}
+
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (currentShowcaseView != null) currentShowcaseView.hide();
 	}
 
 
@@ -110,6 +128,10 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		switch(menuItem.getItemId()) {
 			case R.id.news:
 				addHelperNews();
+				return true;
+
+			case R.id.help:
+				showHelperOverlay();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
@@ -214,5 +236,43 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 			.build(),
 			false);
 		listAdapter.notifyDataSetInvalidated();
+	}
+
+
+	private void showHelperOverlay() {
+		new ShowcaseSeries() {
+			@Override
+			public ShowcaseView getShowcase(int id) {
+				Activity activity = getActivity();
+				Target target;
+				switch(id) {
+					case 0:
+						target = new ActionViewTarget(activity, ActionViewTarget.Type.TITLE);
+						currentShowcaseView = new ShowcaseView.Builder(activity)
+							.setTarget(target)
+							.setContentTitle(R.string.help_news_welcome_title)
+							.setContentText(R.string.help_news_welcome_content)
+							.setStyle(R.style.CustomShowcaseTheme)
+							.build();
+						break;
+
+					case 1:
+						View view = listView.getChildAt(0);
+						if (view == null) view = listView.getEmptyView();
+						target = new ViewTarget(view);
+						currentShowcaseView = new ShowcaseView.Builder(activity)
+							.setTarget(target)
+							.setContentTitle(R.string.help_news_news_title)
+							.setContentText(R.string.help_news_news_content)
+							.setStyle(R.style.CustomShowcaseTheme)
+							.build();
+						break;
+
+					default:
+						currentShowcaseView = null;
+				}
+				return currentShowcaseView;
+			}
+		}.start();
 	}
 }

@@ -72,4 +72,10 @@
 	<string name="help_graph_map_content">View the stations along this river on a map.</string>
 	<string name="help_graph_normalize_title">Normalize Graph</string>
 	<string name="help_graph_normalize_content">Be sure to check out the option to normalize the graph! It shows the current water level in relation to its average min and max values.</string>
+
+
+	<string name="help_news_welcome_title">Welcome</string>
+	<string name="help_news_welcome_content">You are now in the news section which shows you important events that have happend in the past.\n\nTo move between different sections tap the icon at the top!</string>
+	<string name="help_news_news_title">News</string>
+	<string name="help_news_news_content">News items have actions associated with them.\n\nYou can either tap them for easier navigation, or swipe them away once you are done with them.</string>
 </resources>

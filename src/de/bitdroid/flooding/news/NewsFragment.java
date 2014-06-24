@@ -48,6 +48,7 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		listView = (EnhancedListView) view.findViewById(R.id.list);
 		listAdapter = new NewsListAdapter(getActivity().getApplicationContext());
 		listView.setAdapter(listAdapter);
+		listView.setEmptyView(view.findViewById(R.id.empty));
 
 		// enable editing mode
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);

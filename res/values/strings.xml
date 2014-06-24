@@ -59,6 +59,7 @@
 
 	<string name="news_selected">%1$d selected</string>
 	<string name="news_deleted">Deleted %1$d item(s)</string>
+	<string name="news_empty">Nothing new, please come back later.</string>
 
 	<string name="error_invalid_server_url">Invalid server url!</string>
 	<string name="error_server_connection">Sorry, there was an error while communicating with the server.\nReason: %1$s\nPlease try closing and opening your app in a couple of minutes.</string>

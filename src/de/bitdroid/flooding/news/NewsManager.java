@@ -37,8 +37,24 @@ public final class NewsManager {
 
 	private NewsManager(Context context) {
 		this.context = context;
-		addItem("Welcome", "... to the flooding app!", true);
-		addItem("By the way", "... you have got news!", true);
+
+		addItem(new NewsItem.Builder(
+				UUID.randomUUID().toString(), 
+				"Alarms",
+				"If you want to be alarmed when water levels reach a certain level, head over to the alarms section!",
+				System.currentTimeMillis())
+			.setNavigationPos(1)
+			.build(),
+			true);
+
+		addItem(new NewsItem.Builder(
+				UUID.randomUUID().toString(), 
+				"Data",
+				"Want more details about the current water sitation? Check our the data section!",
+				System.currentTimeMillis())
+			.setNavigationPos(2)
+			.build(),
+			true);
 	}
 
 

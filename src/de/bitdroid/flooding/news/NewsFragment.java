@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -13,9 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import de.bitdroid.flooding.MainActivity;
 import de.bitdroid.flooding.R;
 import de.timroes.android.listview.EnhancedListView;
 
@@ -35,9 +38,12 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		EnhancedListView listView = (EnhancedListView) view.findViewById(R.id.list);
 		listAdapter = new NewsListAdapter(getActivity().getApplicationContext());
 		listView.setAdapter(listAdapter);
+
+		// enable editing mode
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(this);
 
+		// enable swiping and undo
 		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
@@ -52,6 +58,20 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 			}
 		});
 		listView.enableSwipeToDismiss();
+
+		// enable navigation to other fragments
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+				NewsItem item = listAdapter.getItem(pos);
+				if (!item.isNavigationEnabled()) return;
+
+				Intent intent = new Intent(MainActivity.ACTION_NAVIGATE);
+				intent.putExtra(MainActivity.EXTRA_POSITION, item.getNavigationPos());
+				getActivity().sendBroadcast(intent);
+			}
+		});
+
 
 		return view;
 	}

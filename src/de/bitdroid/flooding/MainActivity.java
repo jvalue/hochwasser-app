@@ -3,6 +3,10 @@ package de.bitdroid.flooding;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -33,6 +37,9 @@ import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 public class MainActivity extends Activity {
+
+	public static String ACTION_NAVIGATE = "de.bitdroid.flooding.MainActivity.ACTION_NAVIGATE";
+	public static String EXTRA_POSITION = "EXTRA_POSITION";
 
 	private final String PREFS_KEY_FIRST_START = "FIRST_START";
 
@@ -120,7 +127,6 @@ public class MainActivity extends Activity {
 
 		// move to home screen
 		navigateTo(currentNavItem);
-		setTitle(fragmentTitle);
 
 		// load default pref values
 		PreferenceManager.setDefaultValues(
@@ -204,6 +210,14 @@ public class MainActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		if (!arePlayServicesAvailable()) finish();
+		registerReceiver(navigationBroadcastReceiver, new IntentFilter(ACTION_NAVIGATE));
+	}
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		unregisterReceiver(navigationBroadcastReceiver);
 	}
 
 
@@ -221,7 +235,6 @@ public class MainActivity extends Activity {
 		super.onRestoreInstanceState(state);
 		currentNavItem = state.getInt(EXTRA_CURRENT_NAV_ITEM);
 		navigateTo(currentNavItem);
-		setTitle(fragmentTitle);
 	}
 
 
@@ -238,6 +251,7 @@ public class MainActivity extends Activity {
 		drawerMenuList.setItemChecked(position, true);
 		fragmentTitle = navItems[position].getTitle();
 		drawerLayout.closeDrawer(drawerMenu);
+		setTitle(fragmentTitle);
 	}
 
 
@@ -252,5 +266,14 @@ public class MainActivity extends Activity {
 
 		return false;
 	}
+
+
+	private BroadcastReceiver navigationBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int pos = intent.getIntExtra(EXTRA_POSITION, -1);
+			navigateTo(pos);
+		}
+	};
 
 }

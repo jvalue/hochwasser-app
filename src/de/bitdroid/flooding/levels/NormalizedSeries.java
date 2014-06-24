@@ -61,7 +61,7 @@ class NormalizedSeries extends AbstractListSeries {
 			if (yValue > mid) normalized = 0.5 * (1 + ((yValue.doubleValue() - mid.doubleValue()) / (upper.doubleValue() - mid.doubleValue())));
 			else normalized = 0.5 * ((yValue.doubleValue() - lower.doubleValue())  / (mid.doubleValue() - lower.doubleValue()));
 
-			addValues(xValue, normalized);
+			addValues(xValue, normalized * 100);
 
 		} while (cursor.moveToNext());
 	}

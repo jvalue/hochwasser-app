@@ -444,11 +444,11 @@ public class GraphActivity extends Activity {
 					R.xml.series_water_levels));
 
 		series.add(new Pair<AbstractSeries, Integer>(
-					new ConstantSeries(getString(R.string.series_mhw), normalizedSeries, 1),
+					new ConstantSeries(getString(R.string.series_mhw), normalizedSeries, 100),
 					R.xml.series_average_levels));
 
 		series.add(new Pair<AbstractSeries, Integer>(
-					new ConstantSeries(getString(R.string.series_mw), normalizedSeries, 0.5),
+					new ConstantSeries(getString(R.string.series_mw), normalizedSeries, 50),
 					R.xml.series_average_levels));
 
 		series.add(new Pair<AbstractSeries, Integer>(

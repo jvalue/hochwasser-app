@@ -5,8 +5,12 @@ import java.util.Set;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -30,11 +34,17 @@ public final class NewsManager {
 	private final Set<NewsItem> unreadItems = new HashSet<NewsItem>();
 	private final Set<NewsItem> readItems = new HashSet<NewsItem>();
 	private final Context context;
+	private final SQLiteOpenHelper dbHelper;
 
 
 	private NewsManager(Context context) {
 		this.context = context;
+		this.dbHelper = new NewsDatabase(context);
 
+		readAllItemsFromDb();
+
+		/*
+		// TODO
 		addItem(new NewsItem.Builder(
 				"Alarms",
 				"If you want to be alarmed when water levels reach a certain level, head over to the alarms section!",
@@ -50,6 +60,7 @@ public final class NewsManager {
 			.setNavigationPos(2)
 			.build(),
 			true);
+			*/
 	}
 
 
@@ -78,23 +89,23 @@ public final class NewsManager {
 		NotificationManager manager 
 			= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.cancel(NOTIFICATION_ID);
-	}
 
-
-	public NewsItem addItem(String title, String content, boolean showNotification) {
-		Assert.assertNotNull(title, content);
-		NewsItem item = new NewsItem.Builder(
-				title, 
-				content, 
-				System.currentTimeMillis())
-			.build();
-		addItem(item, showNotification);
-		return item;
+		SQLiteDatabase database = null;
+		try {
+			database = dbHelper.getWritableDatabase();
+			ContentValues values = new ContentValues();
+			values.put(NewsDatabase.COLUMN_READ, 1);
+			database.update(NewsDatabase.TABLE_NAME, values, null, null);
+		} finally {
+			if (database != null) database.close();
+		}
 	}
 
 
 	public void addItem(NewsItem item, boolean showNotification) {
+		Assert.assertFalse(unreadItems.contains(item) && readItems.contains(item), "teim alredy added");
 		unreadItems.add(item);
+		insertIntoDb(item);
 
 		if (!showNotification) return;
 
@@ -129,8 +140,92 @@ public final class NewsManager {
 				unreadItems.contains(item) || readItems.contains(item),
 				"item not present");
 
-		unreadItems.remove(item);
-		readItems.remove(item);
+		boolean read = false;
+		if (unreadItems.remove(item)) read = false;
+		if (readItems.remove(item)) read = true;
+
+		deleteItemFromDb(item, read);
+	}
+
+
+	private void insertIntoDb(NewsItem item) {
+		ContentValues values = new ContentValues();
+		values.put(NewsDatabase.COLUMN_TITLE, item.getTitle());
+		values.put(NewsDatabase.COLUMN_CONTENT, item.getContent());
+		values.put(NewsDatabase.COLUMN_TIMESTAMP, item.getTimestamp());
+		values.put(NewsDatabase.COLUMN_NAVIGATION_ENABLED, item.isNavigationEnabled());
+		values.put(NewsDatabase.COLUMN_NAVIGATION_POS, item.getNavigationPos());
+		values.put(NewsDatabase.COLUMN_READ, false);
+
+		SQLiteDatabase database = null;
+		try {
+			database = dbHelper.getWritableDatabase();
+			database.insert(NewsDatabase.TABLE_NAME, null, values);
+		} finally {
+			if (database != null) database.close();
+		}
+	}
+
+
+	private void deleteItemFromDb(NewsItem item, boolean read) {
+		SQLiteDatabase database = null;
+		try {
+			database = dbHelper.getWritableDatabase();
+			database.delete(NewsDatabase.TABLE_NAME,
+					NewsDatabase.COLUMN_TITLE + "=? AND "
+					+ NewsDatabase.COLUMN_CONTENT + "=? AND "
+					+ NewsDatabase.COLUMN_TIMESTAMP + "=? AND "
+					+ NewsDatabase.COLUMN_NAVIGATION_ENABLED + "=? AND "
+					+ NewsDatabase.COLUMN_NAVIGATION_POS + "=? AND "
+					+ NewsDatabase.COLUMN_READ + "=?",
+					new String[] {
+						item.getTitle(),
+						item.getContent(),
+						String.valueOf(item.getTimestamp()),
+						String.valueOf(item.isNavigationEnabled() ? 1 : 0),
+						String.valueOf(item.getNavigationPos()),
+						String.valueOf(read ? 1 : 0)
+					});
+
+		} finally {
+			if (database != null) database.close();
+		}
+	}
+
+
+	private void readAllItemsFromDb() {
+		Cursor cursor = null;
+		try {
+			cursor = dbHelper.getReadableDatabase()
+				.rawQuery("SELECT * FROM " + NewsDatabase.TABLE_NAME, null);
+
+			if (cursor.getCount() == 0) return;
+			cursor.moveToFirst();
+			
+			int titleIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_TITLE);
+			int contentIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_CONTENT);
+			int timestampIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_TIMESTAMP);
+			int navEnabledIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_NAVIGATION_ENABLED);
+			int navPosIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_NAVIGATION_POS);
+			int readPos = cursor.getColumnIndex(NewsDatabase.COLUMN_READ);
+
+			do {
+				NewsItem.Builder builder = new NewsItem.Builder(
+						cursor.getString(titleIdx),
+						cursor.getString(contentIdx),
+						cursor.getLong(timestampIdx));
+				if (cursor.getInt(navEnabledIdx) > 0) 
+					builder.setNavigationPos(cursor.getInt(navPosIdx));
+				else 
+					builder.disableNavigation();
+
+				if (cursor.getInt(readPos) > 0) readItems.add(builder.build());
+				else unreadItems.add(builder.build());
+
+			} while (cursor.moveToNext());
+		} finally {
+			if (cursor != null) cursor.close();
+		}
 	}
 
 }

@@ -28,7 +28,6 @@
 
 	<string name="menu_select_water_search">Search</string>
 
-	<string name="menu_delete">Delete</string>
 
 	<string name="series_select_dialog_title">Select Series to Display</string>
 	<string name="series_monitor_dialog_title">Select a Timestamp to Display</string>
@@ -45,6 +44,8 @@
 	<string name="btn_ok">Ok</string>
 	<string name="btn_cancel">Cancel</string>
 	<string name="help">Help</string>
+	<string name="delete">Delete</string>
+	<string name="select_all">Select all</string>
 
 	<string name="prefs_cat_ods">Open Data Service</string>
 	<string name="prefs_cat_ods_key">open_data_servic</string>

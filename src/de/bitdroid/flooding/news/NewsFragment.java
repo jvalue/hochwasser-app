@@ -134,6 +134,14 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 				mode.finish();
 				return true;
+
+			case R.id.select_all:
+				selectedItems.clear();
+				for (int i = 0; i < listAdapter.getCount(); i++) {
+					listView.setItemChecked(i, true);
+				}
+				return true;
+
 		}
 		return false;
 	}

@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,7 +22,7 @@ import de.timroes.android.listview.EnhancedListView;
 
 public final class NewsFragment extends Fragment implements AbsListView.MultiChoiceModeListener {
 
-	private ArrayAdapter<NewsItem> listAdapter;
+	private NewsListAdapter listAdapter;
 
 	@Override
 	public View onCreateView(
@@ -42,10 +40,8 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable  onDismiss(EnhancedListView listView, int pos) {
-				NewsItem item = listAdapter.getItem(pos);
-				NewsManager.getInstance(getActivity().getApplicationContext()).removeItem(item);
-				listAdapter.notifyDataSetChanged();
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
+				listAdapter.removeItem(listAdapter.getItem(pos));
 				return null;
 			}
 		});
@@ -68,15 +64,12 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.delete:
-				Context context = getActivity().getApplicationContext();
-				NewsManager manager = NewsManager.getInstance(context);
 				for (NewsItem newsItem : selectedItems) {
-					manager.removeItem(newsItem);
+					listAdapter.removeItem(newsItem);
 				}
-				listAdapter.notifyDataSetChanged();
 				Toast.makeText(
-						context, 
-						context.getString(R.string.news_deleted, selectedItems.size()), 
+						getActivity(), 
+						getActivity().getString(R.string.news_deleted, selectedItems.size()), 
 						Toast.LENGTH_SHORT)
 					.show();
 				selectedItems.clear();

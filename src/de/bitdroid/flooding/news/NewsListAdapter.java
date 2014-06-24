@@ -1,28 +1,34 @@
 package de.bitdroid.flooding.news;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.utils.Assert;
 
 
-final class NewsListAdapter extends ArrayAdapter<NewsItem> {
+final class NewsListAdapter extends BaseAdapter {
 	
 	private final static SimpleDateFormat dateFormatter
 		= new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
+
+	private final List<NewsItem> items = new ArrayList<NewsItem>();
 	private final Context context;
+	private final NewsManager manager;
 
 	public NewsListAdapter(Context context) {
-		super(context, R.layout.news_item, NewsManager.getInstance(context).getAllItems());
 		this.context = context;
-		setNotifyOnChange(false);
+		this.manager = NewsManager.getInstance(context);
+		this.items.addAll(manager.getAllItems());
 	}
 
 
@@ -47,10 +53,45 @@ final class NewsListAdapter extends ArrayAdapter<NewsItem> {
 
 
 	@Override
-	public void notifyDataSetChanged() {
-		clear();
-		addAll(NewsManager.getInstance(context).getAllItems());
-		super.notifyDataSetChanged();
-		setNotifyOnChange(false);
+	public NewsItem getItem(int pos) {
+		Assert.assertValidIdx(items, pos);
+		return items.get(pos);
 	}
+
+
+	@Override
+	public long getItemId(int pos) {
+		return pos;
+	}
+
+
+	@Override
+	public int getCount() {
+		return items.size();
+	}
+
+
+	public void addItem(NewsItem item) {
+		Assert.assertNotNull(item);
+		manager.addItem(item, false);
+		items.add(item);
+		notifyDataSetChanged();
+	}
+
+
+	public void removeItem(NewsItem item) {
+		Assert.assertNotNull(item);
+		Assert.assertTrue(items.contains(item), "item not in list");
+		items.remove(item);
+		manager.removeItem(item);
+		notifyDataSetChanged();
+	}
+
+
+	@Override
+	public void notifyDataSetInvalidated() {
+		items.clear();
+		items.addAll(manager.getAllItems());
+	}
+
 }

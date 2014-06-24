@@ -6,8 +6,6 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NA
 
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import android.app.ListFragment;
@@ -27,21 +25,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.flooding.utils.Log;
 
 public class ChooseRiverFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	
 	private static final int LOADER_ID = 44;
 
-	private ArrayAdapter<Entry> listAdapter = null;
+	private ArrayAdapter<River> listAdapter = null;
 	private EditText searchBox = null;
 
 
@@ -77,21 +73,6 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 			public void afterTextChanged(Editable e) { }
 		});
 
-		// show stations on long click
-		ListView listView = (ListView) view.findViewById(android.R.id.list);
-		listView.setEmptyView(view.findViewById(R.id.empty));
-		listView.setLongClickable(true);
-		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-				Entry e = listAdapter.getItem(position);
-				for (String name : e.getStationNames())
-					Log.debug(name);
-				return true;
-			}
-		});
-
 		return view;
     }
 
@@ -101,9 +82,24 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 		super.onActivityCreated(savedInstanceState);
 
 		// list adapter
-		listAdapter = new ArrayAdapter<Entry>(
+		listAdapter = new ArrayAdapter<River>(
 				getActivity().getApplicationContext(), 
-				android.R.layout.simple_list_item_1);
+				android.R.layout.simple_list_item_2,
+				android.R.id.text1) {
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				View view = super.getView(position, convertView, parent);
+				TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+				River river = getItem(position);
+				text1.setText(river.getWaterName());
+				text2.setText(getString(R.string.waters_station_count, river.getStationCount()));
+				return view;
+			}
+			
+		};
 		setListAdapter(listAdapter);
 	}
 
@@ -183,26 +179,23 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 		if (loader.getId() != LOADER_ID) return;
 
 		int waterIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
-		int stationIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
 
-		Map<String, Entry> waterNames = new HashMap<String, Entry>();
+		Map<String, River> waterNames = new HashMap<String, River>();
 
 		if (cursor.getCount() > 0) {
 			cursor.moveToFirst();
 			do {
 				String wName = cursor.getString(waterIdx);
-				String sName = cursor.getString(stationIdx);
-
-				if (!waterNames.containsKey(wName)) waterNames.put(wName, new Entry(wName));
-				waterNames.get(wName).addStation(sName);
+				if (!waterNames.containsKey(wName)) waterNames.put(wName, new River(wName));
+				waterNames.get(wName).addStation();
 			} while (cursor.moveToNext());
 		}
 		
 		listAdapter.clear();
 		listAdapter.addAll(waterNames.values());
-		listAdapter.sort(new Comparator<Entry>() {
+		listAdapter.sort(new Comparator<River>() {
 			@Override
-			public int compare(Entry e1, Entry e2) {
+			public int compare(River e1, River e2) {
 				return e1.getWaterName().compareTo(e2.getWaterName());
 			}
 		});
@@ -216,29 +209,24 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 	}
 
 
-	private static final class Entry {
+	private static final class River {
 		private final String waterName;
-		private final List<String> stationNames = new LinkedList<String>();
+		private int stationCount = 0;
 
-		Entry(String waterName) {
+		public River(String waterName) {
 			this.waterName = waterName;
 		}
 
-		void addStation(String stationName) {
-			this.stationNames.add(stationName);
+		public void addStation() {
+			stationCount++;
 		}
 
-		String getWaterName() {
+		public String getWaterName() {
 			return waterName;
 		}
 
-		List<String> getStationNames() {
-			return stationNames;
-		}
-
-		@Override
-		public String toString() {
-			return waterName + " (" + stationNames.size() + ")";
+		public int getStationCount() {
+			return stationCount;
 		}
 	}
 }

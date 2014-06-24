@@ -23,6 +23,7 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeriesFormatter;
 
+import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
 
@@ -63,6 +64,12 @@ final class WaterGraph implements OnTouchListener {
 			manager.addSeries(s.first, getDefaultFormatter(s.second));
 		}
 		updateGraph();
+	}
+
+
+	public void setRangeLabel(String rangeLabel) {
+		Assert.assertNotNull(rangeLabel);
+		graph.setRangeLabel(rangeLabel);
 	}
 
 

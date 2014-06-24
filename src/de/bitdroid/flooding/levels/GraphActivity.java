@@ -92,8 +92,7 @@ public class GraphActivity extends Activity {
 		// setup graph
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
 		this.graph = new WaterGraph(graphView, getApplicationContext());
-		if (showingRegularSeries) graph.setSeries(getRegularSeries());
-		else graph.setSeries(getNormalizedSeries());
+		graph.setSeries(getRegularSeries());
 
 		// setup seekbar
 		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
@@ -249,8 +248,13 @@ public class GraphActivity extends Activity {
 				return true;
 
 			case R.id.normalize:
-				if (showingRegularSeries) graph.setSeries(getNormalizedSeries());
-				else graph.setSeries(getRegularSeries());
+				if (showingRegularSeries) {
+					graph.setRangeLabel(getString(R.string.graph_rangelabel_pc));
+					graph.setSeries(getNormalizedSeries());
+				} else {
+					graph.setRangeLabel(getString(R.string.graph_rangelabel_cm));
+					graph.setSeries(getRegularSeries());
+				}
 				this.showingRegularSeries = !showingRegularSeries;
 				if (levelData != null) graph.setData(levelData, currentTimestamp);
 				return true;
@@ -337,6 +341,7 @@ public class GraphActivity extends Activity {
 		// restore series
 		this.showingRegularSeries = state.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
 		if (!showingRegularSeries) {
+			graph.setRangeLabel(getString(R.string.graph_rangelabel_pc));
 			graph.setSeries(getNormalizedSeries());
 			if (levelData != null) graph.setData(levelData, currentTimestamp);
 		}

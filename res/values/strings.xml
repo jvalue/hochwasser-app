@@ -26,6 +26,10 @@
 	<string name="menu_graph_seekbar">Select timestamp</string>
 	<string name="menu_graph_map">Show Map</string>
 
+	<string name="graph_rangelabel_cm">Water Level (cm)</string>
+	<string formatted="false" name="graph_rangelabel_pc">Water Level (%)</string>
+	<string name="graph_domainlabel">Location along River (km)</string>
+
 	<string name="menu_select_water_search">Search</string>
 
 	<string name="waters_empty">No data found. Loading might take a little while when first starting the app.</string>

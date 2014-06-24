@@ -1,10 +1,7 @@
 package de.bitdroid.flooding.news;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,8 +27,8 @@ public final class NewsManager {
 	}
 
 
-	private final Map<String, NewsItem> unreadItems = new HashMap<String, NewsItem>();
-	private final Map<String, NewsItem> readItems = new HashMap<String, NewsItem>();
+	private final Set<NewsItem> unreadItems = new HashSet<NewsItem>();
+	private final Set<NewsItem> readItems = new HashSet<NewsItem>();
 	private final Context context;
 
 
@@ -39,7 +36,6 @@ public final class NewsManager {
 		this.context = context;
 
 		addItem(new NewsItem.Builder(
-				UUID.randomUUID().toString(), 
 				"Alarms",
 				"If you want to be alarmed when water levels reach a certain level, head over to the alarms section!",
 				System.currentTimeMillis())
@@ -48,7 +44,6 @@ public final class NewsManager {
 			true);
 
 		addItem(new NewsItem.Builder(
-				UUID.randomUUID().toString(), 
 				"Data",
 				"Want more details about the current water sitation? Check our the data section!",
 				System.currentTimeMillis())
@@ -58,33 +53,26 @@ public final class NewsManager {
 	}
 
 
-	public List<NewsItem> getAllItems() {
-		List<NewsItem> ret = new LinkedList<NewsItem>();
-		ret.addAll(readItems.values());
-		ret.addAll(unreadItems.values());
+	public Set<NewsItem> getAllItems() {
+		Set<NewsItem> ret = new HashSet<NewsItem>();
+		ret.addAll(readItems);
+		ret.addAll(unreadItems);
 		return ret;
 	}
 
 
-	public List<NewsItem> getUnreadItems() {
-		return new LinkedList<NewsItem>(unreadItems.values());
+	public Set<NewsItem> getUnreadItems() {
+		return new HashSet<NewsItem>(unreadItems);
 	}
 
 
-	public List<NewsItem> getReadItems() {
-		return new LinkedList<NewsItem>(readItems.values());
-	}
-
-
-	public NewsItem getById(String id) {
-		Assert.assertNotNull(id);
-		if (unreadItems.containsKey(id)) return unreadItems.get(id);
-		else return readItems.get(id);
+	public Set<NewsItem> getReadItems() {
+		return new HashSet<NewsItem>(readItems);
 	}
 
 
 	public void markAllItemsRead() {
-		readItems.putAll(unreadItems);
+		readItems.addAll(unreadItems);
 		unreadItems.clear();
 
 		NotificationManager manager 
@@ -96,7 +84,6 @@ public final class NewsManager {
 	public NewsItem addItem(String title, String content, boolean showNotification) {
 		Assert.assertNotNull(title, content);
 		NewsItem item = new NewsItem.Builder(
-				UUID.randomUUID().toString(), 
 				title, 
 				content, 
 				System.currentTimeMillis())
@@ -107,7 +94,7 @@ public final class NewsManager {
 
 
 	public void addItem(NewsItem item, boolean showNotification) {
-		unreadItems.put(item.getId(), item);
+		unreadItems.add(item);
 
 		if (!showNotification) return;
 
@@ -139,11 +126,11 @@ public final class NewsManager {
 	public void removeItem(NewsItem item) {
 		Assert.assertNotNull(item);
 		Assert.assertTrue(
-				unreadItems.containsKey(item.getId()) || readItems.containsKey(item.getId()), 
+				unreadItems.contains(item) || readItems.contains(item),
 				"item not present");
 
-		unreadItems.remove(item.getId());
-		readItems.remove(item.getId());
+		unreadItems.remove(item);
+		readItems.remove(item);
 	}
 
 }

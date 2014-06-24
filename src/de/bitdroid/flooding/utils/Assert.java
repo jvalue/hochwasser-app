@@ -1,5 +1,7 @@
 package de.bitdroid.flooding.utils;
 
+import java.util.List;
+
 
 public class Assert {
 
@@ -32,6 +34,12 @@ public class Assert {
 		if (o1 == null && o2 == null) return;
 		if (o1 == null || o2 == null) throw new IllegalArgumentException(errorMsg);
 		if (!o1.equals(o2)) throw new IllegalArgumentException(errorMsg);
+	}
+
+
+	public static void assertValidIdx(List<?> list, int idx) {
+		if (idx < 0 || idx >= list.size()) 
+			throw new IndexOutOfBoundsException("idx was " + idx + " but size is " + list.size());
 	}
 
 }

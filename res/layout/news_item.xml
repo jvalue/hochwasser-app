@@ -24,20 +24,22 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			style="@android:style/TextAppearance.Large"
+			android:textColor="#33b5e5"
 		/>
 
 		<TextView
 			android:id="@+id/news_timestamp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			style="@android:style/TextAppearance.Small"
+			android:textColor="#777777"
+			android:textSize="12dp"
 		/>
 
 		<TextView
 			android:id="@+id/news_content"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			style="@android:style/TextAppearance.Medium"
+			android:paddingTop="4dp"
 		/>
 
 	</LinearLayout>

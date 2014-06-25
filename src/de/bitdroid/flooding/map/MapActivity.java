@@ -20,10 +20,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
+import de.bitdroid.flooding.utils.StringUtils;
 
 public class MapActivity extends Activity {
 
@@ -40,6 +42,12 @@ public class MapActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
 		final String waterName = getIntent().getStringExtra(EXTRA_WATER_NAME);
+
+		// enable action bar back button
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayShowHomeEnabled(false);
+		setTitle(StringUtils.toProperCase(waterName));
 
 		// map view
 		mapView = (FixedMapView) findViewById(R.id.map);
@@ -123,7 +131,6 @@ public class MapActivity extends Activity {
     }
 
 
-
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -135,6 +142,17 @@ public class MapActivity extends Activity {
 	public void onPause() {
 		super.onPause();
 		locationOverlay.disableMyLocation();
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch(menuItem.getItemId()) {
+			case android.R.id.home:
+				finish();
+				return true;
+		}
+		return super.onOptionsItemSelected(menuItem);
 	}
 
 

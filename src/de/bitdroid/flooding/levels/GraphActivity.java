@@ -311,6 +311,9 @@ public class GraphActivity extends Activity {
 				Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
 				mapIntent.putExtra(MapActivity.EXTRA_WATER_NAME, waterName);
 				startActivity(mapIntent);
+				overridePendingTransition(
+						R.anim.slide_enter_from_right,
+						R.anim.slide_exit_to_left);
 				return true;
 
 			case R.id.help:

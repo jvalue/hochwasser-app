@@ -229,6 +229,11 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 		public int getStationCount() {
 			return stationCount;
 		}
+
+		@Override
+		public String toString() {
+			return waterName;
+		}
 	}
 
 }

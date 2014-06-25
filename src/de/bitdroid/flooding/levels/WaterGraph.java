@@ -22,6 +22,7 @@ import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeriesFormatter;
+import com.androidplot.xy.XYStepMode;
 
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
@@ -47,8 +48,8 @@ final class WaterGraph implements OnTouchListener {
 		graph.setOnTouchListener(this);
 		graph.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
 		graph.getLayoutManager().remove(graph.getLegendWidget());
-		graph.setTicksPerRangeLabel(2);
 		graph.setTicksPerDomainLabel(3);
+		disablePercentageRange();
 		graph.getGraphWidget().setRangeValueFormat(new DecimalFormat("@@##"));
 		graph.getGraphWidget().setDomainValueFormat(new DecimalFormat("@@#"));
 		graph.setBorderStyle(Plot.BorderStyle.NONE, null, null);
@@ -70,6 +71,18 @@ final class WaterGraph implements OnTouchListener {
 	public void setRangeLabel(String rangeLabel) {
 		Assert.assertNotNull(rangeLabel);
 		graph.setRangeLabel(rangeLabel);
+	}
+
+
+	public void enablePercentageRange() {
+		graph.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 12.5);
+		graph.setUserRangeOrigin(0);
+	}
+
+
+	public void disablePercentageRange() {
+		graph.setRangeStep(XYStepMode.SUBDIVIDE, 11);
+		graph.setTicksPerRangeLabel(2);
 	}
 
 

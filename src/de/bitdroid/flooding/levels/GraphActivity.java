@@ -252,9 +252,11 @@ public class GraphActivity extends Activity {
 			case R.id.normalize:
 				if (showingRegularSeries) {
 					graph.setRangeLabel(getString(R.string.graph_rangelabel_pc));
+					graph.enablePercentageRange();
 					graph.setSeries(getNormalizedSeries());
 				} else {
 					graph.setRangeLabel(getString(R.string.graph_rangelabel_cm));
+					graph.disablePercentageRange();
 					graph.setSeries(getRegularSeries());
 				}
 				this.showingRegularSeries = !showingRegularSeries;
@@ -347,6 +349,7 @@ public class GraphActivity extends Activity {
 		this.showingRegularSeries = state.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
 		if (!showingRegularSeries) {
 			graph.setRangeLabel(getString(R.string.graph_rangelabel_pc));
+			graph.enablePercentageRange();
 			graph.setSeries(getNormalizedSeries());
 			if (levelData != null) graph.setData(levelData, currentTimestamp);
 		}

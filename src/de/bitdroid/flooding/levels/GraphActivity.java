@@ -87,6 +87,7 @@ public class GraphActivity extends Activity {
 		// enable action bar back button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayShowHomeEnabled(false);
 		setTitle(waterName);
 
 		// setup graph

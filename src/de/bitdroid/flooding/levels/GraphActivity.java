@@ -61,6 +61,7 @@ import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.ShowcaseSeries;
+import de.bitdroid.flooding.utils.StringUtils;
 
 public class GraphActivity extends Activity {
 	
@@ -88,7 +89,7 @@ public class GraphActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayShowHomeEnabled(false);
-		setTitle(waterName);
+		setTitle(StringUtils.toProperCase(waterName));
 
 		// setup graph
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);

@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
+import de.bitdroid.flooding.utils.StringUtils;
 
 public class ChooseRiverFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	
@@ -94,7 +95,7 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
 				River river = getItem(position);
-				text1.setText(river.getWaterName());
+				text1.setText(StringUtils.toProperCase(river.getWaterName()));
 				text2.setText(getString(R.string.waters_station_count, river.getStationCount()));
 				return view;
 			}
@@ -229,4 +230,5 @@ public class ChooseRiverFragment extends ListFragment implements LoaderManager.L
 			return stationCount;
 		}
 	}
+
 }

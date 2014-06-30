@@ -102,10 +102,10 @@ public final class PegelOnlineSource extends OdsSource {
 	public ContentValues saveData(JSONObject json) {
 		ContentValues values = new ContentValues();
 
-		values.put(COLUMN_WATER_NAME, json.optJSONObject("water").optString("longname"));
+		values.put(COLUMN_WATER_NAME, json.optJSONObject("BodyOfWater").optString("longname"));
 		values.put(COLUMN_STATION_NAME, json.optString("longname"));
-		values.put(COLUMN_STATION_LAT, json.optDouble("latitude"));
-		values.put(COLUMN_STATION_LONG, json.optDouble("longitude"));
+		values.put(COLUMN_STATION_LAT, json.optJSONObject("coordinate").optDouble("latitude"));
+		values.put(COLUMN_STATION_LONG, json.optJSONObject("coordinate").optDouble("longitude"));
 		values.put(COLUMN_STATION_KM, json.optDouble("km"));
 
 		JSONObject timeseries = json.optJSONArray("timeseries").optJSONObject(0);

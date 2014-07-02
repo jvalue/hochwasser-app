@@ -13,7 +13,6 @@
 		<CheckBoxPreference
 				android:title="@string/prefs_ods_monitor"
 				android:key="@string/prefs_ods_monitor_key"
-				android:summary="@string/prefs_ods_monitor_summary"
 				android:defaultValue="true"/>
 
 	</PreferenceCategory>

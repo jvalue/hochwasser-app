@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
@@ -24,7 +25,9 @@ public final class SettingsFragment extends PreferenceFragment {
 
 
 		// ods servername
-		Preference servername = findPreference(getString(R.string.prefs_ods_servername_key));
+		final EditTextPreference servername 
+			= (EditTextPreference) findPreference(getString(R.string.prefs_ods_servername_key));
+		servername.setSummary(servername.getText());
 		servername.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -32,6 +35,7 @@ public final class SettingsFragment extends PreferenceFragment {
 					OdsSourceManager
 						.getInstance(getActivity().getApplicationContext())
 						.setOdsServerName(newValue.toString());
+					servername.setSummary(newValue.toString());
 					return true;
 				} catch (IllegalArgumentException iae) {
 					Toast.makeText(

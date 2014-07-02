@@ -56,9 +56,8 @@
 	<string name="prefs_ods_servername_key">server_name</string>
 	<string name="prefs_ods_servername_summary">The ODS Servername, port and base URL.</string>
 	<string name="prefs_ods_servername_default">http://bitdroid.de/flooding/open-data-service</string>
-	<string name="prefs_ods_monitor">Monitor PegelOnline Source</string>
+	<string name="prefs_ods_monitor">Record PegelOnline Source</string>
 	<string name="prefs_ods_monitor_key">monitor</string>
-	<string name="prefs_ods_monitor_summary">Make a copy of the source DB each time it is updated.</string>
 
 	<string name="prefs_cat_sync">Sync Status</string>
 	<string name="prefs_cat_sync_key">sync_status</string>

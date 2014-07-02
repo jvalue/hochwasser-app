@@ -21,7 +21,7 @@ public final class DataFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.data, container, false);
 		ViewPager pager = (ViewPager) view.findViewById(R.id.pager);
-		pager.setAdapter(new DataAdapter(getActivity().getSupportFragmentManager()));
+		pager.setAdapter(new DataAdapter(getChildFragmentManager()));
 
 		return view;
     }

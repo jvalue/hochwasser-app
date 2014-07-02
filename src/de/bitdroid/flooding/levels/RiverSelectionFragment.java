@@ -95,7 +95,7 @@ final class RiverSelectionFragment extends DataSelectionFragment<River> {
 			do {
 				String wName = cursor.getString(waterIdx);
 				if (!items.containsKey(wName)) items.put(wName, new River(wName));
-				else items.get(wName).addStation();
+				items.get(wName).addStation();
 			} while (cursor.moveToNext());
 		}
 		
@@ -129,6 +129,11 @@ final class RiverSelectionFragment extends DataSelectionFragment<River> {
 		}
 
 		public String getRiverName() {
+			return riverName;
+		}
+
+		@Override
+		public String toString() {
 			return riverName;
 		}
 	}

@@ -74,7 +74,7 @@ public final class GcmIntentService extends IntentService {
 			errorMsg = re.getMessage();
 		}
 
-		if (errorMsg != null) Log.warning(errorMsg);
+		if (errorMsg != null) Log.error(errorMsg);
 
 		Intent finishIntent = new Intent(ACTION_GCM_FINISH);
 		finishIntent.putExtra(EXTRA_SOURCE, source.toString());

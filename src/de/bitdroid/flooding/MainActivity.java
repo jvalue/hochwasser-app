@@ -1,8 +1,6 @@
 package de.bitdroid.flooding;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +12,8 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -28,7 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import de.bitdroid.flooding.alarms.AlarmsFragment;
-import de.bitdroid.flooding.levels.ChooseRiverFragment;
+import de.bitdroid.flooding.levels.DataFragment;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.ods.GcmStatus;
@@ -36,7 +36,7 @@ import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
 	public static String ACTION_NAVIGATE = "de.bitdroid.flooding.MainActivity.ACTION_NAVIGATE";
 	public static String EXTRA_POSITION = "EXTRA_POSITION";
@@ -244,9 +244,9 @@ public class MainActivity extends Activity {
 		Fragment fragment = null;
 		if (position == 0) fragment = new NewsFragment();
 		else if (position == 1) fragment = new AlarmsFragment();
-		else if (position == 2) fragment = new ChooseRiverFragment();
-		else if (position == 3) fragment = new SettingsFragment();
-		getFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
+		else if (position == 2) fragment = new DataFragment();
+		// else if (position == 3) fragment = new SettingsFragment();
+		getSupportFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
 		drawerMenuList.setItemChecked(position, true);
 		fragmentTitle = navItems[position].getTitle();
 		drawerLayout.closeDrawer(drawerMenu);

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceFragment;
+import android.support.v4.preference.PreferenceFragment;
 import android.widget.Toast;
 
 import de.bitdroid.flooding.monitor.SourceMonitor;

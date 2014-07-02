@@ -17,4 +17,25 @@
 				android:defaultValue="true"/>
 
 	</PreferenceCategory>
+
+	<PreferenceCategory
+			android:title="@string/prefs_cat_sync"
+			android:key="@string/prefs_cat_sync_key">
+
+		<Preference
+			android:title="@string/prefs_sync_last"
+			android:key="@string/prefs_sync_last_key"
+			android:defaultValue="@string/never" />
+
+		<Preference
+			android:title="@string/prefs_sync_last_success"
+			android:key="@string/prefs_sync_last_success_key"
+			android:defaultValue="@string/never" />
+
+		<Preference
+			android:title="@string/prefs_sync_last_fail"
+			android:key="@string/prefs_sync_last_fail_key"
+			android:defaultValue="@string/never" />
+
+	</PreferenceCategory>
 </PreferenceScreen>

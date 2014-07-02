@@ -1,5 +1,8 @@
 package de.bitdroid.flooding;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -57,6 +60,29 @@ public final class SettingsFragment extends PreferenceFragment {
 				return true;
 			}
 		});
+
+
+		// sync status
+		OdsSourceManager manager 
+			= OdsSourceManager.getInstance(getActivity().getApplicationContext());
+
+		Preference lastSync = findPreference(getString(R.string.prefs_sync_last_key));
+		lastSync.setSummary(formatTime(manager.getLastSync(PegelOnlineSource.INSTANCE)));
+
+		Preference successSync = findPreference(getString(R.string.prefs_sync_last_success_key));
+		successSync.setSummary(formatTime(manager.getLastSuccessfulSync(PegelOnlineSource.INSTANCE)));
+
+		Preference failSync = findPreference(getString(R.string.prefs_sync_last_fail_key));
+		failSync.setSummary(formatTime(manager.getLastFailedSync(PegelOnlineSource.INSTANCE)));
+	}
+
+
+	private final static SimpleDateFormat dateFormatter
+		= new SimpleDateFormat("dd/M/yyyy hh:mm a");
+	
+	private String formatTime(Calendar time) {
+		if (time == null) return getString(R.string.never);
+		else return dateFormatter.format(time.getTime());
 	}
 
 }

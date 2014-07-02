@@ -6,7 +6,6 @@
 		<item>@string/nav_alarms</item>
 		<item>@string/nav_analysis</item>
 		<item>@string/nav_settings</item>
-		<item>@string/nav_about</item>
 	</string-array>
 
 	<string-array name="nav_icons">
@@ -14,7 +13,6 @@
 		<item>@drawable/ic_action_alarms</item>
 		<item>@drawable/ic_action_data</item>
 		<item>@drawable/ic_action_settings</item>
-		<item>@drawable/ic_action_about</item>
 	</string-array>
 
 </resources>

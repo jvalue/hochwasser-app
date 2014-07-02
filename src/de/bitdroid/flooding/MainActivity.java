@@ -246,7 +246,6 @@ public class MainActivity extends Activity {
 		else if (position == 1) fragment = new AlarmsFragment();
 		else if (position == 2) fragment = new ChooseRiverFragment();
 		else if (position == 3) fragment = new SettingsFragment();
-		else if (position == 4) fragment = new AboutFragment();
 		getFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
 		drawerMenuList.setItemChecked(position, true);
 		fragmentTitle = navItems[position].getTitle();

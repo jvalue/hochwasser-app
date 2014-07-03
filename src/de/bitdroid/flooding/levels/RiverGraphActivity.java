@@ -72,6 +72,7 @@ public class RiverGraphActivity extends Activity {
 		EXTRA_STATION_COUNT = "stationCount";
 
 	private static final int LOADER_ID = 44;
+	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
 	private WaterGraph graph;
 	private boolean showingRegularSeries = true;
@@ -133,13 +134,14 @@ public class RiverGraphActivity extends Activity {
 
 		// get latest timestamp
 		currentTimestamp = Collections.max(timestamps);
+		graph.setTitle(dateFormatter.format(new Date(currentTimestamp)));
 
 		AbstractLoaderCallbacks loaderCallbacks = new AbstractLoaderCallbacks(LOADER_ID) {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				RiverGraphActivity.this.levelData = cursor;
-				graph.setData(cursor, currentTimestamp);
+				graph.setData(cursor);
 			}
 
 			@Override
@@ -271,7 +273,7 @@ public class RiverGraphActivity extends Activity {
 					graph.setSeries(getRegularSeries());
 				}
 				this.showingRegularSeries = !showingRegularSeries;
-				if (levelData != null) graph.setData(levelData, currentTimestamp);
+				if (levelData != null) graph.setData(levelData);
 				return true;
 
 			case R.id.timestamp:
@@ -361,12 +363,13 @@ public class RiverGraphActivity extends Activity {
 		if (!showingRegularSeries) {
 			showRelativeRangeLabel();
 			graph.setSeries(getNormalizedSeries());
-			if (levelData != null) graph.setData(levelData, currentTimestamp);
+			if (levelData != null) graph.setData(levelData);
 		}
 		graph.restoreState(state);
 
 		// restore timestamp
 		currentTimestamp = state.getLong(EXTRA_TIMESTAMP);
+		graph.setTitle(dateFormatter.format(new Date(currentTimestamp)));
 		if (loader != null) loader.setTimestamp(currentTimestamp);
 
 		// restore seekbar
@@ -485,6 +488,7 @@ public class RiverGraphActivity extends Activity {
 	private void setTimestamp(long newTimestamp) {
 		currentTimestamp = newTimestamp;
 		loader.setTimestamp(currentTimestamp);
+		graph.setTitle(dateFormatter.format(new Date(currentTimestamp)));
 	}
 
 	

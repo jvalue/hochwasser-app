@@ -117,6 +117,7 @@ public class RiverGraphActivity extends Activity {
 			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
 		Collections.sort(timestamps);
 		seekbar.setMax(timestamps.size() - 1);
+		seekbar.setProgress(seekbar.getMax());
 		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
 			@Override

@@ -1,6 +1,6 @@
 package de.bitdroid.flooding.levels;
 
-import java.text.DecimalFormat;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -49,9 +49,7 @@ final class WaterGraph implements OnTouchListener {
 		graph.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
 		graph.getLayoutManager().remove(graph.getLegendWidget());
 		graph.setTicksPerDomainLabel(3);
-		disablePercentageRange();
-		graph.getGraphWidget().setRangeValueFormat(new DecimalFormat("@@##"));
-		graph.getGraphWidget().setDomainValueFormat(new DecimalFormat("@@#"));
+		graph.setTicksPerRangeLabel(2);
 		graph.setBorderStyle(Plot.BorderStyle.NONE, null, null);
 		graph.setBackgroundColor(Color.BLACK);
 		graph.getGraphWidget().getBackgroundPaint().setColor(Color.BLACK);
@@ -68,21 +66,21 @@ final class WaterGraph implements OnTouchListener {
 	}
 
 
-	public void setRangeLabel(String rangeLabel) {
-		Assert.assertNotNull(rangeLabel);
-		graph.setRangeLabel(rangeLabel);
+	public void setRangeAxis(String label, Format format, XYStepMode stepMode, double step) { 
+		Assert.assertNotNull(label, format, stepMode);
+
+		graph.setRangeLabel(label);
+		graph.setRangeStep(stepMode, step);
+		graph.getGraphWidget().setRangeValueFormat(format);
 	}
 
 
-	public void enablePercentageRange() {
-		graph.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 12.5);
-		graph.setUserRangeOrigin(0);
-	}
+	public void setDomainAxis(String label, Format format, XYStepMode stepMode, double step) { 
+		Assert.assertNotNull(label, format, stepMode);
 
-
-	public void disablePercentageRange() {
-		graph.setRangeStep(XYStepMode.SUBDIVIDE, 11);
-		graph.setTicksPerRangeLabel(2);
+		graph.setDomainLabel(label);
+		graph.setRangeStep(stepMode, step);
+		graph.getGraphWidget().setDomainValueFormat(format);
 	}
 
 
@@ -151,13 +149,12 @@ final class WaterGraph implements OnTouchListener {
 		state.putFloat(key + "y", point.y);
 	}
 
+
 	private PointF restorePoint(Bundle state, String key) {
 		return new PointF(
 				state.getFloat(key + "x"),
 				state.getFloat(key + "y"));
 	}
-
-
 
 
 	private LineAndPointFormatter getDefaultFormatter(int configuration) {

@@ -24,6 +24,7 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +51,7 @@ import android.view.View;
 import android.widget.SeekBar;
 
 import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYStepMode;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
 import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
@@ -100,6 +102,12 @@ public class RiverGraphActivity extends Activity {
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
 		this.graph = new WaterGraph(graphView, getApplicationContext());
 		graph.setSeries(getRegularSeries());
+		graph.setDomainAxis(
+				getString(R.string.graph_domainlabel), 
+				new DecimalFormat("@@#"), 
+				XYStepMode.SUBDIVIDE, 
+				10);
+		showRegularRangeLabel();
 
 		// setup seekbar
 		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
@@ -256,12 +264,10 @@ public class RiverGraphActivity extends Activity {
 
 			case R.id.normalize:
 				if (showingRegularSeries) {
-					graph.setRangeLabel(getString(R.string.graph_rangelabel_pc));
-					graph.enablePercentageRange();
+					showRegularRangeLabel();
 					graph.setSeries(getNormalizedSeries());
 				} else {
-					graph.setRangeLabel(getString(R.string.graph_rangelabel_cm));
-					graph.disablePercentageRange();
+					showRelativeRangeLabel();
 					graph.setSeries(getRegularSeries());
 				}
 				this.showingRegularSeries = !showingRegularSeries;
@@ -353,8 +359,7 @@ public class RiverGraphActivity extends Activity {
 		// restore series
 		this.showingRegularSeries = state.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
 		if (!showingRegularSeries) {
-			graph.setRangeLabel(getString(R.string.graph_rangelabel_pc));
-			graph.enablePercentageRange();
+			showRelativeRangeLabel();
 			graph.setSeries(getNormalizedSeries());
 			if (levelData != null) graph.setData(levelData, currentTimestamp);
 		}
@@ -491,6 +496,23 @@ public class RiverGraphActivity extends Activity {
 		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
 		seekbar.setProgress(timestamps.indexOf(currentTimestamp));
 	}
+
+
+	private void showRegularRangeLabel() {
+		graph.setRangeAxis(
+				getString(R.string.graph_rangelabel_cm),
+				new DecimalFormat("@@##"),
+				XYStepMode.SUBDIVIDE, 11);
+	}
+
+
+	private void showRelativeRangeLabel() {
+		graph.setRangeAxis(
+				getString(R.string.graph_rangelabel_cm),
+				new DecimalFormat("@@##"),
+				XYStepMode.INCREMENT_BY_VAL, 12.5);
+	}
+
 
 
 	private static final String PREFS_NAME = "de.bitdroid.flooding.levels.RiverGraphActivity";

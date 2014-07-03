@@ -25,7 +25,7 @@
 		androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
 		androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
 		androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
-		androidPlot.graphWidget.gridLinePaint.color="@color/map_background"
+		androidPlot.graphWidget.gridLinePaint.color="@color/black"
 	/>
 
 	<SeekBar
@@ -33,7 +33,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:visibility="gone"
-		android:background="@color/map_background"
+		android:background="@color/black"
 	/>
 
 </LinearLayout>

@@ -8,11 +8,11 @@
 		android:id="@+id/tabs"
         android:layout_width="fill_parent"
         android:layout_height="48dip"
-		android:textColor="#ffffff"
-		app:pstsDividerColor="#777777"
+		android:textColor="@color/white"
+		app:pstsDividerColor="@color/gray"
 		app:pstsShouldExpand="true"
-		app:pstsIndicatorColor="@android:color/holo_blue_light"
-		app:pstsUnderlineColor="#777777"
+		app:pstsIndicatorColor="@color/blue"
+		app:pstsUnderlineColor="@color/gray"
 	/>
 
     <android.support.v4.view.ViewPager

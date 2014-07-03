@@ -24,14 +24,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			style="@android:style/TextAppearance.Large"
-			android:textColor="#33b5e5"
+			android:textColor="@color/blue"
 		/>
 
 		<TextView
 			android:id="@+id/news_timestamp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textColor="#777777"
+			android:textColor="@color/gray"
 			android:textSize="12dp"
 		/>
 

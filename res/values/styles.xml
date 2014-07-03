@@ -2,7 +2,7 @@
 <resources>
 
 	<style name="CustomShowcaseTheme" parent="ShowcaseView">
-		<item name="sv_backgroundColor">#DD000000</item>
+		<item name="sv_backgroundColor">@color/showcase_background</item>
 		<item name="sv_tintButtonColor">false</item>
 	</style>
 

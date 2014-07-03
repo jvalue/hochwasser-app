@@ -59,6 +59,7 @@ import com.github.amlcurran.showcaseview.targets.Target;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.map.MapActivity;
+import de.bitdroid.flooding.monitor.MonitorSourceLoader;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
@@ -153,7 +154,7 @@ public class RiverGraphActivity extends Activity {
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
 
-				return new MonitorSourceLoader(
+				return new MonitorSourceLoader.Builder(
 						getApplicationContext(),
 						PegelOnlineSource.INSTANCE,
 						new String[] { 
@@ -181,8 +182,9 @@ public class RiverGraphActivity extends Activity {
 						}, COLUMN_WATER_NAME + "=? AND " 
 							+ COLUMN_LEVEL_TYPE + "=?",
 						new String[] { waterName, "W" },
-						null,
-						currentTimestamp);
+						null)
+						.timestamp(currentTimestamp)
+						.build();
 			}
 		};
 

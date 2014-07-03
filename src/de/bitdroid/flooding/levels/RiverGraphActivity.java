@@ -63,7 +63,7 @@ import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.ShowcaseSeries;
 import de.bitdroid.flooding.utils.StringUtils;
 
-public class GraphActivity extends Activity {
+public class RiverGraphActivity extends Activity {
 	
 	public static final String 
 		EXTRA_WATER_NAME = "waterName",
@@ -130,13 +130,13 @@ public class GraphActivity extends Activity {
 
 			@Override
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				GraphActivity.this.levelData = cursor;
+				RiverGraphActivity.this.levelData = cursor;
 				graph.setData(cursor, currentTimestamp);
 			}
 
 			@Override
 			protected void onLoaderResetHelper(Loader<Cursor> loader) {
-				GraphActivity.this.levelData = null;
+				RiverGraphActivity.this.levelData = null;
 			}
 
 			@Override
@@ -493,7 +493,7 @@ public class GraphActivity extends Activity {
 	}
 
 
-	private static final String PREFS_NAME = "de.bitdroid.flooding.levels.GraphActivity";
+	private static final String PREFS_NAME = "de.bitdroid.flooding.levels.RiverGraphActivity";
 	private static final String KEY_FIRST_START = "KEY_FIRST_START";
 
 	private boolean firstStart() {
@@ -512,7 +512,7 @@ public class GraphActivity extends Activity {
 		new ShowcaseSeries() {
 			@Override
 			public ShowcaseView getShowcase(int id) {
-				Activity activity = GraphActivity.this;
+				Activity activity = RiverGraphActivity.this;
 				Target target;
 				switch(id) {
 					case 0:

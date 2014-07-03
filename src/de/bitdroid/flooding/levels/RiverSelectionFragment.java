@@ -57,11 +57,11 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> {
 	protected Intent getActivityIntent(River river) {
 		// start graph activity
 		Bundle extras = new Bundle();
-		extras.putString(GraphActivity.EXTRA_WATER_NAME, river.getRiverName());
-		extras.putInt(GraphActivity.EXTRA_STATION_COUNT, river.getStationsCount());
+		extras.putString(RiverGraphActivity.EXTRA_WATER_NAME, river.getRiverName());
+		extras.putInt(RiverGraphActivity.EXTRA_STATION_COUNT, river.getStationsCount());
 		Intent intent = new Intent(
 				getActivity().getApplicationContext(),
-				GraphActivity.class);
+				RiverGraphActivity.class);
 		intent.putExtras(extras);
 		return intent;
 	}

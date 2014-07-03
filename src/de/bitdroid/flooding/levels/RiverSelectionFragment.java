@@ -23,7 +23,7 @@ import de.bitdroid.flooding.levels.RiverSelectionFragment.River;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
 
-final class RiverSelectionFragment extends DataSelectionFragment<River> {
+public final class RiverSelectionFragment extends DataSelectionFragment<River> {
 
 	private static final int LOADER_ID = 44;
 

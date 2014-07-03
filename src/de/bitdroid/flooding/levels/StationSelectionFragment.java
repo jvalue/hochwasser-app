@@ -19,7 +19,7 @@ import android.widget.TextView;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
 
-final class StationSelectionFragment extends DataSelectionFragment<String> {
+public final class StationSelectionFragment extends DataSelectionFragment<String> {
 
 	private static final int LOADER_ID = 45;
 

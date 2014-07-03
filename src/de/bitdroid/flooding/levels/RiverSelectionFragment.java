@@ -32,7 +32,7 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> {
 	protected ArrayAdapter<River> getAdapter() {
 		return new ArrayAdapter<River>(
 				getActivity().getApplicationContext(), 
-				android.R.layout.simple_list_item_2,
+				R.layout.data_item,
 				android.R.id.text1) {
 
 			@Override

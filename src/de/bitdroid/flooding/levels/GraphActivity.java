@@ -65,7 +65,9 @@ import de.bitdroid.flooding.utils.StringUtils;
 
 public class GraphActivity extends Activity {
 	
-	public static final String EXTRA_WATER_NAME = "waterName";
+	public static final String 
+		EXTRA_WATER_NAME = "waterName",
+		EXTRA_STATION_COUNT = "stationCount";
 
 	private static final int LOADER_ID = 44;
 
@@ -74,6 +76,7 @@ public class GraphActivity extends Activity {
 	private boolean showingSeekbar = false;
 	private Cursor levelData;
 	private String waterName;
+	private int stationCount;
 
 	private MonitorSourceLoader loader;
 	private long currentTimestamp;
@@ -84,12 +87,14 @@ public class GraphActivity extends Activity {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
+		stationCount = getIntent().getExtras().getInt(EXTRA_STATION_COUNT);
 
 		// enable action bar back button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayShowHomeEnabled(false);
-		setTitle(StringUtils.toProperCase(waterName));
+		getActionBar().setTitle(StringUtils.toProperCase(waterName));
+		getActionBar().setSubtitle(getString(R.string.data_station_count, stationCount));
 
 		// setup graph
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);

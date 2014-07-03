@@ -44,7 +44,7 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> {
 				text1.setText(StringUtils.toProperCase(river.getRiverName()));
 
 				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-				text2.setText(getString(R.string.waters_station_count, river.getStationsCount()));
+				text2.setText(getString(R.string.data_station_count, river.getStationsCount()));
 
 				return view;
 			}

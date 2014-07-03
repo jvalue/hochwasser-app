@@ -42,8 +42,8 @@ public final class DataFragment extends Fragment {
 			super(manager);
 
 			tabTitles = new String[2];
-			tabTitles[0] = context.getString(R.string.waters_tab_river);
-			tabTitles[1] = context.getString(R.string.waters_tab_station);
+			tabTitles[0] = context.getString(R.string.data_tab_river);
+			tabTitles[1] = context.getString(R.string.data_tab_station);
 		}
 
 		@Override

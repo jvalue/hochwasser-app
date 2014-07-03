@@ -269,10 +269,10 @@ public class RiverGraphActivity extends Activity {
 
 			case R.id.normalize:
 				if (showingRegularSeries) {
-					showRegularRangeLabel();
+					showRelativeRangeLabel();
 					graph.setSeries(getNormalizedSeries());
 				} else {
-					showRelativeRangeLabel();
+					showRegularRangeLabel();
 					graph.setSeries(getRegularSeries());
 				}
 				this.showingRegularSeries = !showingRegularSeries;

@@ -49,6 +49,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
@@ -127,6 +128,14 @@ public class RiverGraphActivity extends Activity {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekbar) { }
 		});
+
+		// temp hack to stop race conditions -- will be fixed when ods supports timestamps
+		if (timestamps.size() == 0) {
+			Toast.makeText(this, "No recorded data available yet, please come back in a minute.", Toast.LENGTH_LONG).show();
+			finish();
+			overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
+			return;
+		}
 
 
 		// get latest timestamp

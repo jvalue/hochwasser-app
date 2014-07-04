@@ -9,6 +9,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.View;
@@ -49,16 +50,14 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 	@Override
 	protected Intent getActivityIntent(String station) {
 		// start graph activity
-		/*
 		Bundle extras = new Bundle();
-		extras.putString(GraphActivity.EXTRA_WATER_NAME, river.getRiverName());
+		extras.putString(StationGraphActivity.EXTRA_STATION_NAME, station);
+		extras.putString(StationGraphActivity.EXTRA_WATER_NAME, "Some cool river");
 		Intent intent = new Intent(
 				getActivity().getApplicationContext(),
-				GraphActivity.class);
+				StationGraphActivity.class);
 		intent.putExtras(extras);
 		return intent;
-		*/
-		return null;
 	}
 
 

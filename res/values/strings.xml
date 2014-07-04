@@ -73,8 +73,6 @@
 	<string name="news_intro_data_title">Data</string>
 	<string name="news_intro_data_content">Want more details about the current water situation? Check out the data section!</string>
 
-	<string name="data_tab_river">Rivers</string>
-	<string name="data_tab_station">Stations</string>
 	<string name="data_empty">No data found. Loading might take a little while when first starting the app.</string>
 	<string name="data_station_count">%1$d stations</string>
 	<string name="data_station_all">All stations</string>

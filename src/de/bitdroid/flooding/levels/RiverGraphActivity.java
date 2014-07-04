@@ -68,9 +68,7 @@ import de.bitdroid.flooding.utils.StringUtils;
 
 public class RiverGraphActivity extends Activity {
 	
-	public static final String 
-		EXTRA_WATER_NAME = "waterName",
-		EXTRA_STATION_COUNT = "stationCount";
+	public static final String EXTRA_WATER_NAME = "waterName";
 
 	private static final int LOADER_ID = 44;
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
@@ -80,7 +78,6 @@ public class RiverGraphActivity extends Activity {
 	private boolean showingSeekbar = false;
 	private Cursor levelData;
 	private String waterName;
-	private int stationCount;
 
 	private MonitorSourceLoader loader;
 	private long currentTimestamp;
@@ -91,14 +88,12 @@ public class RiverGraphActivity extends Activity {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.data_river);
 		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
-		stationCount = getIntent().getExtras().getInt(EXTRA_STATION_COUNT);
 
 		// enable action bar back button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setTitle(StringUtils.toProperCase(waterName));
-		getActionBar().setSubtitle(getString(R.string.data_station_count, stationCount));
 
 		// setup graph
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);

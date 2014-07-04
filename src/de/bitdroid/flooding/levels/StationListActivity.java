@@ -1,19 +1,10 @@
 package de.bitdroid.flooding.levels;
 
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UNIT;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VALUE;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.TextView;
+import android.view.MenuItem;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
 
 public class StationListActivity extends FragmentActivity {
@@ -45,6 +36,18 @@ public class StationListActivity extends FragmentActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch(menuItem.getItemId()) {
+			case android.R.id.home:
+				finish();
+				overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
+				return true;
+		}
+		return super.onOptionsItemSelected(menuItem);
 	}
 
 }

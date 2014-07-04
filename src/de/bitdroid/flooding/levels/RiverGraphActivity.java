@@ -89,7 +89,7 @@ public class RiverGraphActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		setContentView(R.layout.graph);
+		setContentView(R.layout.data_river);
 		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 		stationCount = getIntent().getExtras().getInt(EXTRA_STATION_COUNT);
 

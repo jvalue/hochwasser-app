@@ -67,7 +67,7 @@ import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.ShowcaseSeries;
 import de.bitdroid.flooding.utils.StringUtils;
 
-public class RiverGraphActivity extends Activity {
+public class RiverGraphActivity extends BaseActivity {
 	
 	public static final String EXTRA_WATER_NAME = "waterName";
 
@@ -89,11 +89,6 @@ public class RiverGraphActivity extends Activity {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.data_river);
 		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
-
-		// enable action bar back button
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setTitle(StringUtils.toProperCase(waterName));
 
 		// setup graph
@@ -133,7 +128,7 @@ public class RiverGraphActivity extends Activity {
 		if (timestamps.size() == 0) {
 			Toast.makeText(this, "No recorded data available yet, please come back in a minute.", Toast.LENGTH_LONG).show();
 			finish();
-			overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
+			showExitAnimation();
 			return;
 		}
 
@@ -201,13 +196,6 @@ public class RiverGraphActivity extends Activity {
     }
 
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
-	}
-
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -231,11 +219,6 @@ public class RiverGraphActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
-			case android.R.id.home:
-				finish();
-				overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
-				return true;
-
 			case R.id.select_series:
 				List<String> seriesKeys = graph.getSeriesKeys();
 				final String[] items = seriesKeys.toArray(new String[seriesKeys.size()]);

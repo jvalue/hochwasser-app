@@ -5,7 +5,6 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UN
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 
-import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -18,7 +17,7 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
 
 // TODO include graph at some point
-public class StationGraphActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class StationGraphActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 	
 	public static final String 
 		EXTRA_STATION_NAME = "stationName",
@@ -39,13 +38,8 @@ public class StationGraphActivity extends Activity implements LoaderManager.Load
 		stationName = getIntent().getExtras().getString(EXTRA_STATION_NAME);
 		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 
-		// level text view
 		levelView = (TextView) findViewById(R.id.level);
 
-		// enable action bar back button
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setTitle(StringUtils.toProperCase(stationName));
 		getActionBar().setSubtitle(waterName);
 
@@ -56,13 +50,6 @@ public class StationGraphActivity extends Activity implements LoaderManager.Load
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().initLoader(LOADERID, null, this);
-	}
-
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
 	}
 
 

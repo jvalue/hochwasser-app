@@ -1,4 +1,4 @@
-package de.bitdroid.flooding;
+package de.bitdroid.flooding.main;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,6 +10,9 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.preference.PreferenceFragment;
 import android.widget.Toast;
 
+import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.R.string;
+import de.bitdroid.flooding.R.xml;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;

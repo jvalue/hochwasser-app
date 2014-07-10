@@ -1,4 +1,4 @@
-package de.bitdroid.flooding;
+package de.bitdroid.flooding.main;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -27,6 +27,13 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.R.array;
+import de.bitdroid.flooding.R.drawable;
+import de.bitdroid.flooding.R.id;
+import de.bitdroid.flooding.R.layout;
+import de.bitdroid.flooding.R.string;
+import de.bitdroid.flooding.R.xml;
 import de.bitdroid.flooding.alarms.AlarmsFragment;
 import de.bitdroid.flooding.levels.RiverSelectionFragment;
 import de.bitdroid.flooding.monitor.SourceMonitor;

@@ -14,8 +14,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
-import de.bitdroid.flooding.MainActivity;
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.main.MainActivity;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 

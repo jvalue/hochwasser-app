@@ -1,4 +1,4 @@
-package de.bitdroid.flooding;
+package de.bitdroid.flooding.main;
 
 import de.bitdroid.flooding.utils.Assert;
 

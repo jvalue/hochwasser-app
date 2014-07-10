@@ -1,5 +1,6 @@
 package de.bitdroid.flooding;
 
+import de.bitdroid.flooding.main.MainActivity;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**

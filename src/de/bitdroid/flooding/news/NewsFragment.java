@@ -26,8 +26,8 @@ import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
-import de.bitdroid.flooding.MainActivity;
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.main.MainActivity;
 import de.bitdroid.flooding.utils.ShowcaseSeries;
 import de.timroes.android.listview.EnhancedListView;
 

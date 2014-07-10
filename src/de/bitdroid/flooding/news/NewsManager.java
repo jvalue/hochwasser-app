@@ -85,7 +85,7 @@ public final class NewsManager {
 
 
 	public void addItem(NewsItem item, boolean showNotification) {
-		Assert.assertFalse(unreadItems.contains(item) && readItems.contains(item), "teim alredy added");
+		Assert.assertFalse(unreadItems.contains(item) && readItems.contains(item), "item already added");
 		unreadItems.add(item);
 		insertIntoDb(item);
 

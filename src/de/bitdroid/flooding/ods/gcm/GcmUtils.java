@@ -12,7 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.ods.data.OdsSource;
 
 
 public final class GcmUtils extends BroadcastReceiver {

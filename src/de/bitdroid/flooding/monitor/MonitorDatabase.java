@@ -2,7 +2,7 @@ package de.bitdroid.flooding.monitor;
 
 import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_ID;
 import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_MONITOR_TIMESTAMP;
-import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SERVER_ID;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.SQLiteType;

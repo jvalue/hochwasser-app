@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.data;
 
 import java.net.URL;
 import java.util.Calendar;
@@ -173,7 +173,7 @@ public final class OdsSourceManager {
 	 * Set the name for the ODS server.
 	 * <br>
 	 * This name will be combined with the source name defined in each
-	 * {@link de.bitdroid.flooding.ods.OdsSource} to form the complete
+	 * {@link de.bitdroid.flooding.ods.data.OdsSource} to form the complete
 	 * URL for accessing the ODS server.
 	 */
 	public void setOdsServerName(String odsServerName) {

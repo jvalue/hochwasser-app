@@ -1,5 +1,7 @@
 package de.bitdroid.flooding.ods;
 
+import de.bitdroid.flooding.ods.utils.RestCall;
+import de.bitdroid.flooding.ods.utils.RestException;
 import android.test.AndroidTestCase;
 
 

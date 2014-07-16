@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.util.Pair;
 
-import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 

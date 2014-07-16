@@ -7,12 +7,12 @@ import android.content.Intent;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import de.bitdroid.flooding.ods.OdsSource;
-import de.bitdroid.flooding.ods.OdsSourceManager;
-import de.bitdroid.flooding.ods.RestCall;
-import de.bitdroid.flooding.ods.RestException;
-import de.bitdroid.flooding.ods.RestCall.Builder;
-import de.bitdroid.flooding.ods.RestCall.RequestType;
+import de.bitdroid.flooding.ods.data.OdsSource;
+import de.bitdroid.flooding.ods.data.OdsSourceManager;
+import de.bitdroid.flooding.ods.utils.RestCall;
+import de.bitdroid.flooding.ods.utils.RestException;
+import de.bitdroid.flooding.ods.utils.RestCall.Builder;
+import de.bitdroid.flooding.ods.utils.RestCall.RequestType;
 import de.bitdroid.flooding.utils.Log;
 
 

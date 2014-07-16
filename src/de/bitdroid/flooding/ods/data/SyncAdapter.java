@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.data;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SyncResult;
 import android.os.Bundle;
 
+import de.bitdroid.flooding.ods.utils.RestCall;
 import de.bitdroid.flooding.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {

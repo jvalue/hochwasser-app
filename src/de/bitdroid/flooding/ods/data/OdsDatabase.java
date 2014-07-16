@@ -1,8 +1,8 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.data;
 
-import static de.bitdroid.flooding.ods.OdsSource.COLUMN_ID;
-import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SERVER_ID;
-import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SYNC_STATUS;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_ID;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SYNC_STATUS;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -7,7 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import de.bitdroid.flooding.monitor.SourceMonitor;
-import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.Assert;
 
 

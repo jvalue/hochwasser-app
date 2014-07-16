@@ -10,8 +10,8 @@ import android.os.PowerManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import de.bitdroid.flooding.ods.OdsSource;
-import de.bitdroid.flooding.ods.OdsSourceManager;
+import de.bitdroid.flooding.ods.data.OdsSource;
+import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.utils.Log;
 
 

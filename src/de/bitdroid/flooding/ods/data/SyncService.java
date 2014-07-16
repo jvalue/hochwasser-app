@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.data;
 
 import android.app.Service;
 import android.content.Intent;

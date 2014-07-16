@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.utils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.SQLiteType;
 

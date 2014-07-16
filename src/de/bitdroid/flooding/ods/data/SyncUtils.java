@@ -1,8 +1,8 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.data;
 
-import static de.bitdroid.flooding.ods.OdsSource.ACCOUNT;
-import static de.bitdroid.flooding.ods.OdsSource.AUTHORITY;
-import static de.bitdroid.flooding.ods.OdsSource.COLUMN_SERVER_ID;
+import static de.bitdroid.flooding.ods.data.OdsSource.ACCOUNT;
+import static de.bitdroid.flooding.ods.data.OdsSource.AUTHORITY;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
 
 import android.accounts.AccountManager;
 import android.content.ContentResolver;

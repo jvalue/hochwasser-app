@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import de.bitdroid.flooding.ods.data.OdsContentProvider;
+import de.bitdroid.flooding.ods.data.OdsSource;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.test.ProviderTestCase2;

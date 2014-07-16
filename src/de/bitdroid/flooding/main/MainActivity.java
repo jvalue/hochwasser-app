@@ -38,8 +38,8 @@ import de.bitdroid.flooding.alarms.AlarmsFragment;
 import de.bitdroid.flooding.levels.RiverSelectionFragment;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
-import de.bitdroid.flooding.ods.OdsSource;
-import de.bitdroid.flooding.ods.OdsSourceManager;
+import de.bitdroid.flooding.ods.data.OdsSource;
+import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 

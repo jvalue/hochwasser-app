@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.gcm;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.ods.OdsSource;
 
 
 public final class GcmUtils extends BroadcastReceiver {
@@ -22,7 +23,7 @@ public final class GcmUtils extends BroadcastReceiver {
 		PREFS_KEY_APP_VERSION = "appVersion";
 
 
-	static void registerSource(
+	public static void registerSource(
 			Context context, 
 			OdsSource source) {
 
@@ -30,7 +31,7 @@ public final class GcmUtils extends BroadcastReceiver {
 	}
 
 
-	static void unregisterSource(
+	public static void unregisterSource(
 			Context context, 
 			OdsSource source) {
 
@@ -58,14 +59,14 @@ public final class GcmUtils extends BroadcastReceiver {
 	}
 
 
-	static GcmStatus getRegistrationStatus(Context context, OdsSource source) {
+	public static GcmStatus getRegistrationStatus(Context context, OdsSource source) {
 		String status = getSharedPreferences(context).getString(source.toString(), null);
 		if (status == null) return GcmStatus.UNREGISTERED;
 		else return GcmStatus.valueOf(status);
 	}
 
 
-	static Set<OdsSource> getRegisteredSources(Context context) {
+	public static Set<OdsSource> getRegisteredSources(Context context) {
 		Set<OdsSource> sources = new HashSet<OdsSource>();
 		Map<String,?> values = getSharedPreferences(context).getAll();
 		for (Map.Entry<String, ?> e : values.entrySet()) {

@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.gcm;
 
 import java.util.Set;
 
@@ -10,6 +10,8 @@ import android.os.PowerManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import de.bitdroid.flooding.ods.OdsSource;
+import de.bitdroid.flooding.ods.OdsSourceManager;
 import de.bitdroid.flooding.utils.Log;
 
 

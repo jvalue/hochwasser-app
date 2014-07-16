@@ -38,9 +38,9 @@ import de.bitdroid.flooding.alarms.AlarmsFragment;
 import de.bitdroid.flooding.levels.RiverSelectionFragment;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
-import de.bitdroid.flooding.ods.GcmStatus;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
+import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 public class MainActivity extends FragmentActivity {

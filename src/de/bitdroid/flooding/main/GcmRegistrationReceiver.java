@@ -10,9 +10,9 @@ import android.support.v4.app.NotificationCompat;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.R.drawable;
 import de.bitdroid.flooding.R.string;
-import de.bitdroid.flooding.ods.AbstractGcmRegistrationReceiver;
 import de.bitdroid.flooding.ods.OdsSource;
 import de.bitdroid.flooding.ods.OdsSourceManager;
+import de.bitdroid.flooding.ods.gcm.AbstractGcmRegistrationReceiver;
 import de.bitdroid.flooding.utils.Log;
 
 

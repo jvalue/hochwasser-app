@@ -1,5 +1,6 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.gcm;
 
+import de.bitdroid.flooding.ods.OdsSource;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

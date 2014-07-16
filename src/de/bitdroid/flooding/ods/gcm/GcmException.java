@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.gcm;
 
 
 public final class GcmException extends Exception {

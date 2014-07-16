@@ -9,6 +9,8 @@ import java.util.Set;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import de.bitdroid.flooding.ods.gcm.GcmStatus;
+import de.bitdroid.flooding.ods.gcm.GcmUtils;
 import de.bitdroid.flooding.utils.Assert;
 
 

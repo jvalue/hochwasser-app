@@ -84,11 +84,10 @@
 					android:resource="@xml/syncadapter" />
 		</service>
 
-		<service android:name=".ods.GcmIntentService">
+		<service android:name=".ods.gcm.GcmIntentService">
 		</service>
 
-		<receiver 
-				android:name=".ods.GcmUtils">
+		<receiver android:name=".ods.gcm.GcmUtils">
 			<intent-filter>
 				<action android:name="de.bitdroid.flooding.ods.ACTION_GCM_FINISH"/>
 			</intent-filter>
@@ -111,8 +110,7 @@
 		<service android:name=".monitor.CopySourceService">
 		</service>
 
-		<receiver
-				android:name=".ods.GcmBroadcastReceiver">
+		<receiver android:name=".ods.gcm.GcmBroadcastReceiverods.GcmBroadcastReceiver">
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
 				<category android:name="de.bitdroid.flooding" />
@@ -120,7 +118,7 @@
 		</receiver>
 
 		<receiver
-				android:name="de.bitdroid.flooding.main.GcmRegistrationReceiver">
+				android:name=".main.GcmRegistrationReceiver">
 			<intent-filter>
 				<action android:name="de.bitdroid.flooding.ods.ACTION_GCM_FINISH"/>
 			</intent-filter>

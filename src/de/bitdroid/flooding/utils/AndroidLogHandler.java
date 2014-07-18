@@ -10,9 +10,21 @@ final class AndroidLogHandler implements LogHandler {
 	}
 
 	@Override
+	public void debug(String msg, Throwable error) {
+		android.util.Log.d(LOG_PREFIX, prefix(msg), error);
+	}
+
+
+	@Override
 	public void info(String msg) {
 		android.util.Log.i(LOG_PREFIX, prefix(msg));
 	}
+
+	@Override
+	public void info(String msg, Throwable error) {
+		android.util.Log.i(LOG_PREFIX, prefix(msg), error);
+	}
+
 
 	@Override
 	public void warning(String msg) {
@@ -20,9 +32,21 @@ final class AndroidLogHandler implements LogHandler {
 	}
 
 	@Override
+	public void warning(String msg, Throwable error) {
+		android.util.Log.w(LOG_PREFIX, prefix(msg), error);
+	}
+
+
+	@Override
 	public void error(String msg) {
 		android.util.Log.e(LOG_PREFIX, prefix(msg));
 	}
+
+	@Override
+	public void error(String msg, Throwable error) {
+		android.util.Log.e(LOG_PREFIX, prefix(msg), error);
+	}
+
 
 	private String prefix(String msg) {
 			String callerName = Thread.currentThread().getStackTrace()[5].getClassName();

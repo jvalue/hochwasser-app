@@ -29,18 +29,42 @@ public final class Log {
 			handler.debug(msg);
 	}
 
+	public static synchronized void debug(String msg, Throwable error) {
+		for (LogHandler handler : logHandlers)
+			handler.debug(msg, error);
+	}
+
+
 	public static synchronized void info(String msg) {
 		for (LogHandler handler : logHandlers)
 			handler.info(msg);
 	}
+
+	public static synchronized void info(String msg, Throwable error) {
+		for (LogHandler handler : logHandlers)
+			handler.info(msg, error);
+	}
+
 
 	public static synchronized void warning(String msg) {
 		for (LogHandler handler : logHandlers)
 			handler.warning(msg);
 	}
 
+	public static synchronized void warning(String msg, Throwable error) {
+		for (LogHandler handler : logHandlers)
+			handler.warning(msg, error);
+	}
+
+
 	public static synchronized void error(String msg) {
 		for (LogHandler handler : logHandlers)
 			handler.error(msg);
 	}
+
+	public static synchronized void error(String msg, Throwable error) {
+		for (LogHandler handler : logHandlers)
+			handler.error(msg, error);
+	}
+
 }

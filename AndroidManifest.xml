@@ -72,7 +72,7 @@
 		/>
 
 		<service 
-				android:name=".ods.SyncService"
+				android:name=".ods.data.SyncService"
 				android:exported="true"
 				android:process=":sync">
 			<intent-filter>
@@ -84,51 +84,44 @@
 					android:resource="@xml/syncadapter" />
 		</service>
 
-		<service android:name=".ods.gcm.GcmIntentService">
-		</service>
-
-		<receiver android:name=".ods.gcm.GcmUtils">
-			<intent-filter>
-				<action android:name="de.bitdroid.flooding.ods.ACTION_GCM_FINISH"/>
-			</intent-filter>
-		</receiver>
-
 		<receiver
 				android:name=".ods.data.SyncStatusListener">
 			<intent-filter>
-				<action android:name="de.bitdroid.flooding.ods.ACTION_SYNC_FINISH"/>
+				<action android:name="de.bitdroid.flooding.ods.data.ACTION_SYNC_FINISH"/>
 			</intent-filter>
 		</receiver>
 
 		<receiver
 				android:name=".monitor.MonitorSyncListener">
 			<intent-filter>
-				<action android:name="de.bitdroid.flooding.ods.ACTION_SYNC_FINISH"/>
+				<action android:name="de.bitdroid.flooding.ods.data.ACTION_SYNC_FINISH"/>
 			</intent-filter>
 		</receiver>
 
 		<service android:name=".monitor.CopySourceService">
 		</service>
 
-		<receiver android:name=".ods.gcm.GcmBroadcastReceiverods.GcmBroadcastReceiver">
+		<!-- ODS GCM registration and updates -->
+		<service android:name=".ods.data.GcmIntentService">
+		</service>
+
+		<receiver android:name=".ods.data.GcmManager$StatusUpdater">
+			<intent-filter>
+				<action android:name="de.bitdroid.flooding.ods.gcm.ACTION_GCM_FINISH"/>
+			</intent-filter>
+		</receiver>
+
+		<receiver android:name=".ods.data.GcmReceiver">
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
 				<category android:name="de.bitdroid.flooding" />
 			</intent-filter>
 		</receiver>
 
-		<receiver
-				android:name=".main.GcmRegistrationReceiver">
-			<intent-filter>
-				<action android:name="de.bitdroid.flooding.ods.ACTION_GCM_FINISH"/>
-			</intent-filter>
-		</receiver>
-
-		<receiver android:name=".GcmRegistrationReceiver$GcmRetryReceiver"/>
-
 		<meta-data
 				android:name="com.google.android.gms.version"
 				android:value="@integer/google_play_services_version"
-			/>
+		/>
+
 	</application>
 </manifest>

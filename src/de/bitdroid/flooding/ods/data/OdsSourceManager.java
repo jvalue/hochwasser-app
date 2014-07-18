@@ -10,13 +10,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
-import de.bitdroid.flooding.ods.gcm.GcmUtils;
 import de.bitdroid.flooding.utils.Assert;
 
 
 public final class OdsSourceManager {
 	
-	private static final String PREFS_NAME = "de.bitdroid.flooding.ods.OdsSourceManager";
+	private static final String PREFS_NAME = OdsSourceManager.class.getName();
 	private static final String KEY_SERVER_NAME = "serverName";
 
 	private static OdsSourceManager instance;
@@ -31,9 +30,11 @@ public final class OdsSourceManager {
 
 
 	private final Context context;
+	private final GcmManager gcmManager;
 
 	private OdsSourceManager(Context context) {
 		this.context = context;
+		this.gcmManager = GcmManager.getInstance(context);
 	}
 
 
@@ -113,10 +114,10 @@ public final class OdsSourceManager {
 	 */
 	public void startPushNotifications(OdsSource source) {
 		Assert.assertNotNull(source);
-		GcmStatus status = GcmUtils.getRegistrationStatus(context, source);
+		GcmStatus status = gcmManager.getRegistrationStatus(source);
 		Assert.assertEquals(status, GcmStatus.UNREGISTERED, "Already registered");
 
-		GcmUtils.registerSource(context, source);
+		gcmManager.registerSource(source);
 	}
 
 
@@ -129,10 +130,10 @@ public final class OdsSourceManager {
 	 */
 	public void stopPushNotifications(OdsSource source) {
 		Assert.assertNotNull(source);
-		GcmStatus status = GcmUtils.getRegistrationStatus(context, source);
+		GcmStatus status = gcmManager.getRegistrationStatus(source);
 		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
 
-		GcmUtils.unregisterSource(context, source);
+		gcmManager.unregisterSource(source);
 	}
 
 
@@ -142,7 +143,7 @@ public final class OdsSourceManager {
 	 */
 	public GcmStatus getPushNotificationsRegistrationStatus(OdsSource source) {
 		Assert.assertNotNull(source);
-		return GcmUtils.getRegistrationStatus(context, source);
+		return gcmManager.getRegistrationStatus(source);
 	}
 
 
@@ -151,7 +152,7 @@ public final class OdsSourceManager {
 	 * ODS changes.
 	 */
 	public Set<OdsSource> getPushNotificationSources() {
-		return GcmUtils.getRegisteredSources(context);
+		return gcmManager.getRegisteredSources();
 	}
 
 

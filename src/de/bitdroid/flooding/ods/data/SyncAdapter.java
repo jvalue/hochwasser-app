@@ -14,8 +14,8 @@ import de.bitdroid.flooding.utils.Log;
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	public static final String 
-			ACTION_SYNC_FINISH = "de.bitdroid.flooding.ods.ACTION_SYNC_FINISH",
-			ACTION_SYNC_ALL_FINISH = "de.bitdroid.flooding.ods.ACTION_SYNC_ALL_FINISH",
+			ACTION_SYNC_FINISH = "de.bitdroid.flooding.ods.data.ACTION_SYNC_FINISH",
+			ACTION_SYNC_ALL_FINISH = "de.bitdroid.flooding.ods.data.ACTION_SYNC_ALL_FINISH",
 			EXTRA_SOURCE_NAME = "EXTRA_SOURCE_NAME",
 			EXTRA_SYNC_SUCCESSFUL = "EXTRA_SYNC_SUCCESSFUL";
 

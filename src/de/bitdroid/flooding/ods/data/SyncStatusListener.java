@@ -12,7 +12,7 @@ public final class SyncStatusListener extends BroadcastReceiver {
 
 	private static final Object LOCK = new Object();
 
-	private static final String PREFS_NAME = "de.bitdroid.flooding.ods.SyncStatusListener";
+	private static final String PREFS_NAME = SyncStatusListener.class.getName();
 	private static final long PREFS_DEFAULT_TIMESTAMP = -1;
 
 	@Override

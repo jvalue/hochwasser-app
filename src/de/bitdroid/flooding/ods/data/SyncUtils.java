@@ -23,8 +23,7 @@ final class SyncUtils {
 			KEY_ACCOUNT_ADDED = "accountAdded",
 			KEY_PERIODIC_SYNC_ADDED = "periodicSyncAdded";
 
-	private static final String
-			PREFS_NAME = "de.bitdroid.flooding.utils.SyncUtils";
+	private static final String PREFS_NAME = SyncUtils.class.getName();
 
 
 	static boolean isPeriodicSyncScheduled(Context context) {

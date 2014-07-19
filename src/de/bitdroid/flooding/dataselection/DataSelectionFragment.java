@@ -114,6 +114,7 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 		try {
 			Class<?> activityClass = Class.forName(getArguments().getString(EXTRA_ACTIVITY));
 			Intent intent = getActivityIntent(activityClass, listAdapter.getItem(position));
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			getActivity().overridePendingTransition(
 					getArguments().getInt(EXTRA_ANIM_ENTER),

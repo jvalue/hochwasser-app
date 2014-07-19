@@ -29,6 +29,20 @@
 
 	<string name="menu_alarms_add">Add alarm</string>
 
+	<string name="alarms_new_add">Start alarm</string>
+	<string name="alarms_new_river_description">River</string>
+	<string name="alarms_new_station_description">River</string>
+	<string name="alarms_new_level_description">Water level</string>
+	<string name="alarms_new_level_hint">Water level</string>
+	<string name="alarms_new_trigger_description">Alarm when water is</string>
+	<string name="alarms_new_trigger_above">above level</string>
+	<string name="alarms_new_trigger_below">below level</string>
+	<string name="alarms_new_title_river">Select river</string>
+	<string name="alarms_new_title_station">Select station</string>
+	<string name="alarms_new_title_level">Select water level</string>
+	<string name="alarms_new_created">Added new alarm</string>
+	<string name="alarms_new_not_created">Not added</string>
+
 	<string name="series_select_dialog_title">Select Series to Display</string>
 	<string name="series_monitor_dialog_title">Select a Timestamp to Display</string>
 	<string name="series_water_levels">Water Levels</string>

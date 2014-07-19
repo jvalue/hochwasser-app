@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.alarms;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import de.bitdroid.flooding.R;
 
@@ -43,7 +43,10 @@ public final class AlarmsFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.add:
-				Toast.makeText(getActivity(), "stub", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(
+						getActivity().getApplicationContext(), 
+						NewAlarmActivity.class);
+				startActivity(intent);
 				return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	>
+
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/alarms_new_river_description"
+	/>
+
+	<TextView
+		android:id="@+id/river"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	/>
+
+
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/alarms_new_station_description"
+	/>
+
+	<TextView
+		android:id="@+id/station"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	/>
+
+
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/alarms_new_level_description"
+	/>
+
+	<EditText
+		android:id="@+id/level"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/alarms_new_level_hint"
+		android:inputType="numberDecimal"
+	/>
+
+
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/alarms_new_trigger_description"
+	/>
+	
+	<RadioGroup
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:checkedButton="@+id/above"
+		>
+		<RadioButton
+			android:id="@id/above"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/alarms_new_trigger_above"
+		/>
+		<RadioButton
+			android:id="@+id/below"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/alarms_new_trigger_below"
+		/>
+	</RadioGroup>
+
+
+	<Button
+		android:id="@+id/ok"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/alarms_new_add"
+	/>
+
+</LinearLayout>
+

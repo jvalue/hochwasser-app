@@ -69,8 +69,7 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 			}
 		};
 
-		boolean showAllStationsEntry = getArguments().getBoolean(EXTRA_SHOW_ALL_STATIONS_ENTRY, false);
-		if (showAllStationsEntry) adapter.insert(getActivity().getString(R.string.data_station_all), 0);
+		addExtraEntries(adapter);
 		return adapter;
 	}
 
@@ -143,8 +142,18 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 				return e1.compareTo(e2);
 			}
 		});
-		listAdapter.insert(getActivity().getString(R.string.data_station_all), 0);
+		addExtraEntries(listAdapter);
 		listAdapter.getFilter().filter("");
+	}
+
+
+	private void addExtraEntries(ArrayAdapter<String> adapter) {
+		boolean showAllStationsEntry = getArguments().getBoolean(
+				EXTRA_SHOW_ALL_STATIONS_ENTRY, 
+				false);
+		if (showAllStationsEntry) 
+			adapter.insert(getActivity().getString(R.string.data_station_all), 0);
+
 	}
 
 }

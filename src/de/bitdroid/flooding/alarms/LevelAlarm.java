@@ -1,5 +1,8 @@
 package de.bitdroid.flooding.alarms;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.bitdroid.flooding.utils.Assert;
 
 
@@ -9,11 +12,12 @@ final class LevelAlarm extends Alarm {
 	private final double level;
 	private final boolean alarmWhenAbove;
 
+	@JsonCreator
 	public LevelAlarm(
-			String river, 
-			String station, 
-			double level, 
-			boolean alarmWhenAbove) {
+			@JsonProperty("river") String river, 
+			@JsonProperty("station") String station, 
+			@JsonProperty("level") double level, 
+			@JsonProperty("alarmWhenAbove") boolean alarmWhenAbove) {
 
 		Assert.assertNotNull(river, station);
 		this.river = river;

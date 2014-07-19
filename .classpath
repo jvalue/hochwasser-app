@@ -14,5 +14,8 @@
 	<classpathentry kind="lib" path="libs/osmdroid-android-4.1.jar"/>
 	<classpathentry kind="lib" path="libs/androidplot-core-0.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-annotations-2.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-core-2.4.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-databind-2.4.1.3.jar"/>
 	<classpathentry kind="lib" path="plugins/google-play-services_lib/libs/google-play-services.jar"/>
 </classpath>

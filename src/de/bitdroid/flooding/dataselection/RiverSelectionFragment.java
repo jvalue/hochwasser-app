@@ -24,11 +24,9 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
 
 
-public final class RiverSelectionFragment extends DataSelectionFragment<River> {
+public final class RiverSelectionFragment extends DataSelectionFragment<River> implements Extras {
 
 	private static final int LOADER_ID = 44;
-
-	public static final String EXTRA_WATER_NAME = "EXTRA_WATER_NAME";
 
 
 	public static RiverSelectionFragment newInstance(Class<?> activity, int animEnter, int animExit) {

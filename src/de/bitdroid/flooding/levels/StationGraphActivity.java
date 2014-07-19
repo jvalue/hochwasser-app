@@ -13,12 +13,13 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.dataselection.StationSelectionFragment;
+import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
 
 // TODO include graph at some point
-public class StationGraphActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class StationGraphActivity extends BaseActivity 
+	implements LoaderManager.LoaderCallbacks<Cursor>, Extras {
 	
 	private static final int LOADERID = 46;
 
@@ -32,8 +33,8 @@ public class StationGraphActivity extends BaseActivity implements LoaderManager.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.data_station);
-		stationName = getIntent().getExtras().getString(StationSelectionFragment.EXTRA_STATION_NAME);
-		waterName = getIntent().getExtras().getString(StationSelectionFragment.EXTRA_WATER_NAME);
+		stationName = getIntent().getExtras().getString(EXTRA_STATION_NAME);
+		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 
 		levelView = (TextView) findViewById(R.id.level);
 

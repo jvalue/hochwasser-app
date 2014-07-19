@@ -23,14 +23,10 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.StringUtils;
 
-public final class StationSelectionFragment extends DataSelectionFragment<String> {
+public final class StationSelectionFragment extends DataSelectionFragment<String> implements Extras {
 
 	private static final int LOADER_ID = 45;
 	
-	public static final String
-		EXTRA_WATER_NAME = "EXTRA_WATER_NAME",
-		EXTRA_STATION_NAME = "EXTRA_STATION_NAME";
-
 	private static final String
 		EXTRA_ACTIVITY_ALL_STATIONS = "EXTRA_ACTIVITY_ALL_STATIONS",
 		EXTRA_SHOW_ALL_STATIONS_ENTRY = "EXTRA_SHOW_ALL_STATIONS_ENTRY";

@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.levels;
+package de.bitdroid.flooding.dataselection;
 
 import android.app.Service;
 import android.content.Intent;
@@ -21,15 +21,32 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.flooding.utils.Log;
 
 abstract class DataSelectionFragment<T> extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+	static final String
+		EXTRA_ACTIVITY = "EXTRA_ACTIVITY",
+		EXTRA_ANIM_EXIT = "EXTRA_ANIM_EXIT",
+		EXTRA_ANIM_ENTER = "EXTRA_ANIM_ENTER";
+
+	static Bundle getDefaultExtras(Class<?> activityClass, int animEnter, int animExit) {
+		Assert.assertNotNull(activityClass);
+		Bundle extras = new Bundle();
+		extras.putString(EXTRA_ACTIVITY, activityClass.getName());
+		extras.putInt(EXTRA_ANIM_ENTER, animEnter);
+		extras.putInt(EXTRA_ANIM_EXIT, animExit);
+		return extras;
+	}
+
 
 	private ArrayAdapter<T> listAdapter = null;
 	private EditText searchBox = null;
 
 
 	protected abstract ArrayAdapter<T> getAdapter();
-	protected abstract Intent getActivityIntent(T item);
+	protected abstract Intent getActivityIntent(Class<?> activityClass, T item);
 
 	protected abstract int getLoaderId();
 	protected abstract Loader<Cursor> getLoader();
@@ -74,8 +91,6 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 	@Override
 	public final void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		// list adapter
 		listAdapter = getAdapter();
 		setListAdapter(listAdapter);
 	}
@@ -95,12 +110,17 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 			= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
 		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
-		// start graph activity
-		Intent intent = getActivityIntent(listAdapter.getItem(position));
-		startActivity(intent);
-		getActivity().overridePendingTransition(
-				R.anim.slide_enter_from_right, 
-				R.anim.slide_exit_to_left);
+		// start activity
+		try {
+			Class<?> activityClass = Class.forName(getArguments().getString(EXTRA_ACTIVITY));
+			Intent intent = getActivityIntent(activityClass, listAdapter.getItem(position));
+			startActivity(intent);
+			getActivity().overridePendingTransition(
+					getArguments().getInt(EXTRA_ANIM_ENTER),
+					getArguments().getInt(EXTRA_ANIM_EXIT));
+		} catch (ClassNotFoundException cnfe) {
+			Log.error("failed to start activity", cnfe);
+		}
 	}
 
 

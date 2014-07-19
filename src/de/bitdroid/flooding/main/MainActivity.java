@@ -28,14 +28,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.R.array;
-import de.bitdroid.flooding.R.drawable;
-import de.bitdroid.flooding.R.id;
-import de.bitdroid.flooding.R.layout;
-import de.bitdroid.flooding.R.string;
-import de.bitdroid.flooding.R.xml;
 import de.bitdroid.flooding.alarms.AlarmsFragment;
-import de.bitdroid.flooding.levels.RiverSelectionFragment;
+import de.bitdroid.flooding.dataselection.RiverSelectionFragment;
+import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.ods.data.OdsSource;
@@ -251,7 +246,10 @@ public class MainActivity extends FragmentActivity {
 		Fragment fragment = null;
 		if (position == 0) fragment = new NewsFragment();
 		else if (position == 1) fragment = new AlarmsFragment();
-		else if (position == 2) fragment = new RiverSelectionFragment();
+		else if (position == 2) fragment = RiverSelectionFragment.newInstance(
+				StationListActivity.class, 
+				R.anim.slide_enter_from_right,
+				R.anim.slide_exit_to_left);
 		else if (position == 3) fragment = new SettingsFragment();
 		getSupportFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
 		drawerMenuList.setItemChecked(position, true);

@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.levels;
+package de.bitdroid.flooding.dataselection;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
@@ -20,19 +20,36 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
+import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.StringUtils;
 
 public final class StationSelectionFragment extends DataSelectionFragment<String> {
 
 	private static final int LOADER_ID = 45;
-	private static final String EXTRA_RIVERNAME = "EXTRA_RIVERNAME";
+	
+	public static final String
+		EXTRA_WATER_NAME = "EXTRA_WATER_NAME",
+		EXTRA_STATION_NAME = "EXTRA_STATION_NAME";
+
+	private static final String
+		EXTRA_ACTIVITY_ALL_STATIONS = "EXTRA_ACTIVITY_ALL_STATIONS",
+		EXTRA_SHOW_ALL_STATIONS_ENTRY = "EXTRA_SHOW_ALL_STATIONS_ENTRY";
 
 
-	public static StationSelectionFragment newInstance(String riverName) {
+	public static StationSelectionFragment newInstance(
+			Class<?> activitySingleStation,
+			int animEnter, 
+			int animExit, 
+			String riverName,
+			Class<?> activityAllStations,
+			boolean showAllStationsEntry) {
+
 		StationSelectionFragment fragment = new StationSelectionFragment();
-		Bundle args = new Bundle();
-		args.putString(EXTRA_RIVERNAME, riverName);
-		fragment.setArguments(args);
+		Bundle extras = getDefaultExtras(activitySingleStation, animEnter, animExit);
+		extras.putString(EXTRA_WATER_NAME, riverName);
+		extras.putString(EXTRA_ACTIVITY_ALL_STATIONS, activityAllStations.getName());
+		extras.putBoolean(EXTRA_SHOW_ALL_STATIONS_ENTRY, showAllStationsEntry);
+		fragment.setArguments(extras);
 		return fragment;
 	}
 
@@ -56,32 +73,35 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 			}
 		};
 
-		adapter.insert(getActivity().getString(R.string.data_station_all), 0);
+		boolean showAllStationsEntry = getArguments().getBoolean(EXTRA_SHOW_ALL_STATIONS_ENTRY, false);
+		if (showAllStationsEntry) adapter.insert(getActivity().getString(R.string.data_station_all), 0);
 		return adapter;
 	}
 
 
 	@Override
-	protected Intent getActivityIntent(String station) {
+	protected Intent getActivityIntent(Class<?> singleStationActivity, String station) {
 		Bundle extras = new Bundle();
+		extras.putString(EXTRA_WATER_NAME, getArguments().getString(EXTRA_WATER_NAME));
+
 		if (station.equals(getActivity().getString(R.string.data_station_all))) {
-			extras.putString(
-					RiverGraphActivity.EXTRA_WATER_NAME, 
-					getArguments().getString(EXTRA_RIVERNAME));
-			Intent intent = new Intent(
-					getActivity().getApplicationContext(),
-					RiverGraphActivity.class);
-			intent.putExtras(extras);
-			return intent;
+			try {
+				Class<?> allStationsActivity = Class.forName(getArguments().getString(EXTRA_ACTIVITY_ALL_STATIONS));
+				Intent intent = new Intent(
+						getActivity().getApplicationContext(),
+						allStationsActivity);
+				intent.putExtras(extras);
+				return intent;
+			} catch (ClassNotFoundException cnfe) {
+				Log.error("failed to get activity", cnfe);
+				return null;
+			}
 
 		} else {
-			extras.putString(StationGraphActivity.EXTRA_STATION_NAME, station);
-			extras.putString(
-					StationGraphActivity.EXTRA_WATER_NAME, 
-					getArguments().getString(EXTRA_RIVERNAME));
+			extras.putString(EXTRA_STATION_NAME, station);
 			Intent intent = new Intent(
 					getActivity().getApplicationContext(),
-					StationGraphActivity.class);
+					singleStationActivity);
 			intent.putExtras(extras);
 			return intent;
 		}
@@ -101,7 +121,7 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 				PegelOnlineSource.INSTANCE.toUri(),
 				new String[] { COLUMN_STATION_NAME },
 				COLUMN_WATER_NAME + "=? AND " + COLUMN_LEVEL_TYPE + "=?", 
-				new String[] { getArguments().getString(EXTRA_RIVERNAME), "W" }, 
+				new String[] { getArguments().getString(EXTRA_WATER_NAME), "W" }, 
 				null);
 	}
 

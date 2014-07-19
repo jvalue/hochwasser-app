@@ -59,6 +59,7 @@ import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.dataselection.StationSelectionFragment;
 import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.monitor.MonitorSourceLoader;
 import de.bitdroid.flooding.monitor.SourceMonitor;
@@ -69,8 +70,6 @@ import de.bitdroid.flooding.utils.StringUtils;
 
 public class RiverGraphActivity extends BaseActivity {
 	
-	public static final String EXTRA_WATER_NAME = "waterName";
-
 	private static final int LOADER_ID = 44;
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
@@ -88,7 +87,7 @@ public class RiverGraphActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.data_river);
-		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
+		waterName = getIntent().getExtras().getString(StationSelectionFragment.EXTRA_WATER_NAME);
 		getActionBar().setTitle(StringUtils.toProperCase(waterName));
 
 		// setup graph

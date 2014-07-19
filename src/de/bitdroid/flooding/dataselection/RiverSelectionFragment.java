@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.levels;
+package de.bitdroid.flooding.dataselection;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
@@ -19,13 +19,24 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.levels.RiverSelectionFragment.River;
+import de.bitdroid.flooding.dataselection.RiverSelectionFragment.River;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
+
 
 public final class RiverSelectionFragment extends DataSelectionFragment<River> {
 
 	private static final int LOADER_ID = 44;
+
+	public static final String EXTRA_WATER_NAME = "EXTRA_WATER_NAME";
+
+
+	public static RiverSelectionFragment newInstance(Class<?> activity, int animEnter, int animExit) {
+		RiverSelectionFragment fragment = new RiverSelectionFragment();
+		Bundle extras = getDefaultExtras(activity, animEnter, animExit);
+		fragment.setArguments(extras);
+		return fragment;
+	}
 
 
 	@Override
@@ -54,13 +65,13 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> {
 
 
 	@Override
-	protected Intent getActivityIntent(River river) {
+	protected Intent getActivityIntent(Class<?> activity, River river) {
 		// start graph activity
 		Bundle extras = new Bundle();
-		extras.putString(RiverGraphActivity.EXTRA_WATER_NAME, river.getRiverName());
+		extras.putString(EXTRA_WATER_NAME, river.getRiverName());
 		Intent intent = new Intent(
 				getActivity().getApplicationContext(),
-				StationListActivity.class);
+				activity);
 		intent.putExtras(extras);
 		return intent;
 	}

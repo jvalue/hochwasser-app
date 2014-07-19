@@ -30,8 +30,7 @@
 	<string name="menu_alarms_add">Add alarm</string>
 
 	<string name="alarms_new_add">Start alarm</string>
-	<string name="alarms_new_river_description">River</string>
-	<string name="alarms_new_station_description">River</string>
+	<string name="alarms_new_station_description">Station</string>
 	<string name="alarms_new_level_description">Water level</string>
 	<string name="alarms_new_level_hint">Water level</string>
 	<string name="alarms_new_trigger_description">Alarm when water is</string>

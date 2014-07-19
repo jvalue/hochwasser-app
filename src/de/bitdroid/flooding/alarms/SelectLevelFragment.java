@@ -42,14 +42,13 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 
 		View view = inflater.inflate(R.layout.alarms_new, container, false);
 
-		TextView riverView = (TextView) view.findViewById(R.id.river);
 		TextView stationView = (TextView) view.findViewById(R.id.station);
 
 		String river = getArguments().getString(EXTRA_WATER_NAME);
 		String station = getArguments().getString(EXTRA_STATION_NAME);
 
-		riverView.setText(StringUtils.toProperCase(river));
-		stationView.setText(StringUtils.toProperCase(station));
+		stationView.setText(
+				StringUtils.toProperCase(river) + " - " + StringUtils.toProperCase(station));
 
 		Button okButton = (Button) view.findViewById(R.id.ok);
 		okButton.setOnClickListener(new View.OnClickListener() {

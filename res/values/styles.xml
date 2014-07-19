@@ -6,4 +6,15 @@
 		<item name="sv_tintButtonColor">false</item>
 	</style>
 
+	<style name="HeaderFont" parent="@android:style/TextAppearance.Large">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textColor">@color/blue</item>
+	</style>
+
+	<style name="RegularFont" parent="@android:style/TextAppearance.Medium">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+
 </resources>

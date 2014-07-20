@@ -58,6 +58,12 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 		okButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				String levelString = levelEditText.getText().toString();
+				if (levelString.equals("")) {
+					Toast.makeText(getActivity(), getString(R.string.alarms_new_error_level), Toast.LENGTH_LONG).show();
+					return;
+				}
+
 				double level = Double.valueOf(levelEditText.getText().toString());
 				boolean whenAbove = relationRadioGroup.getCheckedRadioButtonId() == R.id.above;
 

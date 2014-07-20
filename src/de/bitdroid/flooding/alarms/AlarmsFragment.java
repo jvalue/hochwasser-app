@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.utils.StringUtils;
 
 
 public final class AlarmsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Map<Long, Alarm>> {
@@ -51,10 +52,18 @@ public final class AlarmsFragment extends ListFragment implements LoaderManager.
 				LevelAlarm alarm = (LevelAlarm) entry.getValue();
 
 				TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-				text1.setText(alarm.getStation());
+				text1.setText(
+					StringUtils.toProperCase(alarm.getRiver()) + " - " 
+					+ StringUtils.toProperCase(alarm.getStation()));
 
 				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-				text2.setText("Alarm when at " + alarm.getLevel());
+				String description;
+				if (alarm.getAlarmWhenAbove()) {
+					description = getString(R.string.alarms_description_above, alarm.getLevel());
+				} else {
+					description = getString(R.string.alarms_description_below, alarm.getLevel());
+				}
+				text2.setText(description);
 
 				return view;
 			}

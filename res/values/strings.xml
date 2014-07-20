@@ -30,9 +30,11 @@
 	<string name="menu_alarms_add">Add alarm</string>
 
 	<string name="alarms_empty">No alarms present.</string>
+	<string name="alarms_description_above">When level above %1$.2f cm</string>
+	<string name="alarms_description_below">When level below %1$.2f cm</string>
 	<string name="alarms_new_add">Start alarm</string>
 	<string name="alarms_new_station_description">Station</string>
-	<string name="alarms_new_level_description">Water level</string>
+	<string name="alarms_new_level_description">Water level in cm</string>
 	<string name="alarms_new_level_hint">Water level</string>
 	<string name="alarms_new_trigger_description">Alarm when water is</string>
 	<string name="alarms_new_trigger_above">above level</string>

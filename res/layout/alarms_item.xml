@@ -13,18 +13,12 @@
 
 	<TextView
 		android:id="@android:id/text1"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textColor="@color/white"
-		android:textSize="18dp"
+		style="@style/HeaderFont"
 	/>
 
 	<TextView
 		android:id="@android:id/text2"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:textColor="@color/gray"
-		android:textSize="12dp"
+		style="@style/RegularFont"
 	/>
 
 </LinearLayout>

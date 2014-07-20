@@ -24,7 +24,7 @@ import de.bitdroid.flooding.utils.StringUtils;
 import de.timroes.android.listview.EnhancedListView;
 
 
-public final class AlarmsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Map<Long, Alarm>> {
+public final class AlarmFragment extends Fragment implements LoaderManager.LoaderCallbacks<Map<Long, Alarm>> {
 
 	private static final int LOADER_ID  = 47;
 

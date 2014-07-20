@@ -28,7 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.alarms.AlarmsFragment;
+import de.bitdroid.flooding.alarms.AlarmFragment;
 import de.bitdroid.flooding.dataselection.RiverSelectionFragment;
 import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
@@ -245,7 +245,7 @@ public class MainActivity extends FragmentActivity {
 
 		Fragment fragment = null;
 		if (position == 0) fragment = new NewsFragment();
-		else if (position == 1) fragment = new AlarmsFragment();
+		else if (position == 1) fragment = new AlarmFragment();
 		else if (position == 2) fragment = RiverSelectionFragment.newInstance(
 				StationListActivity.class, 
 				R.anim.slide_enter_from_right,

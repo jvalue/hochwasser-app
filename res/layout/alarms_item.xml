@@ -13,12 +13,12 @@
 
 	<TextView
 		android:id="@android:id/text1"
-		style="@style/HeaderFont"
+		style="@style/FontHeader"
 	/>
 
 	<TextView
 		android:id="@android:id/text2"
-		style="@style/RegularFont"
+		style="@style/FontRegular"
 	/>
 
 </LinearLayout>

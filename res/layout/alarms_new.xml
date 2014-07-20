@@ -15,12 +15,12 @@
 		android:layout_marginBottom="3dp"
 		>
 		<TextView
-			style="@style/HeaderFont"
+			style="@style/FontHeader"
 			android:text="@string/alarms_new_station_description"
 		/>
 
 		<TextView
-			style="@style/RegularFont"
+			style="@style/FontRegular"
 			android:id="@+id/station"
 		/>
 	</LinearLayout>
@@ -34,12 +34,12 @@
 		android:layout_marginBottom="3dp"
 		>
 		<TextView
-			style="@style/HeaderFont"
+			style="@style/FontHeader"
 			android:text="@string/alarms_new_level_description"
 		/>
 
 		<EditText
-			style="@style/RegularFont"
+			style="@style/FontRegular"
 			android:id="@+id/level"
 			android:layout_width="fill_parent"
 			android:hint="@string/alarms_new_level_hint"
@@ -48,7 +48,7 @@
 		/>
 
 		<TextView
-			style="@style/RegularFont"
+			style="@style/FontRegular"
 			android:text="@string/alarms_new_trigger_description"
 			android:layout_marginTop="3dp"
 		/>

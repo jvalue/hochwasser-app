@@ -1,5 +1,8 @@
 package de.bitdroid.flooding.alarms;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Intent;
@@ -26,7 +29,7 @@ public final class AlarmsFragment extends Fragment implements LoaderManager.Load
 	private static final int LOADER_ID  = 47;
 
 	private EnhancedListView listView;
-	private ArrayAdapter<Map.Entry<Long, Alarm>> listAdapter;
+	private ArrayAdapter<AlarmItem> listAdapter;
 	private AlarmManager alarmManager;
 
 	@Override
@@ -45,21 +48,19 @@ public final class AlarmsFragment extends Fragment implements LoaderManager.Load
 
 		View view = inflater.inflate(R.layout.alarms, container, false);
 		listView = (EnhancedListView) view.findViewById(R.id.list);
-		listAdapter = new ArrayAdapter<Map.Entry<Long, Alarm>>(
+		listAdapter = new ArrayAdapter<AlarmItem>(
 					getActivity().getApplicationContext(),
 					R.layout.alarms_item,
 					android.R.id.text1) { 
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
-				Map.Entry<Long, Alarm> entry = getItem(position);
+				AlarmItem item = getItem(position);
 				View view = super.getView(position, convertView, parent);
-				LevelAlarm alarm = (LevelAlarm) entry.getValue();
+				LevelAlarm alarm = item.getAlarm();
 
 				TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-				text1.setText(
-					StringUtils.toProperCase(alarm.getRiver()) + " - " 
-					+ StringUtils.toProperCase(alarm.getStation()));
+				text1.setText(item.toString());
 
 				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 				String description;
@@ -81,14 +82,14 @@ public final class AlarmsFragment extends Fragment implements LoaderManager.Load
 		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
             @Override
             public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
-                final Map.Entry<Long, Alarm> item = listAdapter.getItem(pos);
-				alarmManager.remove(item.getKey());
+                final AlarmItem item = listAdapter.getItem(pos);
+				alarmManager.remove(item.getId());
 				listAdapter.remove(item); // hack to stop list from flashing
 
                 return new EnhancedListView.Undoable() {
                     @Override
                     public void undo() {
-						alarmManager.add(item.getValue());
+						alarmManager.add(item.getAlarm());
                     }   
                 };  
             }   
@@ -139,14 +140,53 @@ public final class AlarmsFragment extends Fragment implements LoaderManager.Load
 	@Override
 	public void onLoadFinished(Loader<Map<Long, Alarm>> loader, Map<Long, Alarm> alarms) {
 		if (loader.getId() != LOADER_ID) return;
+
+		List<AlarmItem> items = new LinkedList<AlarmItem>();
+		for (Map.Entry<Long, Alarm> e : alarms.entrySet()) {
+			items.add(new AlarmItem(e.getKey(), (LevelAlarm) e.getValue()));
+		}
+		Collections.sort(items);
+
 		listAdapter.clear();
-		listAdapter.addAll(alarms.entrySet());
+		listAdapter.addAll(items);
 	}
 
 
 	@Override
 	public void onLoaderReset(Loader<Map<Long, Alarm>> loader) {
 		listAdapter.clear();
+	}
+
+
+	private static class AlarmItem implements Comparable<AlarmItem> {
+
+		private final long id;
+		private final LevelAlarm alarm;
+
+		public AlarmItem(long id, LevelAlarm alarm) {
+			this.id = id;
+			this.alarm = alarm;
+		}
+
+		public long getId() {
+			return id;
+		}
+
+		public LevelAlarm getAlarm() {
+			return alarm;
+		}
+
+		@Override
+		public String toString() {
+			return StringUtils.toProperCase(alarm.getRiver()) + " - " 
+				+ StringUtils.toProperCase(alarm.getStation());
+		}
+
+		@Override
+		public int compareTo(AlarmItem other) {
+			return toString().compareTo(other.toString());
+		}
+
 	}
 
 }

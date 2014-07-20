@@ -2,11 +2,12 @@ package de.bitdroid.flooding.alarms;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,8 +45,11 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 
 		TextView stationView = (TextView) view.findViewById(R.id.station);
 
-		String river = getArguments().getString(EXTRA_WATER_NAME);
-		String station = getArguments().getString(EXTRA_STATION_NAME);
+		final String river = getArguments().getString(EXTRA_WATER_NAME);
+		final String station = getArguments().getString(EXTRA_STATION_NAME);
+
+		final EditText levelEditText = (EditText) view.findViewById(R.id.level);
+		final RadioGroup relationRadioGroup = (RadioGroup) view.findViewById(R.id.relation);
 
 		stationView.setText(
 				StringUtils.toProperCase(river) + " - " + StringUtils.toProperCase(station));
@@ -54,8 +58,12 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 		okButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				SelectLevelFragment.this.getActivity().getSupportFragmentManager()
-					.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				double level = Double.valueOf(levelEditText.getText().toString());
+				boolean whenAbove = relationRadioGroup.getCheckedRadioButtonId() == R.id.above;
+
+				Alarm alarm = new LevelAlarm(river, station, level, whenAbove);
+				AlarmManager.getInstance(getActivity().getApplicationContext()).add(alarm);
+
 				SelectLevelFragment.this.getActivity().finish();
 				Toast.makeText(
 					SelectLevelFragment.this.getActivity(), 

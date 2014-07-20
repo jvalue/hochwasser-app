@@ -29,6 +29,7 @@
 
 	<string name="menu_alarms_add">Add alarm</string>
 
+	<string name="alarms_empty">No alarms present.</string>
 	<string name="alarms_new_add">Start alarm</string>
 	<string name="alarms_new_station_description">Station</string>
 	<string name="alarms_new_level_description">Water level</string>

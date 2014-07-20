@@ -65,8 +65,8 @@ final class LevelAlarm extends Alarm {
 		int hash = 13;
 		hash = hash + MULT * river.hashCode();
 		hash = hash + MULT * station.hashCode();
-		hash = hash + MULT * Double.valueOf(river).hashCode();
-		hash = hash + MULT * Boolean.valueOf(river).hashCode();
+		hash = hash + MULT * Double.valueOf(level).hashCode();
+		hash = hash + MULT * Boolean.valueOf(alarmWhenAbove).hashCode();
 		return hash;
 	}
 

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -18,16 +18,22 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.utils.StringUtils;
+import de.timroes.android.listview.EnhancedListView;
 
 
-public final class AlarmsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Map<Long, Alarm>> {
+public final class AlarmsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Map<Long, Alarm>> {
 
 	private static final int LOADER_ID  = 47;
+
+	private EnhancedListView listView;
+	private ArrayAdapter<Map.Entry<Long, Alarm>> listAdapter;
+	private AlarmManager alarmManager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		alarmManager = AlarmManager.getInstance(getActivity().getApplicationContext());
 	}
 
 
@@ -37,14 +43,13 @@ public final class AlarmsFragment extends ListFragment implements LoaderManager.
 			ViewGroup container, 
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.alarms_list, container, false);
-
-
-		setListAdapter(new ArrayAdapter<Map.Entry<Long, Alarm>>(
+		View view = inflater.inflate(R.layout.alarms, container, false);
+		listView = (EnhancedListView) view.findViewById(R.id.list);
+		listAdapter = new ArrayAdapter<Map.Entry<Long, Alarm>>(
 					getActivity().getApplicationContext(),
 					R.layout.alarms_item,
 					android.R.id.text1) { 
-
+			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				Map.Entry<Long, Alarm> entry = getItem(position);
@@ -68,7 +73,30 @@ public final class AlarmsFragment extends ListFragment implements LoaderManager.
 				return view;
 			}
 
-		});
+		};
+		listView.setAdapter(listAdapter);
+		listView.setEmptyView(view.findViewById(R.id.empty));
+
+		// enable swipe and undo
+		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+            @Override
+            public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
+                final Map.Entry<Long, Alarm> item = listAdapter.getItem(pos);
+				alarmManager.remove(item.getKey());
+				listAdapter.remove(item); // hack to stop list from flashing
+
+                return new EnhancedListView.Undoable() {
+                    @Override
+                    public void undo() {
+						alarmManager.add(item.getValue());
+                    }   
+                };  
+            }   
+        }); 
+        listView.enableSwipeToDismiss();
+		listView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
+
+
 		return view;
 	}
 
@@ -102,13 +130,6 @@ public final class AlarmsFragment extends ListFragment implements LoaderManager.
 
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public ArrayAdapter<Map.Entry<Long, Alarm>> getListAdapter() {
-		return (ArrayAdapter<Map.Entry<Long, Alarm>>) super.getListAdapter();
-	}
-
-
-	@Override
 	public Loader<Map<Long, Alarm>> onCreateLoader(int id, Bundle bundle) {
 		if (id != LOADER_ID) return null;
 		return new AlarmLoader(getActivity().getApplicationContext());
@@ -118,14 +139,14 @@ public final class AlarmsFragment extends ListFragment implements LoaderManager.
 	@Override
 	public void onLoadFinished(Loader<Map<Long, Alarm>> loader, Map<Long, Alarm> alarms) {
 		if (loader.getId() != LOADER_ID) return;
-		getListAdapter().clear();
-		getListAdapter().addAll(alarms.entrySet());
+		listAdapter.clear();
+		listAdapter.addAll(alarms.entrySet());
 	}
 
 
 	@Override
 	public void onLoaderReset(Loader<Map<Long, Alarm>> loader) {
-		getListAdapter().clear();
+		listAdapter.clear();
 	}
 
 }

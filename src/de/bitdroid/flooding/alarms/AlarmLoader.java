@@ -6,20 +6,21 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-final class AlarmLoader extends AsyncTaskLoader<Map<Long,Alarm>> {
+final class AlarmLoader extends AsyncTaskLoader<Map<Long,Alarm>> implements AlarmUpdateListener {
 
-	private final Context context;
+	private final AlarmManager alarmManager;
 	private Map<Long, Alarm> alarms;
+	private boolean monitoringAlarms = false;
 
 	public AlarmLoader(Context context) {
 		super(context);
-		this.context = context;
+		this.alarmManager = AlarmManager.getInstance(context);
 	}
 
 
 	@Override
 	public Map<Long, Alarm> loadInBackground() {
-		return AlarmManager.getInstance(context).getAll();
+		return alarmManager.getAll();
 	}
 
 
@@ -38,6 +39,12 @@ final class AlarmLoader extends AsyncTaskLoader<Map<Long,Alarm>> {
 	@Override
 	protected void onStartLoading() {
 		if (alarms != null) deliverResult(alarms);
+
+		if (!monitoringAlarms) {
+			monitoringAlarms = true;
+			alarmManager.registerListener(this);
+		}
+
 		if (takeContentChanged() || alarms == null) forceLoad();
 	}
 
@@ -58,6 +65,23 @@ final class AlarmLoader extends AsyncTaskLoader<Map<Long,Alarm>> {
 	protected void onReset() {
 		onStopLoading();
 		alarms = null;
+
+		if (monitoringAlarms) {
+			monitoringAlarms = false;
+			alarmManager.unregisterListener(this);
+		}
+	}
+
+
+	@Override
+	public void onNewAlarm(long id, Alarm alarm) {
+		onContentChanged();
+	}
+
+
+	@Override
+	public void onDeletedAlarm(long id, Alarm alarm) {
+		onContentChanged();
 	}
 
 }

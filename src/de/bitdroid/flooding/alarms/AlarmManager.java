@@ -42,7 +42,7 @@ final class AlarmManager {
 	}
 
 
-	public Map<Long, Alarm> getAll() {
+	public synchronized Map<Long, Alarm> getAll() {
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		builder.setTables(TABLE_NAME);
 		String[] columns = { COLUMN_ID, COLUMN_JSON };
@@ -72,7 +72,7 @@ final class AlarmManager {
 	}
 
 
-	public long add(Alarm alarm) {
+	public synchronized long add(Alarm alarm) {
 		Assert.assertNotNull(alarm);
 
 		SQLiteDatabase database = null;
@@ -89,7 +89,7 @@ final class AlarmManager {
 	}
 
 
-	public void remove(long id) {
+	public synchronized void remove(long id) {
 		SQLiteDatabase database = null;
 		try {
 			database = alarmDb.getWritableDatabase();
@@ -101,7 +101,7 @@ final class AlarmManager {
 	}
 
 
-	public Alarm get(long id) {
+	public synchronized Alarm get(long id) {
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		builder.setTables(TABLE_NAME);
 		String[] columns = { COLUMN_JSON };
@@ -123,14 +123,14 @@ final class AlarmManager {
 	}
 
 
-	public void registerListener(AlarmUpdateListener listener) {
+	public synchronized void registerListener(AlarmUpdateListener listener) {
 		Assert.assertNotNull(listener);
 		Assert.assertTrue(!listeners.contains(listener), "already registered");
 		listeners.add(listener);
 	}
 
 
-	public void unregisterListener(AlarmUpdateListener listener) {
+	public synchronized void unregisterListener(AlarmUpdateListener listener) {
 		Assert.assertNotNull(listener);
 		Assert.assertTrue(listeners.contains(listener), "not registered");
 		listeners.remove(listener);

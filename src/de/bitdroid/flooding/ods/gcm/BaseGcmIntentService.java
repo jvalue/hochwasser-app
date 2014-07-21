@@ -14,43 +14,45 @@ public abstract class BaseGcmIntentService extends IntentService {
 
 	public static final String 
 		EXTRA_REGISTER = "EXTRA_REGISTER",
+		EXTRA_SERVICE_CLIENTID = "EXTRA_SERVICE_CLIENTID",
 		EXTRA_ERROR_MSG = "EXTRA_ERROR_MSG";
 
 
-	private final GcmIdManager idManager;
+	private final GcmIdManager gcmIdManager;
 
 	public BaseGcmIntentService() {
 		super(BaseGcmIntentService.class.getSimpleName());
-		this.idManager = GcmIdManager.getInstance(this);
+		this.gcmIdManager = GcmIdManager.getInstance(this);
 	}
 
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		String gcmClientId = gcmIdManager.getClientId();
+		String senderId = gcmIdManager.getSenderId();
+		String serviceClientId = intent.getStringExtra(EXTRA_SERVICE_CLIENTID);
 		boolean register = intent.getBooleanExtra(EXTRA_REGISTER, false);
-		String clientId = idManager.getClientId();
-		String senderId = idManager.getSenderId();
 
 		String errorMsg = null;
 
 		try {
 
-			if (clientId == null) {
-				clientId = GoogleCloudMessaging
+			if (gcmClientId == null) {
+				gcmClientId = GoogleCloudMessaging
 					.getInstance(getApplicationContext())
 					.register(senderId);
-				idManager.updateClientId(clientId);
+				gcmIdManager.updateClientId(gcmClientId);
 			}
 
-			handleRegistration(intent, clientId, register);
+			serviceClientId = handleRegistration(intent, gcmClientId, serviceClientId, register);
 
 		} catch (Exception e) {
 			errorMsg = e.getMessage();
+			Log.error(errorMsg);
 		}
 
-		if (errorMsg != null) Log.error(errorMsg);
-
 		Intent resultIntent = new Intent(ACTION_GCM_FINISH);
+		resultIntent.putExtra(EXTRA_SERVICE_CLIENTID, serviceClientId);
 		resultIntent.putExtra(EXTRA_ERROR_MSG, errorMsg);
 		resultIntent.putExtra(EXTRA_REGISTER, register);
 
@@ -60,9 +62,10 @@ public abstract class BaseGcmIntentService extends IntentService {
 	}
 
 
-	protected abstract void handleRegistration(
+	protected abstract String handleRegistration(
 			Intent intent, 
-			String clinetId,
+			String gcmClientId,
+			String serviceClientId,
 			boolean register) throws Exception;
 
 	protected abstract void prepareResultIntent(Intent originalIntent, Intent resultIntent);

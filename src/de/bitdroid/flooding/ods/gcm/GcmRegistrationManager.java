@@ -1,7 +1,8 @@
 package de.bitdroid.flooding.ods.gcm;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,63 +12,86 @@ import de.bitdroid.flooding.utils.Assert;
 
 public final class GcmRegistrationManager {
 
-	private static final String PREFS_NAME = "GcmRegistrationManager";
+	private static final String
+		PREFS_KEY_STATUS = "status-",
+		PREFS_KEY_CLIENTID = "clientId-";
 
 
 	private final Context context;
+	private final String prefsName;
 
-	public GcmRegistrationManager(Context context) {
-		Assert.assertNotNull(context);
+	public GcmRegistrationManager(Context context, String prefsName) {
+		Assert.assertNotNull(context, prefsName);
 		this.context = context;
+		this.prefsName = prefsName;
 	}
 
 
-	public void update(String objectId, GcmStatus status) {
+	public void update(String objectId, String clientId, GcmStatus status) {
 		Assert.assertNotNull(objectId, status);
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
-		editor.putString(objectId, status.name());
+		if (clientId != null) editor.putString(getClientIdKey(objectId), clientId);
+		editor.putString(getStatusKey(objectId), status.name());
 		editor.commit();
 	}
 
 
-	public GcmStatus get(String objectId) {
+	public String getClientId(String objectId) {
 		Assert.assertNotNull(objectId);
 
-		String status = getSharedPreferences().getString(objectId, null);
+		return getSharedPreferences().getString(getClientIdKey(objectId), null);
+	}
+
+
+	public GcmStatus getStatus(String objectId) {
+		Assert.assertNotNull(objectId);
+
+		String status = getSharedPreferences().getString(getStatusKey(objectId), null);
 		if (status == null) return GcmStatus.UNREGISTERED;
 		else return GcmStatus.valueOf(status);
 	}
 
 
-	public Map<String, GcmStatus> getAll() {
-		Map<String, ?> entries = getSharedPreferences().getAll();
+	public Set<String> getAllObjects() {
+		Set<String> keys = getSharedPreferences().getAll().keySet();
+		Set<String> objects = new HashSet<String>();
 
-		Map<String, GcmStatus> result = new HashMap<String, GcmStatus>();
-		for (Map.Entry<String, ?> entry : entries.entrySet()) {
-			result.put(entry.getKey(), GcmStatus.valueOf(entry.getValue().toString()));
+		for (String key : keys) {
+			if (key.startsWith(PREFS_KEY_CLIENTID)) key = key.replaceFirst(PREFS_KEY_CLIENTID, "");
+			else if (key.startsWith(PREFS_KEY_STATUS)) key = key.replaceFirst(PREFS_KEY_STATUS, "");
+			objects.add(key);
 		}
 
-		return result;
+		return objects;
 	}
 
 
-	public Map<String, GcmStatus> getAll(GcmStatus status) {
+	public Set<String> getAllObjects(GcmStatus status) {
 		Assert.assertNotNull(status);
 
-		Map<String, GcmStatus> allEntries = getAll();
-		Map<String, GcmStatus> filteredEntries = new HashMap<String, GcmStatus>();
-		for (Map.Entry<String, GcmStatus> entry : allEntries.entrySet()) {
-			if (entry.getValue().equals(status)) 
-				filteredEntries.put(entry.getKey(), entry.getValue());
+		Set<String> objects = getAllObjects();
+		Iterator<String> iter = objects.iterator();
+		while (iter.hasNext()) {
+			if (getStatus(iter.next()) != status) iter.remove();
 		}
-		
-		return filteredEntries;
+
+		return objects;
+	}
+
+
+	private String getClientIdKey(String objectId) {
+		return PREFS_KEY_CLIENTID + objectId;
+	}
+
+
+	private String getStatusKey(String objectId) {
+		return PREFS_KEY_CLIENTID + objectId;
 	}
 
 
 	private SharedPreferences getSharedPreferences() {
-		return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+		return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
 	}
 
 }

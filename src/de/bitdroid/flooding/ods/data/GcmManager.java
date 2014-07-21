@@ -30,7 +30,7 @@ public final class GcmManager {
 	private GcmManager(Context context) {
 		Assert.assertNotNull(context);
 		this.context = context;
-		this.registrationManager = new GcmRegistrationManager(context);
+		this.registrationManager = new GcmRegistrationManager(context, GcmManager.class.getName());
 	}
 
 
@@ -45,27 +45,31 @@ public final class GcmManager {
 
 
 	private void sourceRegistrationHelper(OdsSource source, boolean register) {
+		String sourceId = source.toString();
+		String clientId = registrationManager.getClientId(sourceId);
+
 		// mark task pending
 		GcmStatus status = null;
 		if (register) status = GcmStatus.PENDING_REGISTRATION;
 		else status = GcmStatus.PENDING_UNREGISTRATION;
-		registrationManager.update(source.toString(), status);
+		registrationManager.update(sourceId, clientId, status);
 
 		// execute in background
 		Intent registrationIntent = new Intent(context, GcmIntentService.class);
-		registrationIntent.putExtra(GcmIntentService.EXTRA_SOURCE, source.toString());
+		registrationIntent.putExtra(GcmIntentService.EXTRA_SOURCE, sourceId);
+		registrationIntent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, clientId);
 		registrationIntent.putExtra(BaseGcmIntentService.EXTRA_REGISTER, register);
 		context.startService(registrationIntent);
 	}
 
 
 	public GcmStatus getRegistrationStatus(OdsSource source) {
-		return registrationManager.get(source.toString());
+		return registrationManager.getStatus(source.toString());
 	}
 
 
 	public Set<OdsSource> getRegisteredSources() {
-		Set<String> sourceStrings = registrationManager.getAll(GcmStatus.REGISTERED).keySet();
+		Set<String> sourceStrings = registrationManager.getAllObjects(GcmStatus.REGISTERED);
 		Set<OdsSource> sources = new HashSet<OdsSource>();
 		for (String sourceString : sourceStrings) {
 			sources.add(OdsSource.fromString(sourceString));
@@ -80,8 +84,8 @@ public final class GcmManager {
 		public void onReceive(Context context, Intent intent) {
 			String sourceString = intent.getStringExtra(GcmIntentService.EXTRA_SOURCE);
 			String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
+			String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
 			boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
-
 
 			// clear pending flag
 			if (errorMsg != null) register = !register;
@@ -89,7 +93,7 @@ public final class GcmManager {
 			GcmStatus status = null;
 			if (register) status = GcmStatus.REGISTERED;
 			else status = GcmStatus.UNREGISTERED;
-			GcmManager.getInstance(context).registrationManager.update(sourceString, status);
+			GcmManager.getInstance(context).registrationManager.update(sourceString, clientId, status);
 		}
 
 	}

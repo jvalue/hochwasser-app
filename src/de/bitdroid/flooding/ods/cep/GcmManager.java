@@ -15,7 +15,7 @@ public final class GcmManager {
 
 	private static GcmManager instance;
 
-	public static GcmManager getInstance(Context context) {
+	static GcmManager getInstance(Context context) {
 		Assert.assertNotNull(context);
 		if (instance == null) instance = new GcmManager(context);
 		return instance;
@@ -32,12 +32,12 @@ public final class GcmManager {
 	}
 
 
-	public void registerEplStmt(String eplStmt) {
+	void registerEplStmt(String eplStmt) {
 		sourceRegistrationHelper(eplStmt, true);
 	}
 
 
-	public void unregisterEplStmt(String eplStmt) {
+	void unregisterEplStmt(String eplStmt) {
 		sourceRegistrationHelper(eplStmt, false);
 	}
 
@@ -60,12 +60,12 @@ public final class GcmManager {
 	}
 
 
-	public GcmStatus getRegistrationStatus(String eplStmt) {
+	GcmStatus getRegistrationStatus(String eplStmt) {
 		return registrationManager.getStatus(eplStmt);
 	}
 
 
-	public Set<String> getRegisteredStmts() {
+	Set<String> getRegisteredStmts() {
 		return registrationManager.getAllObjects(GcmStatus.REGISTERED);
 	}
 

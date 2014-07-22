@@ -16,7 +16,7 @@ public final class GcmManager {
 
 	private static GcmManager instance;
 
-	public static GcmManager getInstance(Context context) {
+	static GcmManager getInstance(Context context) {
 		Assert.assertNotNull(context);
 		if (instance == null) instance = new GcmManager(context);
 		return instance;
@@ -33,12 +33,12 @@ public final class GcmManager {
 	}
 
 
-	public void registerSource(OdsSource source) {
+	void registerSource(OdsSource source) {
 		sourceRegistrationHelper(source, true);
 	}
 
 
-	public void unregisterSource(OdsSource source) {
+	void unregisterSource(OdsSource source) {
 		sourceRegistrationHelper(source, false);
 	}
 
@@ -62,12 +62,12 @@ public final class GcmManager {
 	}
 
 
-	public GcmStatus getRegistrationStatus(OdsSource source) {
+	GcmStatus getRegistrationStatus(OdsSource source) {
 		return registrationManager.getStatus(source.toString());
 	}
 
 
-	public Set<OdsSource> getRegisteredSources() {
+	Set<OdsSource> getRegisteredSources() {
 		Set<String> sourceStrings = registrationManager.getAllObjects(GcmStatus.REGISTERED);
 		Set<OdsSource> sources = new HashSet<OdsSource>();
 		for (String sourceString : sourceStrings) {

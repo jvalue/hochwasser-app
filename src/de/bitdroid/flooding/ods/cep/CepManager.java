@@ -5,6 +5,7 @@ import java.net.URL;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
 
 
@@ -25,12 +26,12 @@ public final class CepManager {
 
 
 	private final Context context;
+	private final GcmManager gcmManager;
 
 	private CepManager(Context context) {
 		this.context = context;
+		this.gcmManager = GcmManager.getInstance(context);
 	}
-
-
 
 
 	/**
@@ -56,6 +57,38 @@ public final class CepManager {
 	 */
 	public String getCepServerName() {
 		return getSharedPreferences().getString(KEY_SERVER_NAME, null);
+	}
+
+
+	/**
+	 * Registered a stmt with the CEPS service.
+	 */
+	public void registerEplStmt(String eplStmt) {
+		Assert.assertNotNull(eplStmt);
+		GcmStatus status = gcmManager.getRegistrationStatus(eplStmt);
+		Assert.assertEquals(status, GcmStatus.UNREGISTERED, "Already registered");
+
+		gcmManager.registerEplStmt(eplStmt);
+	}
+
+
+	/**
+	 * Unregisteres a stmt from the CEPS service.
+	 */
+	public void unregisterEplStmt(String eplStmt) {
+		Assert.assertNotNull(eplStmt);
+		GcmStatus status = gcmManager.getRegistrationStatus(eplStmt);
+		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
+
+		gcmManager.unregisterEplStmt(eplStmt);
+	}
+
+
+	/**
+	 * Gets the registration status for a stmt.
+	 */
+	public GcmStatus getEplStmtRegistrationStatus(String eplStmt) {
+		return gcmManager.getRegistrationStatus(eplStmt);
 	}
 
 

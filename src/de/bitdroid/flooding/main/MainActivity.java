@@ -34,7 +34,6 @@ import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.ods.cep.CepManager;
-import de.bitdroid.flooding.ods.cep.GcmManager;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
@@ -148,13 +147,6 @@ public class MainActivity extends FragmentActivity {
 					prefs.getString(getString(R.string.prefs_ods_servername_key), null));
 		}
 
-		// set CEPS server name
-		CepManager cepManager = CepManager.getInstance(getApplicationContext());
-		if (cepManager.getCepServerName() == null) {
-			cepManager.setCepServerName(
-					prefs.getString(getString(R.string.prefs_ceps_servername_key), null));
-		}
-
 		// monitor setup
 		OdsSource source = PegelOnlineSource.INSTANCE;
 		boolean enabled = prefs.getBoolean(getString(R.string.prefs_ods_monitor_key), false);
@@ -163,13 +155,25 @@ public class MainActivity extends FragmentActivity {
 			monitor.startMonitoring(source);
 		}
 
-		OdsSourceManager manager = OdsSourceManager.getInstance(getApplicationContext());
-		GcmStatus status = manager.getPushNotificationsRegistrationStatus(source);
-		if (!status.equals(GcmStatus.REGISTERED)) {
-			manager.startPushNotifications(source);
+		GcmStatus sourceStatus = sourceManager.getPushNotificationsRegistrationStatus(source);
+		if (sourceStatus.equals(GcmStatus.UNREGISTERED)) {
+			sourceManager.startPushNotifications(source);
 		}
 
-	
+		// set CEPS server name
+		CepManager cepManager = CepManager.getInstance(getApplicationContext());
+		if (cepManager.getCepServerName() == null) {
+			cepManager.setCepServerName(
+					prefs.getString(getString(R.string.prefs_ceps_servername_key), null));
+		}
+
+		// register test epl stmt
+		String eplStmt = "select * from `de-pegelonline`";
+		GcmStatus eplStatus = cepManager.getEplStmtRegistrationStatus(eplStmt);
+		if (eplStatus.equals(GcmStatus.UNREGISTERED)) {
+			cepManager.registerEplStmt(eplStmt);
+		}
+
 		// start first manual sync
 		boolean firstStart = prefs.getBoolean(PREFS_KEY_FIRST_START, true);
 		if (firstStart) {
@@ -177,10 +181,7 @@ public class MainActivity extends FragmentActivity {
 			editor.putBoolean(PREFS_KEY_FIRST_START, false);
 			editor.commit();
 
-			manager.startManualSync(source);
-
-			GcmManager.getInstance(getApplicationContext())
-				.registerEplStmt("select * from `de-pegelonline`");
+			sourceManager.startManualSync(source);
 		}
 	}
 

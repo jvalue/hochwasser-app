@@ -2,6 +2,8 @@ package de.bitdroid.flooding.alarms;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,16 +56,10 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 		stationView.setText(
 				StringUtils.toProperCase(river) + " - " + StringUtils.toProperCase(station));
 
-		Button okButton = (Button) view.findViewById(R.id.ok);
+		final Button okButton = (Button) view.findViewById(R.id.ok);
 		okButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				String levelString = levelEditText.getText().toString();
-				if (levelString.equals("")) {
-					Toast.makeText(getActivity(), getString(R.string.alarms_new_error_level), Toast.LENGTH_LONG).show();
-					return;
-				}
-
 				double level = Double.valueOf(levelEditText.getText().toString());
 				boolean whenAbove = relationRadioGroup.getCheckedRadioButtonId() == R.id.above;
 
@@ -78,6 +74,22 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 					.show();
 			}
 		});
+
+		levelEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable s) { }
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if (s.length() == 0) {
+					okButton.setEnabled(false);
+				} else {
+					okButton.setEnabled(true);
+				}
+			}
+		});
+
 
 		return view;
 	}

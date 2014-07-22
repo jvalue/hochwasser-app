@@ -85,6 +85,7 @@
 		android:text="@string/alarms_new_add"
 		android:layout_marginTop="6dp"
 		android:layout_marginBottom="3dp"
+		android:enabled="false"
 	/>
 
 </LinearLayout>

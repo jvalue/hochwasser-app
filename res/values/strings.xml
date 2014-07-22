@@ -13,6 +13,7 @@
 	<string name="map_dialog_station_info_title">Station Info</string>
 	<string name="map_dialog_station_info">%1$s\nRiver km %2$.3f\nLatitude %3$f\nLongitude %4$f</string>
 
+
 	<string name="menu_graph_select_series">Series to display</string>
 	<string name="menu_graph_normalize">Show normalized plot</string>
 	<string name="menu_graph_regular">Show regular plot</string>
@@ -28,6 +29,7 @@
 	<string name="menu_select_water_search_hint">Search river names</string>
 
 	<string name="menu_alarms_add">Add alarm</string>
+
 
 	<string name="alarms_empty">No alarms present.</string>
 	<string name="alarms_description_above">When level above %1$.2f cm</string>
@@ -45,6 +47,7 @@
 	<string name="alarms_new_created">Added new alarm</string>
 	<string name="alarms_new_not_created">Not added</string>
 	<string name="alarms_new_error_level">Please insert a water level!</string>
+
 
 	<string name="series_select_dialog_title">Select Series to Display</string>
 	<string name="series_monitor_dialog_title">Select a Timestamp to Display</string>
@@ -65,23 +68,27 @@
 	<string name="select_all">Select all</string>
 	<string name="never">never</string>
 
+
 	<string name="prefs_cat_ods">Open Data Service</string>
-	<string name="prefs_cat_ods_key">open_data_servic</string>
-	<string name="prefs_ods_servername">Servername</string>
-	<string name="prefs_ods_servername_key">server_name</string>
-	<string name="prefs_ods_servername_summary">The ODS Servername, port and base URL.</string>
-	<string name="prefs_ods_servername_default">http://bitdroid.de/flooding/open-data-service</string>
+	<string name="prefs_cat_ods_key">open_data_service</string>
+	<string name="prefs_ods_servername">ODS Servername</string>
+	<string name="prefs_ods_servername_key">ods_server_name</string>
+	<string name="prefs_ods_servername_default">http://192.168.178.93:8182</string>
 	<string name="prefs_ods_monitor">Record PegelOnline Source</string>
 	<string name="prefs_ods_monitor_key">monitor</string>
+	<string name="prefs_ods_sync_last">Last sync</string>
+	<string name="prefs_ods_sync_last_key">last_sync</string>
+	<string name="prefs_ods_sync_last_success">Last successful sync</string>
+	<string name="prefs_ods_sync_last_success_key">last_successful_sync</string>
+	<string name="prefs_ods_sync_last_fail">Last failed sync</string>
+	<string name="prefs_ods_sync_last_fail_key">last_failed_sync</string>
 
-	<string name="prefs_cat_sync">Sync Status</string>
-	<string name="prefs_cat_sync_key">sync_status</string>
-	<string name="prefs_sync_last">Last sync</string>
-	<string name="prefs_sync_last_key">last_sync</string>
-	<string name="prefs_sync_last_success">Last successful sync</string>
-	<string name="prefs_sync_last_success_key">last_successful_sync</string>
-	<string name="prefs_sync_last_fail">Last failed sync</string>
-	<string name="prefs_sync_last_fail_key">last_failed_sync</string>
+	<string name="prefs_cat_ceps">CEP Service</string>
+	<string name="prefs_cat_ceps_key">cep_service</string>
+	<string name="prefs_ceps_servername">CEPS Servername</string>
+	<string name="prefs_ceps_servername_key">ceps_server_name</string>
+	<string name="prefs_ceps_servername_default">http://192.168.178.93:8183</string>
+
 
 	<string name="news_selected">%1$d selected</string>
 	<string name="news_deleted">Deleted %1$d item(s)</string>
@@ -91,6 +98,7 @@
 	<string name="news_intro_alarms_content">If you want to be alarmed when water levels reach a certain level, head over to the alarms section!</string>
 	<string name="news_intro_data_title">Data</string>
 	<string name="news_intro_data_content">Want more details about the current water situation? Check out the data section!</string>
+
 
 	<string name="data_empty">No data found. Loading might take a little while when first starting the app.</string>
 	<string name="data_station_count">%1$d stations</string>

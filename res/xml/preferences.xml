@@ -1,40 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory
-			android:title="@string/prefs_cat_ods"
-			android:key="@string/prefs_cat_ods_key">
+		android:title="@string/prefs_cat_ods"
+		android:key="@string/prefs_cat_ods_key">
 
 		<EditTextPreference
-				android:title="@string/prefs_ods_servername"
-				android:key="@string/prefs_ods_servername_key"
-				android:summary="@string/prefs_ods_servername_summary"
-				android:defaultValue="@string/prefs_ods_servername_default"/>
+			android:title="@string/prefs_ods_servername"
+			android:key="@string/prefs_ods_servername_key"
+			android:defaultValue="@string/prefs_ods_servername_default"/>
 
 		<CheckBoxPreference
-				android:title="@string/prefs_ods_monitor"
-				android:key="@string/prefs_ods_monitor_key"
-				android:defaultValue="true"/>
+			android:title="@string/prefs_ods_monitor"
+			android:key="@string/prefs_ods_monitor_key"
+			android:defaultValue="true"/>
+
+		<Preference
+			android:title="@string/prefs_ods_sync_last"
+			android:key="@string/prefs_ods_sync_last_key"
+			android:defaultValue="@string/never" />
+
+		<Preference
+			android:title="@string/prefs_ods_sync_last_success"
+			android:key="@string/prefs_ods_sync_last_success_key"
+			android:defaultValue="@string/never" />
+
+		<Preference
+			android:title="@string/prefs_ods_sync_last_fail"
+			android:key="@string/prefs_ods_sync_last_fail_key"
+			android:defaultValue="@string/never" />
 
 	</PreferenceCategory>
 
 	<PreferenceCategory
-			android:title="@string/prefs_cat_sync"
-			android:key="@string/prefs_cat_sync_key">
+		android:title="@string/prefs_cat_ceps"
+		android:key="@string/prefs_cat_ceps_key">
 
-		<Preference
-			android:title="@string/prefs_sync_last"
-			android:key="@string/prefs_sync_last_key"
-			android:defaultValue="@string/never" />
-
-		<Preference
-			android:title="@string/prefs_sync_last_success"
-			android:key="@string/prefs_sync_last_success_key"
-			android:defaultValue="@string/never" />
-
-		<Preference
-			android:title="@string/prefs_sync_last_fail"
-			android:key="@string/prefs_sync_last_fail_key"
-			android:defaultValue="@string/never" />
+		<EditTextPreference
+			android:title="@string/prefs_ceps_servername"
+			android:key="@string/prefs_ceps_servername_key"
+			android:defaultValue="@string/prefs_ceps_servername_default"/>
 
 	</PreferenceCategory>
+
+
 </PreferenceScreen>

@@ -148,6 +148,12 @@ public class MainActivity extends FragmentActivity {
 					prefs.getString(getString(R.string.prefs_ods_servername_key), null));
 		}
 
+		// set CEPS server name
+		CepManager cepManager = CepManager.getInstance(getApplicationContext());
+		if (cepManager.getCepServerName() == null) {
+			cepManager.setCepServerName(
+					prefs.getString(getString(R.string.prefs_ceps_servername_key), null));
+		}
 
 		// monitor setup
 		OdsSource source = PegelOnlineSource.INSTANCE;
@@ -173,8 +179,6 @@ public class MainActivity extends FragmentActivity {
 
 			manager.startManualSync(source);
 
-			CepManager.getInstance(getApplicationContext())
-				.setCepServerName("http://192.168.178.93:8183");
 			GcmManager.getInstance(getApplicationContext())
 				.registerEplStmt("select * from `de-pegelonline`");
 		}

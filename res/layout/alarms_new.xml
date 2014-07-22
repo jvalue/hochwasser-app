@@ -65,12 +65,14 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/alarms_new_trigger_above"
+				style="@style/FontRegular"
 			/>
 			<RadioButton
 				android:id="@+id/below"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/alarms_new_trigger_below"
+				style="@style/FontRegular"
 			/>
 		</RadioGroup>
 	</LinearLayout>

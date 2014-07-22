@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import de.bitdroid.flooding.ods.gcm.BaseGcmIntentService;
 import de.bitdroid.flooding.ods.gcm.GcmRegistrationManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
@@ -58,7 +57,7 @@ public final class GcmManager {
 		Intent registrationIntent = new Intent(context, GcmIntentService.class);
 		registrationIntent.putExtra(GcmIntentService.EXTRA_SOURCE, sourceId);
 		registrationIntent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, clientId);
-		registrationIntent.putExtra(BaseGcmIntentService.EXTRA_REGISTER, register);
+		registrationIntent.putExtra(GcmIntentService.EXTRA_REGISTER, register);
 		context.startService(registrationIntent);
 	}
 

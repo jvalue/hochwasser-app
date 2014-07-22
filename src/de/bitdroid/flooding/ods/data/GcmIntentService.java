@@ -11,6 +11,8 @@ import de.bitdroid.flooding.ods.utils.RestCall;
 
 public final class GcmIntentService extends BaseGcmIntentService {
 
+	private static final String ACTION_GCM_FINISH = "de.bitdroid.flooding.ods.data.ACTION_GCM_FINISH";
+
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	static final String 
@@ -62,6 +64,12 @@ public final class GcmIntentService extends BaseGcmIntentService {
 	protected void prepareResultIntent(Intent originalIntent, Intent resultIntent) {
 		OdsSource source = fromIntent(originalIntent);
 		resultIntent.putExtra(EXTRA_SOURCE, source.toString());
+	}
+
+
+	@Override
+	protected String getActionName() {
+		return ACTION_GCM_FINISH;
 	}
 
 

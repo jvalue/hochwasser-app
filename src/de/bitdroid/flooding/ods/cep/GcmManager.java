@@ -79,7 +79,6 @@ public final class GcmManager {
 			String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
 			boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
 
-
 			// clear pending flag
 			if (errorMsg != null) register = !register;
 

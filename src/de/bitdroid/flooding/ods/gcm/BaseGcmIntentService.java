@@ -10,8 +10,6 @@ import de.bitdroid.flooding.utils.Log;
 
 public abstract class BaseGcmIntentService extends IntentService {
 
-	public static final String ACTION_GCM_FINISH = "de.bitdroid.flooding.ods.gcm.ACTION_GCM_FINISH";
-
 	public static final String 
 		EXTRA_REGISTER = "EXTRA_REGISTER",
 		EXTRA_SERVICE_CLIENTID = "EXTRA_SERVICE_CLIENTID",
@@ -51,7 +49,7 @@ public abstract class BaseGcmIntentService extends IntentService {
 			Log.error(errorMsg);
 		}
 
-		Intent resultIntent = new Intent(ACTION_GCM_FINISH);
+		Intent resultIntent = new Intent(getActionName());
 		resultIntent.putExtra(EXTRA_SERVICE_CLIENTID, serviceClientId);
 		resultIntent.putExtra(EXTRA_ERROR_MSG, errorMsg);
 		resultIntent.putExtra(EXTRA_REGISTER, register);
@@ -69,5 +67,7 @@ public abstract class BaseGcmIntentService extends IntentService {
 			boolean register) throws Exception;
 
 	protected abstract void prepareResultIntent(Intent originalIntent, Intent resultIntent);
+
+	protected abstract String getActionName();
 
 }

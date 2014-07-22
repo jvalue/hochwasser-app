@@ -111,7 +111,7 @@
 
 		<receiver android:name=".ods.data.GcmManager$StatusUpdater">
 			<intent-filter>
-				<action android:name="de.bitdroid.flooding.ods.gcm.ACTION_GCM_FINISH"/>
+				<action android:name="de.bitdroid.flooding.ods.data.ACTION_GCM_FINISH"/>
 			</intent-filter>
 		</receiver>
 
@@ -121,6 +121,31 @@
 				<category android:name="de.bitdroid.flooding" />
 			</intent-filter>
 		</receiver>
+
+		<!-- CEPS GCM registration and updates -->
+		<service android:name=".ods.cep.GcmIntentService">
+		</service>
+
+		<receiver android:name=".ods.cep.GcmManager$StatusUpdater">
+			<intent-filter>
+				<action android:name="de.bitdroid.flooding.ods.cep.ACTION_GCM_FINISH"/>
+			</intent-filter>
+		</receiver>
+
+		<receiver android:name=".ods.cep.GcmReceiver">
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
+				<category android:name="de.bitdroid.flooding" />
+			</intent-filter>
+		</receiver>
+
+
+		<receiver android:name=".alarms.EventReceiver">
+			<intent-filter>
+				<action android:name="de.bitdroid.flooding.ods.cep.ACTION_EVENT_RECEIVED"/>
+			</intent-filter>
+		</receiver>
+
 
 		<meta-data
 				android:name="com.google.android.gms.version"

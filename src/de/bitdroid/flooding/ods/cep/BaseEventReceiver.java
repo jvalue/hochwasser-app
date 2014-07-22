@@ -7,8 +7,8 @@ import android.content.Intent;
 
 public abstract class BaseEventReceiver extends BroadcastReceiver {
 
-	final static String ACTION_EVENT_RECEIVED = "de.bitdroid.flooding.ods.cep";
-	final static String EXTRA_EVENTID = "event";
+	protected final static String ACTION_EVENT_RECEIVED = "de.bitdroid.flooding.ods.cep.ACTION_EVENT_RECEIVED";
+	protected final static String EXTRA_EVENTID = "event";
 
 
 	@Override

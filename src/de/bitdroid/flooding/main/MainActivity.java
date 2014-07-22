@@ -33,6 +33,8 @@ import de.bitdroid.flooding.dataselection.RiverSelectionFragment;
 import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
+import de.bitdroid.flooding.ods.cep.CepManager;
+import de.bitdroid.flooding.ods.cep.GcmManager;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
@@ -170,6 +172,11 @@ public class MainActivity extends FragmentActivity {
 			editor.commit();
 
 			manager.startManualSync(source);
+
+			CepManager.getInstance(getApplicationContext())
+				.setCepServerName("http://192.168.178.93:8183");
+			GcmManager.getInstance(getApplicationContext())
+				.registerEplStmt("select * from `de-pegelonline`");
 		}
 	}
 

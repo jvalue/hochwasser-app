@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 
-public abstract class EventReceiver extends BroadcastReceiver {
+public abstract class BaseEventReceiver extends BroadcastReceiver {
 
 	final static String ACTION_EVENT_RECEIVED = "de.bitdroid.flooding.ods.cep";
 	final static String EXTRA_EVENTID = "event";

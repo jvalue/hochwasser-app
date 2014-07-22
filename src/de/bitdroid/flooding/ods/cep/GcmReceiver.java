@@ -32,8 +32,8 @@ public final class GcmReceiver extends BaseGcmReceiver {
 		String eventId = intent.getStringExtra(EXTRA_EVENTID);
 
 		// broadcast new event
-		Intent eventIntent = new Intent(EventReceiver.ACTION_EVENT_RECEIVED);
-		eventIntent.putExtra(EventReceiver.EXTRA_EVENTID, eventId);
+		Intent eventIntent = new Intent(BaseEventReceiver.ACTION_EVENT_RECEIVED);
+		eventIntent.putExtra(BaseEventReceiver.EXTRA_EVENTID, eventId);
 		context.sendBroadcast(eventIntent);
 
 		// debug output

@@ -46,6 +46,7 @@
 	<string name="alarms_new_title_level">Select water level</string>
 	<string name="alarms_new_created">Added new alarm</string>
 	<string name="alarms_new_not_created">Not added</string>
+	<string name="alarms_new_already_added">Already added!</string>
 
 
 	<string name="series_select_dialog_title">Select Series to Display</string>

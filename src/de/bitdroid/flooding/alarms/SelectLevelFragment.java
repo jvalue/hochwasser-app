@@ -64,7 +64,13 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 				boolean whenAbove = relationRadioGroup.getCheckedRadioButtonId() == R.id.above;
 
 				Alarm alarm = new LevelAlarm(river, station, level, whenAbove);
-				AlarmManager.getInstance(getActivity().getApplicationContext()).add(alarm);
+				AlarmManager manager = AlarmManager.getInstance(getActivity().getApplicationContext());
+				if (manager.contains(alarm)) {
+					Toast.makeText(getActivity(), getString(R.string.alarms_new_already_added), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
+				manager.add(alarm);
 
 				SelectLevelFragment.this.getActivity().finish();
 				Toast.makeText(

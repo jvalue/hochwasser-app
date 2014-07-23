@@ -1,15 +1,15 @@
 package de.bitdroid.flooding.alarms;
 
-import java.util.Map;
+import java.util.Set;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-final class AlarmLoader extends AsyncTaskLoader<Map<Long,Alarm>> implements AlarmUpdateListener {
+final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpdateListener {
 
 	private final AlarmManager alarmManager;
-	private Map<Long, Alarm> alarms;
+	private Set<Alarm> alarms;
 	private boolean monitoringAlarms = false;
 
 	public AlarmLoader(Context context) {
@@ -19,13 +19,13 @@ final class AlarmLoader extends AsyncTaskLoader<Map<Long,Alarm>> implements Alar
 
 
 	@Override
-	public Map<Long, Alarm> loadInBackground() {
+	public Set<Alarm> loadInBackground() {
 		return alarmManager.getAll();
 	}
 
 
 	@Override
-	public void deliverResult(Map<Long, Alarm> alarms) {
+	public void deliverResult(Set<Alarm> alarms) {
 		if (isReset()) return;
 
 		this.alarms = alarms;
@@ -56,7 +56,7 @@ final class AlarmLoader extends AsyncTaskLoader<Map<Long,Alarm>> implements Alar
 
 
 	@Override
-	public void onCanceled(Map<Long, Alarm> alarms) {
+	public void onCanceled(Set<Alarm> alarms) {
 		super.onCanceled(alarms);
 	}
 
@@ -74,13 +74,13 @@ final class AlarmLoader extends AsyncTaskLoader<Map<Long,Alarm>> implements Alar
 
 
 	@Override
-	public void onNewAlarm(long id, Alarm alarm) {
+	public void onNewAlarm(Alarm alarm) {
 		onContentChanged();
 	}
 
 
 	@Override
-	public void onDeletedAlarm(long id, Alarm alarm) {
+	public void onDeletedAlarm(Alarm alarm) {
 		onContentChanged();
 	}
 

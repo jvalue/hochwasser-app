@@ -4,10 +4,10 @@ import static de.bitdroid.flooding.alarms.AlarmDbSchema.COLUMN_ID;
 import static de.bitdroid.flooding.alarms.AlarmDbSchema.COLUMN_JSON;
 import static de.bitdroid.flooding.alarms.AlarmDbSchema.TABLE_NAME;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -45,26 +45,25 @@ final class AlarmManager {
 	}
 
 
-	public synchronized Map<Long, Alarm> getAll() {
+	public synchronized Set<Alarm> getAll() {
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		builder.setTables(TABLE_NAME);
-		String[] columns = { COLUMN_ID, COLUMN_JSON };
+		String[] columns = { COLUMN_JSON };
 		Cursor cursor = builder.query(
 				alarmDb.getReadableDatabase(),
 				columns,
 				null, null, null, null, null);
 
-		Map<Long, Alarm> alarms = new HashMap<Long, Alarm>();
+		Set<Alarm> alarms = new HashSet<Alarm>();
 
 		if (cursor.getCount() <= 0) return alarms;
 		cursor.moveToFirst();
 		do {
-			long id = cursor.getLong(0);
-			String json = cursor.getString(1);
+			String json = cursor.getString(0);
 
 			try {
 				Alarm alarm = mapper.treeToValue(mapper.readTree(json), Alarm.class);
-				alarms.put(id, alarm);
+				alarms.add(alarm);
 			} catch (Exception e) {
 				Log.error("failed to read alarm from db", e);
 			}
@@ -75,8 +74,9 @@ final class AlarmManager {
 	}
 
 
-	public synchronized long add(Alarm alarm) {
+	public synchronized void add(Alarm alarm) {
 		Assert.assertNotNull(alarm);
+		Assert.assertFalse(contains(alarm), "already added");
 
 		cepManager.registerEplStmt(alarm.accept(new EplStmtCreator(), null));
 
@@ -85,49 +85,52 @@ final class AlarmManager {
 			database = alarmDb.getWritableDatabase();
 			ContentValues values = new ContentValues();
 			values.put(COLUMN_JSON, mapper.valueToTree(alarm).toString());
-			long id = database.insert(TABLE_NAME, null, values);
-			alertListenersOnNewAlarm(id, alarm);
-			return id;
+			database.insert(TABLE_NAME, null, values);
+			alertListenersOnNewAlarm(alarm);
 		} finally {
 			if (database != null) database.close();
 		}
 	}
 
 
-	public synchronized void remove(long id) {
+	public synchronized void remove(Alarm alarm) {
+		Assert.assertNotNull(alarm);
+		Assert.assertTrue(contains(alarm), "not added");
+
 		SQLiteDatabase database = null;
 
-		cepManager.unregisterEplStmt(get(id).accept(new EplStmtCreator(), null));
+		cepManager.unregisterEplStmt(alarm.accept(new EplStmtCreator(), null));
 
 		try {
 			database = alarmDb.getWritableDatabase();
-			int deleteCount = database.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{ String.valueOf(id) });
-			if (deleteCount == 1) alertListenersOnDeletedAlarm(id, get(id));
+			database.delete(
+					TABLE_NAME, 
+					COLUMN_JSON + "=?", 
+					new String[]{ mapper.valueToTree(alarm).toString() });
+
+			alertListenersOnDeletedAlarm(alarm);
+
 		} finally {
 			if (database != null) database.close();
 		}
 	}
 
 
-	public synchronized Alarm get(long id) {
+	public synchronized boolean contains(Alarm alarm) {
+		Assert.assertNotNull(alarm);
+
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		builder.setTables(TABLE_NAME);
-		String[] columns = { COLUMN_JSON };
+		String[] columns = { COLUMN_ID };
 		Cursor cursor = builder.query(
 				alarmDb.getReadableDatabase(),
 				columns,
-				null, null, null, null, null);
+				COLUMN_JSON + "=?",
+				new String[]{ mapper.valueToTree(alarm).toString() },
+				null, null, null);
 
-		if (cursor.getCount() <= 0) return null;
-		cursor.moveToFirst();
-		String json = cursor.getString(0);
-
-		try {
-			return mapper.treeToValue(mapper.readTree(json), Alarm.class);
-		} catch (Exception e) {
-			Log.error("failed to read alarm from db", e);
-		}
-		return null;
+		if (cursor.getCount() <= 0) return false;
+		return true;
 	}
 
 
@@ -145,16 +148,16 @@ final class AlarmManager {
 	}
 
 
-	private void alertListenersOnNewAlarm(long id, Alarm alarm) {
+	private void alertListenersOnNewAlarm(Alarm alarm) {
 		for (AlarmUpdateListener listener : listeners) {
-			listener.onNewAlarm(id, alarm);
+			listener.onNewAlarm(alarm);
 		}
 	}
 
 
-	private void alertListenersOnDeletedAlarm(long id, Alarm alarm) {
+	private void alertListenersOnDeletedAlarm(Alarm alarm) {
 		for (AlarmUpdateListener listener : listeners) {
-			listener.onDeletedAlarm(id, alarm);
+			listener.onDeletedAlarm(alarm);
 		}
 	}
 

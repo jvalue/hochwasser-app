@@ -167,13 +167,6 @@ public class MainActivity extends FragmentActivity {
 					prefs.getString(getString(R.string.prefs_ceps_servername_key), null));
 		}
 
-		// register test epl stmt
-		String eplStmt = "select * from `de-pegelonline`";
-		GcmStatus eplStatus = cepManager.getEplStmtRegistrationStatus(eplStmt);
-		if (eplStatus.equals(GcmStatus.UNREGISTERED)) {
-			cepManager.registerEplStmt(eplStmt);
-		}
-
 		// start first manual sync
 		boolean firstStart = prefs.getBoolean(PREFS_KEY_FIRST_START, true);
 		if (firstStart) {

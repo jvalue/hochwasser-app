@@ -17,6 +17,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.bitdroid.flooding.ods.cep.CepManager;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
@@ -34,10 +35,12 @@ final class AlarmManager {
 	}
 
 
+	private final CepManager cepManager;
 	private final AlarmDb alarmDb;
 	private final List<AlarmUpdateListener> listeners = new LinkedList<AlarmUpdateListener>();
 
 	private AlarmManager(Context context) {
+		this.cepManager = CepManager.getInstance(context);
 		this.alarmDb = new AlarmDb(context);
 	}
 
@@ -75,6 +78,8 @@ final class AlarmManager {
 	public synchronized long add(Alarm alarm) {
 		Assert.assertNotNull(alarm);
 
+		cepManager.registerEplStmt(alarm.accept(new EplStmtCreator(), null));
+
 		SQLiteDatabase database = null;
 		try {
 			database = alarmDb.getWritableDatabase();
@@ -91,6 +96,9 @@ final class AlarmManager {
 
 	public synchronized void remove(long id) {
 		SQLiteDatabase database = null;
+
+		cepManager.unregisterEplStmt(get(id).accept(new EplStmtCreator(), null));
+
 		try {
 			database = alarmDb.getWritableDatabase();
 			int deleteCount = database.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{ String.valueOf(id) });

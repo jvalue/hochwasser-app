@@ -31,8 +31,14 @@ public final class GcmRegistrationManager {
 		Assert.assertNotNull(objectId, status);
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
-		if (clientId != null) editor.putString(getClientIdKey(objectId), clientId);
-		editor.putString(getStatusKey(objectId), status.name());
+
+		if (status.equals(GcmStatus.UNREGISTERED)) {
+			editor.remove(getClientIdKey(objectId));
+			editor.remove(getStatusKey(objectId));
+		} else {
+			if (clientId != null) editor.putString(getClientIdKey(objectId), clientId);
+			editor.putString(getStatusKey(objectId), status.name());
+		}
 		editor.commit();
 	}
 

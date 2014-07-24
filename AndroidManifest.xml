@@ -126,7 +126,7 @@
 		<service android:name=".ods.cep.GcmIntentService">
 		</service>
 
-		<receiver android:name=".ods.cep.GcmManager$StatusUpdater">
+		<receiver android:name=".ods.cep.CepManager$StatusUpdater">
 			<intent-filter>
 				<action android:name="de.bitdroid.flooding.ods.cep.ACTION_GCM_FINISH"/>
 			</intent-filter>

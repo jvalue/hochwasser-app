@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.AsyncTaskLoader;
 
-import de.bitdroid.flooding.ods.cep.GcmManager;
+import de.bitdroid.flooding.ods.cep.CepManager;
 
 
 final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpdateListener {
@@ -57,7 +57,7 @@ final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpda
 		if (!monitoringAlarms) {
 			monitoringAlarms = true;
 			alarmManager.registerListener(this);
-			IntentFilter filter = new IntentFilter(GcmManager.ACTION_REGISTRATION_STATUS_CHANGED);
+			IntentFilter filter = new IntentFilter(CepManager.ACTION_REGISTRATION_STATUS_CHANGED);
 			getContext().registerReceiver(registrationListener, filter);
 		}
 
@@ -100,9 +100,5 @@ final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpda
 	public void onDeletedAlarm(Alarm alarm) {
 		onContentChanged();
 	}
-
-
-
-
 
 }

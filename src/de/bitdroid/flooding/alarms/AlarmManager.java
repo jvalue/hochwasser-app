@@ -80,7 +80,7 @@ final class AlarmManager {
 		Assert.assertNotNull(alarm);
 
 		String eplStmt = alarm.accept(stmtCreator, null);
-		GcmStatus registrationStatus = cepManager.getEplStmtRegistrationStatus(eplStmt);
+		GcmStatus registrationStatus = cepManager.getRegistrationStatus(eplStmt);
 
 		switch (registrationStatus) {
 			case REGISTERED:
@@ -154,7 +154,7 @@ final class AlarmManager {
 		Assert.assertNotNull(alarm);
 		Assert.assertTrue(isRegistered(alarm), "not registered");
 
-		return cepManager.getEplStmtRegistrationStatus(alarm.accept(stmtCreator, null));
+		return cepManager.getRegistrationStatus(alarm.accept(stmtCreator, null));
 	}
 
 

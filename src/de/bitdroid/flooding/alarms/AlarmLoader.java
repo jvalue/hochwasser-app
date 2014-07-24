@@ -2,19 +2,33 @@ package de.bitdroid.flooding.alarms;
 
 import java.util.Set;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.content.AsyncTaskLoader;
+
+import de.bitdroid.flooding.ods.cep.GcmManager;
 
 
 final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpdateListener {
 
 	private final AlarmManager alarmManager;
+	private final BroadcastReceiver registrationListener;
+
 	private Set<Alarm> alarms;
 	private boolean monitoringAlarms = false;
 
 	public AlarmLoader(Context context) {
 		super(context);
 		this.alarmManager = AlarmManager.getInstance(context);
+
+		this.registrationListener = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				onContentChanged();
+			}
+		};
 	}
 
 
@@ -43,6 +57,8 @@ final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpda
 		if (!monitoringAlarms) {
 			monitoringAlarms = true;
 			alarmManager.registerListener(this);
+			IntentFilter filter = new IntentFilter(GcmManager.ACTION_REGISTRATION_STATUS_CHANGED);
+			getContext().registerReceiver(registrationListener, filter);
 		}
 
 		if (takeContentChanged() || alarms == null) forceLoad();
@@ -69,6 +85,7 @@ final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpda
 		if (monitoringAlarms) {
 			monitoringAlarms = false;
 			alarmManager.unregisterListener(this);
+			getContext().unregisterReceiver(registrationListener);
 		}
 	}
 
@@ -83,5 +100,9 @@ final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpda
 	public void onDeletedAlarm(Alarm alarm) {
 		onContentChanged();
 	}
+
+
+
+
 
 }

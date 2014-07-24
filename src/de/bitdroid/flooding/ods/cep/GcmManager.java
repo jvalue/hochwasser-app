@@ -13,6 +13,15 @@ import de.bitdroid.flooding.utils.Assert;
 
 public final class GcmManager {
 
+	public static final String ACTION_REGISTRATION_STATUS_CHANGED = "de.bitdroid.flooding.ods.cep.ACTION_REGISTRATION_STATUS_CHANGED";
+
+	public static final String
+		EXTRA_EPL_STMT = "EXTRA_EPL_STMT",
+		EXTRA_REGISTER = "EXTRA_REGISTER",
+		EXTRA_ERROR_MSG = "EXTRA_ERROR_MSG";
+
+
+
 	private static GcmManager instance;
 
 	static GcmManager getInstance(Context context) {
@@ -86,6 +95,13 @@ public final class GcmManager {
 			if (register) status = GcmStatus.REGISTERED;
 			else status = GcmStatus.UNREGISTERED;
 			GcmManager.getInstance(context).registrationManager.update(eplStmt, clientId, status);
+
+			// send broadcast about changed status
+			Intent registrationChangedIntent = new Intent(ACTION_REGISTRATION_STATUS_CHANGED);
+			registrationChangedIntent.putExtra(EXTRA_EPL_STMT, eplStmt);
+			registrationChangedIntent.putExtra(EXTRA_ERROR_MSG, errorMsg);
+			registrationChangedIntent.putExtra(EXTRA_REGISTER, register);
+			context.sendBroadcast(registrationChangedIntent);
 		}
 
 	}

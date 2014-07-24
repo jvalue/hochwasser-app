@@ -140,10 +140,17 @@
 		</receiver>
 
 
+		<!-- Alarms -->
 		<receiver android:name=".alarms.EventReceiver">
 			<intent-filter>
 				<action android:name="de.bitdroid.flooding.ods.cep.ACTION_EVENT_RECEIVED"/>
 			</intent-filter>
+		</receiver>
+
+		<service android:name=".alarms.EventReceiver$EventIntentService">
+		</service>
+
+		<receiver android:name=".alarms.EventReceiver$EventToNesReceiver">
 		</receiver>
 
 

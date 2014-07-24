@@ -49,6 +49,8 @@
 	<string name="alarms_new_already_added">Already added!</string>
 	<string name="alarms_registration_pending">Starting alarm ...</string>
 	<string name="alarms_registration_error">Error starting alarm, tap to retry.</string>
+	<string name="alarms_triggered_title">%1$s alarm triggered!</string>
+	<string name="alarms_triggered_msg">%1$s is %2$s %3$.2f cm</string>
 
 
 	<string name="series_select_dialog_title">Select Series to Display</string>

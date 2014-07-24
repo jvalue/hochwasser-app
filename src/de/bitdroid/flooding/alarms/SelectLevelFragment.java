@@ -70,7 +70,7 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 					return;
 				}
 
-				manager.add(alarm);
+				manager.register(alarm);
 
 				SelectLevelFragment.this.getActivity().finish();
 				Toast.makeText(

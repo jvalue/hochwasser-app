@@ -74,9 +74,9 @@ final class AlarmManager {
 	}
 
 
-	public synchronized void add(Alarm alarm) {
+	public synchronized void register(Alarm alarm) {
 		Assert.assertNotNull(alarm);
-		Assert.assertFalse(contains(alarm), "already added");
+		Assert.assertFalse(contains(alarm), "already registered");
 
 		cepManager.registerEplStmt(alarm.accept(new EplStmtCreator(), null));
 
@@ -93,9 +93,9 @@ final class AlarmManager {
 	}
 
 
-	public synchronized void remove(Alarm alarm) {
+	public synchronized void unregister(Alarm alarm) {
 		Assert.assertNotNull(alarm);
-		Assert.assertTrue(contains(alarm), "not added");
+		Assert.assertTrue(contains(alarm), "not registered");
 
 		SQLiteDatabase database = null;
 

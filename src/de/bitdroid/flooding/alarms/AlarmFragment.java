@@ -83,13 +83,13 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
             @Override
             public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
                 final Alarm alarm = listAdapter.getItem(pos);
-				alarmManager.remove(alarm);
+				alarmManager.unregister(alarm);
 				listAdapter.remove(alarm); // hack to stop list from flashing
 
                 return new EnhancedListView.Undoable() {
                     @Override
                     public void undo() {
-						alarmManager.add(alarm);
+						alarmManager.register(alarm);
                     }   
                 };  
             }   

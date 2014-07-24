@@ -96,7 +96,7 @@ public final class CepManager {
 
 
 	private void sourceRegistrationHelper(String eplStmt, boolean register) {
-		String clientId =  registrationManager.getClientId(eplStmt);
+		String clientId =  registrationManager.getClientIdForObjectId(eplStmt);
 
 		// mark task pending
 		GcmStatus status = null;
@@ -117,7 +117,7 @@ public final class CepManager {
 	 * @return the registration status for this epl stmt.
 	 */
 	public GcmStatus getRegistrationStatus(String eplStmt) {
-		return registrationManager.getStatus(eplStmt);
+		return registrationManager.getStatusForObjectId(eplStmt);
 	}
 
 
@@ -132,7 +132,7 @@ public final class CepManager {
 	String getEplStmtForClientId(String clientId) {
 		Assert.assertNotNull(clientId);
 		for (String stmt : registrationManager.getAllObjects()) {
-			if (registrationManager.getClientId(stmt).equals(clientId))
+			if (registrationManager.getClientIdForObjectId(stmt).equals(clientId))
 				return stmt;
 		}
 		return null;

@@ -35,28 +35,39 @@ public final class GcmRegistrationManager {
 		if (status.equals(GcmStatus.UNREGISTERED)) {
 			editor.remove(getClientIdKey(objectId));
 			editor.remove(getStatusKey(objectId));
+			editor.remove(clientId);
 		} else {
 			if (clientId != null) editor.putString(getClientIdKey(objectId), clientId);
 			editor.putString(getStatusKey(objectId), status.name());
+			editor.putString(clientId, objectId);
 		}
 		editor.commit();
 	}
 
 
-	public String getClientId(String objectId) {
+	public String getClientIdForObjectId(String objectId) {
 		Assert.assertNotNull(objectId);
 
 		return getSharedPreferences().getString(getClientIdKey(objectId), null);
 	}
 
 
-	public GcmStatus getStatus(String objectId) {
+	public String getObjectIdForClientId(String clientId) {
+		Assert.assertNotNull(clientId);
+
+		return getSharedPreferences().getString(clientId, null);
+	}
+
+
+	public GcmStatus getStatusForObjectId(String objectId) {
 		Assert.assertNotNull(objectId);
 
 		String status = getSharedPreferences().getString(getStatusKey(objectId), null);
 		if (status == null) return GcmStatus.UNREGISTERED;
 		else return GcmStatus.valueOf(status);
 	}
+
+
 
 
 	public Set<String> getAllObjects() {
@@ -79,7 +90,7 @@ public final class GcmRegistrationManager {
 		Set<String> objects = getAllObjects();
 		Iterator<String> iter = objects.iterator();
 		while (iter.hasNext()) {
-			if (getStatus(iter.next()) != status) iter.remove();
+			if (getStatusForObjectId(iter.next()) != status) iter.remove();
 		}
 
 		return objects;

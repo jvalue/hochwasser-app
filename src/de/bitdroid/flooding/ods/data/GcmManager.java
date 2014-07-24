@@ -45,7 +45,7 @@ public final class GcmManager {
 
 	private void sourceRegistrationHelper(OdsSource source, boolean register) {
 		String sourceId = source.toString();
-		String clientId = registrationManager.getClientId(sourceId);
+		String clientId = registrationManager.getClientIdForObjectId(sourceId);
 
 		// mark task pending
 		GcmStatus status = null;
@@ -63,7 +63,7 @@ public final class GcmManager {
 
 
 	GcmStatus getRegistrationStatus(OdsSource source) {
-		return registrationManager.getStatus(source.toString());
+		return registrationManager.getStatusForObjectId(source.toString());
 	}
 
 

@@ -131,11 +131,7 @@ public final class CepManager {
 
 	String getEplStmtForClientId(String clientId) {
 		Assert.assertNotNull(clientId);
-		for (String stmt : registrationManager.getAllObjects()) {
-			if (registrationManager.getClientIdForObjectId(stmt).equals(clientId))
-				return stmt;
-		}
-		return null;
+		return registrationManager.getObjectIdForClientId(clientId);
 	}
 
 

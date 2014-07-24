@@ -186,7 +186,7 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 		});
 
 		listAdapter.clear();
-		listAdapter.addAll(alarms);
+		listAdapter.addAll(sortedAlarms);
 	}
 
 

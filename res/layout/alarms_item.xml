@@ -9,6 +9,7 @@
 	android:paddingTop="6dp"
 	android:paddingBottom="6dp"
 	android:background="?android:attr/activatedBackgroundIndicator"
+	android:descendantFocusability="blocksDescendants"
 	>
 
 	<TextView
@@ -20,5 +21,38 @@
 		android:id="@android:id/text2"
 		style="@style/FontRegular"
 	/>
+
+	<LinearLayout
+		android:id="@+id/registration"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		>
+
+		<ImageView
+			android:id="@+id/registration_error"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_action_warning"
+			android:visibility="gone"
+		/>
+
+		<ProgressBar 
+			android:id="@+id/registration_pending"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="@android:style/Widget.ProgressBar.Small"
+			android:visibility="gone"
+		/>
+
+		<TextView
+			android:id="@+id/registration_status"
+			style="@style/FontRegular"
+			android:text="Loading"
+		/>
+
+	</LinearLayout>
+
 
 </LinearLayout>

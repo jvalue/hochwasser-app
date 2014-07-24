@@ -17,10 +17,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.ods.gcm.GcmStatus;
+import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.StringUtils;
 import de.timroes.android.listview.EnhancedListView;
 
@@ -71,12 +75,43 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 				}
 				text2.setText(description);
 
+				LinearLayout regView = (LinearLayout) view.findViewById(R.id.registration);
+				TextView regStatusView = (TextView) view.findViewById(R.id.registration_status);
+
+				GcmStatus regStatus = alarmManager.getRegistrationStatus(alarm);
+				if (regStatus.equals(GcmStatus.REGISTERED)) return view;
+
+				regView.setVisibility(View.VISIBLE);
+				switch (regStatus) {
+					case PENDING_REGISTRATION:
+						view.findViewById(R.id.registration_pending).setVisibility(View.VISIBLE);
+						regStatusView.setText(getString(R.string.alarms_registration_pending));
+						break;
+					case UNREGISTERED:
+						view.findViewById(R.id.registration_error).setVisibility(View.VISIBLE);
+						regStatusView.setText(getString(R.string.alarms_registration_error));
+						break;
+					case PENDING_UNREGISTRATION:
+						Log.warning("Found alarm with PENDING_UNREGISTRATION");
+				}
+
 				return view;
 			}
 
 		};
 		listView.setAdapter(listAdapter);
 		listView.setEmptyView(view.findViewById(R.id.empty));
+
+		// retry registration on tap
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				LevelAlarm alarm = (LevelAlarm) parent.getAdapter().getItem(position);
+				if (alarmManager.getRegistrationStatus(alarm).equals(GcmStatus.UNREGISTERED)) {
+					alarmManager.register(alarm);
+				}
+			}
+		});
 
 		// enable swipe and undo
 		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {

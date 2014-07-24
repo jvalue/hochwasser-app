@@ -18,6 +18,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.bitdroid.flooding.ods.cep.CepManager;
+import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
@@ -38,6 +39,7 @@ final class AlarmManager {
 	private final CepManager cepManager;
 	private final AlarmDb alarmDb;
 	private final List<AlarmUpdateListener> listeners = new LinkedList<AlarmUpdateListener>();
+	private final EplStmtCreator stmtCreator = new EplStmtCreator();
 
 	private AlarmManager(Context context) {
 		this.cepManager = CepManager.getInstance(context);
@@ -76,10 +78,24 @@ final class AlarmManager {
 
 	public synchronized void register(Alarm alarm) {
 		Assert.assertNotNull(alarm);
-		Assert.assertFalse(contains(alarm), "already registered");
 
-		cepManager.registerEplStmt(alarm.accept(new EplStmtCreator(), null));
+		String eplStmt = alarm.accept(stmtCreator, null);
+		GcmStatus registrationStatus = cepManager.getEplStmtRegistrationStatus(eplStmt);
 
+		switch (registrationStatus) {
+			case REGISTERED:
+				throw new IllegalArgumentException("already registered");
+			case PENDING_REGISTRATION:
+				throw new IllegalArgumentException("registration pending");
+			case PENDING_UNREGISTRATION:
+				throw new IllegalArgumentException("unregistration pending");
+		}
+
+		// register on server
+		cepManager.registerEplStmt(alarm.accept(stmtCreator, null));
+
+		// store in db
+		if (contains(alarm)) return;
 		SQLiteDatabase database = null;
 		try {
 			database = alarmDb.getWritableDatabase();
@@ -132,6 +148,15 @@ final class AlarmManager {
 		if (cursor.getCount() <= 0) return false;
 		return true;
 	}
+
+
+	public synchronized GcmStatus getRegistrationStatus(Alarm alarm) {
+		Assert.assertNotNull(alarm);
+		Assert.assertTrue(contains(alarm), "not registered");
+
+		return cepManager.getEplStmtRegistrationStatus(alarm.accept(stmtCreator, null));
+	}
+
 
 
 	public synchronized void registerListener(AlarmUpdateListener listener) {

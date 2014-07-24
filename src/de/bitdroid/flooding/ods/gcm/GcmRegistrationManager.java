@@ -86,7 +86,7 @@ public final class GcmRegistrationManager {
 
 
 	private String getStatusKey(String objectId) {
-		return PREFS_KEY_CLIENTID + objectId;
+		return PREFS_KEY_STATUS + objectId;
 	}
 
 

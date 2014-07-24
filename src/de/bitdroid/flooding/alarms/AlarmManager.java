@@ -111,12 +111,16 @@ final class AlarmManager {
 
 	public synchronized void unregister(Alarm alarm) {
 		Assert.assertNotNull(alarm);
-		Assert.assertTrue(isRegistered(alarm), "not registered");
 
+
+		// unregister from server
+		String stmt = alarm.accept(stmtCreator, null);
+		if (cepManager.getRegistrationStatus(stmt).equals(GcmStatus.REGISTERED)) {
+			cepManager.unregisterEplStmt(stmt);
+		}
+
+		// remove from db
 		SQLiteDatabase database = null;
-
-		cepManager.unregisterEplStmt(alarm.accept(new EplStmtCreator(), null));
-
 		try {
 			database = alarmDb.getWritableDatabase();
 			database.delete(

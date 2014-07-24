@@ -80,19 +80,12 @@ final class AlarmManager {
 		Assert.assertNotNull(alarm);
 
 		String eplStmt = alarm.accept(stmtCreator, null);
-		GcmStatus registrationStatus = cepManager.getRegistrationStatus(eplStmt);
-
-		switch (registrationStatus) {
-			case REGISTERED:
-				throw new IllegalArgumentException("already registered");
-			case PENDING_REGISTRATION:
-				throw new IllegalArgumentException("registration pending");
-			case PENDING_UNREGISTRATION:
-				throw new IllegalArgumentException("unregistration pending");
-		}
+		GcmStatus status = cepManager.getRegistrationStatus(eplStmt);
 
 		// register on server
-		cepManager.registerEplStmt(alarm.accept(stmtCreator, null));
+		if (status.equals(GcmStatus.UNREGISTERED)) {
+			cepManager.registerEplStmt(alarm.accept(stmtCreator, null));
+		}
 
 		// store in db
 		if (isRegistered(alarm)) return;

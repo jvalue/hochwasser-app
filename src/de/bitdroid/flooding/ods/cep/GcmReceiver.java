@@ -16,31 +16,44 @@ import de.bitdroid.flooding.utils.Log;
 public final class GcmReceiver extends BaseGcmReceiver {
 
 	private final static String 
+		EXTRA_CLIENTID = "client",
 		EXTRA_EVENTID = "event",
 		EXTRA_DEBUG = "debug";
 
 	private static final Set<String> REQUIRED_EXTRAS;
 
 	static {
-		Set<String> extras = new HashSet<String>(Arrays.asList(EXTRA_EVENTID));
+		Set<String> extras = new HashSet<String>(Arrays.asList(EXTRA_CLIENTID, EXTRA_EVENTID));
 		REQUIRED_EXTRAS = Collections.unmodifiableSet(extras);
 	}
 
 
 	@Override
 	protected void handle(Context context, Intent intent) {
+		String clientId = intent.getStringExtra(EXTRA_CLIENTID);
 		String eventId = intent.getStringExtra(EXTRA_EVENTID);
-
-		// broadcast new event
-		Intent eventIntent = new Intent(BaseEventReceiver.ACTION_EVENT_RECEIVED);
-		eventIntent.putExtra(BaseEventReceiver.EXTRA_EVENTID, eventId);
-		context.sendBroadcast(eventIntent);
 
 		// debug output
 		String debug = intent.getStringExtra(EXTRA_DEBUG);
 		if (debug != null && !debug.equals("") && Boolean.valueOf(debug)) {
 			handleDebug(context, intent);
 		}
+
+		// get stmt for id
+		CepManager manager = CepManager.getInstance(context);
+		String eplStmt = CepManager.getInstance(context).getEplStmtForClientId(clientId);
+		if (eplStmt == null) {
+			Log.warning("found eplStmt that should be registered, but wasn't");
+			manager.unregisterEplStmt(eplStmt);
+			return;
+		}
+
+		// broadcast new event
+		Intent eventIntent = new Intent(BaseEventReceiver.ACTION_EVENT_RECEIVED);
+		eventIntent.putExtra(BaseEventReceiver.EXTRA_EPLSTMT, eplStmt);
+		eventIntent.putExtra(BaseEventReceiver.EXTRA_EVENTID, eventId);
+		context.sendBroadcast(eventIntent);
+
 	}
 
 

@@ -11,7 +11,7 @@ import de.bitdroid.flooding.utils.Log;
 public final class EventReceiver extends BaseEventReceiver {
 
 	@Override
-	protected void onReceive(Context context, String eventId) {
+	protected void onReceive(Context context, String eplStmt, String eventId) {
 		NewsItem news = new NewsItem.Builder(
 				"Alarm triggered!",
 				"Alarm triggered event " + eventId,

@@ -129,6 +129,16 @@ public final class CepManager {
 	}
 
 
+	String getEplStmtForClientId(String clientId) {
+		Assert.assertNotNull(clientId);
+		for (String stmt : registrationManager.getAllObjects()) {
+			if (registrationManager.getClientId(stmt).equals(clientId))
+				return stmt;
+		}
+		return null;
+	}
+
+
 	private SharedPreferences getSharedPreferences() {
 		return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 	}

@@ -65,7 +65,7 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 
 				Alarm alarm = new LevelAlarm(river, station, level, whenAbove);
 				AlarmManager manager = AlarmManager.getInstance(getActivity().getApplicationContext());
-				if (manager.contains(alarm)) {
+				if (manager.isRegistered(alarm)) {
 					Toast.makeText(getActivity(), getString(R.string.alarms_new_already_added), Toast.LENGTH_SHORT).show();
 					return;
 				}

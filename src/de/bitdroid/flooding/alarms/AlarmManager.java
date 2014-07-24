@@ -95,7 +95,7 @@ final class AlarmManager {
 		cepManager.registerEplStmt(alarm.accept(stmtCreator, null));
 
 		// store in db
-		if (contains(alarm)) return;
+		if (isRegistered(alarm)) return;
 		SQLiteDatabase database = null;
 		try {
 			database = alarmDb.getWritableDatabase();
@@ -111,7 +111,7 @@ final class AlarmManager {
 
 	public synchronized void unregister(Alarm alarm) {
 		Assert.assertNotNull(alarm);
-		Assert.assertTrue(contains(alarm), "not registered");
+		Assert.assertTrue(isRegistered(alarm), "not registered");
 
 		SQLiteDatabase database = null;
 
@@ -132,7 +132,7 @@ final class AlarmManager {
 	}
 
 
-	public synchronized boolean contains(Alarm alarm) {
+	public synchronized boolean isRegistered(Alarm alarm) {
 		Assert.assertNotNull(alarm);
 
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -152,7 +152,7 @@ final class AlarmManager {
 
 	public synchronized GcmStatus getRegistrationStatus(Alarm alarm) {
 		Assert.assertNotNull(alarm);
-		Assert.assertTrue(contains(alarm), "not registered");
+		Assert.assertTrue(isRegistered(alarm), "not registered");
 
 		return cepManager.getEplStmtRegistrationStatus(alarm.accept(stmtCreator, null));
 	}

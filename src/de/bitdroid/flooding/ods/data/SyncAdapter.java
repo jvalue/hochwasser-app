@@ -1,14 +1,19 @@
 package de.bitdroid.flooding.ods.data;
 
+import org.json.JSONException;
+
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.os.RemoteException;
 
 import de.bitdroid.flooding.ods.utils.RestCall;
+import de.bitdroid.flooding.ods.utils.RestException;
 import de.bitdroid.flooding.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
@@ -85,9 +90,18 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			processor.processGetAll(retString);
 			success = true;
 
-		} catch (Exception e) {
-			syncResult.hasHardError();
-			Log.error(android.util.Log.getStackTraceString(e));
+		} catch (RestException re1) {
+			syncResult.stats.numIoExceptions++;
+			Log.error(android.util.Log.getStackTraceString(re1));
+		} catch (JSONException je) {
+			syncResult.stats.numParseExceptions++;
+			Log.error(android.util.Log.getStackTraceString(je));
+		} catch (RemoteException re2) {
+			syncResult.databaseError = true;
+			Log.error(android.util.Log.getStackTraceString(re2));
+		} catch (OperationApplicationException oae) {
+			syncResult.databaseError = true;
+			Log.error(android.util.Log.getStackTraceString(oae));
 		}
 
 		sendSyncFinishBroadcast(source, success);

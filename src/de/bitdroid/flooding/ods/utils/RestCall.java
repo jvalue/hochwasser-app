@@ -97,9 +97,7 @@ public final class RestCall {
 			conn.setRequestMethod(requestType.toString());
 
 			int responseCode = conn.getResponseCode();
-			if (responseCode != HttpURLConnection.HTTP_CREATED
-					&& responseCode != HttpURLConnection.HTTP_OK
-					&& responseCode != HttpURLConnection.HTTP_ACCEPTED)
+			if (responseCode < 200 || responseCode >= 300)
 				throw new RestException(responseCode);
 
 			dataReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));

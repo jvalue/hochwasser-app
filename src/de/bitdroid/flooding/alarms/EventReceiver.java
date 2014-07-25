@@ -15,6 +15,7 @@ import de.bitdroid.flooding.news.NewsManager;
 import de.bitdroid.flooding.ods.cep.BaseEventReceiver;
 import de.bitdroid.flooding.ods.cep.CepManager;
 import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.flooding.utils.StringUtils;
 
 
 public final class EventReceiver extends BaseEventReceiver {
@@ -90,7 +91,10 @@ public final class EventReceiver extends BaseEventReceiver {
 					Log.error("failed to recreate alarm", e);
 				}
 
-				String location = alarm.getRiver() + " - " + alarm.getStation();
+				String location = 
+					StringUtils.toProperCase(alarm.getRiver()) 
+					+ " - " 
+					+ StringUtils.toProperCase(alarm.getStation());
 
 				String title = context.getString(
 						R.string.alarms_triggered_title,

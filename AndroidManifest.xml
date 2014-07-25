@@ -150,7 +150,7 @@
 		<service android:name=".alarms.EventReceiver$EventIntentService">
 		</service>
 
-		<receiver android:name=".alarms.EventReceiver$EventToNesReceiver">
+		<receiver android:name=".alarms.EventReceiver$EventToNewsReceiver">
 		</receiver>
 
 

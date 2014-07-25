@@ -10,7 +10,7 @@ public abstract class BaseEventReceiver extends BroadcastReceiver {
 	protected final static String ACTION_EVENT_RECEIVED = "de.bitdroid.flooding.ods.cep.ACTION_EVENT_RECEIVED";
 	protected final static String 
 		EXTRA_EVENTID = "event",
-		EXTRA_EPLSTMT = "event";
+		EXTRA_EPLSTMT = "stmt";
 
 
 	@Override

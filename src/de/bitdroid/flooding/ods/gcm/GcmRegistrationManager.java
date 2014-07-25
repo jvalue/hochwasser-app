@@ -37,9 +37,11 @@ public final class GcmRegistrationManager {
 			editor.remove(getStatusKey(objectId));
 			editor.remove(clientId);
 		} else {
-			if (clientId != null) editor.putString(getClientIdKey(objectId), clientId);
+			if (clientId != null) {
+				editor.putString(getClientIdKey(objectId), clientId);
+				editor.putString(clientId, objectId);
+			}
 			editor.putString(getStatusKey(objectId), status.name());
-			editor.putString(clientId, objectId);
 		}
 		editor.commit();
 	}

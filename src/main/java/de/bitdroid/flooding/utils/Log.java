@@ -1,70 +1,64 @@
 package de.bitdroid.flooding.utils;
 
-import java.util.LinkedList;
-import java.util.List;
-
-
 public final class Log {
 
-	private Log() { }
-
-	static {
-		logHandlers = new LinkedList<LogHandler>();
-		addHandler(new AndroidLogHandler());
-	}
-
-	private final static List<LogHandler> logHandlers;
-
-	public static synchronized void addHandler(LogHandler handler) {
-		logHandlers.add(handler);
-	}
-
-	public static synchronized boolean removeHandler(LogHandler handler) {
-		return logHandlers.remove(handler);
-	}
+    private Log() { }
 
 
-	public static synchronized void debug(String msg) {
-		for (LogHandler handler : logHandlers)
-			handler.debug(msg);
-	}
+    private final static String LOG_PREFIX = "Flooding";
 
-	public static synchronized void debug(String msg, Throwable error) {
-		for (LogHandler handler : logHandlers)
-			handler.debug(msg, error);
-	}
+    public static void debug(String msg) {
+        android.util.Log.d(LOG_PREFIX, prefix(msg));
+    }
 
-
-	public static synchronized void info(String msg) {
-		for (LogHandler handler : logHandlers)
-			handler.info(msg);
-	}
-
-	public static synchronized void info(String msg, Throwable error) {
-		for (LogHandler handler : logHandlers)
-			handler.info(msg, error);
-	}
+    public static void debug(String msg, Throwable error) {
+        android.util.Log.d(LOG_PREFIX, prefix(msg), error);
+    }
 
 
-	public static synchronized void warning(String msg) {
-		for (LogHandler handler : logHandlers)
-			handler.warning(msg);
-	}
+    public static void info(String msg) {
+        android.util.Log.i(LOG_PREFIX, prefix(msg));
+    }
 
-	public static synchronized void warning(String msg, Throwable error) {
-		for (LogHandler handler : logHandlers)
-			handler.warning(msg, error);
-	}
+    public static void info(String msg, Throwable error) {
+        android.util.Log.i(LOG_PREFIX, prefix(msg), error);
+    }
 
 
-	public static synchronized void error(String msg) {
-		for (LogHandler handler : logHandlers)
-			handler.error(msg);
-	}
+    public static void warning(String msg) {
+        android.util.Log.w(LOG_PREFIX, prefix(msg));
+    }
 
-	public static synchronized void error(String msg, Throwable error) {
-		for (LogHandler handler : logHandlers)
-			handler.error(msg, error);
-	}
+    public static void warning(String msg, Throwable error) {
+        android.util.Log.w(LOG_PREFIX, prefix(msg), error);
+    }
+
+
+    public static void error(String msg) {
+        android.util.Log.e(LOG_PREFIX, prefix(msg));
+    }
+
+    public static void error(String msg, Throwable error) {
+        android.util.Log.e(LOG_PREFIX, prefix(msg), error);
+    }
+
+
+    private static String prefix(String msg) {
+        String callerName = Thread.currentThread().getStackTrace()[5].getClassName();
+
+        try {
+            Class<?> caller = Class.forName(callerName);
+            String name = caller.getSimpleName();
+            // check for inner classes (which don't have a simple name)
+            if (name.equals(""))
+                name = caller.getName();
+
+            return name + ": " + msg;
+
+        } catch (ClassNotFoundException e) {
+            android.util.Log.w(LOG_PREFIX, "Failed to create class from name");
+        }
+        return LOG_PREFIX;
+    }
 
 }

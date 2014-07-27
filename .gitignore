@@ -1,8 +1,12 @@
 local.properties
 bin/
+build/
 gen/
+.idea/
+.settings/
 *.swp
 *.swo
 build.xml
 googleApiKey.xml
-mirror
+*.iml
+.gradle/

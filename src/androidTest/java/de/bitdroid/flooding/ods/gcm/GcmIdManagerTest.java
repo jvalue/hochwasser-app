@@ -4,10 +4,19 @@ import android.content.Context;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
+import de.bitdroid.flooding.utils.SharedPreferencesHelper;
+
 public class GcmIdManagerTest extends AndroidTestCase {
 
+	private Context context;
+
+	@Override
+	public void setUp() {
+		this.context = new RenamingDelegatingContext(getContext(), "test_");
+		SharedPreferencesHelper.clearAll(context);
+	}
+
     public void testCrud() {
-        Context context = new RenamingDelegatingContext(getContext(), "test_");
         GcmIdManager manager = GcmIdManager.getInstance(context);
 
 		assertNull(manager.getClientId());

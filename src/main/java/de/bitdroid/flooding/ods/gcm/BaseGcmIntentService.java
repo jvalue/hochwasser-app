@@ -55,7 +55,6 @@ public abstract class BaseGcmIntentService extends IntentService {
 		} catch (Exception e) {
 			errorMsg = e.getMessage();
 			Log.error(errorMsg);
-			throw new RuntimeException(e);
 		}
 
 		Intent resultIntent = new Intent(getActionName());

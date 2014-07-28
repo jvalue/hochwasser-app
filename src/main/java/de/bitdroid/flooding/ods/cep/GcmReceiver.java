@@ -1,13 +1,13 @@
 package de.bitdroid.flooding.ods.cep;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 
 import de.bitdroid.flooding.ods.gcm.BaseGcmReceiver;
 import de.bitdroid.flooding.utils.Log;
@@ -41,10 +41,10 @@ public final class GcmReceiver extends BaseGcmReceiver {
 
 		// get stmt for id
 		CepManager manager = CepManager.getInstance(context);
-		String eplStmt = CepManager.getInstance(context).getEplStmtForClientId(clientId);
+		String eplStmt = manager.getEplStmtForClientId(clientId);
 		if (eplStmt == null) {
 			Log.warning("found eplStmt that should be registered, but wasn't");
-			manager.unregisterEplStmt(eplStmt);
+			manager.unregisterClientId(clientId);
 			return;
 		}
 

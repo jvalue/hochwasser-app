@@ -1,12 +1,12 @@
 package de.bitdroid.flooding.ods.cep;
 
-import java.net.URL;
-import java.util.Set;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import java.net.URL;
+import java.util.Set;
 
 import de.bitdroid.flooding.ods.gcm.GcmRegistrationManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
@@ -79,7 +79,8 @@ public final class CepManager {
 		GcmStatus status = getRegistrationStatus(eplStmt);
 		Assert.assertEquals(status, GcmStatus.UNREGISTERED, "Already registered");
 
-		sourceRegistrationHelper(eplStmt, true);
+		String clientId =  registrationManager.getClientIdForObjectId(eplStmt);
+		sourceRegistrationHelper(clientId, eplStmt, true);
 	}
 
 
@@ -91,12 +92,12 @@ public final class CepManager {
 		GcmStatus status = getRegistrationStatus(eplStmt);
 		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
 
-		sourceRegistrationHelper(eplStmt, false);
+		String clientId =  registrationManager.getClientIdForObjectId(eplStmt);
+		sourceRegistrationHelper(clientId, eplStmt, false);
 	}
 
 
-	private void sourceRegistrationHelper(String eplStmt, boolean register) {
-		String clientId =  registrationManager.getClientIdForObjectId(eplStmt);
+	private void sourceRegistrationHelper(String clientId, String eplStmt, boolean register) {
 
 		// mark task pending
 		GcmStatus status = null;
@@ -132,6 +133,12 @@ public final class CepManager {
 	String getEplStmtForClientId(String clientId) {
 		Assert.assertNotNull(clientId);
 		return registrationManager.getObjectIdForClientId(clientId);
+	}
+
+
+	void unregisterClientId(String clientId) {
+		Assert.assertNotNull(clientId);
+		sourceRegistrationHelper(clientId, null, false);
 	}
 
 

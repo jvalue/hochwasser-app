@@ -1,7 +1,6 @@
 package de.bitdroid.flooding.ods.utils;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 
 
 public final class RestException extends Exception {
@@ -9,14 +8,17 @@ public final class RestException extends Exception {
 
 	public static final int UNSET  = -1;
 	private final int code;
+    private final String message;
 
-	public RestException(int code) {
+	public RestException(int code, String message) {
 		this.code = code;
+        this.message = message;
 	}
 
 	public RestException(IOException nestedException) {
 		super(nestedException);
 		this.code = RestException.UNSET;
+        this.message = null;
 	}
 
 	public int getCode() {
@@ -25,22 +27,10 @@ public final class RestException extends Exception {
 
 	@Override
 	public String getMessage() {
-		Throwable cause = getCause();
-		if (cause != null) return "Failed to communicate with servers (" + cause.getMessage() + ")";
-		
-		if (code == HttpURLConnection.HTTP_NOT_MODIFIED) {
-			return "The requested documents were not modified";
-		} else if (code == HttpURLConnection.HTTP_BAD_REQUEST) {
-			return "The servers did not understand the request";
-		} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-			return "The credentials provided were not correct";
-		} else if (code == HttpURLConnection.HTTP_FORBIDDEN) {
-			return "The request is not allowed to make these changes";
-		} else if (code == HttpURLConnection.HTTP_NOT_FOUND) {
-			return "The requested resource is not available";
-		} else if (code >= 500 && code <= 600) {
-			return "Unable to connect to the servers";
-		}
-		return "Unknown error (" + code + ")";
-	}
+        Throwable cause = getCause();
+        if (cause != null) return cause.getMessage();
+        else if (message != null) return message + " (" + code + ")";
+        else return "return error code " + code;
+    }
+
 }

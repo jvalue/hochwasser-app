@@ -97,8 +97,9 @@ public final class RestCall {
 			conn.setRequestMethod(requestType.toString());
 
 			int responseCode = conn.getResponseCode();
+            String responseMessage = conn.getResponseMessage();
 			if (responseCode < 200 || responseCode >= 300)
-				throw new RestException(responseCode);
+				throw new RestException(responseCode, responseMessage);
 
 			dataReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			StringBuilder dataBuilder = new StringBuilder();

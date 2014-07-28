@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.ods.gcm;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -10,17 +11,24 @@ import de.bitdroid.flooding.utils.Log;
 
 public abstract class BaseGcmIntentService extends IntentService {
 
-	public static final String 
+	public static final String
 		EXTRA_REGISTER = "EXTRA_REGISTER",
 		EXTRA_SERVICE_CLIENTID = "EXTRA_SERVICE_CLIENTID",
 		EXTRA_ERROR_MSG = "EXTRA_ERROR_MSG";
 
 
 	private final GcmIdManager gcmIdManager;
+	private final Context context;
 
 	public BaseGcmIntentService() {
-		super(BaseGcmIntentService.class.getSimpleName());
-		this.gcmIdManager = GcmIdManager.getInstance(this);
+		this(BaseGcmIntentService.class.getSimpleName(), null);
+	}
+
+	public BaseGcmIntentService(String debugName, Context context) {
+		super(debugName);
+		if (context == null) this.context = this;
+		else this.context = context;
+		this.gcmIdManager = GcmIdManager.getInstance(this.context);
 	}
 
 
@@ -37,7 +45,7 @@ public abstract class BaseGcmIntentService extends IntentService {
 
 			if (gcmClientId == null) {
 				gcmClientId = GoogleCloudMessaging
-					.getInstance(getApplicationContext())
+					.getInstance(context)
 					.register(senderId);
 				gcmIdManager.updateClientId(gcmClientId);
 			}
@@ -47,6 +55,7 @@ public abstract class BaseGcmIntentService extends IntentService {
 		} catch (Exception e) {
 			errorMsg = e.getMessage();
 			Log.error(errorMsg);
+			throw new RuntimeException(e);
 		}
 
 		Intent resultIntent = new Intent(getActionName());
@@ -56,7 +65,7 @@ public abstract class BaseGcmIntentService extends IntentService {
 
 		prepareResultIntent(intent, resultIntent);
 
-		getApplicationContext().sendBroadcast(resultIntent);
+		context.sendBroadcast(resultIntent);
 	}
 
 

@@ -1,7 +1,5 @@
 package de.bitdroid.flooding.ods.gcm;
 
-import java.util.Set;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +7,8 @@ import android.os.Bundle;
 import android.os.PowerManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.util.Set;
 
 
 public abstract class BaseGcmReceiver extends BroadcastReceiver {
@@ -34,7 +34,7 @@ public abstract class BaseGcmReceiver extends BroadcastReceiver {
 
 
 		} finally {
-			wl.release();
+			if (wl != null) wl.release();
 		}
 	}
 

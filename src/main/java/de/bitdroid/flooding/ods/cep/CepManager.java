@@ -11,6 +11,7 @@ import java.util.Set;
 import de.bitdroid.flooding.ods.gcm.GcmRegistrationManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.flooding.utils.Log;
 
 
 public final class CepManager {
@@ -92,13 +93,11 @@ public final class CepManager {
 		GcmStatus status = getRegistrationStatus(eplStmt);
 		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
 
-		String clientId =  registrationManager.getClientIdForObjectId(eplStmt);
-		sourceRegistrationHelper(clientId, eplStmt, false);
+		sourceRegistrationHelper(null, eplStmt, false);
 	}
 
 
 	private void sourceRegistrationHelper(String clientId, String eplStmt, boolean register) {
-
 		// mark task pending
 		GcmStatus status = null;
 		if (register) status = GcmStatus.PENDING_REGISTRATION;
@@ -138,7 +137,12 @@ public final class CepManager {
 
 	void unregisterClientId(String clientId) {
 		Assert.assertNotNull(clientId);
-		sourceRegistrationHelper(clientId, null, false);
+
+		// execute in background
+		Intent registrationIntent = new Intent(context, GcmIntentService.class);
+		registrationIntent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, clientId);
+		registrationIntent.putExtra(GcmIntentService.EXTRA_REGISTER, false);
+		context.startService(registrationIntent);
 	}
 
 
@@ -155,6 +159,12 @@ public final class CepManager {
 			String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
 			String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
 			boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
+
+			// abort if stmt was registered on server, but not on client
+			if (eplStmt == null && !register) {
+				Log.info("not forwarding unregistration action since eplStmt was null");
+				return;
+			}
 
 			// clear pending flag
 			if (errorMsg != null) register = !register;

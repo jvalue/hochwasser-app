@@ -82,7 +82,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		JsonNode json = mapper.valueToTree(clientIdMap);
 
 		// start mock server
-		server.enqueue(new MockResponse().setBody(json.toString()));
+		server.enqueue(new MockResponse().setBody(((Object) json).toString()));
 		server.play();
 		URL serverUrl = server.getUrl("");
 		CepManager.getInstance(getContext()).setCepServerName(serverUrl.toString());

@@ -1,6 +1,5 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.data;
 
-import de.bitdroid.flooding.ods.data.OdsSource;
 import junit.framework.TestCase;
 
 

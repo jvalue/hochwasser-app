@@ -1,13 +1,12 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.ods.data;
+
+import android.content.ContentValues;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import android.content.ContentValues;
-
-import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 

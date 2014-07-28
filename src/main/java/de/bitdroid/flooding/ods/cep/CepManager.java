@@ -80,8 +80,7 @@ public final class CepManager {
 		GcmStatus status = getRegistrationStatus(eplStmt);
 		Assert.assertEquals(status, GcmStatus.UNREGISTERED, "Already registered");
 
-		String clientId =  registrationManager.getClientIdForObjectId(eplStmt);
-		sourceRegistrationHelper(clientId, eplStmt, true);
+		sourceRegistrationHelper(null, eplStmt, true);
 	}
 
 
@@ -93,7 +92,8 @@ public final class CepManager {
 		GcmStatus status = getRegistrationStatus(eplStmt);
 		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
 
-		sourceRegistrationHelper(null, eplStmt, false);
+		String clientId =  registrationManager.getClientIdForObjectId(eplStmt);
+		sourceRegistrationHelper(clientId, eplStmt, false);
 	}
 
 

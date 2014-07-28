@@ -26,7 +26,6 @@ public class GcmReceiverTest extends AndroidTestCase {
 			EVENTID = "someEventId";
 
 	private MockWebServer server;
-	private Context context;
 	private BroadcastReceiver eventReceiver;
 	private int receiverCount;
 	private CepManager manager;
@@ -35,12 +34,12 @@ public class GcmReceiverTest extends AndroidTestCase {
 	@Override
 	public void setUp() {
 		this.server = new MockWebServer();
-		this.context = new RenamingDelegatingContext(
+		setContext(new RenamingDelegatingContext(
 				getContext(),
-				"GcmReceiverTest");
-		SharedPreferencesHelper.clearAll(context);
+				"GcmReceiverTest"));
+		SharedPreferencesHelper.clearAll(getContext());
 
-		this.manager = CepManager.getInstance(context);
+		this.manager = CepManager.getInstance(getContext());
 
 		this.receiverCount = 0;
 		this.eventReceiver = new BaseEventReceiver() {
@@ -52,7 +51,7 @@ public class GcmReceiverTest extends AndroidTestCase {
 			}
 		};
 
-		this.context.registerReceiver(
+		getContext().registerReceiver(
 				eventReceiver,
 				new IntentFilter("de.bitdroid.flooding.ods.cep.ACTION_EVENT_RECEIVED"));
 	}
@@ -61,7 +60,7 @@ public class GcmReceiverTest extends AndroidTestCase {
 	@Override
 	public void tearDown() throws Exception {
 		this.server.shutdown();
-		this.context.unregisterReceiver(eventReceiver);
+		getContext().unregisterReceiver(eventReceiver);
 	}
 
 
@@ -71,6 +70,7 @@ public class GcmReceiverTest extends AndroidTestCase {
 		JsonNode node = mapper.valueToTree(clientMap);
 
 		server.enqueue(new MockResponse().setBody(((Object) node).toString()));
+		server.enqueue(new MockResponse().setResponseCode(404));
 		server.play();
 		manager.setCepServerName(server.getUrl("").toString());
 		manager.registerEplStmt(EPL_STMT);
@@ -82,12 +82,13 @@ public class GcmReceiverTest extends AndroidTestCase {
 		Thread.sleep(1000);
 
 		assertEquals(1, receiverCount);
-		assertEquals(1, server.getRequestCount());
+		assertEquals(2, server.getRequestCount());
 		assertTrue(server.takeRequest().getPath().contains("register"));
+		assertTrue(server.takeRequest().getPath().contains("unregister"));
 	}
 
 
-	public void testInvalidEvent() throws Exception {
+	public void testInvalidRequest() throws Exception {
 		server.play();
 		manager.setCepServerName(server.getUrl("").toString());
 

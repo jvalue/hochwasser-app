@@ -27,6 +27,8 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 
 	private int counter = 0;
 	private MockWebServer server;
+	private BroadcastReceiver receiver;
+	private boolean register;
 
 	public GcmIntentServiceTest() {
 		super(GcmIntentService.class);
@@ -37,16 +39,43 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 	public void setUp() {
 		this.counter = 0;
 		this.server = new MockWebServer();
+
+		// register receiver
+		this.receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String eplStmt = intent.getStringExtra(GcmIntentService.EXTRA_EPL_STMT);
+				String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
+				String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
+				boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
+
+				assertEquals(EPL_STMT, eplStmt);
+				assertNull(errorMsg);
+				assertEquals(CLIENT_ID, clientId);
+				assertEquals(GcmIntentServiceTest.this.register, register);
+
+				counter++;
+			}
+		};
+		getContext().registerReceiver(
+				receiver,
+				new IntentFilter("de.bitdroid.flooding.ods.cep.ACTION_GCM_FINISH"));
 	}
 
 
 	@Override
 	public void tearDown() throws Exception {
 		this.server.shutdown();
+		this.server = null;
+
+		getContext().unregisterReceiver(receiver);
+		this.receiver = null;
 	}
 
 
 	public void testRegister() throws Exception {
+		this.register = true;
+
 		// prepare response
 		Map<String, Object> clientIdMap = new HashMap<String, Object>();
 		clientIdMap.put("clientId", CLIENT_ID);
@@ -57,28 +86,6 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		server.play();
 		URL serverUrl = server.getUrl("");
 		CepManager.getInstance(getContext()).setCepServerName(serverUrl.toString());
-
-		// register receiver
-		BroadcastReceiver receiver = new BroadcastReceiver() {
-				@Override
-				public void onReceive(Context context, Intent intent) {
-					String eplStmt = intent.getStringExtra(GcmIntentService.EXTRA_EPL_STMT);
-					String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
-					String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
-					boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
-
-					assertEquals(EPL_STMT, eplStmt);
-					assertNull(errorMsg);
-					assertEquals(CLIENT_ID, clientId);
-					assertTrue(register);
-
-					counter++;
-				}
-			};
-		getContext().registerReceiver(
-				receiver,
-				new IntentFilter("de.bitdroid.flooding.ods.cep.ACTION_GCM_FINISH"));
-
 
 		// start service
 		Intent intent = new Intent(getContext(), GcmIntentService.class);
@@ -94,38 +101,17 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		assertTrue(request.getPath().contains("cep/gcm/register"));
 		assertTrue(request.getPath().contains("eplStmt=" + URLEncoder.encode(EPL_STMT)));
 		assertEquals(1, counter);
-
-		getContext().unregisterReceiver(receiver);
 	}
 
 
 	public void testUnregister() throws Exception {
+		this.register = false;
+
 		// start mock server
 		server.enqueue(new MockResponse());
 		server.play();
 		URL serverUrl = server.getUrl("");
 		CepManager.getInstance(getContext()).setCepServerName(serverUrl.toString());
-
-		// register receiver
-		BroadcastReceiver receiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String eplStmt = intent.getStringExtra(GcmIntentService.EXTRA_EPL_STMT);
-				String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
-				String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
-				boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
-
-				assertEquals(EPL_STMT, eplStmt);
-				assertNull(errorMsg);
-				assertEquals(CLIENT_ID, clientId);
-				assertFalse(register);
-
-				counter++;
-			}
-		};
-		getContext().registerReceiver(
-				receiver,
-				new IntentFilter("de.bitdroid.flooding.ods.cep.ACTION_GCM_FINISH"));
 
 		// start service
 		Intent intent = new Intent(getContext(), GcmIntentService.class);
@@ -142,9 +128,6 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		assertTrue(request.getPath().contains("cep/unregister"));
 		assertTrue(request.getPath().contains("clientId=" + CLIENT_ID));
 		assertEquals(1, counter);
-
-		getContext().unregisterReceiver(receiver);
 	}
-
 
 }

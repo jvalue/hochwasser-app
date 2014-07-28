@@ -1,11 +1,11 @@
 package de.bitdroid.flooding.ods.gcm;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import de.bitdroid.flooding.utils.Assert;
 
@@ -77,8 +77,8 @@ public final class GcmRegistrationManager {
 		Set<String> objects = new HashSet<String>();
 
 		for (String key : keys) {
-			if (key.startsWith(PREFS_KEY_CLIENTID)) key = key.replaceFirst(PREFS_KEY_CLIENTID, "");
-			else if (key.startsWith(PREFS_KEY_STATUS)) key = key.replaceFirst(PREFS_KEY_STATUS, "");
+			if (key.startsWith(PREFS_KEY_STATUS)) key = key.replaceFirst(PREFS_KEY_STATUS, "");
+            else continue;
 			objects.add(key);
 		}
 

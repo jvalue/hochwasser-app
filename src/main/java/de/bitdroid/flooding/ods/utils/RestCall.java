@@ -3,7 +3,6 @@ package de.bitdroid.flooding.ods.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -59,7 +58,7 @@ public final class RestCall {
 		StringBuilder urlBuilder = new StringBuilder(baseUrl);
 
 		// format paths
-		for (String path : paths) urlBuilder.append("/" + path);
+		for (String path : paths) urlBuilder.append("/").append(path);
 
 		// format params
 		if (parameters.size() != 0) {
@@ -70,9 +69,9 @@ public final class RestCall {
 				firstKey = false;
 
 				try {
-					urlBuilder.append(
-							URLEncoder.encode(key, "UTF-8") + "=" 
-							+ URLEncoder.encode(parameters.get(key), "UTF-8"));
+					urlBuilder.append(URLEncoder.encode(key, "UTF-8"))
+                            .append("=")
+							.append(URLEncoder.encode(parameters.get(key), "UTF-8"));
 				} catch (UnsupportedEncodingException uee) {
 					throw new RuntimeException(uee);
 				}
@@ -84,7 +83,6 @@ public final class RestCall {
 
 		// create connection
 		HttpURLConnection conn = null;
-		OutputStream outputStream = null;
 		BufferedReader dataReader = null;
 		try {
 			URL url = new URL(urlBuilder.toString());
@@ -114,9 +112,10 @@ public final class RestCall {
 
 		} finally {
 			try {
-				if (outputStream != null) outputStream.close();
 				if (dataReader != null) dataReader.close();
-			} catch (IOException e) { }
+			} catch (IOException e) {
+                Log.error("failed to close dataReader", e);
+            }
 
 			if (conn != null) conn.disconnect();
 		}

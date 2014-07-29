@@ -1,11 +1,11 @@
 package de.bitdroid.flooding.ods.data;
 
-import java.util.Calendar;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import java.util.Calendar;
 
 
 public final class SyncStatusListener extends BroadcastReceiver {
@@ -14,17 +14,36 @@ public final class SyncStatusListener extends BroadcastReceiver {
 
 	private static final String PREFS_NAME = SyncStatusListener.class.getName();
 	private static final long PREFS_DEFAULT_TIMESTAMP = -1;
+	private static final String KEY_SYNC_RUNNING = "SYNC_RUNNING";
+
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		String sourceString = intent.getStringExtra(SyncAdapter.EXTRA_SOURCE_NAME);
-		OdsSource source = OdsSource.fromString(sourceString);
-		boolean success = intent.getBooleanExtra(SyncAdapter.EXTRA_SYNC_SUCCESSFUL, false);
+		String action = intent.getAction();
 
-		synchronized(LOCK) {
+		if (action.equals(SyncAdapter.ACTION_SYNC_START)) {
+			// mark sync currently running
 			SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-			editor.putLong(toKey(source, success), System.currentTimeMillis());
+			editor.putBoolean(KEY_SYNC_RUNNING, true);
 			editor.commit();
+
+		} else if (action.equals(SyncAdapter.ACTION_SYNC_ALL_FINISH)) {
+			// mark sync stopped
+			SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+			editor.putBoolean(KEY_SYNC_RUNNING, false);
+			editor.commit();
+
+		} else if (action.equals(SyncAdapter.ACTION_SYNC_FINISH)) {
+			// store latest sync date
+			String sourceString = intent.getStringExtra(SyncAdapter.EXTRA_SOURCE_NAME);
+			OdsSource source = OdsSource.fromString(sourceString);
+			boolean success = intent.getBooleanExtra(SyncAdapter.EXTRA_SYNC_SUCCESSFUL, false);
+
+			synchronized(LOCK) {
+				SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+				editor.putLong(toTimestampKey(source, success), System.currentTimeMillis());
+				editor.commit();
+			}
 		}
 	}
 
@@ -36,6 +55,11 @@ public final class SyncStatusListener extends BroadcastReceiver {
 
 	static Calendar getLastFailedSync(Context context, OdsSource source) {
 		return getTimestamp(context, source, false);
+	}
+
+
+	static boolean isSyncRunning(Context context) {
+		return getSharedPreferences(context).getBoolean(KEY_SYNC_RUNNING, false);
 	}
 
 
@@ -54,11 +78,10 @@ public final class SyncStatusListener extends BroadcastReceiver {
 	}
 
 
-
 	private static Calendar getTimestamp(Context context, OdsSource source, boolean success) {
 		synchronized(LOCK) {
 			SharedPreferences prefs = getSharedPreferences(context);
-			long timestamp = prefs.getLong(toKey(source, success), PREFS_DEFAULT_TIMESTAMP);
+			long timestamp = prefs.getLong(toTimestampKey(source, success), PREFS_DEFAULT_TIMESTAMP);
 			if (timestamp == PREFS_DEFAULT_TIMESTAMP) return null;
 
 			Calendar c = Calendar.getInstance();
@@ -77,7 +100,7 @@ public final class SyncStatusListener extends BroadcastReceiver {
 		KEY_SUCCESS = "_SUCCESS",
 		KEY_FALIURE = "_FAILURE";
 
-	private static String toKey(OdsSource source, boolean success) {
+	private static String toTimestampKey(OdsSource source, boolean success) {
 		if (success) return source.toString() + KEY_SUCCESS;
 		else return source.toString() + KEY_FALIURE;
 	}

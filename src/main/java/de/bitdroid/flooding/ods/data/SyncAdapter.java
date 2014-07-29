@@ -1,7 +1,5 @@
 package de.bitdroid.flooding.ods.data;
 
-import org.json.JSONException;
-
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
@@ -12,13 +10,16 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.os.RemoteException;
 
+import org.json.JSONException;
+
 import de.bitdroid.flooding.ods.utils.RestCall;
 import de.bitdroid.flooding.ods.utils.RestException;
 import de.bitdroid.flooding.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-	public static final String 
+	public static final String
+			ACTION_SYNC_START = "de.bitdroid.flooding.ods.data.ACTION_SYNC_START",
 			ACTION_SYNC_FINISH = "de.bitdroid.flooding.ods.data.ACTION_SYNC_FINISH",
 			ACTION_SYNC_ALL_FINISH = "de.bitdroid.flooding.ods.data.ACTION_SYNC_ALL_FINISH",
 			EXTRA_SOURCE_NAME = "EXTRA_SOURCE_NAME",
@@ -50,18 +51,21 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 		Log.debug("Sync started");
 
+		String sourceName = extras.getString(EXTRA_SOURCE_NAME);
+		OdsSource source = null;
+		if (sourceName != null) source = OdsSource.fromString(sourceName);
+		sendSyncStartBroadcast(source);
+
 		boolean success = true;
 
-		String sourceName = extras.getString(EXTRA_SOURCE_NAME);
-		if (sourceName == null) {
-			// sync all resources and sources
-			for (OdsSource source : OdsSourceManager.getInstance(context).getPollingSources()) {
-				success  = success && syncSource(provider, source, syncResult);
+		// sync all resources and sources
+		if (source == null) {
+			for (OdsSource s : OdsSourceManager.getInstance(context).getPollingSources()) {
+				success  = success && syncSource(provider, s, syncResult);
 			}
 
+		// sync single source
 		} else {
-			// sync single source
-			OdsSource source = OdsSource.fromString(sourceName);
 			success = success && syncSource(provider, source, syncResult);
 		}
 
@@ -109,16 +113,25 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 
-	private void sendSyncFinishBroadcast(OdsSource source, boolean success) {
+	private void sendSyncStartBroadcast(OdsSource source) {
+		Intent syncStartIntent = new Intent(ACTION_SYNC_START);
 		if (source != null) {
-			Intent syncFinishIntent = new Intent(ACTION_SYNC_FINISH);
-			syncFinishIntent.putExtra(EXTRA_SOURCE_NAME, source.getClass().getName());
-			syncFinishIntent.putExtra(EXTRA_SYNC_SUCCESSFUL,  success);
-			context.sendBroadcast(syncFinishIntent);
-		} else {
-			Intent syncFinishIntent = new Intent(ACTION_SYNC_ALL_FINISH);
-			syncFinishIntent.putExtra(EXTRA_SYNC_SUCCESSFUL,  success);
-			context.sendBroadcast(syncFinishIntent);
+			syncStartIntent.putExtra(EXTRA_SOURCE_NAME, source.toString());
 		}
+		context.sendBroadcast(syncStartIntent);
+
+	}
+
+
+	private void sendSyncFinishBroadcast(OdsSource source, boolean success) {
+		Intent syncFinishIntent;
+		if (source != null) {
+			syncFinishIntent = new Intent(ACTION_SYNC_FINISH);
+			syncFinishIntent.putExtra(EXTRA_SOURCE_NAME, source.toString());
+		} else {
+			syncFinishIntent = new Intent(ACTION_SYNC_ALL_FINISH);
+		}
+		syncFinishIntent.putExtra(EXTRA_SYNC_SUCCESSFUL,  success);
+		context.sendBroadcast(syncFinishIntent);
 	}
 }

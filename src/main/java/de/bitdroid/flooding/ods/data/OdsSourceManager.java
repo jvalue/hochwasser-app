@@ -1,13 +1,13 @@
 package de.bitdroid.flooding.ods.data;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
@@ -229,6 +229,13 @@ public final class OdsSourceManager {
 		return SyncStatusListener.getLastSync(context, source);
 	}
 
+
+	/**
+	 * @return true if the underlying sync adapter is currently running.
+	 */
+	public boolean isSyncAdapterRunning() {
+		return SyncStatusListener.isSyncRunning(context);
+	}
 
 
 	private void registerSource(OdsSource source) {

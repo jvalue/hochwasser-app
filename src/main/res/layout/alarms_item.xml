@@ -27,15 +27,18 @@
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:visibility="gone"
+        android:visibility="gone"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:gravity="center_vertical"
 		>
 
 		<ImageView
 			android:id="@+id/registration_error"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
 			android:src="@drawable/ic_action_warning"
-			android:visibility="gone"
+            android:visibility="gone"
 		/>
 
 		<ProgressBar 
@@ -43,13 +46,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			style="@android:style/Widget.ProgressBar.Small"
-			android:visibility="gone"
+            android:visibility="gone"
 		/>
 
 		<TextView
 			android:id="@+id/registration_status"
 			style="@style/FontRegular"
-			android:text="Loading"
+            android:paddingLeft="6dp"
+            android:textColor="@color/gray"
 		/>
 
 	</LinearLayout>

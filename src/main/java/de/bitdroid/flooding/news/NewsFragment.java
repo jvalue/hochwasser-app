@@ -1,8 +1,5 @@
 package de.bitdroid.flooding.news;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +23,9 @@ import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.main.MainActivity;
 import de.bitdroid.flooding.utils.ShowcaseSeries;
@@ -37,12 +37,14 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	private NewsListAdapter listAdapter;
 	private EnhancedListView listView;
 	private ShowcaseView currentShowcaseView;
+	private NewsManager manager;
 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		this.manager = NewsManager.getInstance(getActivity().getApplicationContext());
 	}
 
 	@Override
@@ -67,11 +69,14 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 			@Override
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
 				final NewsItem item = listAdapter.getItem(pos);
-				listAdapter.removeItem(item);
+				manager.removeItem(item);
+				listAdapter.notifyDataSetInvalidated();
+
 				return new EnhancedListView.Undoable() {
 					@Override
 					public void undo() {
-						listAdapter.addItem(item);
+						manager.addItem(item, false);
+						listAdapter.notifyDataSetInvalidated();
 					}
 				};
 			}
@@ -100,7 +105,7 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		NewsManager.getInstance(getActivity().getApplicationContext()).markAllItemsRead();
+		manager.markAllItemsRead();
 
 
 		if (firstStart()) {
@@ -146,8 +151,9 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		switch (item.getItemId()) {
 			case R.id.delete:
 				for (NewsItem newsItem : selectedItems) {
-					listAdapter.removeItem(newsItem);
+					manager.removeItem(newsItem);
 				}
+				listAdapter.notifyDataSetInvalidated();
 				Toast.makeText(
 						getActivity(), 
 						getActivity().getString(R.string.news_deleted, selectedItems.size()), 
@@ -219,22 +225,8 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 
 	private void addHelperNews() {
-		NewsManager manager = NewsManager.getInstance(getActivity().getApplicationContext());
-		manager.addItem(new NewsItem.Builder(
-				getString(R.string.news_intro_alarms_title),
-				getString(R.string.news_intro_alarms_content),
-				System.currentTimeMillis())
-			.setNavigationPos(1)
-			.build(),
-			false);
-
-		manager.addItem(new NewsItem.Builder(
-				getString(R.string.news_intro_data_title),
-				getString(R.string.news_intro_data_content),
-				System.currentTimeMillis())
-			.setNavigationPos(2)
-			.build(),
-			false);
+		manager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, false);
+		manager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), 2, false);
 		listAdapter.notifyDataSetInvalidated();
 	}
 

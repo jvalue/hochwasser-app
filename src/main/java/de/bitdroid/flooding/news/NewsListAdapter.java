@@ -1,16 +1,16 @@
 package de.bitdroid.flooding.news;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.utils.Assert;
@@ -70,24 +70,6 @@ final class NewsListAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		return items.size();
-	}
-
-
-	public void addItem(NewsItem item) {
-		Assert.assertNotNull(item);
-		manager.addItem(item, false);
-		items.add(item);
-		Collections.sort(items);
-		notifyDataSetChanged();
-	}
-
-
-	public void removeItem(NewsItem item) {
-		Assert.assertNotNull(item);
-		Assert.assertTrue(items.contains(item), "item not in list");
-		items.remove(item);
-		manager.removeItem(item);
-		notifyDataSetChanged();
 	}
 
 

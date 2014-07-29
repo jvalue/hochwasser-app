@@ -1,8 +1,5 @@
 package de.bitdroid.flooding.news;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -13,6 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.main.MainActivity;
@@ -84,8 +84,22 @@ public final class NewsManager {
 	}
 
 
+	public NewsItem addItem(String title, String content, int navPos, boolean showNotification) {
+		Assert.assertNotNull(title, content);
+		Assert.assertTrue(navPos > 0 && navPos < 4, "invalid navPos");
+
+		NewsItem item = new NewsItem.Builder(title, content, System.currentTimeMillis())
+				.setNavigationPos(navPos)
+				.build();
+
+		addItem(item, showNotification);
+		return item;
+	}
+
+
 	public void addItem(NewsItem item, boolean showNotification) {
-		Assert.assertFalse(unreadItems.contains(item) && readItems.contains(item), "item already added");
+		Assert.assertNotNull(item);
+
 		unreadItems.add(item);
 		insertIntoDb(item);
 

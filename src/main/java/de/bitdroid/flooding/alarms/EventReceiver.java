@@ -110,13 +110,7 @@ public final class EventReceiver extends BaseEventReceiver {
 						relation,
 						alarm.getLevel());
 
-				NewsItem news = new NewsItem.Builder(
-						title,
-						msg,
-						System.currentTimeMillis())
-					.setNavigationPos(1)
-					.build();
-				NewsManager.getInstance(context).addItem(news, true);
+				NewsManager.getInstance(context).addItem(title, msg, 1, true);
 			}
 		}
 	}

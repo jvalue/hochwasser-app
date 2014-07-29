@@ -30,10 +30,6 @@ final class Processor {
 	public void processGetAll(String jsonString) 
 			throws RemoteException, JSONException, OperationApplicationException {
 
-		// delete all entries
-		int deleteCount = provider.delete(source.toUri(), null, null);
-		Log.debug("Removed " + deleteCount + " rows");
-
 		// insert new entries
 		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 		JSONArray json = new JSONArray(jsonString);
@@ -54,7 +50,9 @@ final class Processor {
 	private ContentProviderOperation insertIntoProvider(JSONObject object) 
 			throws RemoteException, JSONException {
 
-		String serverId = object.optString("_id", null);
+		// this is a hack that updates pegelonline data only, since ODS does currently
+		// (as of 29/07/14) not support updating data
+		String serverId = object.optString("uuid");
 		ContentValues data = source.saveData(object);
 		data.put(OdsSource.COLUMN_SERVER_ID, serverId);
 		data.put(OdsSource.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
@@ -72,7 +70,7 @@ final class Processor {
 			// update data 
 			if (cursor.getCount() >= 1) {
 				cursor.moveToFirst();
-				String id = cursor.getString(0);
+				int id = cursor.getInt(0);
 				data.put(OdsSource.COLUMN_ID, id);
 
 				if (cursor.getCount() > 1) {
@@ -81,6 +79,7 @@ final class Processor {
 
 				return ContentProviderOperation
 					.newUpdate(source.toUri())
+					.withSelection(OdsSource.COLUMN_ID + "=?", new String[] { String.valueOf(id) })
 					.withValues(data)
 					.build();
 

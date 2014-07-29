@@ -12,6 +12,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import de.bitdroid.flooding.R;
@@ -36,6 +38,7 @@ public final class NewsManager {
 	private final Set<NewsItem> readItems = new HashSet<NewsItem>();
 	private final Context context;
 	private final SQLiteOpenHelper dbHelper;
+	private final List<NewsUpdateListener> listeners = new LinkedList<NewsUpdateListener>();
 
 
 	private NewsManager(Context context) {
@@ -127,6 +130,8 @@ public final class NewsManager {
 		NotificationManager manager 
 			= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(NOTIFICATION_ID, builder.build());
+
+		alertListeners(item, true);
 	}
 
 
@@ -139,6 +144,8 @@ public final class NewsManager {
 		unreadItems.remove(item);
 		readItems.remove(item);
 		deleteItemFromDb(item);
+
+		alertListeners(item, false);
 	}
 
 
@@ -235,6 +242,26 @@ public final class NewsManager {
 			} while (cursor.moveToNext());
 		} finally {
 			if (cursor != null) cursor.close();
+		}
+	}
+
+
+	public void registerListener(NewsUpdateListener listener) {
+		Assert.assertNotNull(listener);
+		this.listeners.add(listener);
+	}
+
+
+	public void unregisterListener(NewsUpdateListener listener) {
+		Assert.assertNotNull(listener);
+		this.listeners.remove(listener);
+	}
+
+
+	private void alertListeners(NewsItem item, boolean added) {
+		for (NewsUpdateListener listener : listeners) {
+			if (added) listener.onNewItem(item);
+			else listener.onDeletedItem(item);
 		}
 	}
 

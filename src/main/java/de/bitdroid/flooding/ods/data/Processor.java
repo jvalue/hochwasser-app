@@ -1,11 +1,5 @@
 package de.bitdroid.flooding.ods.data;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -13,16 +7,15 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.RemoteException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 import de.bitdroid.flooding.utils.Log;
 
 
-/* What is the processor all about?
- *
- * Managing and upading the sync status flags for all resources
- *
- * Why? Such that clients know what status their data is in, such
- * as synced or currently being synced.
- */
 final class Processor {
 
 	private final ContentProviderClient provider;
@@ -55,13 +48,6 @@ final class Processor {
 		}
 
 		if (operations.size() > 0) provider.applyBatch(operations);
-	}
-
-	public void prePost() {
-		throw new UnsupportedOperationException();
-	}
-	public void postPost() {
-		throw new UnsupportedOperationException();
 	}
 
 
@@ -109,4 +95,5 @@ final class Processor {
 			if (cursor != null) cursor.close();
 		}
 	}
+
 }

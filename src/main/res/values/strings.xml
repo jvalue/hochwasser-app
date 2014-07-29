@@ -105,6 +105,7 @@
 
 
 	<string name="data_empty">No data found. Loading might take a little while when first starting the app.</string>
+    <string name="data_empty_loading">Loading ...</string>
 	<string name="data_station_count">%1$d stations</string>
 	<string name="data_station_all">All stations</string>
 

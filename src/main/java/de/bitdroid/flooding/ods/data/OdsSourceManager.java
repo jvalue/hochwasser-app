@@ -233,7 +233,7 @@ public final class OdsSourceManager {
 	/**
 	 * @return true if the underlying sync adapter is currently running.
 	 */
-	public boolean isSyncAdapterRunning() {
+	public boolean isSyncRunning() {
 		return SyncStatusListener.isSyncRunning(context);
 	}
 

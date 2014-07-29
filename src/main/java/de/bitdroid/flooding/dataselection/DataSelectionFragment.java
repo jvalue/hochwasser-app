@@ -1,7 +1,10 @@
 package de.bitdroid.flooding.dataselection;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -19,8 +22,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.ods.data.OdsSourceManager;
+import de.bitdroid.flooding.ods.data.SyncAdapter;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
@@ -43,6 +50,8 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 
 	private ArrayAdapter<T> listAdapter = null;
 	private EditText searchBox = null;
+	private ProgressBar emptyProgressBar;
+	private TextView emptyTextView;
 
 
 	protected abstract ArrayAdapter<T> getAdapter();
@@ -84,6 +93,14 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 			public void afterTextChanged(Editable e) { }
 		});
 
+		// empty view
+		this.emptyProgressBar = (ProgressBar) view.findViewById(R.id.empty_progressBar);
+		this.emptyTextView = (TextView) view.findViewById(R.id.empty_text);
+
+		OdsSourceManager manager = OdsSourceManager.getInstance(getActivity().getApplicationContext());
+		if (manager.isSyncRunning()) showSyncRunning();
+		else showSyncStopped();
+
 		return view;
     }
 
@@ -100,6 +117,20 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 	public final void onResume() {
 		super.onResume();
 		getLoaderManager().initLoader(getLoaderId(), null, this);
+
+		// listen for sync started / stopped
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(SyncAdapter.ACTION_SYNC_START);
+		filter.addAction(SyncAdapter.ACTION_SYNC_ALL_FINISH);
+		getActivity().registerReceiver(receiver, filter);
+	}
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		getActivity().unregisterReceiver(receiver);
 	}
 	
 
@@ -171,4 +202,27 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 		listAdapter.clear();
 	}
 
+
+	private void showSyncRunning() {
+		emptyProgressBar.setVisibility(View.VISIBLE);
+		emptyTextView.setText(getString(R.string.data_empty_loading));
+	}
+
+
+	private void showSyncStopped() {
+		emptyProgressBar.setVisibility(View.GONE);
+		emptyTextView.setText(getString(R.string.data_empty));
+	}
+
+
+	private final BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (listAdapter != null && !listAdapter.isEmpty()) {
+				String action = intent.getAction();
+				if (action.equals(SyncAdapter.ACTION_SYNC_ALL_FINISH)) showSyncRunning();
+				else showSyncStopped();
+			}
+		}
+	};
 }

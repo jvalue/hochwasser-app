@@ -20,13 +20,32 @@
 		android:listSelector="@drawable/list_selector"
 	/>
 
-	<TextView
-		android:id="@android:id/empty"
-		android:layout_height="fill_parent"
-		android:layout_width="fill_parent"
-		android:layout_margin="6dp"
-		android:text="@string/data_empty"
-		android:gravity="center"
-	/>
+    <LinearLayout
+        android:id="@android:id/empty"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        >
+
+        <ProgressBar
+            android:id="@+id/empty_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+        />
+
+        <TextView
+            android:id="@+id/empty_text"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="6dp"
+            android:text="@string/data_empty"
+            android:gravity="center"
+            style="@style/FontRegular"
+        />
+
+    </LinearLayout>
 
 </LinearLayout>

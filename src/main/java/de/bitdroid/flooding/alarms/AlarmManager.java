@@ -149,7 +149,6 @@ final class AlarmManager {
 
 	public synchronized GcmStatus getRegistrationStatus(Alarm alarm) {
 		Assert.assertNotNull(alarm);
-		Assert.assertTrue(isRegistered(alarm), "not registered");
 
 		return cepManager.getRegistrationStatus(alarm.accept(stmtCreator, null));
 	}

@@ -3,7 +3,7 @@ package de.bitdroid.flooding.news;
 import de.bitdroid.flooding.utils.Assert;
 
 
-public final class NewsItem implements Comparable<NewsItem> {
+public final class NewsItem {
 
 	private final String title, content;
 	private final long timestamp;
@@ -73,12 +73,6 @@ public final class NewsItem implements Comparable<NewsItem> {
 		hash = hash + MULT * (navigationEnabled ? 1 : 0);
 		hash = hash + MULT * Integer.valueOf(navigationPos).hashCode();
 		return hash;
-	}
-
-
-	@Override
-	public int compareTo(NewsItem other) {
-		return new Long(timestamp).compareTo(other.timestamp);
 	}
 
 

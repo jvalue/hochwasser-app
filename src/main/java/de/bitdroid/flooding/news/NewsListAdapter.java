@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.bitdroid.flooding.R;
@@ -30,7 +31,7 @@ final class NewsListAdapter extends BaseAdapter {
 		this.context = context;
 		this.manager = NewsManager.getInstance(context);
 		this.items.addAll(manager.getAllItems());
-		Collections.sort(items);
+		sort();
 	}
 
 
@@ -77,8 +78,18 @@ final class NewsListAdapter extends BaseAdapter {
 	public void notifyDataSetInvalidated() {
 		items.clear();
 		items.addAll(manager.getAllItems());
-		Collections.sort(items);
+		sort();
 		notifyDataSetChanged();
+	}
+
+
+	private void sort() {
+		Collections.sort(items, new Comparator<NewsItem>() {
+			@Override
+			public int compare(NewsItem item1, NewsItem item2) {
+				return -1 * Long.valueOf(item1.getTimestamp()).compareTo(Long.valueOf(item2.getTimestamp()));
+			}
+		});
 	}
 
 }

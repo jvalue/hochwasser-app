@@ -1,13 +1,5 @@
 package de.bitdroid.flooding.dataselection;
 
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
-
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,10 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.StringUtils;
+
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 public final class StationSelectionFragment extends DataSelectionFragment<String> implements Extras {
 
@@ -64,6 +64,13 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 
 				TextView text1 = (TextView) view.findViewById(android.R.id.text1);
 				text1.setText(StringUtils.toProperCase(station));
+
+				// if all stations entry --> highlight
+				if (isShowingAllEntries() && station.equals(getString(R.string.data_station_all))) {
+					text1.setTextColor(getResources().getColor(R.color.blue));
+				} else {
+					text1.setTextColor(getResources().getColor(R.color.white));
+				}
 
 				return view;
 			}
@@ -148,12 +155,13 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 
 
 	private void addExtraEntries(ArrayAdapter<String> adapter) {
-		boolean showAllStationsEntry = getArguments().getBoolean(
-				EXTRA_SHOW_ALL_STATIONS_ENTRY, 
-				false);
-		if (showAllStationsEntry) 
-			adapter.insert(getActivity().getString(R.string.data_station_all), 0);
+		if (isShowingAllEntries()) adapter.insert(getActivity().getString(R.string.data_station_all), 0);
 
+	}
+
+
+	private boolean isShowingAllEntries() {
+		return getArguments().getBoolean(EXTRA_SHOW_ALL_STATIONS_ENTRY, false);
 	}
 
 }

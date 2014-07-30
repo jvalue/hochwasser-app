@@ -11,15 +11,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.main.MainActivity;
 import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
 
 
 public final class NewsManager {
@@ -34,8 +33,6 @@ public final class NewsManager {
 	}
 
 
-	private final Set<NewsItem> unreadItems = new HashSet<NewsItem>();
-	private final Set<NewsItem> readItems = new HashSet<NewsItem>();
 	private final Context context;
 	private final SQLiteOpenHelper dbHelper;
 	private final List<NewsUpdateListener> listeners = new LinkedList<NewsUpdateListener>();
@@ -44,45 +41,74 @@ public final class NewsManager {
 	private NewsManager(Context context) {
 		this.context = context;
 		this.dbHelper = new NewsDatabase(context);
-
-		readAllItemsFromDb();
 	}
 
 
-	public Set<NewsItem> getAllItems() {
-		Set<NewsItem> ret = new HashSet<NewsItem>();
-		ret.addAll(readItems);
-		ret.addAll(unreadItems);
-		return ret;
-	}
+	/**
+	 * @return all news items mapped to their status: true if they have been read, false otherwise.
+	 */
+	public Map<NewsItem, Boolean> getAllItems() {
+		Map<NewsItem, Boolean> items = new HashMap<NewsItem, Boolean>();
 
+		synchronized (this) {
+			Cursor cursor = null;
+			try {
+				cursor = dbHelper.getReadableDatabase()
+						.rawQuery("SELECT * FROM " + NewsDatabase.TABLE_NAME, null);
 
-	public Set<NewsItem> getUnreadItems() {
-		return new HashSet<NewsItem>(unreadItems);
-	}
+				if (cursor.getCount() == 0) return items;
+				cursor.moveToFirst();
 
+				int titleIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_TITLE);
+				int contentIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_CONTENT);
+				int timestampIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_TIMESTAMP);
+				int navEnabledIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_NAVIGATION_ENABLED);
+				int navPosIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_NAVIGATION_POS);
+				int readPos = cursor.getColumnIndex(NewsDatabase.COLUMN_READ);
 
-	public Set<NewsItem> getReadItems() {
-		return new HashSet<NewsItem>(readItems);
+				do {
+					NewsItem.Builder builder = new NewsItem.Builder(
+							cursor.getString(titleIdx),
+							cursor.getString(contentIdx),
+							cursor.getLong(timestampIdx));
+					if (cursor.getInt(navEnabledIdx) > 0)
+						builder.setNavigationPos(cursor.getInt(navPosIdx));
+					else
+						builder.disableNavigation();
+
+					if (cursor.getInt(readPos) > 0) items.put(builder.build(), true);
+					else items.put(builder.build(), false);
+
+				} while (cursor.moveToNext());
+			} finally {
+				if (cursor != null) cursor.close();
+			}
+		}
+
+		return items;
 	}
 
 
 	public void markAllItemsRead() {
-		readItems.addAll(unreadItems);
-		unreadItems.clear();
-
-		NotificationManager manager 
+		NotificationManager manager
 			= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.cancel(NOTIFICATION_ID);
 
-		SQLiteDatabase database = null;
-		try {
-			database = dbHelper.getWritableDatabase();
-			ContentValues values = new ContentValues();
-			values.put(NewsDatabase.COLUMN_READ, 1);
-			database.update(NewsDatabase.TABLE_NAME, values, null, null);
-		} finally {
-			if (database != null) database.close();
+		synchronized (this) {
+			SQLiteDatabase database = null;
+			try {
+				database = dbHelper.getWritableDatabase();
+				ContentValues values = new ContentValues();
+				values.put(NewsDatabase.COLUMN_READ, 1);
+				int updateCount = database.update(NewsDatabase.TABLE_NAME, values, null, null);
+				if (updateCount > 0) {
+					for (NewsUpdateListener listener : listeners) {
+						listener.onAllItemsRead();
+					}
+				}
+			} finally {
+				if (database != null) database.close();
+			}
 		}
 	}
 
@@ -103,8 +129,26 @@ public final class NewsManager {
 	public void addItem(NewsItem item, boolean showNotification) {
 		Assert.assertNotNull(item);
 
-		unreadItems.add(item);
-		insertIntoDb(item);
+		// insert into db
+		synchronized (this) {
+			ContentValues values = new ContentValues();
+			values.put(NewsDatabase.COLUMN_TITLE, item.getTitle());
+			values.put(NewsDatabase.COLUMN_CONTENT, item.getContent());
+			values.put(NewsDatabase.COLUMN_TIMESTAMP, item.getTimestamp());
+			values.put(NewsDatabase.COLUMN_NAVIGATION_ENABLED, item.isNavigationEnabled());
+			values.put(NewsDatabase.COLUMN_NAVIGATION_POS, item.getNavigationPos());
+			values.put(NewsDatabase.COLUMN_READ, false);
+
+			alertListeners(item, true);
+
+			SQLiteDatabase database = null;
+			try {
+				database = dbHelper.getWritableDatabase();
+				database.insert(NewsDatabase.TABLE_NAME, null, values);
+			} finally {
+				if (database != null) database.close();
+			}
+		}
 
 		if (!showNotification) return;
 
@@ -123,7 +167,6 @@ public final class NewsManager {
 			.setContentTitle(item.getTitle())
 			.setContentText(item.getContent())
 			.setAutoCancel(true)
-			.setNumber(unreadItems.size())
 			.setContentIntent(pendingIntent);
 
 
@@ -131,118 +174,39 @@ public final class NewsManager {
 			= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(NOTIFICATION_ID, builder.build());
 
-		alertListeners(item, true);
+
 	}
 
 
 	public void removeItem(NewsItem item) {
 		Assert.assertNotNull(item);
-		Assert.assertTrue(
-				unreadItems.contains(item) || readItems.contains(item),
-				"item not present");
 
-		unreadItems.remove(item);
-		readItems.remove(item);
-		deleteItemFromDb(item);
+		// remove from db
+		synchronized (this) {
+			SQLiteDatabase database = null;
+			try {
+				database = dbHelper.getWritableDatabase();
+				int count = database.delete(NewsDatabase.TABLE_NAME,
+						NewsDatabase.COLUMN_TITLE + "=? AND "
+								+ NewsDatabase.COLUMN_CONTENT + "=? AND "
+								+ NewsDatabase.COLUMN_TIMESTAMP + "=? AND "
+								+ NewsDatabase.COLUMN_NAVIGATION_ENABLED + "=? AND "
+								+ NewsDatabase.COLUMN_NAVIGATION_POS + "=?",
+						new String[]{
+								item.getTitle(),
+								item.getContent(),
+								String.valueOf(item.getTimestamp()),
+								String.valueOf(item.isNavigationEnabled() ? 1 : 0),
+								String.valueOf(item.getNavigationPos()),
+						}
+				);
+			} finally {
+				if (database != null) database.close();
+			}
+		}
 
+		// alert about deletion
 		alertListeners(item, false);
-	}
-
-
-	private void insertIntoDb(NewsItem item) {
-		ContentValues values = new ContentValues();
-		values.put(NewsDatabase.COLUMN_TITLE, item.getTitle());
-		values.put(NewsDatabase.COLUMN_CONTENT, item.getContent());
-		values.put(NewsDatabase.COLUMN_TIMESTAMP, item.getTimestamp());
-		values.put(NewsDatabase.COLUMN_NAVIGATION_ENABLED, item.isNavigationEnabled());
-		values.put(NewsDatabase.COLUMN_NAVIGATION_POS, item.getNavigationPos());
-		values.put(NewsDatabase.COLUMN_READ, false);
-
-		SQLiteDatabase database = null;
-		try {
-			database = dbHelper.getWritableDatabase();
-			database.insert(NewsDatabase.TABLE_NAME, null, values);
-		} finally {
-			if (database != null) database.close();
-		}
-	}
-
-
-	private void deleteItemFromDb(NewsItem item) {
-		SQLiteDatabase database = null;
-		try {
-			database = dbHelper.getWritableDatabase();
-			String d = 
-					NewsDatabase.COLUMN_TITLE + "=? AND "
-					+ NewsDatabase.COLUMN_CONTENT + "=? AND "
-					+ NewsDatabase.COLUMN_TIMESTAMP + "=? AND "
-					+ NewsDatabase.COLUMN_NAVIGATION_ENABLED + "=? AND "
-					+ NewsDatabase.COLUMN_NAVIGATION_POS + "=?";
-			Log.debug(d);
-			String[] s = new String[] {
-						item.getTitle(),
-						item.getContent(),
-						String.valueOf(item.getTimestamp()),
-						String.valueOf(item.isNavigationEnabled() ? 1 : 0),
-						String.valueOf(item.getNavigationPos())
-					};
-			for (String st : s) Log.debug(st);
-
-			int count = database.delete(NewsDatabase.TABLE_NAME,
-					NewsDatabase.COLUMN_TITLE + "=? AND "
-					+ NewsDatabase.COLUMN_CONTENT + "=? AND "
-					+ NewsDatabase.COLUMN_TIMESTAMP + "=? AND "
-					+ NewsDatabase.COLUMN_NAVIGATION_ENABLED + "=? AND "
-					+ NewsDatabase.COLUMN_NAVIGATION_POS + "=?",
-					new String[] {
-						item.getTitle(),
-						item.getContent(),
-						String.valueOf(item.getTimestamp()),
-						String.valueOf(item.isNavigationEnabled() ? 1 : 0),
-						String.valueOf(item.getNavigationPos()),
-					});
-
-			Log.debug("DELETED " + count + " ITEMS");
-
-		} finally {
-			if (database != null) database.close();
-		}
-	}
-
-
-	private void readAllItemsFromDb() {
-		Cursor cursor = null;
-		try {
-			cursor = dbHelper.getReadableDatabase()
-				.rawQuery("SELECT * FROM " + NewsDatabase.TABLE_NAME, null);
-
-			if (cursor.getCount() == 0) return;
-			cursor.moveToFirst();
-			
-			int titleIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_TITLE);
-			int contentIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_CONTENT);
-			int timestampIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_TIMESTAMP);
-			int navEnabledIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_NAVIGATION_ENABLED);
-			int navPosIdx = cursor.getColumnIndex(NewsDatabase.COLUMN_NAVIGATION_POS);
-			int readPos = cursor.getColumnIndex(NewsDatabase.COLUMN_READ);
-
-			do {
-				NewsItem.Builder builder = new NewsItem.Builder(
-						cursor.getString(titleIdx),
-						cursor.getString(contentIdx),
-						cursor.getLong(timestampIdx));
-				if (cursor.getInt(navEnabledIdx) > 0) 
-					builder.setNavigationPos(cursor.getInt(navPosIdx));
-				else 
-					builder.disableNavigation();
-
-				if (cursor.getInt(readPos) > 0) readItems.add(builder.build());
-				else unreadItems.add(builder.build());
-
-			} while (cursor.moveToNext());
-		} finally {
-			if (cursor != null) cursor.close();
-		}
 	}
 
 

@@ -1,10 +1,10 @@
 package de.bitdroid.flooding.map;
 
-import org.osmdroid.views.MapView;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import org.osmdroid.views.MapView;
 
 import de.bitdroid.flooding.utils.Log;
 
@@ -29,9 +29,6 @@ public final class FixedMapView extends MapView {
 					Log.debug("Ignored move event");
 					return true;
 				}
-
-				Log.debug(getMapCenter().toString());
-
 				break;
 
 			case MotionEvent.ACTION_POINTER_UP:

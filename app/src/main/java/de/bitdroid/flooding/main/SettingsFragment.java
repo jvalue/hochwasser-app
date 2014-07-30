@@ -4,9 +4,8 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.support.v4.preference.PreferenceFragment;
 import android.widget.Toast;
-
-import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,8 +19,6 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 
 public final class SettingsFragment extends PreferenceFragment {
-
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

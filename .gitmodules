@@ -1,0 +1,4 @@
+[submodule "libraries/android-support-v4-preferencefragment"]
+	path = libraries/android-support-v4-preferencefragment
+	url = git@github.com:kolavar/android-support-v4-preferencefragment.git
+	ignore = dirty

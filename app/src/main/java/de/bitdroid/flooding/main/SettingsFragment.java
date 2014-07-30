@@ -47,6 +47,7 @@ public final class SettingsFragment extends PreferenceFragment {
 		Preference monitoring = findPreference(getString(R.string.prefs_ods_monitor_key));
 		final EditTextPreference monitorDuration
 				= (EditTextPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
+		final Preference interval = findPreference(getString(R.string.prefs_ods_monitor_interval_key));
 
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -59,10 +60,14 @@ public final class SettingsFragment extends PreferenceFragment {
 
 				boolean startMonitor = (Boolean) newValue;
 				monitorDuration.setEnabled(startMonitor);
+				interval.setEnabled(startMonitor);
 
 				if (startMonitor) {
 					if (!monitor.isBeingMonitored(source)) monitor.startMonitoring(source);
-					if (!sourceManager.isRegisteredForPolling(source)) sourceManager.startPolling(60, source);
+					double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
+					long interval = (long) intervalInHours * 60 * 60;
+
+					if (!sourceManager.isRegisteredForPolling(source)) sourceManager.startPolling(interval, source);
 				} else {
 					if (monitor.isBeingMonitored(source)) monitor.stopMonitoring(source);
 					if (sourceManager.isRegisteredForPolling(source)) sourceManager.stopPolling();
@@ -84,6 +89,9 @@ public final class SettingsFragment extends PreferenceFragment {
 				return true;
 			}
 		});
+
+		double intervalValue = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
+		interval.setSummary(getString(R.string.prefs_ods_monitor_interval_format, intervalValue));
 
 		// sync status
 		OdsSourceManager manager 

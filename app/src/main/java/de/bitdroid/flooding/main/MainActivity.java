@@ -152,7 +152,9 @@ public class MainActivity extends FragmentActivity {
 		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
 		if (enabled && !monitor.isBeingMonitored(source)) {
 			monitor.startMonitoring(source);
-			sourceManager.startPolling(60, source);
+			double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
+			long intervalInSeconds = (long) intervalInHours * 60 * 60;
+			sourceManager.startPolling(intervalInSeconds, source);
 		}
 
 		// set CEPS server name

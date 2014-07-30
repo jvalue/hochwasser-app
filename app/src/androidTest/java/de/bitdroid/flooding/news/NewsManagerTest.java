@@ -1,16 +1,24 @@
 package de.bitdroid.flooding.news;
 
-import android.content.Context;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
 
 public final class NewsManagerTest extends AndroidTestCase {
 
+	private int  newItemCounter, deletedItemCounter, readCounter;
+
+	@Override
+	public void setUp() {
+		setContext(new RenamingDelegatingContext(getContext(), "test"));
+		newItemCounter = 0;
+		deletedItemCounter = 0;
+		readCounter = 0;
+	}
+
 
 	public void testCRUD() {
-		Context context = new RenamingDelegatingContext(getContext(), "test_");
-		NewsManager manager = NewsManager.getInstance(context);
+		NewsManager manager = NewsManager.getInstance(getContext());
 
 		assertTrue(manager.getAllItems().isEmpty());
 
@@ -43,6 +51,46 @@ public final class NewsManagerTest extends AndroidTestCase {
 
 		manager.removeItem(i2);
 		assertTrue(manager.getAllItems().size() == 0);
+	}
+
+
+	public void testListener() {
+		NewsManager manager = NewsManager.getInstance(getContext());
+		final NewsItem item = new NewsItem.Builder("hello", "world", 41).build();
+
+		manager.registerListener(new NewsUpdateListener() {
+			@Override
+			public void onNewItem(NewsItem newItem) {
+				assertEquals(item, newItem);
+				newItemCounter++;
+			}
+
+			@Override
+			public void onDeletedItem(NewsItem deletedItem) {
+				assertEquals(item, deletedItem);
+				deletedItemCounter++;
+			}
+
+			@Override
+			public void onAllItemsRead() {
+				readCounter++;
+			}
+		});
+
+		manager.addItem(item, false);
+		assertEquals(1, newItemCounter);
+		assertEquals(0, deletedItemCounter);
+		assertEquals(0, readCounter);
+
+		manager.markAllItemsRead();
+		assertEquals(1, newItemCounter);
+		assertEquals(0, deletedItemCounter);
+		assertEquals(1, readCounter);
+
+		manager.removeItem(item);
+		assertEquals(1, newItemCounter);
+		assertEquals(1, deletedItemCounter);
+		assertEquals(1, readCounter);
 	}
 
 }

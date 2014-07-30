@@ -89,7 +89,7 @@ public final class SettingsFragment extends PreferenceFragment {
 
 		double intervalValue = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
 		monitorInterval.setSummary(getString(R.string.prefs_ods_monitor_interval_format, intervalValue));
-		monitorDuration.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		monitorInterval.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				Toast.makeText(getActivity(), "stub", Toast.LENGTH_SHORT).show();

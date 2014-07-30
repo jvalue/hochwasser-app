@@ -1,11 +1,8 @@
 package de.bitdroid.flooding.alarms;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +18,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
@@ -155,6 +161,8 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.add:
+				if (!arePlayServicesAvailable()) return true;
+
 				Intent intent = new Intent(
 						getActivity().getApplicationContext(), 
 						NewAlarmActivity.class);
@@ -198,6 +206,27 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 
 	private String formatAlarmTitle(LevelAlarm alarm) {
 		return StringUtils.toProperCase(alarm.getRiver()) + " - " + StringUtils.toProperCase(alarm.getStation());
+	}
+
+
+	private boolean arePlayServicesAvailable() {
+		Context context = getActivity().getApplicationContext();
+		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+		if (status == ConnectionResult.SUCCESS) return true;
+
+		if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 42);
+			dialog.show();
+		} else {
+			new AlertDialog.Builder(context)
+					.setTitle(getString(R.string.error_play_services_missing_title))
+					.setMessage(getString(R.string.error_play_services_missing_msg))
+					.setPositiveButton(getString(R.string.ok), null)
+					.create()
+					.show();
+		}
+
+		return false;
 	}
 
 }

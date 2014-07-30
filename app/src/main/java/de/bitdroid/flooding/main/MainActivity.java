@@ -1,6 +1,5 @@
 package de.bitdroid.flooding.main;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,9 +22,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.alarms.AlarmFragment;
@@ -212,7 +208,6 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (!arePlayServicesAvailable()) finish();
 		registerReceiver(navigationBroadcastReceiver, new IntentFilter(ACTION_NAVIGATE));
 	}
 
@@ -257,19 +252,6 @@ public class MainActivity extends FragmentActivity {
 		fragmentTitle = navItems[position].getTitle();
 		drawerLayout.closeDrawer(drawerMenu);
 		setTitle(fragmentTitle);
-	}
-
-
-	private boolean arePlayServicesAvailable() {
-		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-		if (status == ConnectionResult.SUCCESS) return true;
-
-		if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, this, 42);
-			dialog.show();
-		}
-
-		return false;
 	}
 
 

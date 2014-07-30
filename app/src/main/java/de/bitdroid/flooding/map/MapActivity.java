@@ -1,31 +1,30 @@
 package de.bitdroid.flooding.map;
 
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_KM;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LAT;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LONG;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import android.app.Activity;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.view.MenuItem;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import android.app.Activity;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.graphics.Point;
-import android.os.Bundle;
-import android.view.MenuItem;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.StringUtils;
+
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_KM;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LAT;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LONG;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 public class MapActivity extends Activity {
 
@@ -60,7 +59,7 @@ public class MapActivity extends Activity {
 				mapView);
 		mapView.getOverlays().add(locationOverlay);
 		
-		// locad station data
+		// load station data
 		AbstractLoaderCallbacks loaderCallback = new AbstractLoaderCallbacks(LOADER_ID) {
 
 			@Override
@@ -84,7 +83,7 @@ public class MapActivity extends Activity {
 					stations.add(new Station(stationName, km, lat, lon));
 				} while (cursor.moveToNext());
 
-				// filter stations with invaild cooridnates
+				// filter stations with invalid coordinates
 				filterInvalidStations(stations);
 
 				// add to overlays
@@ -95,8 +94,8 @@ public class MapActivity extends Activity {
 						stations);
 				mapView.getOverlays().add(stationsOverlay);
 
-				Point center = mapView.getProjection().toPixels(getCenter(stations), null);
-				mapView.scrollTo(center.x, center.y);
+				GeoPoint  point = getCenter(stations);
+				mapView.getController().setCenter(point);
 				mapView.getController().setZoom(8);
 			}
 

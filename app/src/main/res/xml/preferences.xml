@@ -20,25 +20,33 @@
             android:numeric="integer"
             android:defaultValue="@string/prefs_ods_monitor_days_default"/>
 
-        <Preference
+        <EditTextPreference
             android:title="@string/prefs_ods_monitor_interval"
             android:key="@string/prefs_ods_monitor_interval_key"
-            android:defaultValue="@string/prefs_ods_monitor_interval_default" />
+            android:defaultValue="@string/prefs_ods_monitor_interval_default"
+            android:enabled="false"
+            android:shouldDisableView="false" />
 
-		<Preference
+        <EditTextPreference
 			android:title="@string/prefs_ods_sync_last"
 			android:key="@string/prefs_ods_sync_last_key"
-			android:defaultValue="@string/never" />
+			android:defaultValue="@string/never"
+            android:enabled="false"
+            android:shouldDisableView="false" />
 
-		<Preference
+        <EditTextPreference
 			android:title="@string/prefs_ods_sync_last_success"
 			android:key="@string/prefs_ods_sync_last_success_key"
-			android:defaultValue="@string/never" />
+			android:defaultValue="@string/never"
+            android:enabled="false"
+            android:shouldDisableView="false" />
 
-		<Preference
+        <EditTextPreference
 			android:title="@string/prefs_ods_sync_last_fail"
 			android:key="@string/prefs_ods_sync_last_fail_key"
-			android:defaultValue="@string/never" />
+			android:defaultValue="@string/never"
+            android:enabled="false"
+            android:shouldDisableView="false" />
 
 	</PreferenceCategory>
 

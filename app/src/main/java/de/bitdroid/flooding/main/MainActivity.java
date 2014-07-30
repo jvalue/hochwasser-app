@@ -138,7 +138,6 @@ public class MainActivity extends FragmentActivity {
 		SharedPreferences prefs = PreferenceManager
 			.getDefaultSharedPreferences(getApplicationContext());
 
-
 		// set ODS server name
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance(getApplicationContext());
 		if (sourceManager.getOdsServerName() == null) {
@@ -153,7 +152,7 @@ public class MainActivity extends FragmentActivity {
 		if (enabled && !monitor.isBeingMonitored(source)) {
 			monitor.startMonitoring(source);
 			double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
-			long intervalInSeconds = (long) intervalInHours * 60 * 60;
+			long intervalInSeconds = (long) (intervalInHours * 60 * 60);
 			sourceManager.startPolling(intervalInSeconds, source);
 		}
 

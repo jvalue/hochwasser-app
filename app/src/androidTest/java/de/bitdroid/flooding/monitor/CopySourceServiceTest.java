@@ -49,12 +49,13 @@ public class CopySourceServiceTest extends ServiceTestCase {
 
 		// setup monitor frequency
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-		editor.putInt(getContext().getString(R.string.prefs_ods_monitor_days_key), 1);
-		editor.putFloat(getContext().getString(R.string.prefs_ods_monitor_interval_key), 11.5f);
+		editor.putString(getContext().getString(R.string.prefs_ods_monitor_days_key), String.valueOf(1));
+		editor.putString(getContext().getString(R.string.prefs_ods_monitor_interval_key), String.valueOf(11.5f));
 		editor.commit();
 
 		// start first copying
 		monitor.startMonitoring(source);
+		assertTrue(monitor.isBeingMonitored(source));
 
 		Intent intent = new Intent(getContext(), CopySourceService.class);
 		intent.putExtra(CopySourceService.EXTRA_SOURCE_NAME, source.toString());
@@ -62,21 +63,24 @@ public class CopySourceServiceTest extends ServiceTestCase {
 		assertEquals(0, monitor.getAvailableTimestamps(source).size());
 
 		startService(intent);
-		Thread.sleep(100);
+		Thread.sleep(200);
 		assertEquals(1, monitor.getAvailableTimestamps(source).size());
 
 		startService(intent);
-		Thread.sleep(100);
+		Thread.sleep(200);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
 
 		// old values should have been deleted
 		startService(intent);
-		Thread.sleep(100);
+		Thread.sleep(200);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
 
 		startService(intent);
-		Thread.sleep(100);
+		Thread.sleep(200);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
+
+		monitor.stopMonitoring(source);
+		assertFalse(monitor.isBeingMonitored(source));
 	}
 
 

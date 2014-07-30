@@ -65,7 +65,7 @@ public final class SettingsFragment extends PreferenceFragment {
 				if (startMonitor) {
 					if (!monitor.isBeingMonitored(source)) monitor.startMonitoring(source);
 					double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
-					long interval = (long) intervalInHours * 60 * 60;
+					long interval = (long) (intervalInHours * 60 * 60);
 
 					if (!sourceManager.isRegisteredForPolling(source)) sourceManager.startPolling(interval, source);
 				} else {

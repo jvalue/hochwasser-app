@@ -76,8 +76,8 @@ public final class CopySourceService extends IntentService {
 
 			// remove old values (according to settings)
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-			long monitorPeriod = prefs.getInt(getString(R.string.prefs_ods_monitor_days_key), -1);
-			double monitorInterval = prefs.getFloat(getString(R.string.prefs_ods_monitor_interval_key), -1.0f);
+			long monitorPeriod = Long.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_days_key), "-1"));
+			double monitorInterval = Float.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_interval_key), "-1"));
 			if (monitorPeriod == -1 || monitorInterval == -1) {
 				Log.error("failed to read settings for removing old monitor data");
 				return;

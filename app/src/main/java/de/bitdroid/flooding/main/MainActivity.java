@@ -36,7 +36,6 @@ import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.ods.cep.CepManager;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
-import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 public class MainActivity extends FragmentActivity {
@@ -153,11 +152,7 @@ public class MainActivity extends FragmentActivity {
 		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
 		if (enabled && !monitor.isBeingMonitored(source)) {
 			monitor.startMonitoring(source);
-		}
-
-		GcmStatus sourceStatus = sourceManager.getPushNotificationsRegistrationStatus(source);
-		if (sourceStatus.equals(GcmStatus.UNREGISTERED)) {
-			sourceManager.startPushNotifications(source);
+			sourceManager.startPolling(60, source);
 		}
 
 		// set CEPS server name

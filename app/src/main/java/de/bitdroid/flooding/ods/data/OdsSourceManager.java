@@ -11,6 +11,7 @@ import java.util.Set;
 
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.flooding.utils.Log;
 
 
 public final class OdsSourceManager {
@@ -59,6 +60,8 @@ public final class OdsSourceManager {
 		Assert.assertTrue(pollFrequency > 0, "pollFrequency must be > 0");
 		Assert.assertFalse(SyncUtils.isPeriodicSyncScheduled(context), "sync already scheduled");
 
+		Log.debug("started polling with frequency " + pollFrequency);
+
 		addSyncAccount();
 		for (OdsSource source : sources) registerSource(source);
 		SyncUtils.startPeriodicSync(context, pollFrequency);
@@ -70,6 +73,8 @@ public final class OdsSourceManager {
 	 */
 	public void stopPolling() {
 		Assert.assertTrue(SyncUtils.isPeriodicSyncScheduled(context), "sync not scheduled");
+
+		Log.debug("stopped polling");
 
 		SyncUtils.stopPeriodicSync(context);
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
@@ -165,6 +170,9 @@ public final class OdsSourceManager {
 	 */
 	public void startManualSync(OdsSource source) {
 		Assert.assertNotNull(source);
+
+		Log.debug("starting manual sync");
+
 		addSyncAccount();
 		SyncUtils.startManualSync(context, source);
 	}

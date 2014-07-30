@@ -45,16 +45,42 @@ public final class SettingsFragment extends PreferenceFragment {
 
 		// source monitoring
 		Preference monitoring = findPreference(getString(R.string.prefs_ods_monitor_key));
+		final EditTextPreference monitorDuration
+				= (EditTextPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
+
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				SourceMonitor monitor = SourceMonitor
-					.getInstance(getActivity().getApplicationContext());
+						.getInstance(getActivity().getApplicationContext());
+				OdsSourceManager sourceManager = OdsSourceManager
+						.getInstance(getActivity().getApplication());
 				OdsSource source = PegelOnlineSource.INSTANCE;
 
-				if (!monitor.isBeingMonitored(source)) monitor.startMonitoring(source);
-				else monitor.stopMonitoring(source);
+				boolean startMonitor = (Boolean) newValue;
+				monitorDuration.setEnabled(startMonitor);
 
+				if (startMonitor) {
+					if (!monitor.isBeingMonitored(source)) monitor.startMonitoring(source);
+					if (!sourceManager.isRegisteredForPolling(source)) sourceManager.startPolling(60, source);
+				} else {
+					if (monitor.isBeingMonitored(source)) monitor.stopMonitoring(source);
+					if (sourceManager.isRegisteredForPolling(source)) sourceManager.stopPolling();
+				}
+
+				return true;
+			}
+		});
+
+		int days = Integer.valueOf(monitorDuration.getText().toString());
+		monitorDuration.setSummary(getString(R.string.prefs_ods_monitor_days_format, days));
+		monitorDuration.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				int newDays = Integer.valueOf(newValue.toString());
+				if (newDays <= 0) return false;
+
+				monitorDuration.setSummary(getString(R.string.prefs_ods_monitor_days_format, newDays));
 				return true;
 			}
 		});

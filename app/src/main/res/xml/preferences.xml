@@ -14,6 +14,12 @@
 			android:key="@string/prefs_ods_monitor_key"
 			android:defaultValue="true"/>
 
+        <EditTextPreference
+            android:title="@string/prefs_ods_monitor_days"
+            android:key="@string/prefs_ods_monitor_days_key"
+            android:numeric="integer"
+            android:defaultValue="@string/prefs_ods_monitor_days_default"/>
+
 		<Preference
 			android:title="@string/prefs_ods_sync_last"
 			android:key="@string/prefs_ods_sync_last_key"

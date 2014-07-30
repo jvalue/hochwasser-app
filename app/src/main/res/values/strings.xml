@@ -78,8 +78,12 @@
 	<string name="prefs_ods_servername">ODS Servername</string>
 	<string name="prefs_ods_servername_key">ods_server_name</string>
 	<string name="prefs_ods_servername_default">http://192.168.178.93:8182</string>
-	<string name="prefs_ods_monitor">Record PegelOnline Source</string>
+	<string name="prefs_ods_monitor">Record water levels</string>
 	<string name="prefs_ods_monitor_key">monitor</string>
+    <string name="prefs_ods_monitor_days">Monitoring period</string>
+    <string name="prefs_ods_monitor_days_key">monitor_duration</string>
+    <string name="prefs_ods_monitor_days_default">7</string>
+    <string name="prefs_ods_monitor_days_format">%1$s days</string>
 	<string name="prefs_ods_sync_last">Last sync</string>
 	<string name="prefs_ods_sync_last_key">last_sync</string>
 	<string name="prefs_ods_sync_last_success">Last successful sync</string>

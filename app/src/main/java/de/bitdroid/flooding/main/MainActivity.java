@@ -13,6 +13,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -49,7 +51,7 @@ public class MainActivity extends FragmentActivity {
 	private TextView titleView;
 
 	private NavItem[] navItems;
-	private int currentNavItem = 0;
+	private int currentNavItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,12 @@ public class MainActivity extends FragmentActivity {
 		drawerMenu = (LinearLayout) findViewById(R.id.menu);
 		drawerMenuList = (ListView) findViewById(R.id.menu_entries);
 		titleView = (TextView) findViewById(Resources.getSystem().getIdentifier("action_bar_title", "id", "android"));
+
+		if (savedInstanceState == null) {
+			currentNavItem = 0;
+		} else {
+			currentNavItem = savedInstanceState.getInt(EXTRA_CURRENT_NAV_ITEM);
+		}
 
 		String[] navTitles = getResources().getStringArray(R.array.nav_titles);
 		TypedArray navIcons = getResources().obtainTypedArray(R.array.nav_icons);
@@ -79,7 +87,11 @@ public class MainActivity extends FragmentActivity {
 		drawerMenuList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				navigateTo(position);
+				if (currentNavItem == position) {
+					drawerLayout.closeDrawer(drawerMenu);
+					return;
+				}
+				navigateTo(position, true, true);
 			}
 		});
 
@@ -124,7 +136,7 @@ public class MainActivity extends FragmentActivity {
 		drawerLayout.setDrawerListener(drawerToggle);
 
 		// move to home screen
-		navigateTo(currentNavItem);
+		if (savedInstanceState == null) navigateTo(currentNavItem, false, true);
 
 		// load default pref values
 		PreferenceManager.setDefaultValues(
@@ -219,6 +231,21 @@ public class MainActivity extends FragmentActivity {
 	}
 
 
+	@Override
+	public void onBackPressed() {
+		FragmentManager manager = getSupportFragmentManager();
+		int backCount = manager.getBackStackEntryCount();
+		if (backCount == 0) {
+			finish();
+			return;
+		}
+
+		FragmentManager.BackStackEntry entry = manager.getBackStackEntryAt(backCount - 1);
+		int originalPos = Integer.valueOf(entry.getName());
+		manager.popBackStack();
+		navigateTo(originalPos, false, false);
+	}
+
 	private static final String EXTRA_CURRENT_NAV_ITEM = "EXTRA_CURRENT_NAV_ITEM";
 
 	@Override
@@ -228,15 +255,8 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 
-	@Override
-	protected void onRestoreInstanceState(Bundle state) {
-		super.onRestoreInstanceState(state);
-		currentNavItem = state.getInt(EXTRA_CURRENT_NAV_ITEM);
-		navigateTo(currentNavItem);
-	}
-
-
-	private void navigateTo(int position) {
+	private void navigateTo(int position, boolean addToBackStack, boolean replaceFragment) {
+		int oldPosition = currentNavItem;
 		currentNavItem = position;
 
 		Fragment fragment = null;
@@ -247,7 +267,11 @@ public class MainActivity extends FragmentActivity {
 				R.anim.slide_enter_from_right,
 				R.anim.slide_exit_to_left);
 		else if (position == 3) fragment = new SettingsFragment();
-		getSupportFragmentManager().beginTransaction().replace(R.id.frame, fragment).commit();
+
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		if (addToBackStack) transaction.addToBackStack(String.valueOf(oldPosition));
+		if (replaceFragment) transaction.replace(R.id.frame, fragment).commit();
+
 		drawerMenuList.setItemChecked(position, true);
 		fragmentTitle = navItems[position].getTitle();
 		drawerLayout.closeDrawer(drawerMenu);
@@ -259,7 +283,7 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int pos = intent.getIntExtra(EXTRA_POSITION, -1);
-			navigateTo(pos);
+			navigateTo(pos, true, true);
 		}
 	};
 

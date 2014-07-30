@@ -106,8 +106,8 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 			@Override
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
 				final Pair<NewsItem, Boolean> item = listAdapter.getItem(pos);
-				manager.removeItem(item.first);
 				listAdapter.remove(item); // hack to stop list from flashing
+				manager.removeItem(item.first);
 
 				return new EnhancedListView.Undoable() {
 					@Override

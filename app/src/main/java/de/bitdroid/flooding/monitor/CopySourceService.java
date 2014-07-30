@@ -1,15 +1,20 @@
 package de.bitdroid.flooding.monitor;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.SQLiteType;
@@ -39,6 +44,7 @@ public final class CopySourceService extends IntentService {
 		
 		int copyCount = 0;
 		try {
+			// insert new values
 			cursor = getContentResolver().query(
 					source.toUri(),
 					sourceColumns.toArray(new String[sourceColumns.size()]),
@@ -47,7 +53,6 @@ public final class CopySourceService extends IntentService {
 			if (cursor.getCount() == 0) return;
 
 			database = new MonitorDatabase(getApplicationContext()).getWritableDatabase();
-
 
 			long timeStamp = System.currentTimeMillis();
 			String[] cursorColumns = cursor.getColumnNames();
@@ -68,6 +73,29 @@ public final class CopySourceService extends IntentService {
 				database.insert(source.toSqlTableName(), null, values);
 				copyCount++;
 			} while (cursor.moveToNext());
+
+			// remove old values (according to settings)
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			long monitorPeriod = prefs.getInt(getString(R.string.prefs_ods_monitor_days_key), -1);
+			double monitorInterval = prefs.getFloat(getString(R.string.prefs_ods_monitor_interval_key), -1.0f);
+			if (monitorPeriod == -1 || monitorInterval == -1) {
+				Log.error("failed to read settings for removing old monitor data");
+				return;
+			}
+
+			long monitorCount = (long) (monitorPeriod * (24.0 / monitorInterval));
+			List<Long> timestamps = SourceMonitor.getInstance(getApplicationContext()).getAvailableTimestamps(source);
+			Collections.sort(timestamps);
+			int deletionCount;
+			for (deletionCount = 0; monitorCount + deletionCount < timestamps.size(); deletionCount++) {
+				long timestamp = timestamps.get(deletionCount);
+				database.delete(
+						source.toSqlTableName(),
+						SourceMonitor.COLUMN_MONITOR_TIMESTAMP + "=?",
+						new String[] { String.valueOf(timestamp) });
+			}
+			Log.info("deleted " + deletionCount + " old monitor entries");
+
 
 		} finally {
 			if (cursor != null) cursor.close();

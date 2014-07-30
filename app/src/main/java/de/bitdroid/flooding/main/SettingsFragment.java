@@ -47,7 +47,7 @@ public final class SettingsFragment extends PreferenceFragment {
 		Preference monitoring = findPreference(getString(R.string.prefs_ods_monitor_key));
 		final EditTextPreference monitorDuration
 				= (EditTextPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
-		final Preference interval = findPreference(getString(R.string.prefs_ods_monitor_interval_key));
+		final Preference monitorInterval = findPreference(getString(R.string.prefs_ods_monitor_interval_key));
 
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -59,9 +59,6 @@ public final class SettingsFragment extends PreferenceFragment {
 				OdsSource source = PegelOnlineSource.INSTANCE;
 
 				boolean startMonitor = (Boolean) newValue;
-				monitorDuration.setEnabled(startMonitor);
-				interval.setEnabled(startMonitor);
-
 				if (startMonitor) {
 					if (!monitor.isBeingMonitored(source)) monitor.startMonitoring(source);
 					double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
@@ -91,7 +88,14 @@ public final class SettingsFragment extends PreferenceFragment {
 		});
 
 		double intervalValue = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
-		interval.setSummary(getString(R.string.prefs_ods_monitor_interval_format, intervalValue));
+		monitorInterval.setSummary(getString(R.string.prefs_ods_monitor_interval_format, intervalValue));
+		monitorDuration.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				Toast.makeText(getActivity(), "stub", Toast.LENGTH_SHORT).show();
+				return false;
+			}
+		});
 
 		// sync status
 		OdsSourceManager manager 

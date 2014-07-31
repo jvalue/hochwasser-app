@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +37,10 @@ import java.util.Map;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.main.MainActivity;
 import de.bitdroid.flooding.utils.ShowcaseSeries;
-import de.timroes.android.listview.EnhancedListView;
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardListView;
+import it.gmariotti.cardslib.library.view.listener.UndoBarController;
 
 
 public final class NewsFragment extends Fragment implements AbsListView.MultiChoiceModeListener,
@@ -49,8 +51,10 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	private static final SimpleDateFormat dateFormatter
 			= new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
-	private EnhancedListView listView;
-	private ArrayAdapter<Pair<NewsItem, Boolean>> listAdapter;
+	private CardListView listView;
+	private CardArrayAdapter listAdapter;
+	private UndoBarController undoBarController;
+	// private ArrayAdapter<Pair<NewsItem, Boolean>> listAdapter;
 	private ShowcaseView currentShowcaseView;
 	private NewsManager manager;
 
@@ -69,7 +73,16 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.news, container, false);
-		listView = (EnhancedListView) view.findViewById(R.id.list);
+		listView = (CardListView) view.findViewById(R.id.list);
+		List<Card> cards = new LinkedList<Card>();
+		cards.add(new NewsCard(getActivity(), new Pair<NewsItem, Boolean>(
+				new NewsItem.Builder("title", "content", System.currentTimeMillis()).build(),
+				true)));
+		listAdapter = new CardArrayAdapter(getActivity(), new LinkedList<Card>());
+		// listAdapter.setEnableUndo(true);
+		listView.setAdapter(listAdapter);
+
+		/*
 		listAdapter = new ArrayAdapter<Pair<NewsItem, Boolean>>(
 				getActivity().getApplicationContext(),
 				R.layout.news_item,
@@ -95,12 +108,14 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 			}
 		};
 		listView.setAdapter(listAdapter);
+		*/
 		listView.setEmptyView(view.findViewById(R.id.empty));
 
 		// enable editing mode
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(this);
 
+		/*
 		// enable swiping and undo
 		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
@@ -119,12 +134,13 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		});
 		listView.enableSwipeToDismiss();
 		listView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
+		*/
 
 		// enable navigation to other fragments
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-				NewsItem item = listAdapter.getItem(pos).first;
+				NewsItem item = ((NewsCard) listAdapter.getItem(pos)).getNewsItem();
 				if (!item.isNavigationEnabled()) return;
 
 				Intent intent = new Intent(MainActivity.ACTION_NAVIGATE);
@@ -220,14 +236,14 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 		MenuInflater inflater = mode.getMenuInflater();
 		inflater.inflate(R.menu.news_action_mode_menu, menu);
-		listView.disableSwipeToDismiss();
+		// listView.disableSwipeToDismiss();
 		return true;
 	}
 
 
 	@Override
 	public void onDestroyActionMode(ActionMode mode) {
-		listView.enableSwipeToDismiss();
+		// listView.enableSwipeToDismiss();
 		selectedItems.clear();
 	}
 
@@ -240,10 +256,12 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 	@Override
 	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+		/*
 		NewsItem item = listAdapter.getItem(position).first;
 		if (checked) selectedItems.add(item);
 		else selectedItems.remove(item);
 		mode.setTitle(getActivity().getString(R.string.news_selected, selectedItems.size()));
+		*/
 	}
 
 
@@ -271,7 +289,9 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		});
 
 		listAdapter.clear();
-		listAdapter.addAll(sortedItems);
+		for (Pair<NewsItem, Boolean> item : sortedItems) {
+			listAdapter.add(new NewsCard(getActivity().getApplicationContext(), item));
+		}
 	}
 
 
@@ -339,5 +359,55 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 				return currentShowcaseView;
 			}
 		}.start();
+	}
+
+
+	private static class NewsCard extends Card {
+
+		private final Pair<NewsItem, Boolean> data;
+
+		public NewsCard(Context context, Pair<NewsItem, Boolean> data) {
+			super(context, R.layout.news_card);
+			this.data = data;
+
+			setSwipeable(true);
+
+			setOnSwipeListener(new OnSwipeListener() {
+				@Override
+				public void onSwipe(Card card) {
+					Toast.makeText(getContext(), "remove stub", Toast.LENGTH_SHORT).show();
+				}
+			});
+
+			setOnUndoSwipeListListener(new OnUndoSwipeListListener() {
+				@Override
+				public void onUndoSwipe(Card card) {
+					Toast.makeText(getContext(), "add stub", Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+
+
+		@Override
+		public void setupInnerViewElements(ViewGroup parent, View view) {
+			TextView title = (TextView) view.findViewById(R.id.news_title);
+			TextView msg  = (TextView) view.findViewById(R.id.news_timestamp);
+			TextView content = (TextView) view.findViewById(R.id.news_content);
+
+			title.setText(data.first.getTitle());
+			msg.setText(dateFormatter.format(data.first.getTimestamp()));
+			content.setText(data.first.getContent());
+		}
+
+
+		public NewsItem getNewsItem() {
+			return data.first;
+		}
+
+
+		public boolean isRead() {
+			return data.second;
+		}
+
 	}
 }

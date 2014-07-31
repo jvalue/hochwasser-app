@@ -26,6 +26,7 @@ dependencies {
     compile 'de.timroes.android:EnhancedListView:0.3.4'
     compile 'com.github.amlcurran.showcaseview:library:5.0.0'
     compile 'com.squareup.okhttp:mockwebserver:2.0.0'
+	compile 'com.github.gabrielemariotti.cards:library:1.8.0'
     compile project(':android-support-v4-preferencefragment')
 }
 

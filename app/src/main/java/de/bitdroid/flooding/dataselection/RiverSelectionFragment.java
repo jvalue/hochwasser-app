@@ -1,13 +1,5 @@
 package de.bitdroid.flooding.dataselection;
 
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
-
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,10 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.RiverSelectionFragment.River;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
+
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 
 public final class RiverSelectionFragment extends DataSelectionFragment<River> implements Extras {
@@ -51,9 +51,11 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> i
 
 				TextView text1 = (TextView) view.findViewById(android.R.id.text1);
 				text1.setText(StringUtils.toProperCase(river.getRiverName()));
+				text1.setTextColor(getResources().getColor(R.color.black));
 
 				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 				text2.setText(getString(R.string.data_station_count, river.getStationsCount()));
+				text2.setTextColor(getResources().getColor(R.color.gray));
 
 				return view;
 			}

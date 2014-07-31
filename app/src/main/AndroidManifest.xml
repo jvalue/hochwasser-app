@@ -29,7 +29,8 @@
 	<application 
 			android:label="@string/app_name" 
 			android:icon="@drawable/ic_launcher"
-			android:logo="@drawable/ic_menu_home">
+			android:logo="@drawable/ic_menu_home"
+            android:theme="@style/ThemeMain">
 		<activity android:name=".main.MainActivity"
 				  android:label="@string/app_name">
 			<intent-filter>

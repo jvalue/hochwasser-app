@@ -103,7 +103,7 @@ public class MainActivity extends FragmentActivity {
 		drawerToggle = new ActionBarDrawerToggle(
 				this,
 				drawerLayout,
-				R.drawable.ic_drawer,
+				R.drawable.ic_navigation_drawer,
 				R.string.nav_open,
 				R.string.nav_close) {
 			@Override

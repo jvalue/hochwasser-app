@@ -1,5 +1,44 @@
 package de.bitdroid.flooding.levels;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.Loader;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.SeekBar;
+import android.widget.Toast;
+
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYStepMode;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.dataselection.Extras;
+import de.bitdroid.flooding.map.MapActivity;
+import de.bitdroid.flooding.monitor.MonitorSourceLoader;
+import de.bitdroid.flooding.monitor.SourceMonitor;
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
+import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
+import de.bitdroid.flooding.utils.StringUtils;
+
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MHW_UNIT;
@@ -24,50 +63,6 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.Loader;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.Pair;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.SeekBar;
-import android.widget.Toast;
-
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYStepMode;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
-import com.github.amlcurran.showcaseview.targets.Target;
-
-import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.dataselection.Extras;
-import de.bitdroid.flooding.map.MapActivity;
-import de.bitdroid.flooding.monitor.MonitorSourceLoader;
-import de.bitdroid.flooding.monitor.SourceMonitor;
-import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
-import de.bitdroid.flooding.utils.ShowcaseSeries;
-import de.bitdroid.flooding.utils.StringUtils;
-
 public class RiverGraphActivity extends BaseActivity implements Extras {
 	
 	private static final int LOADER_ID = 44;
@@ -81,11 +76,17 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 
 	private MonitorSourceLoader loader;
 	private long currentTimestamp;
+
+	private Handler handler = new Handler();
 	
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+		FullScreenUtils.startFullScreen(this);
+
+		// set layout
 		setContentView(R.layout.data_river);
 		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 		getActionBar().setTitle(StringUtils.toProperCase(waterName));
@@ -191,9 +192,31 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 		this.loader = (MonitorSourceLoader) cursorLoader;
 
 		// if first start show helper screen
-		if (firstStart()) showHelpOverlay();
+		// if (firstStart()) showHelpOverlay();
     }
 
+
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+
+
+	private final Runnable startFullscreenRunnable = new Runnable() {
+		@Override
+		public void run() {
+			FullScreenUtils.startFullScreen(RiverGraphActivity.this);
+		}
+	};
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		if (hasFocus) {
+			handler.removeCallbacks(startFullscreenRunnable);
+			handler.postDelayed(startFullscreenRunnable, 3000);
+		}
+	}
 
 
 	@Override
@@ -321,7 +344,8 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				return true;
 
 			case R.id.help:
-				showHelpOverlay();
+				// showHelpOverlay();
+				Toast.makeText(this, "stub", Toast.LENGTH_SHORT).show();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
@@ -507,7 +531,6 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	}
 
 
-
 	private static final String PREFS_NAME = "de.bitdroid.flooding.levels.RiverGraphActivity";
 	private static final String KEY_FIRST_START = "KEY_FIRST_START";
 
@@ -523,6 +546,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	}
 
 
+	/*
 	private void showHelpOverlay() {
 		new ShowcaseSeries() {
 			@Override
@@ -564,4 +588,5 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 			}
 		}.start();
 	}
+	*/
 }

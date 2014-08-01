@@ -14,33 +14,30 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.ods.gcm.GcmStatus;
-import de.bitdroid.flooding.utils.Log;
-import de.bitdroid.flooding.utils.StringUtils;
-import de.timroes.android.listview.EnhancedListView;
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardListView;
 
 
 public final class AlarmFragment extends Fragment implements LoaderManager.LoaderCallbacks<Set<Alarm>> {
 
 	private static final int LOADER_ID  = 47;
 
-	private EnhancedListView listView;
-	private ArrayAdapter<Alarm> listAdapter;
+	private CardListView listView;
+	private CardArrayAdapter listAdapter;
 	private AlarmManager alarmManager;
 
 	@Override
@@ -52,94 +49,28 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 
 
 	@Override
-	public View onCreateView(
-			LayoutInflater inflater, 
-			ViewGroup container, 
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.alarms, container, false);
+	}
 
-		View view = inflater.inflate(R.layout.alarms, container, false);
-		listView = (EnhancedListView) view.findViewById(R.id.list);
-		listAdapter = new ArrayAdapter<Alarm>(
-					getActivity().getApplicationContext(),
-					R.layout.alarms_item,
-					android.R.id.text1) { 
-			
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		listView = (CardListView) getActivity().findViewById(R.id.list);
+		listView.setEmptyView(getActivity().findViewById(R.id.empty));
+		listAdapter = new CardArrayAdapter(getActivity(), new ArrayList<Card>()) {
 			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				LevelAlarm alarm = (LevelAlarm) getItem(position);
-				View view = super.getView(position, convertView, parent);
-
-				TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-				text1.setText(formatAlarmTitle(alarm));
-
-				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-				String description;
-				if (alarm.getAlarmWhenAbove()) {
-					description = getString(R.string.alarms_description_above, alarm.getLevel());
-				} else {
-					description = getString(R.string.alarms_description_below, alarm.getLevel());
-				}
-				text2.setText(description);
-
-				LinearLayout regView = (LinearLayout) view.findViewById(R.id.registration);
-				TextView regStatusView = (TextView) view.findViewById(R.id.registration_status);
-
-				GcmStatus regStatus = alarmManager.getRegistrationStatus(alarm);
-				if (regStatus.equals(GcmStatus.REGISTERED)) return view;
-
-				regView.setVisibility(View.VISIBLE);
-				switch (regStatus) {
-					case PENDING_REGISTRATION:
-						view.findViewById(R.id.registration_pending).setVisibility(View.VISIBLE);
-						regStatusView.setText(getString(R.string.alarms_registration_pending));
-						break;
-					case UNREGISTERED:
-						view.findViewById(R.id.registration_error).setVisibility(View.VISIBLE);
-						regStatusView.setText(getString(R.string.alarms_registration_error));
-						break;
-					case PENDING_UNREGISTRATION:
-						Log.warning("Found alarm with PENDING_UNREGISTRATION");
-				}
-
-				return view;
+			public void setEnableUndo(boolean enableUndo) {
+				Map<String, Card> oldInternalObjects  = mInternalObjects;
+				super.setEnableUndo(enableUndo);
+				if (oldInternalObjects != null) mInternalObjects.putAll(oldInternalObjects);
 			}
-
 		};
+
+		listAdapter.setEnableUndo(true);
 		listView.setAdapter(listAdapter);
-		listView.setEmptyView(view.findViewById(R.id.empty));
-
-		// retry registration on tap
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				LevelAlarm alarm = (LevelAlarm) parent.getAdapter().getItem(position);
-				if (alarmManager.getRegistrationStatus(alarm).equals(GcmStatus.UNREGISTERED)) {
-					alarmManager.register(alarm);
-				}
-			}
-		});
-
-		// enable swipe and undo
-		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
-            @Override
-            public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
-                final Alarm alarm = listAdapter.getItem(pos);
-				alarmManager.unregister(alarm);
-				listAdapter.remove(alarm); // hack to stop list from flashing
-
-                return new EnhancedListView.Undoable() {
-                    @Override
-                    public void undo() {
-						alarmManager.register(alarm);
-                    }   
-                };  
-            }   
-        }); 
-        listView.enableSwipeToDismiss();
-		listView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
-
-
-		return view;
 	}
 
 
@@ -184,28 +115,29 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 	public void onLoadFinished(Loader<Set<Alarm>> loader, Set<Alarm> alarms) {
 		if (loader.getId() != LOADER_ID) return;
 
-		List<Alarm> sortedAlarms = new LinkedList<Alarm>();
-		sortedAlarms.addAll(alarms);
-		Collections.sort(sortedAlarms, new Comparator<Alarm>() {
+		List<AlarmsCard> cards = new LinkedList<AlarmsCard>();
+		for (Alarm alarm : alarms) {
+			AlarmsCard card = new AlarmsCard(getActivity(), alarmManager, (LevelAlarm) alarm);
+			card.setId(String.valueOf(alarm.hashCode()));
+			cards.add(card);
+		}
+
+		Collections.sort(cards, new Comparator<AlarmsCard>() {
 			@Override
-			public int compare(Alarm alarm1, Alarm alarm2) {
-				return formatAlarmTitle((LevelAlarm) alarm1).compareTo(formatAlarmTitle((LevelAlarm) alarm2));
+			public int compare(AlarmsCard alarm1, AlarmsCard alarm2) {
+				return alarm1.getTitle().compareTo(alarm2.getTitle());
 			}
 		});
 
 		listAdapter.clear();
-		listAdapter.addAll(sortedAlarms);
+		listAdapter.addAll(cards);
+		listAdapter.setEnableUndo(true);
 	}
 
 
 	@Override
 	public void onLoaderReset(Loader<Set<Alarm>> loader) {
 		listAdapter.clear();
-	}
-
-
-	private String formatAlarmTitle(LevelAlarm alarm) {
-		return StringUtils.toProperCase(alarm.getRiver()) + " - " + StringUtils.toProperCase(alarm.getStation());
 	}
 
 

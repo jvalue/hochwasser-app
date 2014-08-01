@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/gray_light"
 	>
 
-	<de.timroes.android.listview.EnhancedListView
+	<it.gmariotti.cardslib.library.view.CardListView
 		android:id="@+id/list"
-		android:layout_height="fill_parent"
+		android:layout_height="match_parent"
 		android:layout_width="match_parent"
-		android:layout_margin="6dp"
-		android:listSelector="@drawable/list_selector"
+        card:list_card_layout_resourceID="@layout/list_card_layout"
 	/>
 
 	<TextView
@@ -22,4 +24,6 @@
 		android:gravity="center"
 	/>
 
-</LinearLayout>
+    <include layout="@layout/list_card_undo_message"/>
+
+</FrameLayout>

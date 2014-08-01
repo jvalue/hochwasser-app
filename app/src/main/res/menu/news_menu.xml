@@ -5,9 +5,4 @@
 		android:title="Add news"
 		android:hint="Add news"
 	/>
-	<item 
-		android:id="@+id/help"
-		android:title="@string/help"
-		android:hint="@string/help"
-	/>
 </menu>

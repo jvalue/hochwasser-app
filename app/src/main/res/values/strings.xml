@@ -105,9 +105,9 @@
 	<string name="news_empty">Nothing new, please come back later.</string>
 
 	<string name="news_intro_alarms_title">Alarms</string>
-	<string name="news_intro_alarms_content">If you want to be alarmed when water levels reach a certain level, head over to the alarms section!</string>
+    <string name="news_intro_alarms_content">Want alarms when water levels reach a certain level? &lt;b&gt;Click here!&lt;/b&gt;</string>
 	<string name="news_intro_data_title">Data</string>
-	<string name="news_intro_data_content">Want more details about the current water situation? Check out the data section!</string>
+	<string name="news_intro_data_content">Want more details about the current water situation? &lt;b&gt;Click here!&lt;/b&gt;</string>
 
 
 	<string name="data_empty">No data found. Loading might take a little while when first starting the app.</string>
@@ -123,16 +123,15 @@
     <string name="error_play_services_missing_title">Google Play Services missing</string>
     <string name="error_play_services_missing_msg">Sorry, this action requires the Google Play Services to be installed on your device.</string>
 
+
+
+    <string name="help_news_title">Welcome!</string>
+    <string name="help_news_content">Tap here to get navigate around the app!</string>
+
 	<string name="help_graph_timestamps_title">Timestamps</string>
 	<string name="help_graph_timestamps_content">Choose what timestamp the graph should reflect.</string>
 	<string name="help_graph_map_title">Map</string>
 	<string name="help_graph_map_content">View the stations along this river on a map.</string>
 	<string name="help_graph_normalize_title">Normalize Graph</string>
 	<string name="help_graph_normalize_content">Be sure to check out the option to normalize the graph! It shows the current water level in relation to its average min and max values.</string>
-
-
-	<string name="help_news_welcome_title">Welcome</string>
-	<string name="help_news_welcome_content">You are now in the news section which shows you important events that have happend in the past.\n\nTo move between different sections tap the icon at the top!</string>
-	<string name="help_news_news_title">News</string>
-	<string name="help_news_news_content">News items have actions associated with them.\n\nYou can either tap them for easier navigation, or swipe them away once you are done with them.</string>
 </resources>

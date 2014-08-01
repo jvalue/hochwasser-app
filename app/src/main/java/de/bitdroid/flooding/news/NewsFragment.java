@@ -1,6 +1,5 @@
 package de.bitdroid.flooding.news;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,11 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
-import com.github.amlcurran.showcaseview.targets.Target;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.utils.ShowcaseSeries;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
@@ -41,7 +34,6 @@ public final class NewsFragment extends Fragment implements
 
 	private CardListView listView;
 	private CardArrayAdapter listAdapter;
-	private ShowcaseView currentShowcaseView;
 	private NewsManager manager;
 
 
@@ -78,6 +70,10 @@ public final class NewsFragment extends Fragment implements
 
 		listAdapter.setEnableUndo(true);
 		listView.setAdapter(listAdapter);
+
+		if (firstStart()) {
+			addHelperNews();
+		}
 	}
 
 
@@ -85,13 +81,6 @@ public final class NewsFragment extends Fragment implements
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().initLoader(LOADER_ID, null, this);
-	}
-
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		if (currentShowcaseView != null) currentShowcaseView.hide();
 	}
 
 
@@ -113,10 +102,6 @@ public final class NewsFragment extends Fragment implements
 		switch(menuItem.getItemId()) {
 			case R.id.news:
 				addHelperNews();
-				return true;
-
-			case R.id.help:
-				showHelperOverlay();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
@@ -175,46 +160,8 @@ public final class NewsFragment extends Fragment implements
 
 
 	private void addHelperNews() {
-		manager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, false);
 		manager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), 2, false);
-	}
-
-
-	private void showHelperOverlay() {
-		new ShowcaseSeries() {
-			@Override
-			public ShowcaseView getShowcase(int id) {
-				Activity activity = getActivity();
-				Target target;
-				switch(id) {
-					case 0:
-						target = new ActionViewTarget(activity, ActionViewTarget.Type.TITLE);
-						currentShowcaseView = new ShowcaseView.Builder(activity)
-								.setTarget(target)
-								.setContentTitle(R.string.help_news_welcome_title)
-								.setContentText(R.string.help_news_welcome_content)
-								.setStyle(R.style.CustomShowcaseTheme)
-								.build();
-						break;
-
-					case 1:
-						View view = listView.getChildAt(0);
-						if (view == null) view = listView.getEmptyView();
-						target = new ViewTarget(view);
-						currentShowcaseView = new ShowcaseView.Builder(activity)
-								.setTarget(target)
-								.setContentTitle(R.string.help_news_news_title)
-								.setContentText(R.string.help_news_news_content)
-								.setStyle(R.style.CustomShowcaseTheme)
-								.build();
-						break;
-
-					default:
-						currentShowcaseView = null;
-				}
-				return currentShowcaseView;
-			}
-		}.start();
+		manager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, false);
 	}
 
 }

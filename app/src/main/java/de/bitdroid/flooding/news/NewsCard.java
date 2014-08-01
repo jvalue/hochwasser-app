@@ -2,6 +2,7 @@ package de.bitdroid.flooding.news;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.Html;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ final class NewsCard extends Card {
 
 		title.setText(data.first.getTitle());
 		msg.setText(dateFormatter.format(data.first.getTimestamp()));
-		content.setText(data.first.getContent());
+		content.setText(Html.fromHtml(data.first.getContent()));
 	}
 
 	public NewsItem getNewsItem() {

@@ -38,7 +38,7 @@ import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 
 
-public final class NewsFragment extends Fragment implements AbsListView.MultiChoiceModeListener,
+public final class NewsFragment extends Fragment implements
 		LoaderManager.LoaderCallbacks<Map<NewsItem, Boolean>> {
 
 	private static final int LOADER_ID = 40;
@@ -82,9 +82,6 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 		listAdapter.setEnableUndo(true);
 		listView.setAdapter(listAdapter);
-
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		listView.setMultiChoiceModeListener(this);
 	}
 
 
@@ -127,70 +124,6 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
-	}
-
-
-	private final List<NewsItem> selectedItems = new LinkedList<NewsItem>();
-
-	@Override
-	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.delete:
-				for (NewsItem newsItem : selectedItems) {
-					manager.removeItem(newsItem);
-				}
-				Toast.makeText(
-						getActivity(),
-						getActivity().getString(R.string.news_deleted, selectedItems.size()),
-						Toast.LENGTH_SHORT)
-					.show();
-				selectedItems.clear();
-
-				mode.finish();
-				return true;
-
-			case R.id.select_all:
-				selectedItems.clear();
-				for (int i = 0; i < listAdapter.getCount(); i++) {
-					listView.setItemChecked(i, true);
-				}
-				return true;
-
-		}
-		return false;
-	}
-
-
-	@Override
-	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-		MenuInflater inflater = mode.getMenuInflater();
-		inflater.inflate(R.menu.news_action_mode_menu, menu);
-		// listView.disableSwipeToDismiss();
-		return true;
-	}
-
-
-	@Override
-	public void onDestroyActionMode(ActionMode mode) {
-		// listView.enableSwipeToDismiss();
-		selectedItems.clear();
-	}
-
-
-	@Override
-	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-		return false;
-	}
-
-
-	@Override
-	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-		/*
-		NewsItem item = listAdapter.getItem(position).first;
-		if (checked) selectedItems.add(item);
-		else selectedItems.remove(item);
-		mode.setTitle(getActivity().getString(R.string.news_selected, selectedItems.size()));
-		*/
 	}
 
 

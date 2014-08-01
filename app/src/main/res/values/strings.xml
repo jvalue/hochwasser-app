@@ -102,8 +102,6 @@
 	<string name="prefs_ceps_servername_default">http://192.168.178.93:8183</string>
 
 
-	<string name="news_selected">%1$d selected</string>
-	<string name="news_deleted">Deleted %1$d item(s)</string>
 	<string name="news_empty">Nothing new, please come back later.</string>
 
 	<string name="news_intro_alarms_title">Alarms</string>

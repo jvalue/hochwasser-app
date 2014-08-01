@@ -179,6 +179,8 @@ public class MainActivity extends FragmentActivity {
 			editor.commit();
 
 			sourceManager.startManualSync(source);
+
+			drawerLayout.openDrawer(drawerMenu);
 		}
 	}
 

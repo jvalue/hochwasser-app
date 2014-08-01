@@ -14,12 +14,12 @@
 	<string name="map_dialog_station_info">%1$s\nRiver km %2$.3f\nLatitude %3$f\nLongitude %4$f</string>
 
 
-	<string name="menu_graph_select_series">Series to display</string>
-	<string name="menu_graph_normalize">Show normalized plot</string>
-	<string name="menu_graph_regular">Show regular plot</string>
-	<string name="menu_graph_timestamp">Select timestamp from list</string>
-	<string name="menu_graph_seekbar">Select timestamp</string>
-	<string name="menu_graph_map">Show Map</string>
+	<string name="menu_graph_select_series">Series</string>
+	<string name="menu_graph_normalize">Normalized plot</string>
+	<string name="menu_graph_regular">Regular plot</string>
+	<string name="menu_graph_timestamp">Timestamps</string>
+	<string name="menu_graph_seekbar">Timestamps</string>
+	<string name="menu_graph_map">Map</string>
 
 	<string name="graph_rangelabel_cm">Water Level (cm)</string>
 	<string formatted="false" name="graph_rangelabel_pc">Water Level (%)</string>

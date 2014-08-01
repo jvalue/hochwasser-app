@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/gray_light"
 	>
 
     <it.gmariotti.cardslib.library.view.CardListView
 		android:id="@+id/list"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
-        android:background="@color/gray_light"
         android:paddingTop="6dp"
         card:list_card_layout_resourceID="@layout/list_card_layout"
 	/>
@@ -27,4 +27,4 @@
 
     <include layout="@layout/list_card_undo_message"/>
 
-</LinearLayout>
+</FrameLayout>

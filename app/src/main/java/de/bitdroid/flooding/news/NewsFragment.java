@@ -28,6 +28,7 @@ import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -40,7 +41,6 @@ import de.bitdroid.flooding.utils.ShowcaseSeries;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
-import it.gmariotti.cardslib.library.view.listener.UndoBarController;
 
 
 public final class NewsFragment extends Fragment implements AbsListView.MultiChoiceModeListener,
@@ -53,8 +53,6 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 	private CardListView listView;
 	private CardArrayAdapter listAdapter;
-	private UndoBarController undoBarController;
-	// private ArrayAdapter<Pair<NewsItem, Boolean>> listAdapter;
 	private ShowcaseView currentShowcaseView;
 	private NewsManager manager;
 
@@ -67,101 +65,45 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	}
 
 	@Override
-	public View onCreateView(
-			LayoutInflater inflater, 
-			ViewGroup container, 
-			Bundle savedInstanceState) {
-
-		View view = inflater.inflate(R.layout.news, container, false);
-		listView = (CardListView) view.findViewById(R.id.list);
-		List<Card> cards = new LinkedList<Card>();
-		cards.add(new NewsCard(getActivity(), new Pair<NewsItem, Boolean>(
-				new NewsItem.Builder("title", "content", System.currentTimeMillis()).build(),
-				true)));
-		listAdapter = new CardArrayAdapter(getActivity(), new LinkedList<Card>());
-		// listAdapter.setEnableUndo(true);
-		listView.setAdapter(listAdapter);
-
-		/*
-		listAdapter = new ArrayAdapter<Pair<NewsItem, Boolean>>(
-				getActivity().getApplicationContext(),
-				R.layout.news_item,
-				android.R.id.text1) {
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				LayoutInflater inflater
-						= (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				View view = inflater.inflate(R.layout.news_item, parent, false);
-
-				Pair<NewsItem, Boolean> item = getItem(position);
-
-				TextView title = (TextView) view.findViewById(R.id.news_title);
-				TextView data = (TextView) view.findViewById(R.id.news_timestamp);
-				TextView content = (TextView) view.findViewById(R.id.news_content);
-
-				title.setText(item.first.getTitle());
-				data.setText(dateFormatter.format(item.first.getTimestamp()));
-				content.setText(item.first.getContent());
-
-				return view;
-			}
-		};
-		listView.setAdapter(listAdapter);
-		*/
-		listView.setEmptyView(view.findViewById(R.id.empty));
-
-		// enable editing mode
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		listView.setMultiChoiceModeListener(this);
-
-		/*
-		// enable swiping and undo
-		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
-			@Override
-			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int pos) {
-				final Pair<NewsItem, Boolean> item = listAdapter.getItem(pos);
-				listAdapter.remove(item); // hack to stop list from flashing
-				manager.removeItem(item.first);
-
-				return new EnhancedListView.Undoable() {
-					@Override
-					public void undo() {
-						manager.addItem(item.first, false);
-					}
-				};
-			}
-		});
-		listView.enableSwipeToDismiss();
-		listView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
-		*/
-
-		// enable navigation to other fragments
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-				NewsItem item = ((NewsCard) listAdapter.getItem(pos)).getNewsItem();
-				if (!item.isNavigationEnabled()) return;
-
-				Intent intent = new Intent(MainActivity.ACTION_NAVIGATE);
-				intent.putExtra(MainActivity.EXTRA_POSITION, item.getNavigationPos());
-				getActivity().sendBroadcast(intent);
-			}
-		});
-
-		return view;
+	public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.news, container, false);
 	}
 
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
 		manager.markAllItemsRead();
 
-		if (firstStart()) {
-			addHelperNews();
-			showHelperOverlay();
-		}
+		listView = (CardListView) getActivity().findViewById(R.id.list);
+		listView.setEmptyView(getActivity().findViewById(R.id.empty));
+		listAdapter = new CardArrayAdapter(getActivity(), new ArrayList<Card>()) {
+			@Override
+			public void setEnableUndo(boolean enableUndo) {
+				Map<String, Card> oldInternalObjects  = mInternalObjects;
+				super.setEnableUndo(enableUndo);
+				if (oldInternalObjects != null) mInternalObjects.putAll(oldInternalObjects);
+			}
+
+		};
+
+		listAdapter.setEnableUndo(true);
+		listView.setAdapter(listAdapter);
+
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		listView.setMultiChoiceModeListener(this);
+
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+				NewsItem item = ((NewsCard) listAdapter.getItem(pos)).getNewsItem();
+				if (!item.isNavigationEnabled()) return;
+				Intent intent = new Intent(MainActivity.ACTION_NAVIGATE);
+				intent.putExtra(MainActivity.EXTRA_POSITION, item.getNavigationPos());
+				getActivity().sendBroadcast(intent);
+			}
+		});
 	}
 
 
@@ -176,6 +118,13 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	public void onStop() {
 		super.onStop();
 		if (currentShowcaseView != null) currentShowcaseView.hide();
+	}
+
+
+	@Override
+	public Loader<Map<NewsItem, Boolean>> onCreateLoader(int id, Bundle bundle) {
+		if (id != LOADER_ID) return null;
+		return new NewsLoader(getActivity().getApplicationContext());
 	}
 
 
@@ -200,7 +149,6 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 	}
 
 
-
 	private final List<NewsItem> selectedItems = new LinkedList<NewsItem>();
 
 	@Override
@@ -211,8 +159,8 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 					manager.removeItem(newsItem);
 				}
 				Toast.makeText(
-						getActivity(), 
-						getActivity().getString(R.string.news_deleted, selectedItems.size()), 
+						getActivity(),
+						getActivity().getString(R.string.news_deleted, selectedItems.size()),
 						Toast.LENGTH_SHORT)
 					.show();
 				selectedItems.clear();
@@ -266,15 +214,9 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 
 	@Override
-	public Loader<Map<NewsItem, Boolean>> onCreateLoader(int id, Bundle bundle) {
-		if (id != LOADER_ID) return null;
-		return new NewsLoader(getActivity().getApplicationContext());
-	}
-
-
-	@Override
 	public void onLoadFinished(Loader<Map<NewsItem, Boolean>> loader, Map<NewsItem, Boolean> items) {
 		if (loader.getId() != LOADER_ID) return;
+
 		List<Pair<NewsItem, Boolean>> sortedItems = new LinkedList<Pair<NewsItem, Boolean>>();
 		for (Map.Entry<NewsItem, Boolean> entry : items.entrySet()) {
 			sortedItems.add(new Pair<NewsItem, Boolean>(entry.getKey(), entry.getValue()));
@@ -283,15 +225,19 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 		Collections.sort(sortedItems, new Comparator<Pair<NewsItem, Boolean>>() {
 			@Override
 			public int compare(Pair<NewsItem, Boolean> item1, Pair<NewsItem, Boolean> item2) {
-				return  -1 * Long.valueOf(item1.first.getTimestamp())
+				return -1 * Long.valueOf(item1.first.getTimestamp())
 						.compareTo(item2.first.getTimestamp());
 			}
 		});
 
 		listAdapter.clear();
 		for (Pair<NewsItem, Boolean> item : sortedItems) {
-			listAdapter.add(new NewsCard(getActivity().getApplicationContext(), item));
+			NewsCard card =  new NewsCard(getActivity(), manager, item);
+			card.setId(String.valueOf(item.first.getTimestamp()));
+			listAdapter.add(card);
 		}
+
+		listAdapter.setEnableUndo(true);
 	}
 
 
@@ -306,7 +252,7 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 	private boolean firstStart() {
 		SharedPreferences prefs = getActivity().getSharedPreferences(
-				PREFS_NAME, 
+				PREFS_NAME,
 				Context.MODE_PRIVATE);
 		boolean firstStart = prefs.getBoolean(KEY_FIRST_START, true);
 		if (!firstStart) return false;
@@ -334,11 +280,11 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 					case 0:
 						target = new ActionViewTarget(activity, ActionViewTarget.Type.TITLE);
 						currentShowcaseView = new ShowcaseView.Builder(activity)
-							.setTarget(target)
-							.setContentTitle(R.string.help_news_welcome_title)
-							.setContentText(R.string.help_news_welcome_content)
-							.setStyle(R.style.CustomShowcaseTheme)
-							.build();
+								.setTarget(target)
+								.setContentTitle(R.string.help_news_welcome_title)
+								.setContentText(R.string.help_news_welcome_content)
+								.setStyle(R.style.CustomShowcaseTheme)
+								.build();
 						break;
 
 					case 1:
@@ -346,11 +292,11 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 						if (view == null) view = listView.getEmptyView();
 						target = new ViewTarget(view);
 						currentShowcaseView = new ShowcaseView.Builder(activity)
-							.setTarget(target)
-							.setContentTitle(R.string.help_news_news_title)
-							.setContentText(R.string.help_news_news_content)
-							.setStyle(R.style.CustomShowcaseTheme)
-							.build();
+								.setTarget(target)
+								.setContentTitle(R.string.help_news_news_title)
+								.setContentText(R.string.help_news_news_content)
+								.setStyle(R.style.CustomShowcaseTheme)
+								.build();
 						break;
 
 					default:
@@ -366,23 +312,21 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 		private final Pair<NewsItem, Boolean> data;
 
-		public NewsCard(Context context, Pair<NewsItem, Boolean> data) {
+		public NewsCard(Context context, final NewsManager manager, final Pair<NewsItem, Boolean> data) {
 			super(context, R.layout.news_card);
 			this.data = data;
 
 			setSwipeable(true);
-
 			setOnSwipeListener(new OnSwipeListener() {
 				@Override
 				public void onSwipe(Card card) {
-					Toast.makeText(getContext(), "remove stub", Toast.LENGTH_SHORT).show();
+					manager.removeItem(data.first);
 				}
 			});
-
 			setOnUndoSwipeListListener(new OnUndoSwipeListListener() {
 				@Override
 				public void onUndoSwipe(Card card) {
-					Toast.makeText(getContext(), "add stub", Toast.LENGTH_SHORT).show();
+					manager.addItem(data.first, false);
 				}
 			});
 		}
@@ -390,24 +334,23 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 		@Override
 		public void setupInnerViewElements(ViewGroup parent, View view) {
-			TextView title = (TextView) view.findViewById(R.id.news_title);
-			TextView msg  = (TextView) view.findViewById(R.id.news_timestamp);
-			TextView content = (TextView) view.findViewById(R.id.news_content);
+			TextView title = (TextView) parent.findViewById(R.id.news_title);
+			TextView msg  = (TextView) parent.findViewById(R.id.news_timestamp);
+			TextView content = (TextView) parent.findViewById(R.id.news_content);
 
 			title.setText(data.first.getTitle());
 			msg.setText(dateFormatter.format(data.first.getTimestamp()));
 			content.setText(data.first.getContent());
 		}
 
-
 		public NewsItem getNewsItem() {
 			return data.first;
 		}
-
 
 		public boolean isRead() {
 			return data.second;
 		}
 
 	}
+
 }

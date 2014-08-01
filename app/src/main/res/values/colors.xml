@@ -5,8 +5,10 @@
 	<color name="white">#ffffff</color>
 	<color name="blue">#6699FF</color>
     <color name="blue_dark">#3b77e7</color>
+    <color name="blue_light">#ff88bbff</color>
 	<color name="gray">#777777</color>
     <color name="gray_light">#ffe1e1e1</color>
+    <color name="gray_dark">#ff474747</color>
 
 	<color name="line_green">#007700</color>
 	<color name="line_orange">#CCFF33</color>

@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,17 +92,6 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(this);
-
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-				NewsItem item = ((NewsCard) listAdapter.getItem(pos)).getNewsItem();
-				if (!item.isNavigationEnabled()) return;
-				Intent intent = new Intent(MainActivity.ACTION_NAVIGATE);
-				intent.putExtra(MainActivity.EXTRA_POSITION, item.getNavigationPos());
-				getActivity().sendBroadcast(intent);
-			}
-		});
 	}
 
 
@@ -312,8 +300,12 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 
 		private final Pair<NewsItem, Boolean> data;
 
-		public NewsCard(Context context, final NewsManager manager, final Pair<NewsItem, Boolean> data) {
-			super(context, R.layout.news_card);
+		public NewsCard(
+				final Activity activity,
+				final NewsManager manager,
+				final Pair<NewsItem, Boolean> data) {
+
+			super(activity, R.layout.news_card);
 			this.data = data;
 
 			setSwipeable(true);
@@ -327,6 +319,16 @@ public final class NewsFragment extends Fragment implements AbsListView.MultiCho
 				@Override
 				public void onUndoSwipe(Card card) {
 					manager.addItem(data.first, false);
+				}
+			});
+
+
+			setOnClickListener(new OnCardClickListener() {
+				@Override
+				public void onClick(Card card, View view) {
+					Intent intent = new Intent(MainActivity.ACTION_NAVIGATE);
+					intent.putExtra(MainActivity.EXTRA_POSITION, data.first.getNavigationPos());
+					activity.sendBroadcast(intent);
 				}
 			});
 		}

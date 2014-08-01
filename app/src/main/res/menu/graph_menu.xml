@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item 
+    <item
+        android:id="@+id/seekbar"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_graph_seekbar"
+        android:hint="@string/menu_graph_seekbar"
+        android:icon="@drawable/ic_action_time_light"
+    />
+	<item
 		android:id="@+id/normalize"
 		android:title="@string/menu_graph_normalize"
+        android:icon="@drawable/ic_action_normalize_light"
+        android:showAsAction="ifRoom"
 	/>
-	<item 
+    <item
+        android:id="@+id/map"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_graph_map"
+        android:hint="@string/menu_graph_map"
+        android:icon="@drawable/ic_action_map_light"
+    />
+	<item
 		android:id="@+id/select_series"
 		android:title="@string/menu_graph_select_series"
 	/>
@@ -12,21 +28,7 @@
 		android:id="@+id/timestamp"
 		android:title="@string/menu_graph_timestamp"
 	/>
-	<item 
-		android:id="@+id/seekbar"
-		android:showAsAction="always"
-		android:title="@string/menu_graph_seekbar"
-		android:hint="@string/menu_graph_seekbar"
-		android:icon="@drawable/ic_action_time_light"
-	/>
-	<item 
-		android:id="@+id/map"
-		android:showAsAction="always"
-		android:title="@string/menu_graph_map"
-		android:hint="@string/menu_graph_map"
-		android:icon="@drawable/ic_action_map_light"
-	/>
-	<item 
+	<item
 		android:id="@+id/help"
 		android:title="@string/help"
 		android:hint="@string/help"

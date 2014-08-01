@@ -13,12 +13,12 @@ import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 
-final class AlarmsCard extends Card {
+final class AlarmCard extends Card {
 
 	private final LevelAlarm alarm;
 	private final AlarmManager manager;
 
-	public AlarmsCard(
+	public AlarmCard(
 			final Activity activity,
 			final AlarmManager manager,
 			final LevelAlarm alarm) {

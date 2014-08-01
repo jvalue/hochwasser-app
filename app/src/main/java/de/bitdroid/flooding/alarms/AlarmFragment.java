@@ -115,16 +115,16 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 	public void onLoadFinished(Loader<Set<Alarm>> loader, Set<Alarm> alarms) {
 		if (loader.getId() != LOADER_ID) return;
 
-		List<AlarmsCard> cards = new LinkedList<AlarmsCard>();
+		List<AlarmCard> cards = new LinkedList<AlarmCard>();
 		for (Alarm alarm : alarms) {
-			AlarmsCard card = new AlarmsCard(getActivity(), alarmManager, (LevelAlarm) alarm);
+			AlarmCard card = new AlarmCard(getActivity(), alarmManager, (LevelAlarm) alarm);
 			card.setId(String.valueOf(alarm.hashCode()));
 			cards.add(card);
 		}
 
-		Collections.sort(cards, new Comparator<AlarmsCard>() {
+		Collections.sort(cards, new Comparator<AlarmCard>() {
 			@Override
-			public int compare(AlarmsCard alarm1, AlarmsCard alarm2) {
+			public int compare(AlarmCard alarm1, AlarmCard alarm2) {
 				return alarm1.getTitle().compareTo(alarm2.getTitle());
 			}
 		});

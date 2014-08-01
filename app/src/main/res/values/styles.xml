@@ -11,6 +11,7 @@
     <style name="ThemeMain.ActionBar" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@color/blue_dark</item>
         <item name="android:titleTextStyle">@style/ThemeMain.ActionBar.Text</item>
+        <item name="android:subtitleTextStyle">@style/ThemeMain.ActionBar.Text</item>
     </style>
 
     <style name="ThemeMain.ActionBar.Text" parent="@android:style/TextAppearance">

@@ -1,10 +1,5 @@
 package de.bitdroid.flooding.levels;
 
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UNIT;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VALUE;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
-
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -16,6 +11,11 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
+
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UNIT;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VALUE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 
 // TODO include graph at some point
 public class StationGraphActivity extends BaseActivity 
@@ -39,7 +39,7 @@ public class StationGraphActivity extends BaseActivity
 		levelView = (TextView) findViewById(R.id.level);
 
 		getActionBar().setTitle(StringUtils.toProperCase(stationName));
-		getActionBar().setSubtitle(waterName);
+		getActionBar().setSubtitle(StringUtils.toProperCase(waterName));
 
     }
 

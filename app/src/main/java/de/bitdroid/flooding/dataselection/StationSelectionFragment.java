@@ -67,7 +67,7 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 
 				// if all stations entry --> highlight
 				if (isShowingAllEntries() && station.equals(getString(R.string.data_station_all))) {
-					text1.setTextColor(getResources().getColor(R.color.blue));
+					text1.setTextColor(getResources().getColor(R.color.blue_dark));
 				} else {
 					text1.setTextColor(getResources().getColor(R.color.black));
 				}

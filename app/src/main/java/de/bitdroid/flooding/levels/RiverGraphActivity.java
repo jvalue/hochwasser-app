@@ -229,10 +229,14 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		if (showingRegularSeries) 
-			menu.findItem(R.id.normalize).setTitle(getString(R.string.menu_graph_normalize));
-		else 
-			menu.findItem(R.id.normalize).setTitle(getString(R.string.menu_graph_regular));
+		MenuItem item = menu.findItem(R.id.normalize);
+		if (showingRegularSeries) {
+			item.setTitle(getString(R.string.menu_graph_normalize));
+			item.setIcon(getResources().getDrawable(R.drawable.ic_action_normalize_light));
+		} else {
+			item.setTitle(getString(R.string.menu_graph_regular));
+			item.setIcon(getResources().getDrawable(R.drawable.ic_action_cm));
+		}
 		return true;
 	}
 
@@ -286,6 +290,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				}
 				this.showingRegularSeries = !showingRegularSeries;
 				if (levelData != null) graph.setData(levelData);
+				invalidateOptionsMenu();
 				return true;
 
 			case R.id.timestamp:

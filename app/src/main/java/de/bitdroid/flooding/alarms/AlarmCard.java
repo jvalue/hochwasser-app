@@ -1,12 +1,14 @@
 package de.bitdroid.flooding.alarms;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.levels.StationGraphActivity;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
@@ -46,8 +48,17 @@ final class AlarmCard extends Card {
 		setOnClickListener(new OnCardClickListener() {
 			@Override
 			public void onClick(Card card, View view) {
+				// tap to retry
 				if (manager.getRegistrationStatus(alarm).equals(GcmStatus.UNREGISTERED)) {
 					manager.register(alarm);
+
+				// goto station graph
+				} else if (manager.getRegistrationStatus(alarm).equals(GcmStatus.REGISTERED)) {
+					Intent intent = new Intent(activity, StationGraphActivity.class);
+					intent.putExtra(StationGraphActivity.EXTRA_WATER_NAME, alarm.getRiver());
+					intent.putExtra(StationGraphActivity.EXTRA_STATION_NAME, alarm.getStation());
+					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
 				}
 			}
 		});

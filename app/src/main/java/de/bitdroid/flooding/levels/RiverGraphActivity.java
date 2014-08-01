@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Pair;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -251,18 +252,19 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 					i++;
 				}
 
-				new AlertDialog.Builder(this)
+				new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog))
 					.setTitle(getString(R.string.series_select_dialog_title))
 					.setMultiChoiceItems(
 							items,
-							selectedItems, 
+							selectedItems,
 							new DialogInterface.OnMultiChoiceClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int idx, boolean checked) {
-							selectedItems[idx] = checked;
-						}
-					})
+								@Override
+								public void onClick(DialogInterface dialog, int idx, boolean checked) {
+									selectedItems[idx] = checked;
+								}
+							}
+					)
 					.setNegativeButton(getString(R.string.btn_cancel), null)
 					.setPositiveButton(getString(R.string.btn_ok) , new DialogInterface.OnClickListener() {
 						@Override
@@ -303,7 +305,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				final long originalTimestamp = currentTimestamp;
 				int selectedTimestamp = timestamps.indexOf(currentTimestamp);
 
-				new AlertDialog.Builder(this)
+				new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog))
 					.setTitle(getString(R.string.series_monitor_dialog_title))
 					.setSingleChoiceItems(
 							stringTimestamps.toArray(new String[timestamps.size()]), 

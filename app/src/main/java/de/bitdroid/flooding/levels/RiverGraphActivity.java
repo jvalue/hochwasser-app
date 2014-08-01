@@ -1,11 +1,9 @@
 package de.bitdroid.flooding.levels;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -346,8 +344,11 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				return true;
 
 			case R.id.help:
-				// showHelpOverlay();
-				Toast.makeText(this, "stub", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(this, RiverGraphHelpActivity.class);
+				startActivity(intent);
+				overridePendingTransition(
+						R.anim.slide_enter_from_right,
+						R.anim.slide_exit_to_left);
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
@@ -532,63 +533,4 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				XYStepMode.INCREMENT_BY_VAL, 12.5);
 	}
 
-
-	private static final String PREFS_NAME = "de.bitdroid.flooding.levels.RiverGraphActivity";
-	private static final String KEY_FIRST_START = "KEY_FIRST_START";
-
-	private boolean firstStart() {
-		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-		boolean firstStart = prefs.getBoolean(KEY_FIRST_START, true);
-		if (!firstStart) return false;
-
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putBoolean(KEY_FIRST_START, false);
-		editor.commit();
-		return true;
-	}
-
-
-	/*
-	private void showHelpOverlay() {
-		new ShowcaseSeries() {
-			@Override
-			public ShowcaseView getShowcase(int id) {
-				Activity activity = RiverGraphActivity.this;
-				Target target;
-				switch(id) {
-					case 0:
-						target = new ActionItemTarget(activity, R.id.seekbar);
-						return new ShowcaseView.Builder(activity)
-							.setTarget(target)
-							.setContentTitle(R.string.help_graph_timestamps_title)
-							.setContentText(R.string.help_graph_timestamps_content)
-							.doNotBlockTouches()
-							.setStyle(R.style.CustomShowcaseTheme)
-							.build();
-
-					case 1:
-						target = new ActionItemTarget(activity, R.id.map);
-						return new ShowcaseView.Builder(activity)
-							.setTarget(target)
-							.setContentTitle(R.string.help_graph_map_title)
-							.setContentText(R.string.help_graph_map_content)
-							.doNotBlockTouches()
-							.setStyle(R.style.CustomShowcaseTheme)
-							.build();
-
-					case 2:
-						target = new ActionViewTarget(activity, ActionViewTarget.Type.OVERFLOW);
-						return new ShowcaseView.Builder(activity)
-							.setTarget(target)
-							.setContentTitle(R.string.help_graph_normalize_title)
-							.setContentText(R.string.help_graph_normalize_content)
-							.doNotBlockTouches()
-							.setStyle(R.style.CustomShowcaseTheme)
-							.build();
-				}
-				return null;
-			}
-		}.start();
-	}
-	*/
 }

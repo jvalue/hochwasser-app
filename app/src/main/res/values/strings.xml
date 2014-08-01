@@ -125,9 +125,22 @@
 
 
 
-    <string name="help_news_title">Welcome!</string>
-    <string name="help_news_content">Tap here to get navigate around the app!</string>
-
+    <string name="help_graph">
+        Here you can see all &lt;b&gt;water levels&lt;/b&gt; (y-axis) along a &lt;b&gt;river&lt;/b&gt; (x-axis).
+    </string>
+    <string name="help_graph_timestamps">
+        Selects a &lt;b&gt;timestamp&lt;/b&gt; to display in the graph.
+        This app will periodically fetch fresh water data and make it available here. Generally it takes
+        a couple of hours before you can see multiple timestamps. For more information check the settings.
+    </string>
+    <string name="help_graph_map">
+        Display &lt;b&gt;station locations&lt;/b&gt; on a map. Click a station for more information.
+    </string>
+    <string name="help_graph_normalize">
+        The regular graph shows absolute water levels, which is not ideal of analysing the data.
+        &lt;b&gt;Normalizing&lt;/b&gt; the graph will display the current levels in relation
+        their average max and min values, effectively treating the distance (max - min) as 100%.
+    </string>
 	<string name="help_graph_timestamps_title">Timestamps</string>
 	<string name="help_graph_timestamps_content">Choose what timestamp the graph should reflect.</string>
 	<string name="help_graph_map_title">Map</string>

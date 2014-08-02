@@ -2,6 +2,7 @@ package de.bitdroid.flooding.levels;
 
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -41,6 +42,10 @@ public class StationGraphActivity extends BaseActivity
 		getActionBar().setTitle(StringUtils.toProperCase(stationName));
 		getActionBar().setSubtitle(StringUtils.toProperCase(waterName));
 
+		// fetch new station data
+		Intent intent = new Intent(this, StationIntentService.class);
+		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, stationName);
+		startService(intent);
     }
 
 

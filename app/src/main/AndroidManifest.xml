@@ -63,6 +63,9 @@
 				  android:label="@string/app_name">
 		</activity>
 
+        <service android:name=".levels.StationIntentService">
+        </service>
+
 		<service android:name=".ods.data.AuthenticatorService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>

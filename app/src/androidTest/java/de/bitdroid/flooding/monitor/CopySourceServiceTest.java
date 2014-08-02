@@ -39,10 +39,6 @@ public class CopySourceServiceTest extends ServiceTestCase {
 				CopySourceServiceTest.class.getSimpleName()));
 
 		ListContentProvider provider = new ListContentProvider();
-		provider.addCursor(MockOdsSource.getSampelCursor());
-		provider.addCursor(MockOdsSource.getSampelCursor());
-		provider.addCursor(MockOdsSource.getSampelCursor());
-		provider.addCursor(MockOdsSource.getSampelCursor());
 		resolver.addProvider(OdsSource.AUTHORITY, provider);
 
 		OdsSource source = new MockOdsSource();
@@ -63,19 +59,30 @@ public class CopySourceServiceTest extends ServiceTestCase {
 
 		assertEquals(0, monitor.getAvailableTimestamps(source).size());
 
+		long timestamp = System.currentTimeMillis();
+		provider.addCursor(MockOdsSource.getSampleCursor(timestamp));
 		startService(intent);
 		Thread.sleep(200);
 		assertEquals(1, monitor.getAvailableTimestamps(source).size());
 
+		// no copying since same timestamp
+		provider.addCursor(MockOdsSource.getSampleCursor(timestamp));
+		startService(intent);
+		Thread.sleep(200);
+		assertEquals(1, monitor.getAvailableTimestamps(source).size());
+
+		provider.addCursor(MockOdsSource.getSampleCursor(System.currentTimeMillis()));
 		startService(intent);
 		Thread.sleep(200);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
 
 		// old values should have been deleted
+		provider.addCursor(MockOdsSource.getSampleCursor(System.currentTimeMillis()));
 		startService(intent);
 		Thread.sleep(200);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
 
+		provider.addCursor(MockOdsSource.getSampleCursor(System.currentTimeMillis()));
 		startService(intent);
 		Thread.sleep(200);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
@@ -132,13 +139,14 @@ public class CopySourceServiceTest extends ServiceTestCase {
 			throw new UnsupportedOperationException("stub");
 		}
 
-		public static Cursor getSampelCursor() {
+		public static Cursor getSampleCursor(long timestamp) {
 			MatrixCursor cursor = new MatrixCursor(new String[] {
 					OdsSource.COLUMN_SERVER_ID,
+					OdsSource.COLUMN_TIMESTAMP,
 					COLUMN });
 			for (int i = 0; i < 10; i++) {
 				String randomValue = String.valueOf(Math.random());
-				cursor.addRow(new String[] { randomValue, randomValue });
+				cursor.addRow(new String[] { randomValue, String.valueOf(timestamp), randomValue});
 			}
 			return cursor;
 		}

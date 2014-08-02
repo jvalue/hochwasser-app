@@ -30,12 +30,14 @@ final class Processor {
 	public void processGetAll(String jsonString) 
 			throws RemoteException, JSONException, OperationApplicationException {
 
+		long currentTimestamp = System.currentTimeMillis();
+
 		// insert new entries
 		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 		JSONArray json = new JSONArray(jsonString);
 		Log.debug("Fetched " + json.length() + " items from server");
 		for (int i = 0; i < json.length(); i++) {
-			ContentProviderOperation operation = insertIntoProvider(json.getJSONObject(i));
+			ContentProviderOperation operation = insertIntoProvider(json.getJSONObject(i), currentTimestamp);
 			if (operation != null) operations.add(operation);
 			if (operations.size() >= 100) {
 				provider.applyBatch(operations);
@@ -47,7 +49,7 @@ final class Processor {
 	}
 
 
-	private ContentProviderOperation insertIntoProvider(JSONObject object) 
+	private ContentProviderOperation insertIntoProvider(JSONObject object, long timestamp)
 			throws RemoteException, JSONException {
 
 		// this is a hack that updates pegelonline data only, since ODS does currently
@@ -56,6 +58,7 @@ final class Processor {
 		ContentValues data = source.saveData(object);
 		data.put(OdsSource.COLUMN_SERVER_ID, serverId);
 		data.put(OdsSource.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
+		data.put(OdsSource.COLUMN_TIMESTAMP, timestamp);
 
 		// query if already present
 		Cursor cursor = null;

@@ -1,25 +1,26 @@
 package de.bitdroid.flooding.monitor;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
+
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 public final class SourceMonitor {
 
 	public final static String COLUMN_ID = "_id";
-	public final static String COLUMN_MONITOR_TIMESTAMP = "monitorTimestamp";
 
 	private final static String PREFS_NAME = "de.bitdroid.flooding.monitor.SourceMonitor";
 
@@ -117,8 +118,8 @@ public final class SourceMonitor {
 		builder.setTables(source.toSqlTableName());
 
 		Cursor cursor = monitorDatabase.getReadableDatabase().rawQuery(
-				"SELECT " + COLUMN_MONITOR_TIMESTAMP + " FROM " 
-				+ source.toSqlTableName() + " GROUP BY " + COLUMN_MONITOR_TIMESTAMP, 
+				"SELECT " + COLUMN_TIMESTAMP + " FROM "
+				+ source.toSqlTableName() + " GROUP BY " + COLUMN_TIMESTAMP,
 				null);
 
 		if (cursor.getCount() == 0) return timestamps;

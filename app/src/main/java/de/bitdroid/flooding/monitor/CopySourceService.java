@@ -19,6 +19,8 @@ import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.SQLiteType;
 
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_TIMESTAMP;
+
 
 public final class CopySourceService extends IntentService {
 
@@ -36,36 +38,43 @@ public final class CopySourceService extends IntentService {
 		OdsSource source = OdsSource.fromString(sourceName);
 
 		Map<String, SQLiteType> schema = source.getSchema();
+		schema.put(OdsSource.COLUMN_SERVER_ID, SQLiteType.TEXT);
+		schema.put(OdsSource.COLUMN_TIMESTAMP, SQLiteType.INTEGER);
 		Set<String> sourceColumns = new HashSet<String>(schema.keySet());
-		sourceColumns.add(OdsSource.COLUMN_SERVER_ID);
+
+		List<Long> timestamps = SourceMonitor.getInstance(getApplicationContext()).getAvailableTimestamps(source);
+		Collections.sort(timestamps);
 
 		Cursor cursor = null;
 		SQLiteDatabase database = null;
 		
 		int copyCount = 0;
 		try {
-			// insert new values
+			// check for timestamp
 			cursor = getContentResolver().query(
 					source.toUri(),
 					sourceColumns.toArray(new String[sourceColumns.size()]),
 					null, null, null);
 
 			if (cursor.getCount() == 0) return;
-
-			database = new MonitorDatabase(getApplicationContext()).getWritableDatabase();
-
-			long timeStamp = System.currentTimeMillis();
-			String[] cursorColumns = cursor.getColumnNames();
-
 			cursor.moveToFirst();
+
+			int timestampIdx = cursor.getColumnIndex(OdsSource.COLUMN_TIMESTAMP);
+			long dataTimestamp = cursor.getLong(timestampIdx);
+			long monitorTimestamp = timestamps.isEmpty() ? -1 : timestamps.get(timestamps.size() - 1);
+
+			if (dataTimestamp <= monitorTimestamp) return;
+
+			// insert new values
+			database = new MonitorDatabase(getApplicationContext()).getWritableDatabase();
+			String[] cursorColumns = cursor.getColumnNames();
+			timestamps.add(dataTimestamp);
+
 			do {
 				ContentValues values = new ContentValues();
-				values.put(SourceMonitor.COLUMN_MONITOR_TIMESTAMP, timeStamp);
 				for (int i = 0; i < cursorColumns.length; i++) {
 					String column = cursorColumns[i];
-					SQLiteType type = null;
-					if (column.equals(OdsSource.COLUMN_SERVER_ID)) type = SQLiteType.TEXT;
-					else type = schema.get(column);
+					SQLiteType type = schema.get(column);
 
 					insertIntoValues(values, column, cursor, i, type);
 				}
@@ -75,6 +84,7 @@ public final class CopySourceService extends IntentService {
 			} while (cursor.moveToNext());
 
 			// remove old values (according to settings)
+
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			long monitorPeriod = Long.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_days_key), "-1"));
 			double monitorInterval = Float.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_interval_key), "-1"));
@@ -84,17 +94,15 @@ public final class CopySourceService extends IntentService {
 			}
 
 			long monitorCount = (long) (monitorPeriod * (24.0 / monitorInterval));
-			List<Long> timestamps = SourceMonitor.getInstance(getApplicationContext()).getAvailableTimestamps(source);
-			Collections.sort(timestamps);
 			int deletionCount;
 			for (deletionCount = 0; monitorCount + deletionCount < timestamps.size(); deletionCount++) {
 				long timestamp = timestamps.get(deletionCount);
 				database.delete(
 						source.toSqlTableName(),
-						SourceMonitor.COLUMN_MONITOR_TIMESTAMP + "=?",
+						COLUMN_TIMESTAMP + "=?",
 						new String[] { String.valueOf(timestamp) });
 			}
-			Log.info("deleted " + deletionCount + " old monitor entries");
+			Log.debug("deleted " + deletionCount + " old monitor entries");
 
 
 		} finally {
@@ -119,8 +127,8 @@ public final class CopySourceService extends IntentService {
 				values.put(key, string);
 				break;
 			case INTEGER:
-				Integer integer = cursor.getInt(colIdx);
-				values.put(key, integer);
+				Long lon = cursor.getLong(colIdx);
+				values.put(key, lon);
 				break;
 			case REAL:
 				Double doubl = cursor.getDouble(colIdx);

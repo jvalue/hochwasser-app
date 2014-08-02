@@ -1,9 +1,5 @@
 package de.bitdroid.flooding.ods.data;
 
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_ID;
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SYNC_STATUS;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,6 +7,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_ID;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SYNC_STATUS;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 final class OdsDatabase extends SQLiteOpenHelper {
@@ -32,7 +32,8 @@ final class OdsDatabase extends SQLiteOpenHelper {
 			"create table if not exists " + tableName + " ( "
 			+ COLUMN_ID + " integer primary key autoincrement, "
 			+ COLUMN_SERVER_ID + " text not null, "
-			+ COLUMN_SYNC_STATUS + " text not null");
+			+ COLUMN_SYNC_STATUS + " text not null,"
+			+ COLUMN_TIMESTAMP + " integer");
 
 		for (String key : source.getSchema().keySet()) {
 			createBuilder.append(", " + key + " " + source.getSchema().get(key).toString());

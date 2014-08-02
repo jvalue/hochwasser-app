@@ -1,14 +1,13 @@
 package de.bitdroid.flooding.monitor;
 
-import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_MONITOR_TIMESTAMP;
-
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
 
-import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.Assert;
+
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 public final class MonitorSourceLoader extends AsyncTaskLoader<Cursor> {
@@ -53,7 +52,7 @@ public final class MonitorSourceLoader extends AsyncTaskLoader<Cursor> {
 		String[] selectionArgs = this.selectionArgs;
 
 		if (useSingleTimestamp) {
-			String timestampSelection = COLUMN_MONITOR_TIMESTAMP + "=?";
+			String timestampSelection = COLUMN_TIMESTAMP + "=?";
 			String timestampArg = String.valueOf(timestamp);
 
 			if (selection == null) selection = timestampSelection;

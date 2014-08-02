@@ -1,12 +1,12 @@
 package de.bitdroid.flooding.ods.data;
 
-import java.util.Map;
-
-import org.json.JSONObject;
-
 import android.accounts.Account;
 import android.content.ContentValues;
 import android.net.Uri;
+
+import org.json.JSONObject;
+
+import java.util.Map;
 
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.SQLiteType;
@@ -28,7 +28,8 @@ public abstract class OdsSource {
 	public static final String
 		COLUMN_ID = "_id",
 		COLUMN_SERVER_ID = "serverId",
-		COLUMN_SYNC_STATUS = "syncStatus";
+		COLUMN_SYNC_STATUS = "syncStatus",
+		COLUMN_TIMESTAMP = "timestamp";
 
 
 	private static final String

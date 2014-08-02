@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.levels.StationintentServiceTest;
+package de.bitdroid.flooding.levels;
 
 
 import android.content.ContentValues;
@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.levels.StationIntentService;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;

@@ -1,15 +1,12 @@
 package de.bitdroid.flooding.monitor;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.test.RenamingDelegatingContext;
 import android.test.ServiceTestCase;
 import android.test.mock.MockContentResolver;
 
@@ -22,6 +19,7 @@ import java.util.Map;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.data.OdsSource;
+import de.bitdroid.flooding.testUtils.MockContentProviderContext;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 public class CopySourceServiceTest extends ServiceTestCase {
@@ -35,7 +33,10 @@ public class CopySourceServiceTest extends ServiceTestCase {
 	public void testCopyAndDelete() throws Exception {
 		// setup content provider and data
 		MockContentResolver resolver = new MockContentResolver();
-		setContext(new MockContentProviderContext(getContext(), resolver));
+		setContext(new MockContentProviderContext(
+				getContext(),
+				resolver,
+				CopySourceServiceTest.class.getSimpleName()));
 
 		ListContentProvider provider = new ListContentProvider();
 		provider.addCursor(MockOdsSource.getSampelCursor());
@@ -83,27 +84,6 @@ public class CopySourceServiceTest extends ServiceTestCase {
 		assertFalse(monitor.isBeingMonitored(source));
 	}
 
-
-	private static class MockContentProviderContext extends RenamingDelegatingContext {
-
-		private final ContentResolver resolver;
-
-		public MockContentProviderContext(Context targetContext, ContentResolver resolver) {
-			super(targetContext, "test");
-			this.resolver = resolver;
-		}
-
-		@Override
-		public ContentResolver getContentResolver() {
-			return resolver;
-		}
-
-		@Override
-		public Context getApplicationContext() {
-			return this;
-		}
-
-	}
 
 	private static class ListContentProvider extends android.test.mock.MockContentProvider {
 

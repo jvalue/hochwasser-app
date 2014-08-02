@@ -75,11 +75,11 @@ public class GcmReceiverTest extends AndroidTestCase {
 		manager.setCepServerName(server.getUrl("").toString());
 		manager.registerEplStmt(EPL_STMT);
 
-		Thread.sleep(1000);
+		Thread.sleep(200);
 
 		new GcmReceiver().handle(getContext(), getIntent());
 
-		Thread.sleep(1000);
+		Thread.sleep(200);
 
 		assertEquals(1, receiverCount);
 		assertEquals(2, server.getRequestCount());
@@ -94,7 +94,7 @@ public class GcmReceiverTest extends AndroidTestCase {
 
 		new GcmReceiver().handle(getContext(), getIntent());
 
-		Thread.sleep(1000);
+		Thread.sleep(200);
 
 		assertEquals(0, receiverCount);
 		assertEquals(1, server.getRequestCount());

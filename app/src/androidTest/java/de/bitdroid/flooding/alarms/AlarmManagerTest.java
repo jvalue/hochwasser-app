@@ -80,7 +80,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(alarm2));
 
 		manager.register(alarm1);
-		Thread.sleep(500);
+		Thread.sleep(200);
 
 		assertEquals(1, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm1));
@@ -92,7 +92,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(0, deletedCounter);
 
 		manager.register(alarm2);
-		Thread.sleep(500);
+		Thread.sleep(200);
 
 		assertEquals(2, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm1));
@@ -105,7 +105,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(0, deletedCounter);
 
 		manager.unregister(alarm1);
-		Thread.sleep(500);
+		Thread.sleep(200);
 
 		assertEquals(1, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm2));
@@ -118,7 +118,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 
 		manager.unregisterListener(listener);
 		manager.unregister(alarm2);
-		Thread.sleep(500);
+		Thread.sleep(200);
 
 		assertEquals(0, manager.getAll().size());
 		assertFalse(manager.isRegistered((alarm1)));
@@ -147,7 +147,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(alarm));
 
 		manager.register(alarm);
-		Thread.sleep(500);
+		Thread.sleep(200);
 
 		assertEquals(1, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm));
@@ -155,7 +155,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(alarm));
 
 		manager.register(alarm);
-		Thread.sleep(500);
+		Thread.sleep(200);
 
 		assertEquals(1, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm));
@@ -163,7 +163,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(alarm));
 
 		manager.unregister(alarm);
-		Thread.sleep(500);
+		Thread.sleep(200);
 
 		assertEquals(0, manager.getAll().size());
 		assertFalse(manager.isRegistered((alarm)));

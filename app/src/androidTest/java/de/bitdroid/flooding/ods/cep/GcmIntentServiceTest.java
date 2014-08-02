@@ -94,7 +94,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		getContext().startService(intent);
 
 		// wait for service to finish
-		Thread.sleep(200);
+		Thread.sleep(300);
 
 		assertEquals(1, server.getRequestCount());
 		RecordedRequest request = server.takeRequest();
@@ -121,7 +121,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		getContext().startService(intent);
 
 		// wait for service to finish
-		Thread.sleep(200);
+		Thread.sleep(300);
 
 		assertEquals(1, server.getRequestCount());
 		RecordedRequest request = server.takeRequest();

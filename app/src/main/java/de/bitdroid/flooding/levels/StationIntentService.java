@@ -86,9 +86,9 @@ public class StationIntentService extends IntentService {
 
 			JSONObject json = new JSONObject(jsonResult);
 
-			ContentValues contentValues = source.saveData(json);
-			contentValues.put(OdsSource.COLUMN_SERVER_ID, json.optString("uuid"));
+			ContentValues contentValues = source.saveData(json, System.currentTimeMillis());
 			contentValues.put(OdsSource.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
+			// TODO remove!
 
 			if (oldValuePresent) {
 				// update

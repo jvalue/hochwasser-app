@@ -74,9 +74,17 @@ public abstract class OdsSource {
 
 
 	/**
-	 * Fetch parts that should be stored.
+	 * Pick values that should be stored in the db from a JSON object
 	 */
-	public abstract ContentValues saveData(JSONObject jsonObject);
+	public final ContentValues saveData(JSONObject jsonObject, long timestamp) {
+		ContentValues values = new ContentValues();
+		values.put(OdsSource.COLUMN_SERVER_ID, jsonObject.optString("_id"));
+		values.put(OdsSource.COLUMN_TIMESTAMP, timestamp);
+		saveData(jsonObject, values);
+		return values;
+	}
+
+	protected abstract void saveData(JSONObject jsonObject, ContentValues values);
 
 
 	public final Uri toUri() {

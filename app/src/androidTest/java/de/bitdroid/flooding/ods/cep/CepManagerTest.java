@@ -57,7 +57,7 @@ public class CepManagerTest extends AndroidTestCase {
 		assertEquals(0, manager.getRegisteredStmts().size());
 
 		manager.registerEplStmt(stmt1);
-		Thread.sleep(200);
+		Thread.sleep(300);
 
 		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(stmt1));
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt2));
@@ -65,7 +65,7 @@ public class CepManagerTest extends AndroidTestCase {
 		assertTrue(manager.getRegisteredStmts().contains(stmt1));
 
 		manager.registerEplStmt(stmt2);
-		Thread.sleep(200);
+		Thread.sleep(300);
 
 		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(stmt1));
 		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(stmt2));
@@ -74,7 +74,7 @@ public class CepManagerTest extends AndroidTestCase {
 		assertTrue(manager.getRegisteredStmts().contains(stmt2));
 
 		manager.unregisterEplStmt(stmt1);
-		Thread.sleep(200);
+		Thread.sleep(300);
 
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt1));
 		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(stmt2));
@@ -82,7 +82,7 @@ public class CepManagerTest extends AndroidTestCase {
 		assertTrue(manager.getRegisteredStmts().contains(stmt2));
 
 		manager.unregisterEplStmt(stmt2);
-		Thread.sleep(200);
+		Thread.sleep(300);
 
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt1));
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt2));

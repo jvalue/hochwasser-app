@@ -94,9 +94,7 @@ public class SyncStatusListenerTest extends AndroidTestCase {
 		}
 
 		@Override
-		public ContentValues saveData(JSONObject jsonObject) {
-			return new ContentValues();
-		}
+		protected void saveData(JSONObject jsonObject, ContentValues values) { }
 	}
 
 }

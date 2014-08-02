@@ -55,7 +55,5 @@ public final class DummySource extends OdsSource {
 
 
 	@Override
-	public ContentValues saveData(JSONObject json) {
-		return new ContentValues();
-	}
+	protected void saveData(JSONObject json, ContentValues values) { }
 }

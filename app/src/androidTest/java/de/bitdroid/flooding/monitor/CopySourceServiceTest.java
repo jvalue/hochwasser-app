@@ -135,7 +135,7 @@ public class CopySourceServiceTest extends ServiceTestCase {
 		}
 
 		@Override
-		public ContentValues saveData(JSONObject json) {
+		protected void saveData(JSONObject json, ContentValues values) {
 			throw new UnsupportedOperationException("stub");
 		}
 

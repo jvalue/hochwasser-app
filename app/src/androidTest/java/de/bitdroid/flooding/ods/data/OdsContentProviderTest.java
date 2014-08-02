@@ -1,14 +1,14 @@
 package de.bitdroid.flooding.ods.data;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.json.JSONObject;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.test.ProviderTestCase2;
 import android.test.mock.MockContentResolver;
+
+import org.json.JSONObject;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 public final class OdsContentProviderTest extends ProviderTestCase2<OdsContentProvider> {
@@ -103,9 +103,10 @@ public final class OdsContentProviderTest extends ProviderTestCase2<OdsContentPr
 
 	private ContentValues getValues(String id, String syncStatus) {
 		JSONObject json = new JSONObject();
-		ContentValues data = source.saveData(json);
+		ContentValues data = source.saveData(json, System.currentTimeMillis());
 		data.put(OdsSource.COLUMN_SERVER_ID, id);
 		data.put(OdsSource.COLUMN_SYNC_STATUS, syncStatus);
+		// TODO remove!
 		return data;
 	}
 

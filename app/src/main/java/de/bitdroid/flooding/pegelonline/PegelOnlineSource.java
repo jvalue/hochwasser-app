@@ -1,13 +1,13 @@
 package de.bitdroid.flooding.pegelonline;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.content.ContentValues;
+import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.ContentValues;
-import android.util.Pair;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.utils.SQLiteType;
@@ -99,8 +99,10 @@ public final class PegelOnlineSource extends OdsSource {
 
 
 	@Override
-	public ContentValues saveData(JSONObject json) {
-		ContentValues values = new ContentValues();
+	protected void saveData(JSONObject json, ContentValues values) {
+		// this is a hack that updates pegelonline data only, since ODS does currently
+		// (as of 29/07/14) not support updating data
+		values.put(OdsSource.COLUMN_SERVER_ID, json.optString("uuid"));
 
 		values.put(COLUMN_WATER_NAME, json.optJSONObject("BodyOfWater").optString("longname"));
 		values.put(COLUMN_STATION_NAME, json.optString("longname"));
@@ -158,9 +160,6 @@ public final class PegelOnlineSource extends OdsSource {
 			}
 
 		}
-
-
-		return values;
 	}
 
 }

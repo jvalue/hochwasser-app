@@ -52,13 +52,11 @@ final class Processor {
 	private ContentProviderOperation insertIntoProvider(JSONObject object, long timestamp)
 			throws RemoteException, JSONException {
 
-		// this is a hack that updates pegelonline data only, since ODS does currently
-		// (as of 29/07/14) not support updating data
-		String serverId = object.optString("uuid");
-		ContentValues data = source.saveData(object);
-		data.put(OdsSource.COLUMN_SERVER_ID, serverId);
+		ContentValues data = source.saveData(object, timestamp);
 		data.put(OdsSource.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
-		data.put(OdsSource.COLUMN_TIMESTAMP, timestamp);
+		// TODO REMOVE!
+
+		String serverId = data.getAsString(OdsSource.COLUMN_SERVER_ID);
 
 		// query if already present
 		Cursor cursor = null;

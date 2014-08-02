@@ -75,11 +75,11 @@ public class GcmReceiverTest extends AndroidTestCase {
 		manager.setCepServerName(server.getUrl("").toString());
 		manager.registerEplStmt(EPL_STMT);
 
-		Thread.sleep(200);
+		Thread.sleep(300);
 
 		new GcmReceiver().handle(getContext(), getIntent());
 
-		Thread.sleep(200);
+		Thread.sleep(300);
 
 		assertEquals(1, receiverCount);
 		assertEquals(2, server.getRequestCount());

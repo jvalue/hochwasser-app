@@ -39,7 +39,7 @@ public final class GcmIntentService extends BaseGcmIntentService {
 
 		RestCall.Builder builder = new RestCall.Builder(
 				RestCall.RequestType.POST,
-				CepManager.getInstance(getApplicationContext()).getCepServerName());
+				new CepManager(getApplicationContext()).getCepServerName());
 
 		if (register) {
 			String jsonString = builder

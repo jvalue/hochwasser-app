@@ -42,7 +42,7 @@ final class AlarmManager {
 	private final EplStmtCreator stmtCreator = new EplStmtCreator();
 
 	private AlarmManager(Context context) {
-		this.cepManager = CepManager.getInstance(context);
+		this.cepManager = new CepManager(context);
 		this.alarmDb = new AlarmDb(context);
 	}
 

@@ -37,9 +37,7 @@ public final class SettingsFragment extends PreferenceFragment {
 		updateServerName(R.string.prefs_ceps_servername_key, new ChangeServerName() {
 			@Override
 			public void changeServerName(String newServerName) {
-				CepManager
-					.getInstance(getActivity().getApplicationContext())
-					.setCepServerName(newServerName);
+				new CepManager(getActivity().getApplicationContext()).setCepServerName(newServerName);
 			}
 		});
 

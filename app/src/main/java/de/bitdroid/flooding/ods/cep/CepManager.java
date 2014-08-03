@@ -27,19 +27,10 @@ public final class CepManager {
 	private static final String KEY_SERVER_NAME = "serverName";
 
 
-	private static CepManager instance;
-
-	public static CepManager getInstance(Context context) {
-		Assert.assertNotNull(context);
-		if (instance == null) instance = new CepManager(context);
-		return instance;
-	}
-
-
 	private final Context context;
 	private final GcmRegistrationManager registrationManager;
 
-	private CepManager(Context context) {
+	public CepManager(Context context) {
 		Assert.assertNotNull(context);
 		this.context = context;
 		this.registrationManager = new GcmRegistrationManager(context, PREFS_NAME);
@@ -172,7 +163,7 @@ public final class CepManager {
 			GcmStatus status = null;
 			if (register) status = GcmStatus.REGISTERED;
 			else status = GcmStatus.UNREGISTERED;
-			CepManager.getInstance(context).registrationManager.update(eplStmt, clientId, status);
+			new CepManager(context).registrationManager.update(eplStmt, clientId, status);
 
 			// send broadcast about changed status
 			Intent registrationChangedIntent = new Intent(ACTION_REGISTRATION_STATUS_CHANGED);

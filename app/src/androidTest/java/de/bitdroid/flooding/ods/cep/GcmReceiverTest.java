@@ -38,7 +38,7 @@ public class GcmReceiverTest extends AndroidTestCase {
 		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
 		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
 
-		this.manager = CepManager.getInstance(getContext());
+		this.manager = new CepManager(getContext());
 
 		this.receiverCount = 0;
 		this.eventReceiver = new BaseEventReceiver() {

@@ -165,7 +165,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		// set CEPS server name
-		CepManager cepManager = CepManager.getInstance(getApplicationContext());
+		CepManager cepManager = new CepManager(getApplicationContext());
 		if (cepManager.getCepServerName() == null) {
 			cepManager.setCepServerName(
 					prefs.getString(getString(R.string.prefs_ceps_servername_key), null));

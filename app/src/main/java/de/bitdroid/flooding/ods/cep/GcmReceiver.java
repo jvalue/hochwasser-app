@@ -40,7 +40,7 @@ public final class GcmReceiver extends BaseGcmReceiver {
 		}
 
 		// get stmt for id
-		CepManager manager = CepManager.getInstance(context);
+		CepManager manager = new CepManager(context);
 		String eplStmt = manager.getEplStmtForClientId(clientId);
 		if (eplStmt == null) {
 			Log.warning("found eplStmt that should be registered, but wasn't");

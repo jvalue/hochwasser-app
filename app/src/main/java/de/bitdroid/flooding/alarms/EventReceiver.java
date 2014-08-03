@@ -78,7 +78,7 @@ public final class EventReceiver extends BaseEventReceiver {
 
 			// check or error while unregistering
 			if (alarmJson == null && eplStmt != null) {
-				CepManager.getInstance(context).unregisterEplStmt(eplStmt);
+				new CepManager(context).unregisterEplStmt(eplStmt);
 
 			// show news
 			} else {

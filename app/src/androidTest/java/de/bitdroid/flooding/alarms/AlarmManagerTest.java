@@ -40,7 +40,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		server.enqueue(new MockResponse());
 		server.enqueue(new MockResponse());
 		server.play();
-		CepManager.getInstance(getContext()).setCepServerName(server.getUrl("").toString());
+		new CepManager(getContext()).setCepServerName(server.getUrl("").toString());
 
 		final Alarm alarm1 = new LevelAlarm("river", "station", 32, true);
 		final Alarm alarm2 = new LevelAlarm("river", "station", 32, false);
@@ -138,7 +138,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		server.enqueue(getRegistrationResponse("someId1"));
 		server.enqueue(new MockResponse());
 		server.play();
-		CepManager.getInstance(getContext()).setCepServerName(server.getUrl("").toString());
+		new CepManager(getContext()).setCepServerName(server.getUrl("").toString());
 
 		final Alarm alarm = new LevelAlarm("river", "station", 32, true);
 

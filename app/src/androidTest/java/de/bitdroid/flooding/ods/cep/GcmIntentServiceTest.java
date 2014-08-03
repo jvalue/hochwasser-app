@@ -85,7 +85,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		server.enqueue(new MockResponse().setBody(((Object) json).toString()));
 		server.play();
 		URL serverUrl = server.getUrl("");
-		CepManager.getInstance(getContext()).setCepServerName(serverUrl.toString());
+		new CepManager(getContext()).setCepServerName(serverUrl.toString());
 
 		// start service
 		Intent intent = new Intent(getContext(), GcmIntentService.class);
@@ -111,7 +111,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		server.enqueue(new MockResponse());
 		server.play();
 		URL serverUrl = server.getUrl("");
-		CepManager.getInstance(getContext()).setCepServerName(serverUrl.toString());
+		new CepManager(getContext()).setCepServerName(serverUrl.toString());
 
 		// start service
 		Intent intent = new Intent(getContext(), GcmIntentService.class);

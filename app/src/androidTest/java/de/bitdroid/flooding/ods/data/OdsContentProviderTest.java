@@ -41,72 +41,75 @@ public final class OdsContentProviderTest extends ProviderTestCase2<OdsContentPr
 
 
 	public void testCRUD() {
-		String id = "1234";
-		String statusOk = "ok", statusFail = "fail";
-
+		String id1 = "1234";
+		String id2 = "6789";
 
 		// test insert & read
-		ContentValues data1 = getValues(id, statusOk);
-		ContentValues data2 = getValues("6789", statusFail);
+		long timestamp = System.currentTimeMillis();
+		ContentValues data1 = getValues(id1, timestamp);
+		ContentValues data2 = getValues(id2, timestamp);
 
 		contentResolver.insert(source.toUri(), data1); 
 		contentResolver.insert(source.toUri(), data2); 
 
 		Cursor cursor = contentResolver.query(
 				source.toUri(),
-				new String[] { OdsSource.COLUMN_SERVER_ID, OdsSource.COLUMN_SYNC_STATUS },
+				new String[] { OdsSource.COLUMN_SERVER_ID , OdsSource.COLUMN_TIMESTAMP },
 				null, null, null);
 
-		int count = cursor.getCount();
-		assertTrue("Found " + count + " elements but was expecting 2", count == 2);
+		assertEquals(2, cursor.getCount());
 
-		List<String> requiredStatus = new LinkedList<String>();
-		requiredStatus.add(statusOk);
-		requiredStatus.add(statusFail);
+		List<String> ids = new LinkedList<String>();
+		ids.add(id1);
+		ids.add(id2);
 
 		cursor.moveToFirst();
 		do {
-			String status = cursor.getString(1);
-			assertTrue("Failed to find status " + status, requiredStatus.remove(status));
+			String id = cursor.getString(0);
+			long time = cursor.getLong(1);
+
+			assertTrue(ids.contains(id));
+			ids.remove(id);
+			assertEquals(timestamp, time);
+
 		} while (cursor.moveToNext());
 		cursor.close();
 
 
 		// test update
-		data1 = getValues(id, statusFail);
-		contentResolver.update(source.toUri(), data1, null, null); 
+		long newTimestamp = System.currentTimeMillis();
+		data1 = getValues(id1, newTimestamp);
+		contentResolver.update(source.toUri(), data1, null, null);
 
 		cursor = contentResolver.query(
 				source.toUri(),
-				new String[] { OdsSource.COLUMN_SERVER_ID, OdsSource.COLUMN_SYNC_STATUS },
+				new String[] { OdsSource.COLUMN_SERVER_ID, OdsSource.COLUMN_TIMESTAMP },
 				null, null, null);
 
-		requiredStatus.add(statusFail);
-		requiredStatus.add(statusFail);
-
+		boolean foundNewTimestamp = false;
 		cursor.moveToFirst();
 		do {
-			String status = cursor.getString(1);
-			assertTrue("Failed to find status " + status, requiredStatus.remove(status));
+			if (cursor.getString(0).equals(id1)) {
+				assertEquals(newTimestamp, cursor.getLong(1));
+				foundNewTimestamp = true;
+			}
 		} while (cursor.moveToNext());
 		cursor.close();
 
+		assertTrue(foundNewTimestamp);
 
 		// test delete
 		int deleteCount = contentResolver.delete(source.toUri(), null, null);
-		assertTrue("Deleted " + deleteCount + ", expected 2", deleteCount == 2);
+		assertEquals(2, deleteCount);
 		cursor.close();
 	}
 
 
-
-
-	private ContentValues getValues(String id, String syncStatus) {
+	private ContentValues getValues(String id, long timestamp) {
 		JSONObject json = new JSONObject();
 		ContentValues data = source.saveData(json, System.currentTimeMillis());
 		data.put(OdsSource.COLUMN_SERVER_ID, id);
-		data.put(OdsSource.COLUMN_SYNC_STATUS, syncStatus);
-		// TODO remove!
+		data.put(OdsSource.COLUMN_TIMESTAMP, timestamp);
 		return data;
 	}
 

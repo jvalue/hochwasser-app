@@ -53,9 +53,6 @@ final class Processor {
 			throws RemoteException, JSONException {
 
 		ContentValues data = source.saveData(object, timestamp);
-		data.put(OdsSource.COLUMN_SYNC_STATUS, SyncStatus.SYNCED.toString());
-		// TODO REMOVE!
-
 		String serverId = data.getAsString(OdsSource.COLUMN_SERVER_ID);
 
 		// query if already present

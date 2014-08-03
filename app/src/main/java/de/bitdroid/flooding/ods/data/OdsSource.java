@@ -28,7 +28,6 @@ public abstract class OdsSource {
 	public static final String
 		COLUMN_ID = "_id",
 		COLUMN_SERVER_ID = "serverId",
-		COLUMN_SYNC_STATUS = "syncStatus",
 		COLUMN_TIMESTAMP = "timestamp";
 
 

@@ -1,35 +1,29 @@
 package de.bitdroid.flooding.ods.data;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import de.bitdroid.flooding.ods.gcm.GcmRegistrationManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
 
 
-public final class GcmManager {
+final class GcmManager {
 
-	private static GcmManager instance;
-
-	static GcmManager getInstance(Context context) {
-		Assert.assertNotNull(context);
-		if (instance == null) instance = new GcmManager(context);
-		return instance;
-	}
+	private static final String PREFS_NAME = GcmManager.class.getName();
 
 
 	private final Context context;
 	private final GcmRegistrationManager registrationManager;
 
-	private GcmManager(Context context) {
+	public GcmManager(Context context) {
 		Assert.assertNotNull(context);
 		this.context = context;
-		this.registrationManager = new GcmRegistrationManager(context, GcmManager.class.getName());
+		this.registrationManager = new GcmRegistrationManager(context, PREFS_NAME);
 	}
 
 
@@ -92,7 +86,7 @@ public final class GcmManager {
 			GcmStatus status = null;
 			if (register) status = GcmStatus.REGISTERED;
 			else status = GcmStatus.UNREGISTERED;
-			GcmManager.getInstance(context).registrationManager.update(sourceString, clientId, status);
+			new GcmRegistrationManager(context, PREFS_NAME).update(sourceString, clientId, status);
 		}
 
 	}

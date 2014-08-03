@@ -35,7 +35,7 @@ public final class OdsSourceManager {
 
 	private OdsSourceManager(Context context) {
 		this.context = context;
-		this.gcmManager = GcmManager.getInstance(context);
+		this.gcmManager = new GcmManager(context);
 	}
 
 

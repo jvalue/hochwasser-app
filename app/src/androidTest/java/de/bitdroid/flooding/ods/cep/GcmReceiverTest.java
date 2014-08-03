@@ -11,6 +11,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 import de.bitdroid.flooding.utils.Log;
 
 public class GcmReceiverTest extends BaseAndroidTestCase {
@@ -36,10 +37,10 @@ public class GcmReceiverTest extends BaseAndroidTestCase {
 
 	@Override
 	public void beforeTest() {
-		// SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
+		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
 
 		this.server = new MockWebServer();
-		this.manager = new CepManager(getContext());
+		this.manager = CepManagerFactory.createCepManager(getContext());
 
 		this.receiverCount = 0;
 		this.eventReceiver = new BaseEventReceiver() {

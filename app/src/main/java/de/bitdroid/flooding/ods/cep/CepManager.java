@@ -30,7 +30,7 @@ public final class CepManager {
 	private final Context context;
 	private final GcmRegistrationManager registrationManager;
 
-	public CepManager(Context context) {
+	CepManager(Context context) {
 		Assert.assertNotNull(context);
 		this.context = context;
 		this.registrationManager = new GcmRegistrationManager(context, PREFS_NAME);
@@ -163,7 +163,7 @@ public final class CepManager {
 			GcmStatus status = null;
 			if (register) status = GcmStatus.REGISTERED;
 			else status = GcmStatus.UNREGISTERED;
-			new CepManager(context).registrationManager.update(eplStmt, clientId, status);
+			CepManagerFactory.createCepManager(context).registrationManager.update(eplStmt, clientId, status);
 
 			// send broadcast about changed status
 			Intent registrationChangedIntent = new Intent(ACTION_REGISTRATION_STATUS_CHANGED);

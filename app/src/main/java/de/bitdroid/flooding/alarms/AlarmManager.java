@@ -1,14 +1,5 @@
 package de.bitdroid.flooding.alarms;
 
-import static de.bitdroid.flooding.alarms.AlarmDbSchema.COLUMN_ID;
-import static de.bitdroid.flooding.alarms.AlarmDbSchema.COLUMN_JSON;
-import static de.bitdroid.flooding.alarms.AlarmDbSchema.TABLE_NAME;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,10 +8,20 @@ import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import de.bitdroid.flooding.ods.cep.CepManager;
+import de.bitdroid.flooding.ods.cep.CepManagerFactory;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
+
+import static de.bitdroid.flooding.alarms.AlarmDbSchema.COLUMN_ID;
+import static de.bitdroid.flooding.alarms.AlarmDbSchema.COLUMN_JSON;
+import static de.bitdroid.flooding.alarms.AlarmDbSchema.TABLE_NAME;
 
 
 final class AlarmManager {
@@ -42,7 +43,7 @@ final class AlarmManager {
 	private final EplStmtCreator stmtCreator = new EplStmtCreator();
 
 	private AlarmManager(Context context) {
-		this.cepManager = new CepManager(context);
+		this.cepManager = CepManagerFactory.createCepManager(context);
 		this.alarmDb = new AlarmDb(context);
 	}
 

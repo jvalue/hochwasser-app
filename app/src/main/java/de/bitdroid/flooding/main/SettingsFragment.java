@@ -12,7 +12,7 @@ import java.util.Calendar;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.monitor.SourceMonitor;
-import de.bitdroid.flooding.ods.cep.CepManager;
+import de.bitdroid.flooding.ods.cep.CepManagerFactory;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -37,7 +37,7 @@ public final class SettingsFragment extends PreferenceFragment {
 		updateServerName(R.string.prefs_ceps_servername_key, new ChangeServerName() {
 			@Override
 			public void changeServerName(String newServerName) {
-				new CepManager(getActivity().getApplicationContext()).setCepServerName(newServerName);
+				CepManagerFactory.createCepManager(getActivity().getApplicationContext()).setCepServerName(newServerName);
 			}
 		});
 

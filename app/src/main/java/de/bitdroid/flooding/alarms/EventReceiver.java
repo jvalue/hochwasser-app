@@ -1,7 +1,5 @@
 package de.bitdroid.flooding.alarms;
 
-import java.util.Set;
-
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,11 +7,12 @@ import android.content.Intent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Set;
+
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.news.NewsItem;
 import de.bitdroid.flooding.news.NewsManager;
 import de.bitdroid.flooding.ods.cep.BaseEventReceiver;
-import de.bitdroid.flooding.ods.cep.CepManager;
+import de.bitdroid.flooding.ods.cep.CepManagerFactory;
 import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.StringUtils;
 
@@ -78,7 +77,7 @@ public final class EventReceiver extends BaseEventReceiver {
 
 			// check or error while unregistering
 			if (alarmJson == null && eplStmt != null) {
-				new CepManager(context).unregisterEplStmt(eplStmt);
+				CepManagerFactory.createCepManager(context).unregisterEplStmt(eplStmt);
 
 			// show news
 			} else {

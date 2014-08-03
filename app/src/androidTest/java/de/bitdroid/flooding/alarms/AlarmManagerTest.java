@@ -8,7 +8,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.bitdroid.flooding.ods.cep.CepManager;
+import de.bitdroid.flooding.ods.cep.CepManagerFactory;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
@@ -45,7 +45,7 @@ public class AlarmManagerTest extends BaseAndroidTestCase {
 		server.enqueue(new MockResponse());
 		server.enqueue(new MockResponse());
 		server.play();
-		new CepManager(getContext()).setCepServerName(server.getUrl("").toString());
+		CepManagerFactory.createCepManager(getContext()).setCepServerName(server.getUrl("").toString());
 
 		final Alarm alarm1 = new LevelAlarm("river", "station", 32, true);
 		final Alarm alarm2 = new LevelAlarm("river", "station", 32, false);
@@ -143,7 +143,7 @@ public class AlarmManagerTest extends BaseAndroidTestCase {
 		server.enqueue(getRegistrationResponse("someId1"));
 		server.enqueue(new MockResponse());
 		server.play();
-		new CepManager(getContext()).setCepServerName(server.getUrl("").toString());
+		CepManagerFactory.createCepManager(getContext()).setCepServerName(server.getUrl("").toString());
 
 		final Alarm alarm = new LevelAlarm("river", "station", 32, true);
 

@@ -32,6 +32,7 @@ import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.ods.cep.CepManager;
+import de.bitdroid.flooding.ods.cep.CepManagerFactory;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -165,7 +166,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		// set CEPS server name
-		CepManager cepManager = new CepManager(getApplicationContext());
+		CepManager cepManager = CepManagerFactory.createCepManager(getApplicationContext());
 		if (cepManager.getCepServerName() == null) {
 			cepManager.setCepServerName(
 					prefs.getString(getString(R.string.prefs_ceps_servername_key), null));

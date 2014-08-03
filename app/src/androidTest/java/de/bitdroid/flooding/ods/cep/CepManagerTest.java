@@ -24,7 +24,7 @@ public class CepManagerTest extends BaseAndroidTestCase {
 	public void beforeClass() {
 		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
 		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
-		this.manager = new CepManager(getContext());
+		this.manager = CepManagerFactory.createCepManager(getContext());
 	}
 
 

@@ -6,6 +6,8 @@ import android.net.Uri;
 
 import org.json.JSONObject;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.bitdroid.flooding.utils.Assert;
@@ -25,8 +27,11 @@ public abstract class OdsSource {
 
 	public static final String AUTHORITY = "de.bitdroid.flooding.provider";
 
+	/** Primary key. NOT included in the schema information! */
 	public static final String
-		COLUMN_ID = "_id",
+		COLUMN_ID = "_id";
+
+	public static final String
 		COLUMN_SERVER_ID = "serverId",
 		COLUMN_TIMESTAMP = "timestamp";
 
@@ -38,7 +43,10 @@ public abstract class OdsSource {
 
 	private final Uri baseUri;
 
+	private final Map<String, SQLiteType> schema;
+
 	protected OdsSource() {
+		// build base url
 		Uri.Builder builder = new Uri.Builder()
 				.scheme("content")
 				.authority(AUTHORITY)
@@ -48,8 +56,14 @@ public abstract class OdsSource {
 		for (String path : classPaths) {
 			builder.appendPath(path);
 		}
-
 		this.baseUri = builder.build();
+
+		// build readonly schema info
+		Map<String, SQLiteType> schema = new HashMap<String, SQLiteType>();
+		schema.put(COLUMN_SERVER_ID, SQLiteType.TEXT);
+		schema.put(COLUMN_TIMESTAMP, SQLiteType.INTEGER);
+		getSchema(schema);
+		this.schema = Collections.unmodifiableMap(schema);
 	}
 
 
@@ -63,7 +77,12 @@ public abstract class OdsSource {
 	/**
 	 * Describes what parts of data should be saved.
 	 */
-	public abstract Map<String, SQLiteType> getSchema(); 
+	public final Map<String, SQLiteType> getSchema() {
+		return schema;
+	}
+
+
+	protected abstract void getSchema(Map<String, SQLiteType> schema);
 
 
 	/**

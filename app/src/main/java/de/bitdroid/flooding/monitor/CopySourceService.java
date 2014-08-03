@@ -38,8 +38,6 @@ public final class CopySourceService extends IntentService {
 		OdsSource source = OdsSource.fromString(sourceName);
 
 		Map<String, SQLiteType> schema = source.getSchema();
-		schema.put(OdsSource.COLUMN_SERVER_ID, SQLiteType.TEXT);
-		schema.put(OdsSource.COLUMN_TIMESTAMP, SQLiteType.INTEGER);
 		Set<String> sourceColumns = new HashSet<String>(schema.keySet());
 
 		List<Long> timestamps = SourceMonitor.getInstance(getApplicationContext()).getAvailableTimestamps(source);

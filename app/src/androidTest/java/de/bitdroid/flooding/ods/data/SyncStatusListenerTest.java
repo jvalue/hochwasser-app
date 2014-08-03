@@ -8,7 +8,6 @@ import android.test.RenamingDelegatingContext;
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import de.bitdroid.flooding.utils.SQLiteType;
@@ -84,9 +83,7 @@ public class SyncStatusListenerTest extends AndroidTestCase {
 		}
 
 		@Override
-		public Map<String, SQLiteType> getSchema() {
-			return new HashMap<String, SQLiteType>();
-		}
+		protected void getSchema(Map<String, SQLiteType> schema) { }
 
 		@Override
 		public String getSourceId() {

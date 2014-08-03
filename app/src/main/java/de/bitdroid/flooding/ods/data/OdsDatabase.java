@@ -8,8 +8,6 @@ import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
 import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_ID;
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 final class OdsDatabase extends SQLiteOpenHelper {
@@ -29,9 +27,7 @@ final class OdsDatabase extends SQLiteOpenHelper {
 		
 		StringBuilder createBuilder = new StringBuilder(
 			"create table if not exists " + tableName + " ( "
-			+ COLUMN_ID + " integer primary key autoincrement, "
-			+ COLUMN_SERVER_ID + " text not null, "
-			+ COLUMN_TIMESTAMP + " integer");
+			+ COLUMN_ID + " integer primary key autoincrement");
 
 		for (String key : source.getSchema().keySet()) {
 			createBuilder.append(", " + key + " " + source.getSchema().get(key).toString());

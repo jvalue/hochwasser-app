@@ -49,37 +49,6 @@ public final class PegelOnlineSource extends OdsSource {
 		SOURCE_URL = "ods/de/pegelonline/stations";
 
 
-	private static final Map<String, SQLiteType> SCHEMA = new HashMap<String, SQLiteType>();
-
-	static {
-		SCHEMA.put(COLUMN_WATER_NAME, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_STATION_NAME, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_STATION_LAT, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_STATION_LONG, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_STATION_KM, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_LEVEL_TIMESTAMP, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_LEVEL_VALUE, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_LEVEL_UNIT, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_LEVEL_ZERO_VALUE, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_LEVEL_ZERO_UNIT, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_LEVEL_TYPE, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_CHARVALUES_MW_VALUE , SQLiteType.REAL);
-		SCHEMA.put(COLUMN_CHARVALUES_MW_UNIT, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_CHARVALUES_MHW_VALUE , SQLiteType.REAL);
-		SCHEMA.put(COLUMN_CHARVALUES_MHW_UNIT, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_CHARVALUES_MNW_VALUE , SQLiteType.REAL);
-		SCHEMA.put(COLUMN_CHARVALUES_MNW_UNIT, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_CHARVALUES_MTNW_VALUE, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_CHARVALUES_MTNW_UNIT, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_CHARVALUES_MTHW_VALUE, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_CHARVALUES_MTHW_UNIT, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_CHARVALUES_HTHW_VALUE, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_CHARVALUES_HTHW_UNIT, SQLiteType.TEXT);
-		SCHEMA.put(COLUMN_CHARVALUES_NTNW_VALUE, SQLiteType.REAL);
-		SCHEMA.put(COLUMN_CHARVALUES_NTNW_UNIT, SQLiteType.TEXT);
-	}
-
-
 	@Override
 	public String getSourceUrlPath() {
 		return SOURCE_URL;
@@ -87,8 +56,32 @@ public final class PegelOnlineSource extends OdsSource {
 
 
 	@Override
-	public Map<String, SQLiteType> getSchema() {
-		return SCHEMA;
+	protected void getSchema(Map<String, SQLiteType> schema) {
+		schema.put(COLUMN_WATER_NAME, SQLiteType.TEXT);
+		schema.put(COLUMN_STATION_NAME, SQLiteType.TEXT);
+		schema.put(COLUMN_STATION_LAT, SQLiteType.REAL);
+		schema.put(COLUMN_STATION_LONG, SQLiteType.REAL);
+		schema.put(COLUMN_STATION_KM, SQLiteType.REAL);
+		schema.put(COLUMN_LEVEL_TIMESTAMP, SQLiteType.TEXT);
+		schema.put(COLUMN_LEVEL_VALUE, SQLiteType.REAL);
+		schema.put(COLUMN_LEVEL_UNIT, SQLiteType.TEXT);
+		schema.put(COLUMN_LEVEL_ZERO_VALUE, SQLiteType.REAL);
+		schema.put(COLUMN_LEVEL_ZERO_UNIT, SQLiteType.TEXT);
+		schema.put(COLUMN_LEVEL_TYPE, SQLiteType.TEXT);
+		schema.put(COLUMN_CHARVALUES_MW_VALUE , SQLiteType.REAL);
+		schema.put(COLUMN_CHARVALUES_MW_UNIT, SQLiteType.TEXT);
+		schema.put(COLUMN_CHARVALUES_MHW_VALUE , SQLiteType.REAL);
+		schema.put(COLUMN_CHARVALUES_MHW_UNIT, SQLiteType.TEXT);
+		schema.put(COLUMN_CHARVALUES_MNW_VALUE , SQLiteType.REAL);
+		schema.put(COLUMN_CHARVALUES_MNW_UNIT, SQLiteType.TEXT);
+		schema.put(COLUMN_CHARVALUES_MTNW_VALUE, SQLiteType.REAL);
+		schema.put(COLUMN_CHARVALUES_MTNW_UNIT, SQLiteType.TEXT);
+		schema.put(COLUMN_CHARVALUES_MTHW_VALUE, SQLiteType.REAL);
+		schema.put(COLUMN_CHARVALUES_MTHW_UNIT, SQLiteType.TEXT);
+		schema.put(COLUMN_CHARVALUES_HTHW_VALUE, SQLiteType.REAL);
+		schema.put(COLUMN_CHARVALUES_HTHW_UNIT, SQLiteType.TEXT);
+		schema.put(COLUMN_CHARVALUES_NTNW_VALUE, SQLiteType.REAL);
+		schema.put(COLUMN_CHARVALUES_NTNW_UNIT, SQLiteType.TEXT);
 	}
 
 

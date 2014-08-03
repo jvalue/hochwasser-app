@@ -12,7 +12,6 @@ import android.test.mock.MockContentResolver;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -128,10 +127,8 @@ public class CopySourceServiceTest extends ServiceTestCase {
 		}
 
 		@Override
-		public Map<String, SQLiteType> getSchema() {
-			Map<String, SQLiteType> schema = new HashMap<String, SQLiteType>();
+		protected void getSchema(Map<String, SQLiteType> schema) {
 			schema.put(COLUMN, SQLiteType.TEXT);
-			return schema;
 		}
 
 		@Override

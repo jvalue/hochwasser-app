@@ -12,8 +12,6 @@ import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_ID;
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 final class MonitorDatabase extends SQLiteOpenHelper {
@@ -31,9 +29,7 @@ final class MonitorDatabase extends SQLiteOpenHelper {
 
 		StringBuilder builder = new StringBuilder(
 				"create table if not exists " + tableName + " ( "
-				+ COLUMN_ID + " integer primary key autoincrement, "
-				+ COLUMN_SERVER_ID + " text not null, "
-				+ COLUMN_TIMESTAMP + " integer");
+				+ COLUMN_ID + " integer primary key autoincrement");
 
 		for (Map.Entry<String, SQLiteType> e : source.getSchema().entrySet()) {
 			builder.append(", " + e.getKey() + " " + e.getValue().toString());

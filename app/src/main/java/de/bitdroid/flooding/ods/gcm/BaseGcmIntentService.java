@@ -1,7 +1,6 @@
 package de.bitdroid.flooding.ods.gcm;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -18,18 +17,11 @@ public abstract class BaseGcmIntentService extends IntentService {
 
 
 	private final GcmIdManager gcmIdManager;
-	private final Context context;
+
 
 	public BaseGcmIntentService() {
-		this(BaseGcmIntentService.class.getSimpleName(), null);
-	}
-
-	// TODO sooo weird and bad!
-	public BaseGcmIntentService(String debugName, Context context) {
-		super(debugName);
-		if (context == null) this.context = this;
-		else this.context = context;
-		this.gcmIdManager = new GcmIdManager(this.context);
+		super(BaseGcmIntentService.class.getSimpleName());
+		this.gcmIdManager = new GcmIdManager(this);
 	}
 
 
@@ -46,7 +38,7 @@ public abstract class BaseGcmIntentService extends IntentService {
 
 			if (gcmClientId == null) {
 				gcmClientId = GoogleCloudMessaging
-					.getInstance(context)
+					.getInstance(this)
 					.register(senderId);
 				gcmIdManager.updateClientId(gcmClientId);
 			}
@@ -65,7 +57,7 @@ public abstract class BaseGcmIntentService extends IntentService {
 
 		prepareResultIntent(intent, resultIntent);
 
-		context.sendBroadcast(resultIntent);
+		sendBroadcast(resultIntent);
 	}
 
 

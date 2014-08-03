@@ -5,65 +5,34 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.test.AndroidTestCase;
+import android.test.ServiceTestCase;
 
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
-public class BaseGcmIntentServiceTest extends AndroidTestCase {
+public class BaseGcmIntentServiceTest extends ServiceTestCase<BaseGcmIntentServiceTest.DummyBaseGcmIntentService> {
 
 	private static final String PREFIX = BaseGcmIntentServiceTest.class.getSimpleName();
 
-	private int
+	private static final String SERVICE_CLIENTID = "serviceClientId";
+	private static final boolean REGISTER = true;
+	private static final String ACTION = "BaseGcmIntentServiceTest.ACTION";
+
+	private static int
 			handleRegistrationCounter = 0,
 			prepareResultIntentCounter = 0,
 			getActionNameCounter = 0;
 
 
+	public BaseGcmIntentServiceTest() {
+		super(DummyBaseGcmIntentService.class);
+	}
+
 	public void testRegister() throws Exception {
-		final String SERVICE_CLIENTID = "serviceClientId";
-		final boolean REGISTER = true;
-		final String ACTION = "BaseGcmIntentServiceTest.ACTION";
 
 		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
 		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
 
-		BaseGcmIntentService service = new BaseGcmIntentService("test", getContext()) {
-			@Override
-			protected String handleRegistration(
-					Intent intent,
-					String gcmClientId,
-					String serviceClientId,
-					boolean register) throws Exception {
-
-				assertNotNull(gcmClientId);
-				assertNull(serviceClientId);
-				assertEquals(REGISTER, register);
-
-				handleRegistrationCounter++;
-
-				return SERVICE_CLIENTID;
-			}
-
-			@Override
-			protected void prepareResultIntent(Intent originalIntent, Intent resultIntent) {
-				assertFalse(originalIntent.getExtras().containsKey(EXTRA_ERROR_MSG));
-				assertTrue(originalIntent.getExtras().containsKey(EXTRA_REGISTER));
-				assertFalse(originalIntent.getExtras().containsKey(EXTRA_SERVICE_CLIENTID));
-
-				assertNull(resultIntent.getExtras().getString(EXTRA_ERROR_MSG));
-				assertTrue(resultIntent.getExtras().containsKey(EXTRA_REGISTER));
-				assertTrue(resultIntent.getExtras().containsKey(EXTRA_SERVICE_CLIENTID));
-
-				prepareResultIntentCounter++;
-			}
-
-			@Override
-			protected String getActionName() {
-				getActionNameCounter++;
-				return ACTION;
-			}
-		};
 
 		GcmIdManager idManager = new GcmIdManager(getContext());
 		assertNull(idManager.getClientId());
@@ -80,11 +49,51 @@ public class BaseGcmIntentServiceTest extends AndroidTestCase {
 		Intent intent = new Intent("test");
 		intent.putExtra(BaseGcmIntentService.EXTRA_REGISTER, true);
 
-		service.onHandleIntent(intent);
+		startService(intent);
+		Thread.sleep(300);
 
 		assertEquals(1, handleRegistrationCounter);
 		assertEquals(1, prepareResultIntentCounter);
 		assertEquals(1, getActionNameCounter);
 	}
+
+
+	public static final class DummyBaseGcmIntentService extends BaseGcmIntentService {
+
+		@Override
+		protected String handleRegistration(
+				Intent intent,
+				String gcmClientId,
+				String serviceClientId,
+				boolean register) throws Exception {
+
+			assertNotNull(gcmClientId);
+			assertNull(serviceClientId);
+			assertEquals(REGISTER, register);
+
+			handleRegistrationCounter++;
+
+			return SERVICE_CLIENTID;
+		}
+
+		@Override
+		protected void prepareResultIntent(Intent originalIntent, Intent resultIntent) {
+			assertFalse(originalIntent.getExtras().containsKey(EXTRA_ERROR_MSG));
+			assertTrue(originalIntent.getExtras().containsKey(EXTRA_REGISTER));
+			assertFalse(originalIntent.getExtras().containsKey(EXTRA_SERVICE_CLIENTID));
+
+			assertNull(resultIntent.getExtras().getString(EXTRA_ERROR_MSG));
+			assertTrue(resultIntent.getExtras().containsKey(EXTRA_REGISTER));
+			assertTrue(resultIntent.getExtras().containsKey(EXTRA_SERVICE_CLIENTID));
+
+			prepareResultIntentCounter++;
+		}
+
+		@Override
+		protected String getActionName() {
+			getActionNameCounter++;
+			return ACTION;
+		}
+	};
 
 }

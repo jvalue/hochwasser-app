@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,10 +14,12 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
 public class GcmReceiverTest extends AndroidTestCase {
 
+	private static final String PREFIX = GcmReceiverTest.class.getSimpleName();
 	private static final ObjectMapper mapper = new ObjectMapper();
 	private static final String
 			CLIENTID = "someClientId",
@@ -34,10 +35,8 @@ public class GcmReceiverTest extends AndroidTestCase {
 	@Override
 	public void setUp() {
 		this.server = new MockWebServer();
-		setContext(new RenamingDelegatingContext(
-				getContext(),
-				"GcmReceiverTest"));
-		SharedPreferencesHelper.clearAll(getContext());
+		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
+		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
 
 		this.manager = CepManager.getInstance(getContext());
 

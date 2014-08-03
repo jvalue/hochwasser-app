@@ -1,7 +1,8 @@
 package de.bitdroid.flooding.news;
 
 import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
+
+import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 
 
 public final class NewsManagerTest extends AndroidTestCase {
@@ -10,7 +11,7 @@ public final class NewsManagerTest extends AndroidTestCase {
 
 	@Override
 	public void setUp() {
-		setContext(new RenamingDelegatingContext(getContext(), "test"));
+		setContext(new PrefsRenamingDelegatingContext(getContext(), "test"));
 		newItemCounter = 0;
 		deletedItemCounter = 0;
 		readCounter = 0;

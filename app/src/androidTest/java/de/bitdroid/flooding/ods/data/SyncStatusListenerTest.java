@@ -3,22 +3,24 @@ package de.bitdroid.flooding.ods.data;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
 
 import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Map;
 
+import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 public class SyncStatusListenerTest extends AndroidTestCase {
 
+	private static final String PREFIX = SyncStatusListenerTest.class.getSimpleName();
+
 	@Override
 	public void setUp() {
-		setContext(new RenamingDelegatingContext(
-				getContext(),
-				SyncStatusListenerTest.class.getSimpleName()));
+		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
+		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
 	}
 
 

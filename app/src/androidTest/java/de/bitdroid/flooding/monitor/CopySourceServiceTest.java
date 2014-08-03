@@ -18,10 +18,14 @@ import java.util.Map;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.data.OdsSource;
-import de.bitdroid.flooding.testUtils.MockContentProviderContext;
+import de.bitdroid.flooding.testUtils.ContentProviderContext;
+import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 import de.bitdroid.flooding.utils.SQLiteType;
 
 public class CopySourceServiceTest extends ServiceTestCase {
+
+	private static final String PREFIX = CopySourceServiceTest.class.getSimpleName();
 
 
 	public CopySourceServiceTest() {
@@ -32,10 +36,9 @@ public class CopySourceServiceTest extends ServiceTestCase {
 	public void testCopyAndDelete() throws Exception {
 		// setup content provider and data
 		MockContentResolver resolver = new MockContentResolver();
-		setContext(new MockContentProviderContext(
-				getContext(),
-				resolver,
-				CopySourceServiceTest.class.getSimpleName()));
+		setContext(new ContentProviderContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX), resolver));
+
+		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
 
 		ListContentProvider provider = new ListContentProvider();
 		resolver.addProvider(OdsSource.AUTHORITY, provider);

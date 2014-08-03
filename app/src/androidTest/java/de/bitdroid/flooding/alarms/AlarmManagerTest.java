@@ -1,7 +1,6 @@
 package de.bitdroid.flooding.alarms;
 
 import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +12,7 @@ import java.util.Map;
 
 import de.bitdroid.flooding.ods.cep.CepManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
+import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 
 public class AlarmManagerTest extends AndroidTestCase {
 
@@ -24,7 +24,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 
 	@Override
 	public void setUp() {
-		setContext(new RenamingDelegatingContext(
+		setContext(new PrefsRenamingDelegatingContext(
 				getContext(),
 				"AlarmManagerTest"));
 		this.manager = AlarmManager.getInstance(getContext());

@@ -27,11 +27,14 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.flooding.testUtils.MockContentProviderContext;
+import de.bitdroid.flooding.testUtils.ContentProviderContext;
+import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 import de.bitdroid.flooding.utils.Log;
 
 public class StationIntentServiceTest extends ServiceTestCase {
 
+	private static final String PREFIX = StationIntentServiceTest.class.getSimpleName();
 
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 	private static final String stationName = "someStation";
@@ -59,10 +62,11 @@ public class StationIntentServiceTest extends ServiceTestCase {
 
 		// setup context
 		MockContentResolver resolver = new MockContentResolver();
-		setContext(new MockContentProviderContext(
-				getContext(),
-				resolver,
-				StationIntentServiceTest.class.getSimpleName()));
+		setContext(new ContentProviderContext(
+				new PrefsRenamingDelegatingContext(getContext(), PREFIX),
+				resolver));
+
+		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
 
 		ListContentProvider provider = new ListContentProvider();
 		resolver.addProvider(PegelOnlineSource.INSTANCE.AUTHORITY, provider);

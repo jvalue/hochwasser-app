@@ -2,14 +2,14 @@ package de.bitdroid.flooding.testUtils;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.test.RenamingDelegatingContext;
+import android.content.ContextWrapper;
 
-public class MockContentProviderContext extends RenamingDelegatingContext {
+public class ContentProviderContext extends ContextWrapper {
 
 	private final ContentResolver resolver;
 
-	public MockContentProviderContext(Context targetContext, ContentResolver resolver, String prefix) {
-		super(targetContext, prefix);
+	public ContentProviderContext(Context targetContext, ContentResolver resolver) {
+		super(targetContext);
 		this.resolver = resolver;
 	}
 

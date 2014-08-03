@@ -6,34 +6,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
 
+import java.lang.reflect.Constructor;
+
+import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
 public class BaseGcmIntentServiceTest extends AndroidTestCase {
 
-	private Context context;
+	private static final String PREFIX = BaseGcmIntentServiceTest.class.getSimpleName();
+
 	private int
 			handleRegistrationCounter = 0,
 			prepareResultIntentCounter = 0,
 			getActionNameCounter = 0;
 
-	@Override
-	public void setUp() {
-		this.context = new RenamingDelegatingContext(getContext(), "BaseGcmIntentServiceTest_");
-		SharedPreferencesHelper.clearAll(context);
 
-		handleRegistrationCounter = 0;
-		prepareResultIntentCounter = 0;
-		getActionNameCounter = 0;
-	}
-
-	public void testRegister() {
+	public void testRegister() throws Exception {
 		final String SERVICE_CLIENTID = "serviceClientId";
 		final boolean REGISTER = true;
 		final String ACTION = "BaseGcmIntentServiceTest.ACTION";
 
-		BaseGcmIntentService service = new BaseGcmIntentService("test", context) {
+		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
+		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
+
+		BaseGcmIntentService service = new BaseGcmIntentService("test", getContext()) {
 			@Override
 			protected String handleRegistration(
 					Intent intent,
@@ -70,13 +67,12 @@ public class BaseGcmIntentServiceTest extends AndroidTestCase {
 			}
 		};
 
-		Intent intent = new Intent("test");
-		intent.putExtra(BaseGcmIntentService.EXTRA_REGISTER, true);
-
-		GcmIdManager idManager = GcmIdManager.getInstance(context);
+		Constructor<GcmIdManager> constructor = GcmIdManager.class.getDeclaredConstructor(Context.class);
+		constructor.setAccessible(true);
+		GcmIdManager idManager = constructor.newInstance(getContext());
 		assertNull(idManager.getClientId());
 
-		context.registerReceiver(new BroadcastReceiver() {
+		getContext().registerReceiver(new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				assertNull(intent.getStringExtra(BaseGcmIntentService.EXTRA_ERROR_MSG));
@@ -84,6 +80,9 @@ public class BaseGcmIntentServiceTest extends AndroidTestCase {
 				assertTrue(intent.getExtras().containsKey(BaseGcmIntentService.EXTRA_SERVICE_CLIENTID));
 			}
 		}, new IntentFilter(ACTION));
+
+		Intent intent = new Intent("test");
+		intent.putExtra(BaseGcmIntentService.EXTRA_REGISTER, true);
 
 		service.onHandleIntent(intent);
 

@@ -1,7 +1,6 @@
 package de.bitdroid.flooding.ods.cep;
 
 import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,18 +11,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
+import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
 public class CepManagerTest extends AndroidTestCase {
 
+	private static final String PREFIX = CepManagerTest.class.getSimpleName();
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private CepManager manager;
 
 	@Override
 	public void setUp() {
-		setContext(new RenamingDelegatingContext(getContext(), "CepManagerTest"));
-		SharedPreferencesHelper.clearAll(getContext());
+		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
+		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
 		this.manager = CepManager.getInstance(getContext());
 	}
 

@@ -13,9 +13,9 @@ import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
-public class CepManagerTest extends BaseAndroidTestCase {
+public class CepManagerImplTest extends BaseAndroidTestCase {
 
-	private static final String PREFIX = CepManagerTest.class.getSimpleName();
+	private static final String PREFIX = CepManagerImplTest.class.getSimpleName();
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private CepManager manager;

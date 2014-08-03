@@ -14,7 +14,7 @@ public class CepManagerFactory {
 
 	public static synchronized CepManager createCepManager(Context context) {
 		Assert.assertNotNull(context);
-		if (manager == null) manager = new CepManager(context);
+		if (manager == null) manager = new CepManagerImpl(context);
 		return manager;
 	}
 

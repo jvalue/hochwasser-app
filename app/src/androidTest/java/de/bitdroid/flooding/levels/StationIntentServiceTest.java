@@ -62,11 +62,11 @@ public class StationIntentServiceTest extends ServiceTestCase {
 
 		// setup context
 		MockContentResolver resolver = new MockContentResolver();
-		setContext(new ContentProviderContext(
-				new PrefsRenamingDelegatingContext(getContext(), PREFIX),
-				resolver));
+		setContext(new PrefsRenamingDelegatingContext(
+				new ContentProviderContext(getContext(), resolver),
+				PREFIX));
 
-		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
+		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
 
 		ListContentProvider provider = new ListContentProvider();
 		resolver.addProvider(PegelOnlineSource.INSTANCE.AUTHORITY, provider);

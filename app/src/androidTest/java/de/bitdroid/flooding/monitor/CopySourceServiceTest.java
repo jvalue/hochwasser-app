@@ -36,9 +36,9 @@ public class CopySourceServiceTest extends ServiceTestCase {
 	public void testCopyAndDelete() throws Exception {
 		// setup content provider and data
 		MockContentResolver resolver = new MockContentResolver();
-		setContext(new ContentProviderContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX), resolver));
+		setContext(new PrefsRenamingDelegatingContext(new ContentProviderContext(getContext(), resolver), PREFIX));
 
-		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
+		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
 
 		ListContentProvider provider = new ListContentProvider();
 		resolver.addProvider(OdsSource.AUTHORITY, provider);
@@ -64,29 +64,29 @@ public class CopySourceServiceTest extends ServiceTestCase {
 		long timestamp = System.currentTimeMillis();
 		provider.addCursor(MockOdsSource.getSampleCursor(timestamp));
 		startService(intent);
-		Thread.sleep(200);
+		Thread.sleep(300);
 		assertEquals(1, monitor.getAvailableTimestamps(source).size());
 
 		// no copying since same timestamp
 		provider.addCursor(MockOdsSource.getSampleCursor(timestamp));
 		startService(intent);
-		Thread.sleep(200);
+		Thread.sleep(300);
 		assertEquals(1, monitor.getAvailableTimestamps(source).size());
 
 		provider.addCursor(MockOdsSource.getSampleCursor(System.currentTimeMillis()));
 		startService(intent);
-		Thread.sleep(200);
+		Thread.sleep(300);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
 
 		// old values should have been deleted
 		provider.addCursor(MockOdsSource.getSampleCursor(System.currentTimeMillis()));
 		startService(intent);
-		Thread.sleep(200);
+		Thread.sleep(300);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
 
 		provider.addCursor(MockOdsSource.getSampleCursor(System.currentTimeMillis()));
 		startService(intent);
-		Thread.sleep(200);
+		Thread.sleep(300);
 		assertEquals(2, monitor.getAvailableTimestamps(source).size());
 
 		monitor.stopMonitoring(source);

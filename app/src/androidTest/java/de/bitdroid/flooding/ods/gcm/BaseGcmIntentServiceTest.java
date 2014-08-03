@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.test.AndroidTestCase;
 
-import java.lang.reflect.Constructor;
-
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
@@ -28,7 +26,7 @@ public class BaseGcmIntentServiceTest extends AndroidTestCase {
 		final String ACTION = "BaseGcmIntentServiceTest.ACTION";
 
 		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
-		SharedPreferencesHelper.clearAll(getContext(), PREFIX);
+		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
 
 		BaseGcmIntentService service = new BaseGcmIntentService("test", getContext()) {
 			@Override
@@ -67,9 +65,7 @@ public class BaseGcmIntentServiceTest extends AndroidTestCase {
 			}
 		};
 
-		Constructor<GcmIdManager> constructor = GcmIdManager.class.getDeclaredConstructor(Context.class);
-		constructor.setAccessible(true);
-		GcmIdManager idManager = constructor.newInstance(getContext());
+		GcmIdManager idManager = new GcmIdManager(getContext());
 		assertNull(idManager.getClientId());
 
 		getContext().registerReceiver(new BroadcastReceiver() {
@@ -90,4 +86,5 @@ public class BaseGcmIntentServiceTest extends AndroidTestCase {
 		assertEquals(1, prepareResultIntentCounter);
 		assertEquals(1, getActionNameCounter);
 	}
+
 }

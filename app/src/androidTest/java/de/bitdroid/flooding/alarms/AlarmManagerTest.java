@@ -1,7 +1,5 @@
 package de.bitdroid.flooding.alarms;
 
-import android.test.AndroidTestCase;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -12,24 +10,31 @@ import java.util.Map;
 
 import de.bitdroid.flooding.ods.cep.CepManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
+import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
-public class AlarmManagerTest extends AndroidTestCase {
+public class AlarmManagerTest extends BaseAndroidTestCase {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
+	private static final String PREFIX = AlarmManagerTest.class.getSimpleName();
 
 	private AlarmManager manager;
 	private int addedCounter;
 	private int deletedCounter;
 
 	@Override
-	public void setUp() {
-		setContext(new PrefsRenamingDelegatingContext(
-				getContext(),
-				"AlarmManagerTest"));
+	public void beforeClass() {
+		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
 		this.manager = AlarmManager.getInstance(getContext());
-		this.addedCounter = 0;
-		this.deletedCounter = 0;
+	}
+
+
+	@Override
+	public void beforeTest() {
+		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
+		addedCounter = 0;
+		deletedCounter = 0;
 	}
 
 
@@ -80,7 +85,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(alarm2));
 
 		manager.register(alarm1);
-		Thread.sleep(200);
+		Thread.sleep(500);
 
 		assertEquals(1, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm1));
@@ -92,7 +97,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(0, deletedCounter);
 
 		manager.register(alarm2);
-		Thread.sleep(200);
+		Thread.sleep(500);
 
 		assertEquals(2, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm1));
@@ -105,7 +110,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(0, deletedCounter);
 
 		manager.unregister(alarm1);
-		Thread.sleep(200);
+		Thread.sleep(500);
 
 		assertEquals(1, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm2));
@@ -118,7 +123,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 
 		manager.unregisterListener(listener);
 		manager.unregister(alarm2);
-		Thread.sleep(200);
+		Thread.sleep(500);
 
 		assertEquals(0, manager.getAll().size());
 		assertFalse(manager.isRegistered((alarm1)));
@@ -147,7 +152,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(alarm));
 
 		manager.register(alarm);
-		Thread.sleep(200);
+		Thread.sleep(500);
 
 		assertEquals(1, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm));
@@ -155,7 +160,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(alarm));
 
 		manager.register(alarm);
-		Thread.sleep(200);
+		Thread.sleep(500);
 
 		assertEquals(1, manager.getAll().size());
 		assertTrue(manager.getAll().contains(alarm));
@@ -163,7 +168,7 @@ public class AlarmManagerTest extends AndroidTestCase {
 		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(alarm));
 
 		manager.unregister(alarm);
-		Thread.sleep(200);
+		Thread.sleep(500);
 
 		assertEquals(0, manager.getAll().size());
 		assertFalse(manager.isRegistered((alarm)));

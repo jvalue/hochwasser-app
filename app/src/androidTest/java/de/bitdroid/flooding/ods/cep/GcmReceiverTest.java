@@ -15,7 +15,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.bitdroid.flooding.utils.SharedPreferencesHelper;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
 public class GcmReceiverTest extends AndroidTestCase {
 

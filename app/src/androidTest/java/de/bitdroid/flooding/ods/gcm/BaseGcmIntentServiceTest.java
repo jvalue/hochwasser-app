@@ -8,7 +8,7 @@ import android.content.IntentFilter;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
-import de.bitdroid.flooding.utils.SharedPreferencesHelper;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
 public class BaseGcmIntentServiceTest extends AndroidTestCase {
 

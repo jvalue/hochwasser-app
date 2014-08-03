@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
-import de.bitdroid.flooding.utils.SharedPreferencesHelper;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
 public class CepManagerTest extends AndroidTestCase {
 

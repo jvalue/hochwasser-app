@@ -11,24 +11,15 @@ import de.bitdroid.flooding.utils.Assert;
 
 public final class GcmIdManager {
 
-	private static final String PREFS_NAME = "GcmIdManager";
+	private static final String PREFS_NAME = GcmIdManager.class.getName();
 	private static final String 
 		PREFS_KEY_CLIENTID = "clientId",
 		PREFS_KEY_APP_VERSION = "appVersion";
 
 
-	private static GcmIdManager instance;
-
-	public static GcmIdManager getInstance(Context context) {
-		Assert.assertNotNull(context);
-		if (instance == null) instance = new GcmIdManager(context);
-		return instance;
-	}
-
-	
 	private final Context context;
 
-	private GcmIdManager(Context context) {
+	public GcmIdManager(Context context) {
 		Assert.assertNotNull(context);
 		this.context = context;
 	}

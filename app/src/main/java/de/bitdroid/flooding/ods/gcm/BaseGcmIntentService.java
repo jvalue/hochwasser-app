@@ -24,11 +24,12 @@ public abstract class BaseGcmIntentService extends IntentService {
 		this(BaseGcmIntentService.class.getSimpleName(), null);
 	}
 
+	// TODO sooo weird and bad!
 	public BaseGcmIntentService(String debugName, Context context) {
 		super(debugName);
 		if (context == null) this.context = this;
 		else this.context = context;
-		this.gcmIdManager = GcmIdManager.getInstance(this.context);
+		this.gcmIdManager = new GcmIdManager(this.context);
 	}
 
 

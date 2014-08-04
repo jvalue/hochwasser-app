@@ -20,21 +20,17 @@
                 />
 
             <TextView
-                android:id="@+id/timestamp_date"
+                android:id="@+id/timestamp"
                 style="@style/StationCard.Row.Right"
                 />
         </TableRow>
-
-        <TextView
-            android:id="@+id/timestamp_time"
-            style="@style/StationCard.Row.Right"
-            />
 
         <TextView
             android:id="@+id/level"
             style="@style/FontHeader"
             android:textSize="40dp"
             android:gravity="center_horizontal"
+            android:paddingTop="4dp"
             />
 
         </TableLayout>

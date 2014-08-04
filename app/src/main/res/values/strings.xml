@@ -115,7 +115,7 @@
 	<string name="data_station_count">%1$d stations</string>
 	<string name="data_station_all">All stations</string>
 
-    <string name="station_card_level_title">Measurements</string>
+    <string name="station_card_level_title">Measurement</string>
     <string name="station_card_level_from">From</string>
     <string name="station_card_info_title">General Information</string>
     <string name="station_card_info_station">Gauging Station</string>

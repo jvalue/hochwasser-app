@@ -18,8 +18,7 @@ final class StationLevelCard extends Card {
 
 	private static final DateFormat
 			dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ"),
-			dateFormat = new SimpleDateFormat("dd/MM/yy"),
-			timeFormat = new SimpleDateFormat("HH:mm a");
+			timeFormat = new SimpleDateFormat("dd/MM/yy HH:mm a");
 
 
 	private final String timestamp;
@@ -36,13 +35,11 @@ final class StationLevelCard extends Card {
 
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
-		TextView dateView = (TextView) view.findViewById(R.id.timestamp_date);
-		TextView timeView = (TextView) view.findViewById(R.id.timestamp_time);
+		TextView timeView = (TextView) view.findViewById(R.id.timestamp);
 		TextView levelView = (TextView) view.findViewById(R.id.level);
 
 		try {
 			Date date = dateParser.parse(timestamp);
-			dateView.setText(dateFormat.format(date));
 			timeView.setText(timeFormat.format(date));
 		} catch (ParseException pe) {
 			Log.error("failed to parse timestamp", pe);

@@ -7,15 +7,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 
-import java.util.ArrayList;
-
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardListView;
+import it.gmariotti.cardslib.library.view.CardView;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
@@ -28,8 +25,7 @@ public class StationGraphActivity extends BaseActivity
 	
 	private static final int LOADERID = 46;
 
-	private CardListView listView;
-	private CardArrayAdapter listAdapter;
+	private CardView levelView;
 	private String stationName;
 	private String waterName;
 
@@ -42,9 +38,7 @@ public class StationGraphActivity extends BaseActivity
 		stationName = getIntent().getExtras().getString(EXTRA_STATION_NAME);
 		waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
 
-		listView = (CardListView) findViewById(R.id.list);
-		listAdapter = new CardArrayAdapter(this, new ArrayList<Card>());
-		listView.setAdapter(listAdapter);
+		levelView = (CardView) findViewById(R.id.level);
 
 		getActionBar().setTitle(StringUtils.toProperCase(stationName));
 		getActionBar().setSubtitle(StringUtils.toProperCase(waterName));
@@ -89,14 +83,14 @@ public class StationGraphActivity extends BaseActivity
 
 		cursor.moveToFirst();
 
-		Card card = new StationLevelCard(
+		Card levelCard = new StationLevelCard(
 				getApplicationContext(),
 				cursor.getString(2),
 				cursor.getDouble(0),
 				cursor.getString(1));
 
-		listAdapter.clear();
-		listAdapter.add(card);
+		levelView.setCard(levelCard);
+		levelView.setCard(levelCard);
 	}
 
 

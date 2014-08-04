@@ -5,7 +5,6 @@
 	>
 
     <TextView
-        android:id="@+id/title"
         style="@style/StationCard.Title"
         android:text="@string/station_card_level_title"
         />
@@ -16,7 +15,6 @@
 
         <TableRow>
             <TextView
-                android:layout_weight="1"
                 style="@style/StationCard.Row.Left"
                 android:text="@string/station_card_level_from"
                 />

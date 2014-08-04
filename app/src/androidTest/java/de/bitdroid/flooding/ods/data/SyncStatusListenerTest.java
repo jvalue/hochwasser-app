@@ -39,7 +39,7 @@ public class SyncStatusListenerTest extends BaseAndroidTestCase {
 		Intent successIntent = new Intent(SyncAdapter.ACTION_SYNC_FINISH);
 		successIntent.putExtra(SyncAdapter.EXTRA_SOURCE_NAME, source.toString());
 		successIntent.putExtra(SyncAdapter.EXTRA_SYNC_SUCCESSFUL, true);
-		getContext().sendBroadcast(successIntent);
+		new SyncStatusListener().onReceive(getContext(), successIntent);
 
 		Thread.sleep(100);
 
@@ -51,7 +51,7 @@ public class SyncStatusListenerTest extends BaseAndroidTestCase {
 		Intent failIntent = new Intent(SyncAdapter.ACTION_SYNC_FINISH);
 		failIntent.putExtra(SyncAdapter.EXTRA_SOURCE_NAME, source.toString());
 		failIntent.putExtra(SyncAdapter.EXTRA_SYNC_SUCCESSFUL, false);
-		getContext().sendBroadcast(failIntent);
+		new SyncStatusListener().onReceive(getContext(), failIntent);
 
 		Thread.sleep(100);
 
@@ -66,14 +66,14 @@ public class SyncStatusListenerTest extends BaseAndroidTestCase {
 		assertFalse(SyncStatusListener.isSyncRunning(getContext()));
 
 		Intent startIntent = new Intent(SyncAdapter.ACTION_SYNC_START);
-		getContext().sendBroadcast(startIntent);
+		new SyncStatusListener().onReceive(getContext(), startIntent);
 
 		Thread.sleep(100);
 
 		assertTrue(SyncStatusListener.isSyncRunning(getContext()));
 
 		Intent stopIntent = new Intent(SyncAdapter.ACTION_SYNC_ALL_FINISH);
-		getContext().sendBroadcast(stopIntent);
+		new SyncStatusListener().onReceive(getContext(), stopIntent);
 
 		Thread.sleep(100);
 

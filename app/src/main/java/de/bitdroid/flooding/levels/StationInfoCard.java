@@ -60,7 +60,7 @@ final class StationInfoCard extends Card {
 
 	private void setEmpty(View view, int resourceId) {
 		TextView textView = (TextView) view.findViewById(resourceId);
-		textView.setText("-");
+		((View) textView.getParent()).setVisibility(View.GONE);
 	}
 
 

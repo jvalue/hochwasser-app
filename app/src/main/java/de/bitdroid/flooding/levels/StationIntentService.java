@@ -9,6 +9,8 @@ import android.database.Cursor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import de.bitdroid.flooding.R;
@@ -68,7 +70,7 @@ public class StationIntentService extends IntentService {
 			String odsServerName = OdsSourceManager.getInstance(getApplicationContext()).getOdsServerName();
 			String jsonResult = new RestCall.Builder(RestCall.RequestType.GET, odsServerName)
 					.path(source.getSourceUrlPath())
-					.path(stationName)
+					.path(URLEncoder.encode(stationName, "UTF-8"))
 					.build()
 					.execute();
 
@@ -94,6 +96,8 @@ public class StationIntentService extends IntentService {
 			Log.error("failed to synchronize station", re);
 		} catch(JSONException je) {
 			Log.error("failed to read json", je);
+		} catch (UnsupportedEncodingException uee) {
+			Log.error("wrong encoding", uee);
 		}
 	}
 

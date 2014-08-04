@@ -47,6 +47,12 @@ final class StationCharValuesCard extends Card {
 	}
 
 
+	public boolean isEmpty() {
+		return mhw.isEmpty() && mw.isEmpty() && mnw.isEmpty()
+				&& mthw.isEmpty() && mtnw.isEmpty() && hthw.isEmpty() && ntnw.isEmpty();
+	}
+
+
 	private boolean setText(View view, int resourceId, CharValue charValue) {
 		TextView textView = (TextView) view.findViewById(resourceId);
 		if (charValue.value != null && charValue.unit != null) {
@@ -120,6 +126,11 @@ final class StationCharValuesCard extends Card {
 			this.value = value;
 			this.unit = unit;
 		}
+
+		public boolean isEmpty() {
+			return value == null && unit == null;
+		}
+
 	}
 
 }

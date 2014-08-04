@@ -1,17 +1,25 @@
 package de.bitdroid.flooding.news;
 
-import android.test.AndroidTestCase;
-
+import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 
 
-public final class NewsManagerTest extends AndroidTestCase {
+public final class NewsManagerTest extends BaseAndroidTestCase {
 
-	private int  newItemCounter, deletedItemCounter, readCounter;
+	private static final String PREFIX = NewsManagerTest.class.getSimpleName();
+
+	private int newItemCounter, deletedItemCounter, readCounter;
+
 
 	@Override
-	public void setUp() {
-		setContext(new PrefsRenamingDelegatingContext(getContext(), "test"));
+	public void beforeClass() {
+		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
+	}
+
+	@Override
+	public void beforeTest() {
+		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
 		newItemCounter = 0;
 		deletedItemCounter = 0;
 		readCounter = 0;

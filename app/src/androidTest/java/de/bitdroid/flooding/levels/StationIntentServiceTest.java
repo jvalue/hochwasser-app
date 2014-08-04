@@ -17,8 +17,6 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +34,6 @@ public class StationIntentServiceTest extends ServiceTestCase {
 
 	private static final String PREFIX = StationIntentServiceTest.class.getSimpleName();
 
-	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 	private static final String stationName = "someStation";
 
 	private static int updateCount, insertCount, queryCount = 0;
@@ -138,9 +135,9 @@ public class StationIntentServiceTest extends ServiceTestCase {
 
 	private Cursor createCursor(Date date) {
 		MatrixCursor cursor = new MatrixCursor(new String[] {
-				PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP,
+				PegelOnlineSource.COLUMN_TIMESTAMP,
 				OdsSource.COLUMN_ID	});
-		if (date != null) cursor.addRow(new Object[] { dateFormat.format(date), String.valueOf(0) });
+		if (date != null) cursor.addRow(new Object[] { String.valueOf(date.getTime()), String.valueOf(0) });
 		return cursor;
 	}
 

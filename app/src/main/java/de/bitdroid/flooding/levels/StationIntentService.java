@@ -9,9 +9,6 @@ import android.database.Cursor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.bitdroid.flooding.R;
@@ -24,10 +21,7 @@ import de.bitdroid.flooding.utils.Log;
 
 public class StationIntentService extends IntentService {
 
-
 	public static final String EXTRA_STATION_NAME = "EXTRA_STATION_NAME";
-
-	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
 
 	public StationIntentService() {
@@ -42,7 +36,7 @@ public class StationIntentService extends IntentService {
 		PegelOnlineSource source = PegelOnlineSource.INSTANCE;
 		Cursor cursor = getContentResolver().query(
 				source.toUri(),
-				new String[] { PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP, PegelOnlineSource.COLUMN_ID },
+				new String[] { OdsSource.COLUMN_TIMESTAMP, OdsSource.COLUMN_ID },
 				PegelOnlineSource.COLUMN_STATION_NAME + "=? AND "
 						+ PegelOnlineSource.COLUMN_LEVEL_TYPE + "=?",
 				new String[] { station, "W" },
@@ -50,19 +44,14 @@ public class StationIntentService extends IntentService {
 
 		cursor.moveToFirst();
 		if (cursor.getCount() == 1) {
-			String timestamp = cursor.getString(0);
-			try {
-				Date lastMeasurement = dateFormat.parse(timestamp);
-				Date currentDate = new Date();
+			Date lastMeasurement = new Date(cursor.getLong(0));
+			Date currentDate = new Date();
 
-				int maxAge = getResources().getInteger(R.integer.station_max_age_in_ms);
-				long diff = currentDate.getTime() - lastMeasurement.getTime();
+			int maxAge = getResources().getInteger(R.integer.station_max_age_in_ms);
+			long diff = currentDate.getTime() - lastMeasurement.getTime();
 
-				if (diff > maxAge) synchronizeStation(station, true, cursor.getInt(1));
+			if (diff > maxAge) synchronizeStation(station, true, cursor.getInt(1));
 
-			} catch (ParseException pe) {
-				Log.error("failed to parse date", pe);
-			}
 
 		} else if (cursor.getCount() > 1) {
 			Log.warning("found more than one timestamp!");

@@ -77,7 +77,7 @@
 	<string name="prefs_cat_ods_key">open_data_service</string>
 	<string name="prefs_ods_servername">ODS Servername</string>
 	<string name="prefs_ods_servername_key">ods_server_name</string>
-	<string name="prefs_ods_servername_default">http://192.168.178.93:8182</string>
+	<string name="prefs_ods_servername_default">http://faui2o2f.cs.fau.de:8080/open-data-service</string>
 	<string name="prefs_ods_monitor">Record water levels</string>
 	<string name="prefs_ods_monitor_key">monitor</string>
     <string name="prefs_ods_monitor_days">Monitoring period</string>
@@ -86,7 +86,7 @@
     <string name="prefs_ods_monitor_days_format">%1$s days</string>
     <string name="prefs_ods_monitor_interval">Time between recordings</string>
     <string name="prefs_ods_monitor_interval_key">monitor_interval</string>
-    <string name="prefs_ods_monitor_interval_default">0.25</string>
+    <string name="prefs_ods_monitor_interval_default">0.5</string>
     <string name="prefs_ods_monitor_interval_format">%1$s hours</string>
 	<string name="prefs_ods_sync_last">Last sync</string>
 	<string name="prefs_ods_sync_last_key">last_sync</string>

@@ -115,6 +115,9 @@
 	<string name="data_station_count">%1$d stations</string>
 	<string name="data_station_all">All stations</string>
 
+    <string name="station_card_level_title">Measurements</string>
+    <string name="station_card_level_from">From</string>
+
 
 	<string name="error_invalid_server_url">Invalid server url!</string>
 	<string name="error_server_connection">Sorry, there was an error while communicating with the server.\nReason: %1$s\nPlease try closing and opening your app in a couple of minutes.</string>

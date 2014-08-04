@@ -24,6 +24,6 @@
 		android:gravity="center"
 	/>
 
-    <include layout="@layout/list_card_undo_message"/>
+    <include layrut="@layout/list_card_undo_message"/>
 
 </FrameLayout>

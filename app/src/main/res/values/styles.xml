@@ -59,4 +59,31 @@
 	</style>
 
 
+    <style name="StationCard">
+    </style>
+
+    <style name="StationCard.Title">
+        <item name="android:textAppearance">@style/FontRegular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="StationCard.Row">
+    </style>
+
+    <style name="StationCard.Row.Left">
+        <item name="android:layout_weight">1</item>
+        <item name="android:textAppearance">@style/FontRegular</item>
+    </style>
+
+    <style name="StationCard.Row.Right">
+        <item name="android:layout_weight">2</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textAppearance">@style/FontRegular</item>
+    </style>
+
+
+
+
 </resources>

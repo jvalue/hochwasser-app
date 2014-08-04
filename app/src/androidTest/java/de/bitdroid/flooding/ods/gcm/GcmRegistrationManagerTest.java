@@ -5,25 +5,28 @@ import android.test.AndroidTestCase;
 
 public class GcmRegistrationManagerTest extends AndroidTestCase {
 
-    private static final String PREFS_NAME = "test";
+    private static final String PREFS_NAME = GcmRegistrationManagerTest.class.getName();
 
-    private Context context;
 
     @Override
     public void setUp() {
-        this.context = getContext();
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().clear().commit();
+		clearPrefs();
     }
 
 
     @Override
     public void tearDown() {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().clear().commit();
+		clearPrefs();
     }
 
 
+	private void clearPrefs() {
+		getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().clear().commit();
+	}
+
+
     public void testCurd() {
-        GcmRegistrationManager manager = new GcmRegistrationManager(context, PREFS_NAME);
+        GcmRegistrationManager manager = new GcmRegistrationManager(getContext(), PREFS_NAME);
 
         assertEquals(0, manager.getAllObjects().size());
         assertEquals(0, manager.getAllObjects(GcmStatus.PENDING_REGISTRATION).size());

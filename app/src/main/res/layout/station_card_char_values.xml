@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/CardBackground"
+	>
+
+    <TextView
+        style="@style/StationCard.Title"
+        android:text="@string/station_card_char_title"
+        />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow>
+            <TextView
+                style="@style/StationCard.Row.Left.SmallContent"
+                android:text="@string/station_card_char_mhw"
+                />
+
+            <TextView
+                android:id="@+id/mhw"
+                style="@style/StationCard.Row.Right.SmallContent"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                style="@style/StationCard.Row.Left.SmallContent"
+                android:text="@string/station_card_char_mw"
+                />
+
+            <TextView
+                android:id="@+id/mw"
+                style="@style/StationCard.Row.Right.SmallContent"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                style="@style/StationCard.Row.Left.SmallContent"
+                android:text="@string/station_card_char_mnw"
+                />
+
+            <TextView
+                android:id="@+id/mnw"
+                style="@style/StationCard.Row.Right.SmallContent"
+                />
+        </TableRow>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            />
+
+
+        <TableRow>
+            <TextView
+                style="@style/StationCard.Row.Left.SmallContent"
+                android:text="@string/station_card_char_mthw"
+                />
+
+            <TextView
+                style="@style/StationCard.Row.Right.SmallContent"
+                android:id="@+id/mthw"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                style="@style/StationCard.Row.Left.SmallContent"
+                android:text="@string/station_card_char_mtnw"
+                />
+
+            <TextView
+                android:id="@+id/mtnw"
+                style="@style/StationCard.Row.Right.SmallContent"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                style="@style/StationCard.Row.Left.SmallContent"
+                android:text="@string/station_card_char_hthw"
+                />
+
+            <TextView
+                android:id="@+id/hthw"
+                style="@style/StationCard.Row.Right.SmallContent"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                style="@style/StationCard.Row.Left.SmallContent"
+                android:text="@string/station_card_char_ntnw"
+                />
+
+            <TextView
+                android:id="@+id/ntnw"
+                style="@style/StationCard.Row.Right.SmallContent"
+                />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

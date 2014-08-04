@@ -45,14 +45,22 @@ final class StationInfoCard extends Card {
 		setText(view, R.id.station, StringUtils.toProperCase(station));
 		setText(view, R.id.water, StringUtils.toProperCase(river));
 		if (riverKm != null) setText(view, R.id.riverKm, String.valueOf(riverKm));
+		else setEmpty(view, R.id.riverKm);
 		if (lat != null && lon != null) setText(view, R.id.coordinates, lat + ", " + lon);
+		else setEmpty(view, R.id.coordinates);
 		if (zeroValue != null && zeroUnit != null) setText(view, R.id.zero, zeroValue + " " + zeroUnit);
+		else setEmpty(view, R.id.zero);
 	}
 
 
 	private void setText(View view, int resourceId, String text) {
 		TextView textView = (TextView) view.findViewById(resourceId);
 		textView.setText(text);
+	}
+
+	private void setEmpty(View view, int resourceId) {
+		TextView textView = (TextView) view.findViewById(resourceId);
+		textView.setText("-");
 	}
 
 

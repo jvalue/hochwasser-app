@@ -10,6 +10,7 @@ import android.os.Bundle;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
+import de.bitdroid.flooding.utils.Log;
 import de.bitdroid.flooding.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
@@ -29,7 +30,6 @@ public class StationGraphActivity extends BaseActivity
 	private String stationName;
 	private String waterName;
 
-	
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,14 +47,9 @@ public class StationGraphActivity extends BaseActivity
 		Intent intent = new Intent(this, StationIntentService.class);
 		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, stationName);
 		startService(intent);
-    }
 
-
-	@Override
-	public void onResume() {
-		super.onResume();
 		getLoaderManager().initLoader(LOADERID, null, this);
-	}
+    }
 
 
 	@Override
@@ -89,7 +84,6 @@ public class StationGraphActivity extends BaseActivity
 				cursor.getDouble(0),
 				cursor.getString(1));
 
-		levelView.setCard(levelCard);
 		levelView.setCard(levelCard);
 	}
 

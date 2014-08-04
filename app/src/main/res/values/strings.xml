@@ -116,9 +116,9 @@
 	<string name="data_station_all">All stations</string>
 
     <string name="station_card_level_title">Measurement</string>
-    <string name="station_card_level_from">From</string>
+    <string name="station_card_level_from">Timestamp</string>
     <string name="station_card_info_title">General Information</string>
-    <string name="station_card_info_station">Gauging Station</string>
+    <string name="station_card_info_station">Station</string>
     <string name="station_card_info_water">Water</string>
     <string name="station_card_info_river_km">River Km</string>
     <string name="station_card_info_coordinates">Station Coordinates</string>

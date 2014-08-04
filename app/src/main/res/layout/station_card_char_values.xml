@@ -50,12 +50,6 @@
         </TableRow>
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            />
-
-
         <TableRow>
             <TextView
                 style="@style/StationCard.Row.Left.SmallContent"

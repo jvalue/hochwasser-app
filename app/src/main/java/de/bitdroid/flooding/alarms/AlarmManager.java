@@ -30,9 +30,13 @@ final class AlarmManager {
 
 	private static AlarmManager instance;
 
-	public static AlarmManager getInstance(Context context) {
+	public static synchronized AlarmManager getInstance(Context context) {
 		Assert.assertNotNull(context);
-		if (instance == null) instance = new AlarmManager(context);
+		if (instance == null) {
+			CepManager cepManager = CepManagerFactory.createCepManager(context);
+			AlarmDb alarmDb = new AlarmDb(context);
+			instance = new AlarmManager(cepManager, alarmDb);
+		}
 		return instance;
 	}
 
@@ -42,9 +46,9 @@ final class AlarmManager {
 	private final List<AlarmUpdateListener> listeners = new LinkedList<AlarmUpdateListener>();
 	private final EplStmtCreator stmtCreator = new EplStmtCreator();
 
-	private AlarmManager(Context context) {
-		this.cepManager = CepManagerFactory.createCepManager(context);
-		this.alarmDb = new AlarmDb(context);
+	private AlarmManager(CepManager cepManager, AlarmDb alarmDb) {
+		this.cepManager = cepManager;
+		this.alarmDb = alarmDb;
 	}
 
 
@@ -94,7 +98,7 @@ final class AlarmManager {
 		try {
 			database = alarmDb.getWritableDatabase();
 			ContentValues values = new ContentValues();
-			values.put(COLUMN_JSON, mapper.valueToTree(alarm).toString());
+			values.put(COLUMN_JSON, ((Object) mapper.valueToTree(alarm)).toString());
 			database.insert(TABLE_NAME, null, values);
 			alertListenersOnNewAlarm(alarm);
 		} finally {
@@ -120,7 +124,7 @@ final class AlarmManager {
 			database.delete(
 					TABLE_NAME, 
 					COLUMN_JSON + "=?", 
-					new String[]{ mapper.valueToTree(alarm).toString() });
+					new String[]{ ((Object) mapper.valueToTree(alarm)).toString() });
 
 			alertListenersOnDeletedAlarm(alarm);
 
@@ -140,7 +144,7 @@ final class AlarmManager {
 				alarmDb.getReadableDatabase(),
 				columns,
 				COLUMN_JSON + "=?",
-				new String[]{ mapper.valueToTree(alarm).toString() },
+				new String[]{ ((Object) mapper.valueToTree(alarm)).toString() },
 				null, null, null);
 
 		if (cursor.getCount() <= 0) return false;

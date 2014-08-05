@@ -7,8 +7,11 @@ import android.content.Context;
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
+import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
@@ -102,7 +105,31 @@ public class OdsSourceManagerTest extends BaseAndroidTestCase {
 	}
 
 
+	public void testManualSync() {
+		OdsSource source = new MockSource1();
+
+		sourceManager.startManualSync(source);
+		verify(syncUtils).addAccount();
+		verify(syncUtils).startManualSync(source);
+	}
+
+
 	public void testPush() {
+		OdsSource source = new MockSource1();
+
+		when(gcmManager.getRegistrationStatus(source)).thenReturn(GcmStatus.UNREGISTERED);
+		assertEquals(GcmStatus.UNREGISTERED, sourceManager.getPushNotificationsRegistrationStatus(source));
+
+		sourceManager.startPushNotifications(source);
+		verify(gcmManager).registerSource(source);
+
+		when(gcmManager.getRegisteredSources()).thenReturn(new HashSet<OdsSource>(Arrays.asList(source)));
+		assertEquals(1, sourceManager.getPushNotificationSources().size());
+
+		when(gcmManager.getRegistrationStatus(source)).thenReturn(GcmStatus.REGISTERED);
+
+		sourceManager.stopPushNotifications(source);
+		verify(gcmManager).unregisterSource(source);
 	}
 
 

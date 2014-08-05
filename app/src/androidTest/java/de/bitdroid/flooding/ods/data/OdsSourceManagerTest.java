@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
@@ -17,6 +18,9 @@ import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
 import de.bitdroid.flooding.utils.SQLiteType;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,6 +28,8 @@ import static org.mockito.Mockito.when;
 public class OdsSourceManagerTest extends BaseAndroidTestCase {
 
 	private static final String PREFIX =  OdsSourceManagerTest.class.getSimpleName();
+	private static final String serverName = "http://someServerName.com";
+
 
 
 	private OdsSourceManager sourceManager;
@@ -58,8 +64,6 @@ public class OdsSourceManagerTest extends BaseAndroidTestCase {
 
 
 	public void testServerName() {
-		String serverName = "http://someServerName.com";
-
 		// simple check
 		sourceManager.setOdsServerName(serverName);
 		assertEquals(serverName, sourceManager.getOdsServerName());
@@ -91,11 +95,12 @@ public class OdsSourceManagerTest extends BaseAndroidTestCase {
 		assertFalse(sourceManager.isPollingActive());
 		assertEquals(0, sourceManager.getPollingSources().size());
 
+		sourceManager.setOdsServerName(serverName);
 		sourceManager.startPolling(pollFrequency, source1, source2);
 
 		assertTrue(sourceManager.isPollingActive());
 		assertEquals(2, sourceManager.getPollingSources().size());
-		verify(syncUtils).startPeriodicSync(pollFrequency);
+		verify(syncUtils).startPeriodicSync(eq(serverName), any(List.class), eq(pollFrequency));
 
 		sourceManager.stopPolling();
 
@@ -108,9 +113,11 @@ public class OdsSourceManagerTest extends BaseAndroidTestCase {
 	public void testManualSync() {
 		OdsSource source = new MockSource1();
 
+		sourceManager.setOdsServerName(serverName);
 		sourceManager.startManualSync(source);
+
 		verify(syncUtils).addAccount();
-		verify(syncUtils).startManualSync(source);
+		verify(syncUtils).startManualSync(eq(serverName), notNull(OdsSource.class));
 	}
 
 

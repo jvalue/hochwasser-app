@@ -1,18 +1,16 @@
 package de.bitdroid.flooding.ods.data;
 
-import java.util.ArrayList;
-
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.os.Bundle;
+
+import java.util.ArrayList;
 
 
 public final class OdsContentProvider extends ContentProvider {
@@ -26,10 +24,12 @@ public final class OdsContentProvider extends ContentProvider {
 		return true;
 	}
 
+
 	@Override
 	public String getType(Uri uri) {
 		return null;
 	}
+
 
 	@Override
 	public Cursor query(
@@ -40,19 +40,6 @@ public final class OdsContentProvider extends ContentProvider {
 			String sortOrder) {
 
 		OdsSource source = OdsSource.fromUri(uri);
-
-		// check for manual sync reqeust
-		if (OdsSource.isSyncUri(uri)) {
-			Bundle settingsBundle = new Bundle();
-			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			settingsBundle.putString(SyncAdapter.EXTRA_SOURCE_NAME, source.toString());
-			ContentResolver.requestSync(
-					OdsSource.ACCOUNT,
-					OdsSource.AUTHORITY,
-					settingsBundle);
-		}
-
 
 		// create table
 		String tableName = source.toSqlTableName();

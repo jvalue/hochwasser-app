@@ -67,7 +67,7 @@ public class SyncStatusListenerTest extends BaseAndroidTestCase {
 		SyncStatusListener listener = new SyncStatusListener(getContext());
 		assertFalse(listener.isSyncRunning());
 
-		Intent startIntent = new Intent(SyncAdapter.ACTION_SYNC_START);
+		Intent startIntent = new Intent(SyncAdapter.ACTION_SYNC_ALL_START);
 		new SyncStatusListener().onReceive(getContext(), startIntent);
 
 		Thread.sleep(100);

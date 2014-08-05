@@ -4,22 +4,27 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+
+import java.util.List;
 
 import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
 
 import static de.bitdroid.flooding.ods.data.OdsSource.ACCOUNT;
 import static de.bitdroid.flooding.ods.data.OdsSource.AUTHORITY;
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
 
 
 public class SyncUtils {
 
 	private static final String
 			KEY_ACCOUNT_ADDED = "accountAdded",
-			KEY_PERIODIC_SYNC_ADDED = "periodicSyncAdded";
+			KEY_PERIODIC_SYNC_ADDED = "periodicSyncAdded",
+			KEY_PERIODIC_SYNC_SERVERNAME = "serverName",
+			KEY_PERIODIC_SYNC_JSON = "sourceJson";
 
 	private static final String PREFS_NAME = SyncUtils.class.getName();
 
@@ -36,41 +41,62 @@ public class SyncUtils {
 	}
 
 
-	public void startPeriodicSync(long pollFrequency) {
+	public void startPeriodicSync(
+				String odsServerName,
+				List<OdsSource> sources,
+				long pollFrequency) {
+
+		// adapter specific
+		ArrayNode json = new ArrayNode(JsonNodeFactory.instance);
+		for (OdsSource source : sources) json.add(source.toString());
+		Bundle settingsBundle = getSyncExtras(odsServerName, json.toString());
+
 		ContentResolver.setIsSyncable(ACCOUNT, AUTHORITY, 1);
 		ContentResolver.setSyncAutomatically(ACCOUNT, AUTHORITY, true);
 		ContentResolver.addPeriodicSync(
 				ACCOUNT,
 				AUTHORITY,
-				new Bundle(),
+				settingsBundle,
 				pollFrequency);
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putBoolean(KEY_PERIODIC_SYNC_ADDED, true);
+		editor.putString(KEY_PERIODIC_SYNC_SERVERNAME, odsServerName);
+		editor.putString(KEY_PERIODIC_SYNC_JSON, json.toString());
 		editor.commit();
 	}
 
 
 	public void stopPeriodicSync() {
-		ContentResolver.setSyncAutomatically(ACCOUNT, AUTHORITY, false);
-		ContentResolver.removePeriodicSync(ACCOUNT, AUTHORITY, new Bundle());
+		SharedPreferences prefs = getSharedPreferences();
+		String odsServerName = prefs.getString(KEY_PERIODIC_SYNC_SERVERNAME, null);
+		String jsonSources = prefs.getString(KEY_PERIODIC_SYNC_JSON, null);
+		Bundle settingsBundle = getSyncExtras(odsServerName, jsonSources);
 
-		SharedPreferences.Editor editor = getSharedPreferences().edit();
+		ContentResolver.setSyncAutomatically(ACCOUNT, AUTHORITY, false);
+		ContentResolver.removePeriodicSync(ACCOUNT, AUTHORITY, settingsBundle);
+
+		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean(KEY_PERIODIC_SYNC_ADDED, false);
+		editor.remove(KEY_PERIODIC_SYNC_SERVERNAME);
+		editor.remove(KEY_PERIODIC_SYNC_JSON);
 		editor.commit();
 	}
 
 
-	public void startManualSync(OdsSource source) {
-		Cursor cursor = null;
-		try {
-			cursor = context.getContentResolver().query(
-					source.toSyncUri(),
-					new String[] { COLUMN_SERVER_ID },
-					null, null, null);
-		} finally {
-			cursor.close();
-		}
+	public void startManualSync(String odsServerName, OdsSource source) {
+		// adapter specific
+		ArrayNode json = new ArrayNode(JsonNodeFactory.instance);
+		json.add(source.toString());
+		Bundle settingsBundle = getSyncExtras(odsServerName, json.toString());
+
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+
+		ContentResolver.requestSync(
+				OdsSource.ACCOUNT,
+				OdsSource.AUTHORITY,
+				settingsBundle);
 	}
 
 
@@ -93,6 +119,13 @@ public class SyncUtils {
 		return prefs.getBoolean(KEY_ACCOUNT_ADDED, false);
 	}
 
+
+	private Bundle getSyncExtras(String odsServerName, String jsonSources) {
+		Bundle settingsBundle = new Bundle();
+		settingsBundle.putString(SyncAdapter.EXTRA_ODS_URL, odsServerName);
+		settingsBundle.putString(SyncAdapter.EXTRA_SOURCE_JSON, jsonSources);
+		return settingsBundle;
+	}
 
 	private SharedPreferences getSharedPreferences() {
 		return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

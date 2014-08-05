@@ -120,7 +120,7 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 
 		// listen for sync started / stopped
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(SyncAdapter.ACTION_SYNC_START);
+		filter.addAction(SyncAdapter.ACTION_SYNC_ALL_START);
 		filter.addAction(SyncAdapter.ACTION_SYNC_ALL_FINISH);
 		getActivity().registerReceiver(receiver, filter);
 	}
@@ -220,7 +220,7 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 		public void onReceive(Context context, Intent intent) {
 			if (listAdapter != null && !listAdapter.isEmpty()) {
 				String action = intent.getAction();
-				if (action.equals(SyncAdapter.ACTION_SYNC_ALL_FINISH)) showSyncRunning();
+				if (action.equals(SyncAdapter.ACTION_SYNC_ALL_START)) showSyncRunning();
 				else showSyncStopped();
 			}
 		}

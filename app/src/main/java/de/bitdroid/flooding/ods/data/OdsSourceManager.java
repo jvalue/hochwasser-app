@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
@@ -79,7 +80,10 @@ public final class OdsSourceManager {
 
 		addSyncAccount();
 		for (OdsSource source : sources) registerSource(source);
-		syncUtils.startPeriodicSync(pollFrequency);
+		syncUtils.startPeriodicSync(
+				getOdsServerName(),
+				Arrays.asList(sources),
+				pollFrequency);
 	}
 
 
@@ -192,7 +196,7 @@ public final class OdsSourceManager {
 		Log.debug("starting manual sync");
 
 		addSyncAccount();
-		syncUtils.startManualSync(source);
+		syncUtils.startManualSync(getOdsServerName(), source);
 	}
 
 

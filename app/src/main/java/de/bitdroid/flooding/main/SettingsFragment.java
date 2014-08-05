@@ -53,7 +53,7 @@ public final class SettingsFragment extends PreferenceFragment {
 				SourceMonitor monitor = SourceMonitor
 						.getInstance(getActivity().getApplicationContext());
 				OdsSourceManager sourceManager = OdsSourceManager
-						.getInstance(getActivity().getApplication());
+						.getInstance(getActivity().getApplicationContext());
 				OdsSource source = PegelOnlineSource.INSTANCE;
 
 				boolean startMonitor = (Boolean) newValue;

@@ -40,16 +40,8 @@ public class SyncStatusListener extends BroadcastReceiver {
 		String action = intent.getAction();
 
 		if (action.equals(SyncAdapter.ACTION_SYNC_START)) {
-			// mark sync currently running
-			SharedPreferences.Editor editor = getSharedPreferences().edit();
-			editor.putBoolean(KEY_SYNC_RUNNING, true);
-			editor.commit();
-
-		} else if (action.equals(SyncAdapter.ACTION_SYNC_ALL_FINISH)) {
-			// mark sync stopped
-			SharedPreferences.Editor editor = getSharedPreferences().edit();
-			editor.putBoolean(KEY_SYNC_RUNNING, false);
-			editor.commit();
+			// nothing to do for now
+			// TODO offer some method for querying sync status of single source?
 
 		} else if (action.equals(SyncAdapter.ACTION_SYNC_FINISH)) {
 			// store latest sync date
@@ -62,7 +54,20 @@ public class SyncStatusListener extends BroadcastReceiver {
 				editor.putLong(toTimestampKey(source, success), System.currentTimeMillis());
 				editor.commit();
 			}
+
+		} else if (action.equals(SyncAdapter.ACTION_SYNC_ALL_START)) {
+			//  mark sync started
+			SharedPreferences.Editor editor = getSharedPreferences().edit();
+			editor.putBoolean(KEY_SYNC_RUNNING, true);
+			editor.commit();
+
+		} else if (action.equals(SyncAdapter.ACTION_SYNC_ALL_FINISH)) {
+			// mark sync stopped
+			SharedPreferences.Editor editor = getSharedPreferences().edit();
+			editor.putBoolean(KEY_SYNC_RUNNING, false);
+			editor.commit();
 		}
+
 	}
 
 

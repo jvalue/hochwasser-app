@@ -100,6 +100,7 @@
 				android:name=".ods.data.SyncStatusListener">
 			<intent-filter>
 				<action android:name="de.bitdroid.flooding.ods.data.ACTION_SYNC_START"/>
+                <action android:name="de.bitdroid.flooding.ods.data.ACTION_SYNC_ALL_START"/>
                 <action android:name="de.bitdroid.flooding.ods.data.ACTION_SYNC_FINISH"/>
                 <action android:name="de.bitdroid.flooding.ods.data.ACTION_SYNC_ALL_FINISH"/>
 			</intent-filter>

@@ -10,7 +10,12 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.os.RemoteException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import org.json.JSONException;
+
+import java.io.IOException;
 
 import de.bitdroid.flooding.ods.utils.RestCall;
 import de.bitdroid.flooding.ods.utils.RestException;
@@ -20,10 +25,15 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	public static final String
 			ACTION_SYNC_START = "de.bitdroid.flooding.ods.data.ACTION_SYNC_START",
+			ACTION_SYNC_ALL_START = "de.bitdroid.flooding.ods.data.ACTION_SYNC_ALL_START",
 			ACTION_SYNC_FINISH = "de.bitdroid.flooding.ods.data.ACTION_SYNC_FINISH",
 			ACTION_SYNC_ALL_FINISH = "de.bitdroid.flooding.ods.data.ACTION_SYNC_ALL_FINISH",
+			EXTRA_SOURCE_JSON = "EXTRA_SOURCE_JSON",
 			EXTRA_SOURCE_NAME = "EXTRA_SOURCE_NAME",
+			EXTRA_ODS_URL = "EXTRA_ODS_URL",
 			EXTRA_SYNC_SUCCESSFUL = "EXTRA_SYNC_SUCCESSFUL";
+
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private final Context context;
 
@@ -49,27 +59,34 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			ContentProviderClient provider,
 			SyncResult syncResult) {
 
-		Log.debug("Sync started");
-
-		String sourceName = extras.getString(EXTRA_SOURCE_NAME);
-		OdsSource source = null;
-		if (sourceName != null) source = OdsSource.fromString(sourceName);
-		sendSyncStartBroadcast(source);
-
-		boolean success = true;
-
-		// sync all resources and sources
-		if (source == null) {
-			for (OdsSource s : OdsSourceManager.getInstance(context).getPollingSources()) {
-				success  = success && syncSource(provider, s, syncResult);
-			}
-
-		// sync single source
-		} else {
-			success = success && syncSource(provider, source, syncResult);
+		String odsUrl = extras.getString(EXTRA_ODS_URL);
+		String jsonSources = extras.getString(EXTRA_SOURCE_JSON);
+		if (odsUrl == null && jsonSources == null) {
+			Log.warning("ignoring probable first sync request");
+			return;
+		}
+		ArrayNode sourceJson = null;
+		try {
+			sourceJson = mapper.readValue(jsonSources, ArrayNode.class);
+		} catch (IOException ioe) {
+			Log.error("failed to parse sources", ioe);
 		}
 
-		sendSyncFinishBroadcast(null, success);
+
+		Log.debug("Sync started");
+		sendSyncAllStartBroadcast();
+
+		boolean allSuccess = true;
+		for (int idx = 0; idx < sourceJson.size(); idx++) {
+			OdsSource source = OdsSource.fromString(sourceJson.get(idx).asText());
+
+			sendSyncSingleStartBroadcast(source);
+			boolean success = syncSource(provider, source, odsUrl, syncResult);
+			allSuccess = allSuccess && success;
+			sendSyncSingleFinishBroadcast(source, success);
+		}
+
+		sendSyncAllFinishBroadcast(allSuccess);
 		Log.debug("Sync finished");
 	}
 
@@ -77,6 +94,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private boolean syncSource(
 			ContentProviderClient provider, 
 			OdsSource source,
+			String odsUrl,
 			SyncResult syncResult) {
 
 		boolean success = false;
@@ -86,7 +104,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			Processor processor = new Processor(provider, source);
 			String retString = new RestCall.Builder(
 					RestCall.RequestType.GET,
-					OdsSourceManager.getInstance(context).getOdsServerName())
+					odsUrl)
 				.path(source.getSourceUrlPath())
 				.build()
 				.execute();
@@ -108,29 +126,33 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			Log.error(android.util.Log.getStackTraceString(oae));
 		}
 
-		sendSyncFinishBroadcast(source, success);
 		return success;
 	}
 
 
-	private void sendSyncStartBroadcast(OdsSource source) {
+	private void sendSyncSingleStartBroadcast(OdsSource source) {
 		Intent syncStartIntent = new Intent(ACTION_SYNC_START);
-		if (source != null) {
-			syncStartIntent.putExtra(EXTRA_SOURCE_NAME, source.toString());
-		}
+		syncStartIntent.putExtra(EXTRA_SOURCE_NAME, source.toString());
 		context.sendBroadcast(syncStartIntent);
-
 	}
 
 
-	private void sendSyncFinishBroadcast(OdsSource source, boolean success) {
-		Intent syncFinishIntent;
-		if (source != null) {
-			syncFinishIntent = new Intent(ACTION_SYNC_FINISH);
-			syncFinishIntent.putExtra(EXTRA_SOURCE_NAME, source.toString());
-		} else {
-			syncFinishIntent = new Intent(ACTION_SYNC_ALL_FINISH);
-		}
+	private void sendSyncAllStartBroadcast() {
+		Intent syncStartIntent = new Intent(ACTION_SYNC_ALL_START);
+		context.sendBroadcast(syncStartIntent);
+	}
+
+
+	private void sendSyncSingleFinishBroadcast(OdsSource source, boolean success) {
+		Intent syncFinishIntent = new Intent(ACTION_SYNC_FINISH);
+		syncFinishIntent.putExtra(EXTRA_SOURCE_NAME, source.toString());
+		syncFinishIntent.putExtra(EXTRA_SYNC_SUCCESSFUL, success);
+		context.sendBroadcast(syncFinishIntent);
+	}
+
+
+	private void sendSyncAllFinishBroadcast(boolean success) {
+		Intent syncFinishIntent = new Intent(ACTION_SYNC_ALL_FINISH);
 		syncFinishIntent.putExtra(EXTRA_SYNC_SUCCESSFUL,  success);
 		context.sendBroadcast(syncFinishIntent);
 	}

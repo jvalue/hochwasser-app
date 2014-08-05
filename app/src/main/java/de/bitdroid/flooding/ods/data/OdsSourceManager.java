@@ -23,8 +23,13 @@ public final class OdsSourceManager {
 	public static OdsSourceManager getInstance(Context context) {
 		Assert.assertNotNull(context);
 		synchronized(OdsSourceManager.class) {
-			if (instance == null)
-				instance = new OdsSourceManager(context);
+			if (instance == null) {
+				instance = new OdsSourceManager(
+						context,
+						new GcmManager(context),
+						new SyncUtils(context),
+						new SyncStatusListener(context));
+			}
 			return instance;
 		}
 	}
@@ -35,11 +40,16 @@ public final class OdsSourceManager {
 	private final SyncUtils syncUtils;
 	private final SyncStatusListener syncStatusListener;
 
-	private OdsSourceManager(Context context) {
+	private OdsSourceManager(
+			Context context,
+			GcmManager gcmManager,
+			SyncUtils syncUtils,
+			SyncStatusListener syncStatusListener) {
+
 		this.context = context;
-		this.gcmManager = new GcmManager(context);
-		this.syncUtils = new SyncUtils(context);
-		this.syncStatusListener = new SyncStatusListener(context);
+		this.gcmManager = gcmManager;
+		this.syncUtils = syncUtils;
+		this.syncStatusListener = syncStatusListener;
 	}
 
 

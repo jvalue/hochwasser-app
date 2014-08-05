@@ -77,8 +77,11 @@ public final class OdsSourceManager {
 		Log.debug("stopped polling");
 
 		SyncUtils.stopPeriodicSync(context);
-		SharedPreferences.Editor editor = getSharedPreferences().edit();
-		editor.clear();
+
+		SharedPreferences prefs = getSharedPreferences();
+		Set<String> keySet = prefs.getAll().keySet();
+		SharedPreferences.Editor editor = prefs.edit();
+		for (String key : keySet)  if (!key.equals(KEY_SERVER_NAME)) editor.remove(key);
 		editor.commit();
 	}
 

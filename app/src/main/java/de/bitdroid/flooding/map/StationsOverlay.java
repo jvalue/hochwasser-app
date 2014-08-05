@@ -15,7 +15,7 @@ import java.util.List;
 import de.bitdroid.flooding.utils.Assert;
 
 
-final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
+public final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	public static final int LOADER_ID = 43;
 

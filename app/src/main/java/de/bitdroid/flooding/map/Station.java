@@ -1,7 +1,7 @@
 package de.bitdroid.flooding.map;
 
 
-final class Station {
+public final class Station {
 
 	private final String name;
 	private final double lat, lon;

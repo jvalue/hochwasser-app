@@ -46,9 +46,9 @@ public class StationGraphActivity extends BaseActivity
 	
 	private static final int LOADERID = 46;
 
-	private CardView levelView, infoView, charValuesView;
 	private String stationName;
 	private String waterName;
+	private CardView levelView, infoView, charValuesView, mapView;
 
 
     @Override
@@ -61,6 +61,7 @@ public class StationGraphActivity extends BaseActivity
 		levelView = (CardView) findViewById(R.id.level);
 		infoView = (CardView) findViewById(R.id.info);
 		charValuesView = (CardView) findViewById(R.id.charValues);
+		mapView = (CardView) findViewById(R.id.map);
 
 		getActionBar().setTitle(StringUtils.toProperCase(stationName));
 		getActionBar().setSubtitle(StringUtils.toProperCase(waterName));
@@ -147,7 +148,16 @@ public class StationGraphActivity extends BaseActivity
 				.build();
 
 		if (charValuesCard.isEmpty()) charValuesView.setVisibility(View.GONE);
-		else  charValuesView.setCard(charValuesCard);
+		else charValuesView.setCard(charValuesCard);
+
+		StationMapCard mapCard = new StationMapCard(
+				getApplicationContext(),
+				stationName,
+				wrapper.getDouble(4),
+				wrapper.getDouble(5));
+
+		if (mapCard.isEmpty()) mapView.setVisibility(View.GONE);
+		else mapView.setCard(mapCard);
 	}
 
 

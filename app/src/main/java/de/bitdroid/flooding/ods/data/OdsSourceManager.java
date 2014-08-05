@@ -46,6 +46,7 @@ public final class OdsSourceManager {
 			SyncUtils syncUtils,
 			SyncStatusListener syncStatusListener) {
 
+		Assert.assertNotNull(context, gcmManager, syncUtils, syncStatusListener);
 		this.context = context;
 		this.gcmManager = gcmManager;
 		this.syncUtils = syncUtils;

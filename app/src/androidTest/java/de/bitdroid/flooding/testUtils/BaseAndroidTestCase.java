@@ -7,7 +7,7 @@ public class BaseAndroidTestCase extends AndroidTestCase {
 	private boolean setup = false;
 
 	@Override
-	public final void setUp() {
+	public final void setUp() throws Exception {
 		if (!setup) {
 			beforeClass();
 			setup = true;
@@ -16,7 +16,7 @@ public class BaseAndroidTestCase extends AndroidTestCase {
 	}
 
 
-	public void beforeTest() { }
-	public void beforeClass() { }
+	public void beforeTest() throws Exception { }
+	public void beforeClass() throws Exception { }
 
 }

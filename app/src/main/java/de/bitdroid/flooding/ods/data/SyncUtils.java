@@ -15,7 +15,7 @@ import static de.bitdroid.flooding.ods.data.OdsSource.AUTHORITY;
 import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
 
 
-final class SyncUtils {
+public class SyncUtils {
 
 	private static final String
 			KEY_ACCOUNT_ADDED = "accountAdded",

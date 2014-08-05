@@ -12,7 +12,7 @@ import de.bitdroid.flooding.ods.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.Assert;
 
 
-final class GcmManager {
+public class GcmManager {
 
 	private static final String PREFS_NAME = GcmManager.class.getName();
 

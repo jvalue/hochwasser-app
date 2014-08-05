@@ -10,7 +10,7 @@ import java.util.Calendar;
 import de.bitdroid.flooding.utils.Assert;
 
 
-public final class SyncStatusListener extends BroadcastReceiver {
+public class SyncStatusListener extends BroadcastReceiver {
 
 	private static final Object LOCK = new Object();
 

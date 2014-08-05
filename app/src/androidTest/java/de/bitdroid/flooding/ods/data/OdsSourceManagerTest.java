@@ -1,15 +1,21 @@
 package de.bitdroid.flooding.ods.data;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Constructor;
+import java.util.Map;
 
 import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
+import de.bitdroid.flooding.utils.SQLiteType;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class OdsSourceManagerTest extends BaseAndroidTestCase {
@@ -64,6 +70,80 @@ public class OdsSourceManagerTest extends BaseAndroidTestCase {
 		sourceManager.stopPolling();
 
 		assertEquals(serverName, sourceManager.getOdsServerName());
+	}
+
+
+	public  void testPolling() {
+		OdsSource source1 = new MockSource1();
+		OdsSource source2 = new MockSource2();
+		long pollFrequency = 100;
+		when(syncUtils.isPeriodicSyncScheduled())
+				.thenReturn(false)
+				.thenReturn(false)
+				.thenReturn(true)
+				.thenReturn(true)
+				.thenReturn(false)
+				.thenReturn(false);
+
+		assertFalse(sourceManager.isPollingActive());
+		assertEquals(0, sourceManager.getPollingSources().size());
+
+		sourceManager.startPolling(pollFrequency, source1, source2);
+
+		assertTrue(sourceManager.isPollingActive());
+		assertEquals(2, sourceManager.getPollingSources().size());
+		verify(syncUtils).startPeriodicSync(pollFrequency);
+
+		sourceManager.stopPolling();
+
+		assertFalse(sourceManager.isPollingActive());
+		assertEquals(0, sourceManager.getPollingSources().size());
+		verify(syncUtils).stopPeriodicSync();
+	}
+
+
+	public void testPush() {
+	}
+
+
+	public static abstract class MockSource extends OdsSource {
+
+		private final String id;
+
+		public MockSource(String id) {
+			this.id = id;
+		}
+
+		@Override
+		public String getSourceId() {
+			return id;
+		}
+
+		@Override
+		public String getSourceUrlPath() {
+			return "mockSourcePath";
+		}
+
+		@Override
+		public void getSchema(Map<String, SQLiteType> schema) { }
+
+		@Override
+		protected void saveData(JSONObject json, ContentValues values) { }
+
+	}
+
+
+	public static final class MockSource1 extends MockSource {
+		public MockSource1() {
+			super("mockId1");
+		}
+	}
+
+
+	public static final class MockSource2 extends MockSource {
+		public MockSource2() {
+			super("mockId2");
+		}
 	}
 
 }

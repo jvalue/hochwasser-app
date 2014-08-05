@@ -89,7 +89,6 @@ public class MapActivity extends Activity {
 				if (stationsOverlay != null) mapView.getOverlays().remove(stationsOverlay);
 				stationsOverlay = new StationsOverlay(
 						getApplicationContext(), 
-						MapActivity.this, 
 						stations,
 						new StationClickListener() {
 							@Override

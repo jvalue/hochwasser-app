@@ -19,24 +19,21 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	public static final int LOADER_ID = 43;
 
-	private final Context context;
 	private final StationClickListener clickListener;
 	private final List<OverlayItem> overlayItems = new ArrayList<OverlayItem>();
 	private final List<Station> stations = new ArrayList<Station>();
 
 	public StationsOverlay(
-			Context applicationContext,
-			Context activityContext,
+			Context context,
 			List<Station> stations,
 			StationClickListener clickListener) {
 
 		super(
-				applicationContext.getResources().getDrawable(android.R.drawable.presence_online), 
-				new ResourceProxyImpl(applicationContext));
+				context.getResources().getDrawable(android.R.drawable.presence_online),
+				new ResourceProxyImpl(context));
 
-		Assert.assertNotNull(activityContext, stations, clickListener);
+		Assert.assertNotNull(context, stations, clickListener);
 
-		this.context = activityContext;
 		this.stations.addAll(stations);
 		this.clickListener = clickListener;
 

@@ -1,10 +1,12 @@
 package de.bitdroid.flooding.map;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
 import org.osmdroid.util.GeoPoint;
@@ -20,7 +22,6 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.StringUtils;
 
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_KM;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LAT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LONG;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
@@ -72,15 +73,13 @@ public class MapActivity extends Activity {
 				int latIdx = cursor.getColumnIndex(COLUMN_STATION_LAT);
 				int longIdx = cursor.getColumnIndex(COLUMN_STATION_LONG);
 				int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
-				int kmIdx = cursor.getColumnIndex(COLUMN_STATION_KM);
 
 				do {
 					String stationName = cursor.getString(nameIdx);
-					double km = cursor.getDouble(kmIdx);
 					double lat = cursor.getDouble(latIdx);
 					double lon = cursor.getDouble(longIdx);
 
-					stations.add(new Station(stationName, km, lat, lon));
+					stations.add(new Station(stationName, lat, lon));
 				} while (cursor.moveToNext());
 
 				// filter stations with invalid coordinates
@@ -91,7 +90,22 @@ public class MapActivity extends Activity {
 				stationsOverlay = new StationsOverlay(
 						getApplicationContext(), 
 						MapActivity.this, 
-						stations);
+						stations,
+						new StationClickListener() {
+							@Override
+							public void onStationClick(Station station) {
+								new AlertDialog.Builder(new ContextThemeWrapper(
+										MapActivity.this, android.R.style.Theme_Holo_Dialog))
+										.setTitle(StringUtils.toProperCase(station.getName()))
+										.setMessage(getString(
+												R.string.map_dialog_station_info,
+												station.getLat(),
+												station.getLon()))
+										.setPositiveButton(R.string.btn_ok, null)
+										.show();
+
+							}
+						});
 				mapView.getOverlays().add(stationsOverlay);
 
 				GeoPoint  point = getCenter(stations);
@@ -118,8 +132,7 @@ public class MapActivity extends Activity {
 							COLUMN_STATION_LAT, 
 							COLUMN_STATION_LONG, 
 							COLUMN_STATION_NAME,
-							COLUMN_STATION_KM
-						}, 
+						},
 						selection, selectionParams, null);
 			}
 		};

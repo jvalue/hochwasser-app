@@ -10,8 +10,7 @@
 	<string name="nav_open">Open</string>
 	<string name="nav_close">Close</string>
 
-	<string name="map_dialog_station_info_title">Station Info</string>
-	<string name="map_dialog_station_info">%1$s\nRiver km %2$.3f\nLatitude %3$f\nLongitude %4$f</string>
+	<string name="map_dialog_station_info">Latitude %1$f\nLongitude %2$f</string>
 
 
 	<string name="menu_graph_select_series">Series</string>

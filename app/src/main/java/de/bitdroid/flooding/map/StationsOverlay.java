@@ -1,9 +1,7 @@
 package de.bitdroid.flooding.map;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Point;
-import android.view.ContextThemeWrapper;
 
 import org.osmdroid.api.IMapView;
 import org.osmdroid.util.GeoPoint;
@@ -14,28 +12,33 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.utils.Assert;
 
 
 final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	public static final int LOADER_ID = 43;
 
+	private final Context context;
+	private final StationClickListener clickListener;
 	private final List<OverlayItem> overlayItems = new ArrayList<OverlayItem>();
 	private final List<Station> stations = new ArrayList<Station>();
-	private final Context context;
 
 	public StationsOverlay(
 			Context applicationContext,
 			Context activityContext,
-			List<Station> stations) {
+			List<Station> stations,
+			StationClickListener clickListener) {
 
 		super(
 				applicationContext.getResources().getDrawable(android.R.drawable.presence_online), 
 				new ResourceProxyImpl(applicationContext));
 
+		Assert.assertNotNull(activityContext, stations, clickListener);
+
 		this.context = activityContext;
 		this.stations.addAll(stations);
+		this.clickListener = clickListener;
 
 		for (Station station : stations) {
 			String name = station.getName();
@@ -68,17 +71,7 @@ final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected boolean onTap(int index) {
 		Station station = stations.get(index);
-		new AlertDialog.Builder(new ContextThemeWrapper(context, android.R.style.Theme_Holo_Dialog))
-			.setTitle(R.string.map_dialog_station_info_title)
-			.setMessage(context.getString(
-					R.string.map_dialog_station_info,
-					station.getName(),
-					station.getKm(),
-					station.getLat(),
-					station.getLon()))
-			.setPositiveButton(R.string.btn_ok, null)
-			.show();
-
+		clickListener.onStationClick(station);
 		return true;
 	}
 

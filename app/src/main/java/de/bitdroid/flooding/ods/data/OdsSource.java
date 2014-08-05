@@ -147,6 +147,7 @@ public abstract class OdsSource {
 		if (other == null || !(other instanceof OdsSource)) return false;
 		OdsSource source = (OdsSource) other;
 		return equals(getSourceUrlPath(), source.getSourceUrlPath())
+			&& equals(getSourceId(), source.getSourceId())
 			&& equals(getSchema(), source.getSchema());
 	}
 
@@ -164,6 +165,7 @@ public abstract class OdsSource {
 		final int MULT = 13;
 		int hash = 11;
 		hash = hash * MULT + (getSourceUrlPath() == null ? 0 : getSourceUrlPath().hashCode());
+		hash = hash * MULT + (getSourceId() == null ? 0 : getSourceId().hashCode());
 		hash = hash * MULT + (getSchema() == null ? 0 : getSchema().hashCode());
 		return hash;
 	}

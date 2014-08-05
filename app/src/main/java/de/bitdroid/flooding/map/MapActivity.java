@@ -29,7 +29,9 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NA
 
 public class MapActivity extends Activity {
 
-	public static final String EXTRA_WATER_NAME = "EXTRA_WATER_NAME";
+	public static final String
+			EXTRA_WATER_NAME = "EXTRA_WATER_NAME",
+			EXTRA_STATION_NAME = "EXTRA_STATION_NAME";
 
 	private static final int LOADER_ID = 43;
 	
@@ -42,12 +44,14 @@ public class MapActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
 		final String waterName = getIntent().getStringExtra(EXTRA_WATER_NAME);
+		final String stationName = getIntent().getStringExtra(EXTRA_STATION_NAME);
 
 		// enable action bar back button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayShowHomeEnabled(false);
-		setTitle(StringUtils.toProperCase(waterName));
+		if (waterName != null) setTitle(StringUtils.toProperCase(waterName));
+		else if (stationName != null) setTitle(StringUtils.toProperCase(stationName));
 
 		// map view
 		mapView = (FixedMapView) findViewById(R.id.map);
@@ -122,6 +126,9 @@ public class MapActivity extends Activity {
 				if (waterName != null) {
 					selection = COLUMN_WATER_NAME + "=?";
 					selectionParams = new String[] { waterName };
+				} else if (stationName != null) {
+					selection = COLUMN_STATION_NAME + "=?";
+					selectionParams = new String[] { stationName };
 				}
 
 				return new CursorLoader(

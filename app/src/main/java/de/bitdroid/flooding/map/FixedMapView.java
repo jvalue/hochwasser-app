@@ -9,7 +9,7 @@ import org.osmdroid.views.MapView;
 import de.bitdroid.flooding.utils.Log;
 
 
-public final class FixedMapView extends MapView {
+public class FixedMapView extends MapView {
 
 	private static final int IGNORE_MOVE_COUNT = 2;
 	private int moveCount = 0;

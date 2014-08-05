@@ -151,7 +151,7 @@ public class StationGraphActivity extends BaseActivity
 		else charValuesView.setCard(charValuesCard);
 
 		StationMapCard mapCard = new StationMapCard(
-				getApplicationContext(),
+				this,
 				stationName,
 				wrapper.getDouble(4),
 				wrapper.getDouble(5));

@@ -99,7 +99,7 @@
 	<string name="prefs_cat_ceps_key">cep_service</string>
 	<string name="prefs_ceps_servername">CEPS Servername</string>
 	<string name="prefs_ceps_servername_key">ceps_server_name</string>
-	<string name="prefs_ceps_servername_default">http://192.168.178.93:8183</string>
+	<string name="prefs_ceps_servername_default">http://faui2o2f.cs.fau.de:8080/cep-service</string>
 
 
 	<string name="news_empty">Nothing new, please come back later.</string>

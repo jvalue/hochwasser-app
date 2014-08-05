@@ -31,10 +31,11 @@ public class SyncStatusListenerTest extends BaseAndroidTestCase {
 
 	public void testSyncTimestamps() throws Exception {
 		OdsSource source = new DummySource();
+		SyncStatusListener listener = new SyncStatusListener(getContext());
 
-		assertNull(SyncStatusListener.getLastSync(getContext(), source));
-		assertNull(SyncStatusListener.getLastSuccessfulSync(getContext(), source));
-		assertNull(SyncStatusListener.getLastFailedSync(getContext(), source));
+		assertNull(listener.getLastSync(source));
+		assertNull(listener.getLastSuccessfulSync(source));
+		assertNull(listener.getLastFailedSync(source));
 
 		Intent successIntent = new Intent(SyncAdapter.ACTION_SYNC_FINISH);
 		successIntent.putExtra(SyncAdapter.EXTRA_SOURCE_NAME, source.toString());
@@ -43,10 +44,10 @@ public class SyncStatusListenerTest extends BaseAndroidTestCase {
 
 		Thread.sleep(100);
 
-		Calendar lastSuccess = SyncStatusListener.getLastSuccessfulSync(getContext(), source);
+		Calendar lastSuccess = listener.getLastSuccessfulSync(source);
 		assertNotNull(lastSuccess);
-		assertEquals(lastSuccess, SyncStatusListener.getLastSync(getContext(), source));
-		assertNull(SyncStatusListener.getLastFailedSync(getContext(), source));
+		assertEquals(lastSuccess, listener.getLastSync(source));
+		assertNull(listener.getLastFailedSync(source));
 
 		Intent failIntent = new Intent(SyncAdapter.ACTION_SYNC_FINISH);
 		failIntent.putExtra(SyncAdapter.EXTRA_SOURCE_NAME, source.toString());
@@ -55,29 +56,30 @@ public class SyncStatusListenerTest extends BaseAndroidTestCase {
 
 		Thread.sleep(100);
 
-		Calendar lastFailure = SyncStatusListener.getLastFailedSync(getContext(), source);
+		Calendar lastFailure = listener.getLastFailedSync(source);
 		assertNotNull(lastFailure);
-		assertEquals(lastFailure, SyncStatusListener.getLastSync(getContext(), source));
-		assertEquals( lastSuccess, SyncStatusListener.getLastSuccessfulSync(getContext(), source));
+		assertEquals(lastFailure, listener.getLastSync(source));
+		assertEquals( lastSuccess, listener.getLastSuccessfulSync(source));
 	}
 
 
 	public void testSyncRunning() throws  Exception {
-		assertFalse(SyncStatusListener.isSyncRunning(getContext()));
+		SyncStatusListener listener = new SyncStatusListener(getContext());
+		assertFalse(listener.isSyncRunning());
 
 		Intent startIntent = new Intent(SyncAdapter.ACTION_SYNC_START);
 		new SyncStatusListener().onReceive(getContext(), startIntent);
 
 		Thread.sleep(100);
 
-		assertTrue(SyncStatusListener.isSyncRunning(getContext()));
+		assertTrue(listener.isSyncRunning());
 
 		Intent stopIntent = new Intent(SyncAdapter.ACTION_SYNC_ALL_FINISH);
 		new SyncStatusListener().onReceive(getContext(), stopIntent);
 
 		Thread.sleep(100);
 
-		assertFalse(SyncStatusListener.isSyncRunning(getContext()));
+		assertFalse(listener.isSyncRunning());
 	}
 
 

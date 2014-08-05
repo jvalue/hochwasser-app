@@ -33,11 +33,13 @@ public final class OdsSourceManager {
 	private final Context context;
 	private final GcmManager gcmManager;
 	private final SyncUtils syncUtils;
+	private final SyncStatusListener syncStatusListener;
 
 	private OdsSourceManager(Context context) {
 		this.context = context;
 		this.gcmManager = new GcmManager(context);
 		this.syncUtils = new SyncUtils(context);
+		this.syncStatusListener = new SyncStatusListener(context);
 	}
 
 
@@ -219,7 +221,7 @@ public final class OdsSourceManager {
 	 */
 	public Calendar getLastSuccessfulSync(OdsSource source) {
 		Assert.assertNotNull(source);
-		return SyncStatusListener.getLastSuccessfulSync(context, source);
+		return syncStatusListener.getLastSuccessfulSync(source);
 	}
 
 
@@ -229,7 +231,7 @@ public final class OdsSourceManager {
 	 */
 	public Calendar getLastFailedSync(OdsSource source) {
 		Assert.assertNotNull(source);
-		return SyncStatusListener.getLastFailedSync(context, source);
+		return syncStatusListener.getLastFailedSync(source);
 	}
 
 
@@ -239,7 +241,7 @@ public final class OdsSourceManager {
 	 */
 	public Calendar getLastSync(OdsSource source) {
 		Assert.assertNotNull(source);
-		return SyncStatusListener.getLastSync(context, source);
+		return syncStatusListener.getLastSync(source);
 	}
 
 
@@ -247,7 +249,7 @@ public final class OdsSourceManager {
 	 * @return true if the underlying sync adapter is currently running.
 	 */
 	public boolean isSyncRunning() {
-		return SyncStatusListener.isSyncRunning(context);
+		return syncStatusListener.isSyncRunning();
 	}
 
 

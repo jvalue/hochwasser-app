@@ -1,9 +1,5 @@
 package de.bitdroid.flooding.ods.data;
 
-import static de.bitdroid.flooding.ods.data.OdsSource.ACCOUNT;
-import static de.bitdroid.flooding.ods.data.OdsSource.AUTHORITY;
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
-
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -11,13 +7,15 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.Log;
+
+import static de.bitdroid.flooding.ods.data.OdsSource.ACCOUNT;
+import static de.bitdroid.flooding.ods.data.OdsSource.AUTHORITY;
+import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_SERVER_ID;
 
 
 final class SyncUtils {
-
-	private SyncUtils () { }
-
 
 	private static final String
 			KEY_ACCOUNT_ADDED = "accountAdded",
@@ -26,12 +24,19 @@ final class SyncUtils {
 	private static final String PREFS_NAME = SyncUtils.class.getName();
 
 
-	static boolean isPeriodicSyncScheduled(Context context) {
-		return getSharedPreferences(context).getBoolean(KEY_PERIODIC_SYNC_ADDED, false);
+	private final Context context;
+
+	public SyncUtils(Context context) {
+		Assert.assertNotNull(context);
+		this.context = context;
+	}
+
+	public boolean isPeriodicSyncScheduled() {
+		return getSharedPreferences().getBoolean(KEY_PERIODIC_SYNC_ADDED, false);
 	}
 
 
-	static void startPeriodicSync(Context context, long pollFrequency) {
+	public void startPeriodicSync(long pollFrequency) {
 		ContentResolver.setIsSyncable(ACCOUNT, AUTHORITY, 1);
 		ContentResolver.setSyncAutomatically(ACCOUNT, AUTHORITY, true);
 		ContentResolver.addPeriodicSync(
@@ -40,23 +45,23 @@ final class SyncUtils {
 				new Bundle(),
 				pollFrequency);
 
-		SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-		editor.putBoolean(KEY_PERIODIC_SYNC_ADDED,  true);
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
+		editor.putBoolean(KEY_PERIODIC_SYNC_ADDED, true);
 		editor.commit();
 	}
 
 
-	static void stopPeriodicSync(Context context) {
+	public void stopPeriodicSync() {
 		ContentResolver.setSyncAutomatically(ACCOUNT, AUTHORITY, false);
 		ContentResolver.removePeriodicSync(ACCOUNT, AUTHORITY, new Bundle());
 
-		SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putBoolean(KEY_PERIODIC_SYNC_ADDED, false);
 		editor.commit();
 	}
 
 
-	static void startManualSync(Context context, OdsSource  source) {
+	public void startManualSync(OdsSource source) {
 		Cursor cursor = null;
 		try {
 			cursor = context.getContentResolver().query(
@@ -69,7 +74,7 @@ final class SyncUtils {
 	}
 
 
-	static void addAccount(Context context) {
+	public void addAccount() {
 		AccountManager accountManager 
 			= (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 
@@ -77,20 +82,19 @@ final class SyncUtils {
 			Log.warning("Adding account failed");
 		}
 
-		SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putBoolean(KEY_ACCOUNT_ADDED,  true);
 		editor.commit();
 	}
 
 
-	static boolean isAccountAdded(Context context) {
-		SharedPreferences prefs = getSharedPreferences(context);
+	public boolean isAccountAdded() {
+		SharedPreferences prefs = getSharedPreferences();
 		return prefs.getBoolean(KEY_ACCOUNT_ADDED, false);
 	}
 
 
-	
-	private static SharedPreferences getSharedPreferences(Context context) {
+	private SharedPreferences getSharedPreferences() {
 		return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 	}
 

@@ -32,10 +32,12 @@ public final class OdsSourceManager {
 
 	private final Context context;
 	private final GcmManager gcmManager;
+	private final SyncUtils syncUtils;
 
 	private OdsSourceManager(Context context) {
 		this.context = context;
 		this.gcmManager = new GcmManager(context);
+		this.syncUtils = new SyncUtils(context);
 	}
 
 
@@ -58,13 +60,13 @@ public final class OdsSourceManager {
 
 		Assert.assertNotNull((Object) sources);
 		Assert.assertTrue(pollFrequency > 0, "pollFrequency must be > 0");
-		Assert.assertFalse(SyncUtils.isPeriodicSyncScheduled(context), "sync already scheduled");
+		Assert.assertFalse(syncUtils.isPeriodicSyncScheduled(), "sync already scheduled");
 
 		Log.debug("started polling with frequency " + pollFrequency);
 
 		addSyncAccount();
 		for (OdsSource source : sources) registerSource(source);
-		SyncUtils.startPeriodicSync(context, pollFrequency);
+		syncUtils.startPeriodicSync(pollFrequency);
 	}
 
 
@@ -72,11 +74,11 @@ public final class OdsSourceManager {
 	 * Stops the periodic synchronization schedule.
 	 */
 	public void stopPolling() {
-		Assert.assertTrue(SyncUtils.isPeriodicSyncScheduled(context), "sync not scheduled");
+		Assert.assertTrue(syncUtils.isPeriodicSyncScheduled(), "sync not scheduled");
 
 		Log.debug("stopped polling");
 
-		SyncUtils.stopPeriodicSync(context);
+		syncUtils.stopPeriodicSync();
 
 		SharedPreferences prefs = getSharedPreferences();
 		Set<String> keySet = prefs.getAll().keySet();
@@ -90,7 +92,7 @@ public final class OdsSourceManager {
 	 * Returns whether a periodic sync is scheduled for execution.
 	 */
 	public boolean isPollingActive() {
-		return SyncUtils.isPeriodicSyncScheduled(context);
+		return syncUtils.isPeriodicSyncScheduled();
 	}
 
 
@@ -177,7 +179,7 @@ public final class OdsSourceManager {
 		Log.debug("starting manual sync");
 
 		addSyncAccount();
-		SyncUtils.startManualSync(context, source);
+		syncUtils.startManualSync(source);
 	}
 
 
@@ -260,7 +262,7 @@ public final class OdsSourceManager {
 
 
 	private void addSyncAccount() {
-		if (!SyncUtils.isAccountAdded(context)) SyncUtils.addAccount(context);
+		if (!syncUtils.isAccountAdded()) syncUtils.addAccount();
 	}
 
 

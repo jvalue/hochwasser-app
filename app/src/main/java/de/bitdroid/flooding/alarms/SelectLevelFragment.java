@@ -1,10 +1,14 @@
 package de.bitdroid.flooding.alarms;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +19,7 @@ import android.widget.Toast;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
+import de.bitdroid.flooding.levels.StationGraphActivity;
 import de.bitdroid.flooding.utils.StringUtils;
 
 
@@ -31,9 +36,16 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 	}
 
 
+	private String river, station;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+
+		this.river = getArguments().getString(EXTRA_WATER_NAME);
+		this.station = getArguments().getString(EXTRA_STATION_NAME);
+
 	}
 
 
@@ -46,9 +58,6 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 		View view = inflater.inflate(R.layout.alarms_new, container, false);
 
 		TextView stationView = (TextView) view.findViewById(R.id.station);
-
-		final String river = getArguments().getString(EXTRA_WATER_NAME);
-		final String station = getArguments().getString(EXTRA_STATION_NAME);
 
 		final EditText levelEditText = (EditText) view.findViewById(R.id.level);
 		final RadioGroup relationRadioGroup = (RadioGroup) view.findViewById(R.id.relation);
@@ -98,6 +107,27 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 
 
 		return view;
+	}
+
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.alarms_new_menu, menu);
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.data:
+				Intent intent = new Intent(getActivity(), StationGraphActivity.class);
+				intent.putExtra(StationGraphActivity.EXTRA_WATER_NAME, river);
+				intent.putExtra(StationGraphActivity.EXTRA_STATION_NAME, station);
+				getActivity().startActivity(intent);
+				getActivity().overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
+				return true;
+		}
+		return  super.onOptionsItemSelected(item);
 	}
 
 }

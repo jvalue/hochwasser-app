@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.AsyncTaskLoader;
 
-import de.bitdroid.flooding.ods.cep.CepManager;
+import de.bitdroid.ods.cep.CepManager;
 
 
 final class AlarmLoader extends AsyncTaskLoader<Set<Alarm>> implements AlarmUpdateListener {

@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import de.bitdroid.flooding.ods.data.OdsSource;
-import de.bitdroid.flooding.ods.data.SyncAdapter;
+import de.bitdroid.ods.data.OdsSource;
+import de.bitdroid.ods.data.SyncAdapter;
 import de.bitdroid.utils.Log;
 
 

@@ -4,10 +4,10 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
 
-import de.bitdroid.flooding.ods.data.OdsSource;
+import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.utils.Assert;
 
-import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_TIMESTAMP;
+import static de.bitdroid.ods.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 public final class MonitorSourceLoader extends AsyncTaskLoader<Cursor> {

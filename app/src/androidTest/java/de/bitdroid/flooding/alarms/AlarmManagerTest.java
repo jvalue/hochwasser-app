@@ -2,8 +2,8 @@ package de.bitdroid.flooding.alarms;
 
 import java.lang.reflect.Constructor;
 
-import de.bitdroid.flooding.ods.cep.CepManager;
-import de.bitdroid.flooding.ods.gcm.GcmStatus;
+import de.bitdroid.ods.cep.CepManager;
+import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.testUtils.BaseAndroidTestCase;
 import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.testUtils.SharedPreferencesHelper;

@@ -22,8 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.ods.data.OdsSource;
-import de.bitdroid.flooding.ods.data.OdsSourceManager;
+import de.bitdroid.ods.data.OdsSource;
+import de.bitdroid.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.testUtils.ContentProviderContext;
 import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;

@@ -26,8 +26,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.ods.data.OdsSourceManager;
-import de.bitdroid.flooding.ods.data.SyncAdapter;
+import de.bitdroid.ods.data.OdsSourceManager;
+import de.bitdroid.ods.data.SyncAdapter;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.Log;
 

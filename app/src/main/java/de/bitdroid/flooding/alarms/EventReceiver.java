@@ -11,8 +11,8 @@ import java.util.Set;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.news.NewsManager;
-import de.bitdroid.flooding.ods.cep.BaseEventReceiver;
-import de.bitdroid.flooding.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.cep.BaseEventReceiver;
+import de.bitdroid.ods.cep.CepManagerFactory;
 import de.bitdroid.utils.Log;
 import de.bitdroid.utils.StringUtils;
 

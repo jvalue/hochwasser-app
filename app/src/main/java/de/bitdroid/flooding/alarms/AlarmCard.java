@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.levels.StationGraphActivity;
-import de.bitdroid.flooding.ods.gcm.GcmStatus;
+import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.Log;
 import de.bitdroid.utils.StringUtils;

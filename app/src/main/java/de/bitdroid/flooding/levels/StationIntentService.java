@@ -14,8 +14,8 @@ import java.net.URLEncoder;
 import java.util.Date;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.ods.data.OdsSource;
-import de.bitdroid.flooding.ods.data.OdsSourceManager;
+import de.bitdroid.ods.data.OdsSource;
+import de.bitdroid.ods.data.OdsSourceManager;
 import de.bitdroid.utils.RestCall;
 import de.bitdroid.utils.RestException;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;

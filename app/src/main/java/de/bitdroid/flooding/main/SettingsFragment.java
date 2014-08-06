@@ -12,9 +12,9 @@ import java.util.Calendar;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.monitor.SourceMonitor;
-import de.bitdroid.flooding.ods.cep.CepManagerFactory;
-import de.bitdroid.flooding.ods.data.OdsSource;
-import de.bitdroid.flooding.ods.data.OdsSourceManager;
+import de.bitdroid.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.data.OdsSource;
+import de.bitdroid.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 

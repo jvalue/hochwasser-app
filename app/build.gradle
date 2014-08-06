@@ -27,6 +27,7 @@ dependencies {
 	compile 'com.github.gabrielemariotti.cards:library:1.8.0'
     compile project(':android-support-v4-preferencefragment')
     compile project(':utils')
+    compile project(':ods')
 
 	androidTestCompile 'com.squareup.okhttp:mockwebserver:2.0.0'
 	androidTestCompile 'com.google.dexmaker:dexmaker:1.1'

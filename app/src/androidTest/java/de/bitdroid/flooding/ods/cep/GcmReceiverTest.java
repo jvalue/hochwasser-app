@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
-import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
+import de.bitdroid.testUtils.BaseAndroidTestCase;
+import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.testUtils.SharedPreferencesHelper;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

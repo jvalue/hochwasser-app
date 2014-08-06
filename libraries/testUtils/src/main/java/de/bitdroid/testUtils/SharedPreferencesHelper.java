@@ -1,18 +1,15 @@
-package de.bitdroid.flooding.testUtils;
+package de.bitdroid.testUtils;
 
 import android.content.Context;
 
 import java.io.File;
-
-import de.bitdroid.utils.Assert;
 
 public class SharedPreferencesHelper {
 
 	private SharedPreferencesHelper() { }
 
 	public static void clearAll(PrefsRenamingDelegatingContext context) {
-		Assert.assertNotNull(context);
-
+		if (context == null) throw new NullPointerException("context cannot be null");
 		File dir = new File(context.getFilesDir().getParent() + "/shared_prefs/");
 		String[] prefsNames = dir.list();
 		if (prefsNames == null || prefsNames.length == 0) return;

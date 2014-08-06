@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.testUtils;
+package de.bitdroid.testUtils;
 
 import android.content.ContentResolver;
 import android.content.Context;

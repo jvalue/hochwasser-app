@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.test.ServiceTestCase;
 
-import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
+import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.testUtils.SharedPreferencesHelper;
 
 public class BaseGcmIntentServiceTest extends ServiceTestCase<BaseGcmIntentServiceTest.DummyBaseGcmIntentService> {
 

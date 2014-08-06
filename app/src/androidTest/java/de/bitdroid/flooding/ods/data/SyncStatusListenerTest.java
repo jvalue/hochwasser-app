@@ -8,9 +8,9 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Map;
 
-import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
-import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
+import de.bitdroid.testUtils.BaseAndroidTestCase;
+import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.testUtils.SharedPreferencesHelper;
 
 public class SyncStatusListenerTest extends BaseAndroidTestCase {
 

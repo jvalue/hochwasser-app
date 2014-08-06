@@ -1,9 +1,9 @@
-package de.bitdroid.flooding.utils;
+package de.bitdroid.utils;
+
+import junit.framework.TestCase;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 
 public final class AssertTest extends TestCase {

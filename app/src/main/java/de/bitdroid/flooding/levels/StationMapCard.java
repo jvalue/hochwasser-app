@@ -18,7 +18,7 @@ import de.bitdroid.flooding.map.MapActivity;
 import de.bitdroid.flooding.map.Station;
 import de.bitdroid.flooding.map.StationClickListener;
 import de.bitdroid.flooding.map.StationsOverlay;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 import it.gmariotti.cardslib.library.internal.Card;
 
 final class StationMapCard extends Card {

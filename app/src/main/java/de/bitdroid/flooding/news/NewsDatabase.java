@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 
 
 final class NewsDatabase extends SQLiteOpenHelper {

@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.Map;
 
 import de.bitdroid.flooding.ods.data.OdsSource;
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.Log;
 import de.bitdroid.flooding.ods.data.SQLiteType;
 
 import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_ID;

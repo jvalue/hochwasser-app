@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.io.File;
 
-import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.utils.Assert;
 
 public class SharedPreferencesHelper {
 

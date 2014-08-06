@@ -3,7 +3,7 @@ package de.bitdroid.flooding.alarms;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.utils.Assert;
 
 
 final class LevelAlarm extends Alarm {

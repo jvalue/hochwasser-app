@@ -17,9 +17,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-import de.bitdroid.flooding.utils.RestCall;
-import de.bitdroid.flooding.utils.RestException;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.RestCall;
+import de.bitdroid.utils.RestException;
+import de.bitdroid.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 

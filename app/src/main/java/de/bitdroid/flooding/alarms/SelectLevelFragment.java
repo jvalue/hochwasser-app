@@ -20,7 +20,7 @@ import android.widget.Toast;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.levels.StationGraphActivity;
-import de.bitdroid.flooding.utils.StringUtils;
+import de.bitdroid.utils.StringUtils;
 
 
 public final class SelectLevelFragment extends Fragment implements Extras {

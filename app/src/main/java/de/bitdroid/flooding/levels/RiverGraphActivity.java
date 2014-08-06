@@ -36,7 +36,7 @@ import de.bitdroid.flooding.monitor.MonitorSourceLoader;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
-import de.bitdroid.flooding.utils.StringUtils;
+import de.bitdroid.utils.StringUtils;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_VALUE;

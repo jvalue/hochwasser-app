@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 
 
 public abstract class BaseGcmIntentService extends IntentService {

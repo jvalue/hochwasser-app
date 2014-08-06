@@ -16,8 +16,8 @@ import java.util.Set;
 import de.bitdroid.flooding.ods.cep.CepManager;
 import de.bitdroid.flooding.ods.cep.CepManagerFactory;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.Log;
 
 import static de.bitdroid.flooding.alarms.AlarmDbSchema.COLUMN_ID;
 import static de.bitdroid.flooding.alarms.AlarmDbSchema.COLUMN_JSON;

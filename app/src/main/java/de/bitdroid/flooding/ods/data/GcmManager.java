@@ -9,7 +9,7 @@ import java.util.Set;
 
 import de.bitdroid.flooding.ods.gcm.GcmRegistrationManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
-import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.utils.Assert;
 
 
 public class GcmManager {

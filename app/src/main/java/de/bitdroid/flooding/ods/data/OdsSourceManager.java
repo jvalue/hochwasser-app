@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.Log;
 
 
 public final class OdsSourceManager {

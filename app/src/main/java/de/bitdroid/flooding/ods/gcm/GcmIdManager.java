@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.utils.Assert;
 
 
 public final class GcmIdManager {

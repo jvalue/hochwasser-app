@@ -22,8 +22,8 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
 
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.Log;
 
 
 final class WaterGraph implements OnTouchListener {

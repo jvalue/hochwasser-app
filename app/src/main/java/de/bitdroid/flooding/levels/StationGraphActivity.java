@@ -11,8 +11,8 @@ import android.view.View;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.StringUtils;
+import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
 

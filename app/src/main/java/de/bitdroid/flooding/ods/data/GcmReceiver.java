@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import de.bitdroid.flooding.ods.gcm.BaseGcmReceiver;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 
 
 public final class GcmReceiver extends BaseGcmReceiver {

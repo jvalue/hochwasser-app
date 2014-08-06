@@ -3,7 +3,7 @@ package de.bitdroid.flooding.pegelonline;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.utils.Assert;
 
 
 public final class UnitConverter {

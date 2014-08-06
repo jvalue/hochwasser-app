@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.bitdroid.flooding.ods.gcm.BaseGcmReceiver;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 
 
 public final class GcmReceiver extends BaseGcmReceiver {

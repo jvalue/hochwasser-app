@@ -18,7 +18,7 @@ import java.util.Map;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.main.MainActivity;
-import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.utils.Assert;
 
 
 public final class NewsManager {

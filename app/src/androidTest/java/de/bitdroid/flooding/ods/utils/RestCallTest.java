@@ -2,8 +2,8 @@ package de.bitdroid.flooding.ods.utils;
 
 import android.test.AndroidTestCase;
 
-import de.bitdroid.flooding.utils.RestCall;
-import de.bitdroid.flooding.utils.RestException;
+import de.bitdroid.utils.RestCall;
+import de.bitdroid.utils.RestException;
 
 
 public final class RestCallTest extends AndroidTestCase {

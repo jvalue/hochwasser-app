@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 
 
 final class Processor {

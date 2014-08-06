@@ -28,8 +28,8 @@ import android.widget.TextView;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
 import de.bitdroid.flooding.ods.data.SyncAdapter;
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.Log;
 
 abstract class DataSelectionFragment<T> extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

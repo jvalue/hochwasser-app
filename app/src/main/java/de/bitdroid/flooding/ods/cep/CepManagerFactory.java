@@ -3,7 +3,7 @@ package de.bitdroid.flooding.ods.cep;
 
 import android.content.Context;
 
-import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.utils.Assert;
 
 public class CepManagerFactory {
 

@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import java.util.List;
 
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.Log;
 
 import static de.bitdroid.flooding.ods.data.OdsSource.ACCOUNT;
 import static de.bitdroid.flooding.ods.data.OdsSource.AUTHORITY;

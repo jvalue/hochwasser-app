@@ -8,7 +8,7 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.dataselection.RiverSelectionFragment;
 import de.bitdroid.flooding.dataselection.StationSelectionFragment;
-import de.bitdroid.flooding.utils.StringUtils;
+import de.bitdroid.utils.StringUtils;
 
 
 public class NewAlarmActivity extends FragmentActivity implements Extras {

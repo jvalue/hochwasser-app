@@ -5,7 +5,7 @@ import android.os.Bundle;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.dataselection.StationSelectionFragment;
-import de.bitdroid.flooding.utils.StringUtils;
+import de.bitdroid.utils.StringUtils;
 
 
 public class StationListActivity extends BaseActivity implements Extras {

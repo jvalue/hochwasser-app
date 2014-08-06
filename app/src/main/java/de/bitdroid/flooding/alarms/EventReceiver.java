@@ -13,8 +13,8 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.news.NewsManager;
 import de.bitdroid.flooding.ods.cep.BaseEventReceiver;
 import de.bitdroid.flooding.ods.cep.CepManagerFactory;
-import de.bitdroid.flooding.utils.Log;
-import de.bitdroid.flooding.utils.StringUtils;
+import de.bitdroid.utils.Log;
+import de.bitdroid.utils.StringUtils;
 
 
 public final class EventReceiver extends BaseEventReceiver {

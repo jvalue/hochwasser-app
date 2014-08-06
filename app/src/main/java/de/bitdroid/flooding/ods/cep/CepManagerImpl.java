@@ -10,8 +10,8 @@ import java.util.Set;
 
 import de.bitdroid.flooding.ods.gcm.GcmRegistrationManager;
 import de.bitdroid.flooding.ods.gcm.GcmStatus;
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.Log;
 
 
 final class CepManagerImpl implements CepManager {

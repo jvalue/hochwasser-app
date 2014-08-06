@@ -1,5 +1,6 @@
-package de.bitdroid.flooding.utils;
+package de.bitdroid.utils;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 
@@ -10,7 +11,7 @@ public final class StringUtilsTest extends TestCase {
 		String[] capStrings = { "Hello World", "Foobar", "A-B-Cc", "Hello" };
 
 		for (int i = 0; i < rawStrings.length; i++) {
-			assertEquals(StringUtils.toProperCase(rawStrings[i]), capStrings[i]);
+			Assert.assertEquals(StringUtils.toProperCase(rawStrings[i]), capStrings[i]);
 		}
 	}
 

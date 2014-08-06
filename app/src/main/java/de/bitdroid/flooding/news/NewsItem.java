@@ -1,6 +1,6 @@
 package de.bitdroid.flooding.news;
 
-import de.bitdroid.flooding.utils.Assert;
+import de.bitdroid.utils.Assert;
 
 
 public final class NewsItem {

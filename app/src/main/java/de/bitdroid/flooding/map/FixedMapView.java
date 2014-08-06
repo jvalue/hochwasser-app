@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 
 import org.osmdroid.views.MapView;
 
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 
 
 public class FixedMapView extends MapView {

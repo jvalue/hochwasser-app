@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 import it.gmariotti.cardslib.library.internal.Card;
 
 final class StationLevelCard extends Card {

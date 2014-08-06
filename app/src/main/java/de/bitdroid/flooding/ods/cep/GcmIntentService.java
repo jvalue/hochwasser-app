@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.bitdroid.flooding.ods.gcm.BaseGcmIntentService;
-import de.bitdroid.flooding.utils.RestCall;
+import de.bitdroid.utils.RestCall;
 
 
 public final class GcmIntentService extends BaseGcmIntentService {

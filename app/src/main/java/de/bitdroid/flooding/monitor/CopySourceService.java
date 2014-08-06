@@ -16,7 +16,7 @@ import java.util.Set;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.data.OdsSource;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 import de.bitdroid.flooding.ods.data.SQLiteType;
 
 import static de.bitdroid.flooding.ods.data.OdsSource.COLUMN_TIMESTAMP;

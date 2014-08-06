@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.SyncAdapter;
-import de.bitdroid.flooding.utils.Log;
+import de.bitdroid.utils.Log;
 
 
 public final class MonitorSyncListener extends BroadcastReceiver {

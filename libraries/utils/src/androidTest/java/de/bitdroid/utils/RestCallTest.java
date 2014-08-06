@@ -2,27 +2,56 @@ package de.bitdroid.utils;
 
 import android.test.AndroidTestCase;
 
-import de.bitdroid.utils.RestCall;
-import de.bitdroid.utils.RestException;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 
 public final class RestCallTest extends AndroidTestCase {
 
-	public void testBasicConnection() throws RestException {
+	public void testSuccess() throws Exception {
+		String restResult = "someContent";
+		String somePath = "somePath";
+
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody(restResult));
+		server.play();
 
 		RestCall call = new RestCall.Builder(
-				RestCall.RequestType.GET, 
-				"http://faui2o2f.cs.fau.de:8080")
-			.path("open-data-service")
-			.path("ods")
-			.path("de")
-			.path("pegelonline")
-			.path("stationsFlat")
+				RestCall.RequestType.GET,
+				server.getUrl("").toString())
+			.path(somePath)
 			.build();
 
-		String result = call.execute();
+		assertEquals(restResult, call.execute());
+		assertTrue(server.takeRequest().getPath().contains(somePath));
 
-		assertTrue("Result was null", result != null);
+		server.shutdown();
+	}
+
+
+	public void testFailure() throws Exception {
+		int code = 500;
+
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setResponseCode(code));
+		server.play();
+
+		try {
+			new RestCall.Builder(
+					RestCall.RequestType.POST,
+					server.getUrl("").toString())
+				.build()
+				.execute();
+
+		} catch (RestException re) {
+			assertEquals(code, re.getCode());
+			return;
+
+		} finally {
+			server.shutdown();
+		}
+
+		fail();
 	}
 
 }

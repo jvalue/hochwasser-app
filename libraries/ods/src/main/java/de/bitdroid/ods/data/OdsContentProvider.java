@@ -91,6 +91,7 @@ public final class OdsContentProvider extends ContentProvider {
 		SQLiteDatabase database = odsDatabase.getWritableDatabase();
 		odsDatabase.addSource(database, tableName, source);
 
+		getContext().getContentResolver().notifyChange(uri, null);
 		return database.delete(
 				tableName,
 				"1",
@@ -107,6 +108,7 @@ public final class OdsContentProvider extends ContentProvider {
 		OdsSource source = OdsSource.fromUri(uri);
 		String tableName = source.toSqlTableName();
 
+		getContext().getContentResolver().notifyChange(uri, null);
 		return odsDatabase.getWritableDatabase().update(tableName, values, selection, selectionArgs);
 	}
 

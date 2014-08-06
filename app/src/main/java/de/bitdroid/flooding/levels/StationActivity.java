@@ -41,7 +41,7 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LONG;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 
-public class StationGraphActivity extends BaseActivity
+public class StationActivity extends BaseActivity
 	implements LoaderManager.LoaderCallbacks<Cursor>, Extras {
 	
 	private static final int LOADERID = 46;

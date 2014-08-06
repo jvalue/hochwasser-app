@@ -51,7 +51,7 @@
                   android:label="@string/app_name">
         </activity>
 
-		<activity android:name=".levels.StationGraphActivity"
+		<activity android:name=".levels.StationActivity"
 				  android:label="@string/app_name">
 		</activity>
 

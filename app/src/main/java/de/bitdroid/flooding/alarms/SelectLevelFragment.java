@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
-import de.bitdroid.flooding.levels.StationGraphActivity;
+import de.bitdroid.flooding.levels.StationActivity;
 import de.bitdroid.utils.StringUtils;
 
 
@@ -120,9 +120,9 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.data:
-				Intent intent = new Intent(getActivity(), StationGraphActivity.class);
-				intent.putExtra(StationGraphActivity.EXTRA_WATER_NAME, river);
-				intent.putExtra(StationGraphActivity.EXTRA_STATION_NAME, station);
+				Intent intent = new Intent(getActivity(), StationActivity.class);
+				intent.putExtra(StationActivity.EXTRA_WATER_NAME, river);
+				intent.putExtra(StationActivity.EXTRA_STATION_NAME, station);
 				getActivity().startActivity(intent);
 				getActivity().overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
 				return true;

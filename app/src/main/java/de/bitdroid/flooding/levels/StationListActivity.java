@@ -19,7 +19,7 @@ public class StationListActivity extends BaseActivity implements Extras {
 		getSupportFragmentManager()
 			.beginTransaction()
 			.replace(R.id.frame, StationSelectionFragment.newInstance(
-						StationGraphActivity.class,
+						StationActivity.class,
 						R.anim.slide_enter_from_right,
 						R.anim.slide_exit_to_left,
 						waterName,

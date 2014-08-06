@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.levels.StationGraphActivity;
+import de.bitdroid.flooding.levels.StationActivity;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.Log;
@@ -54,9 +54,9 @@ final class AlarmCard extends Card {
 
 				// goto station graph
 				} else if (manager.getRegistrationStatus(alarm).equals(GcmStatus.REGISTERED)) {
-					Intent intent = new Intent(activity, StationGraphActivity.class);
-					intent.putExtra(StationGraphActivity.EXTRA_WATER_NAME, alarm.getRiver());
-					intent.putExtra(StationGraphActivity.EXTRA_STATION_NAME, alarm.getStation());
+					Intent intent = new Intent(activity, StationActivity.class);
+					intent.putExtra(StationActivity.EXTRA_WATER_NAME, alarm.getRiver());
+					intent.putExtra(StationActivity.EXTRA_STATION_NAME, alarm.getStation());
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
 				}

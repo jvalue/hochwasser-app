@@ -6,8 +6,6 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-import de.bitdroid.flooding.utils.SQLiteType;
-
 
 public final class DummySource extends OdsSource {
 

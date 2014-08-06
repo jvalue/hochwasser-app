@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.utils;
+package de.bitdroid.flooding.ods.data;
 
 
 public enum SQLiteType {

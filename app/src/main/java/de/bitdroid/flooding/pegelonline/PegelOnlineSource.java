@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bitdroid.flooding.ods.data.OdsSource;
-import de.bitdroid.flooding.utils.SQLiteType;
+import de.bitdroid.flooding.ods.data.SQLiteType;
 
 
 public final class PegelOnlineSource extends OdsSource { 

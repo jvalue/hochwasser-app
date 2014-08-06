@@ -11,7 +11,6 @@ import java.util.Map;
 import de.bitdroid.flooding.testUtils.BaseAndroidTestCase;
 import de.bitdroid.flooding.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.flooding.testUtils.SharedPreferencesHelper;
-import de.bitdroid.flooding.utils.SQLiteType;
 
 public class SyncStatusListenerTest extends BaseAndroidTestCase {
 

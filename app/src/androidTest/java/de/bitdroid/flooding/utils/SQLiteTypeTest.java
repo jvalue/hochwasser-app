@@ -3,6 +3,8 @@ package de.bitdroid.flooding.utils;
 
 import junit.framework.TestCase;
 
+import de.bitdroid.flooding.ods.data.SQLiteType;
+
 public class SQLiteTypeTest extends TestCase {
 
     public void testTypes() {

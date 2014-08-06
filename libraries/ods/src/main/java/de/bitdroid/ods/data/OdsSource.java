@@ -6,11 +6,13 @@ import android.net.Uri;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.bitdroid.utils.Assert;
+import de.bitdroid.utils.Log;
 
 
 /**
@@ -24,7 +26,7 @@ public abstract class OdsSource {
 
 	public static final Account ACCOUNT = new Account(ACCOUNT_NAME, ACCOUNT_TYPE);
 
-	public static final String AUTHORITY = "de.bitdroid.ods.provider";
+	public static final String AUTHORITY = initAuthority();
 
 	/** Primary key. NOT included in the schema information! */
 	public static final String
@@ -188,4 +190,25 @@ public abstract class OdsSource {
 		return getClass().getName();
 	}
 
+
+	// the content provider authority must be unique for each app. However, since this provider
+	// will be part of a library, clients must define their own unique id.
+	// --> try looking up some field and getting the autority from that
+	private static final String CLASS_NAME = "de.bitdroid.ods.ContentProviderAuthority";
+	private static final String FIELD_NAME = "AUTHORITY";
+
+	private static String initAuthority() {
+		String defaultAuthority = "de.bitdroid.ods.provider";
+
+		try {
+			ClassLoader loader = OdsSource.class.getClassLoader();
+			Class<?> clazz = loader.loadClass(CLASS_NAME);
+			Field field = clazz.getDeclaredField(FIELD_NAME);
+			return field.get(null).toString();
+		} catch (Exception e) {
+			Log.warning("could not find any class " + CLASS_NAME + " with field " + FIELD_NAME);
+		}
+
+		return defaultAuthority;
+	}
 }

@@ -31,14 +31,6 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <provider
-            android:name=".data.OdsContentProvider"
-            android:authorities="de.bitdroid.ods.provider"
-            android:exported="true"
-            android:syncable="true"
-            android:grantUriPermissions="true"
-            />
-
         <service
             android:name=".data.SyncService"
             android:exported="true"

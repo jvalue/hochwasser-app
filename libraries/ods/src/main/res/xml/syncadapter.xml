@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter
 		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:contentAuthority="de.bitdroid.ods.provider"
+		android:contentAuthority="@string/content_provider_authority"
 		android:accountType="de.bitdroid.ods"
 		android:userVisible="true"
 		android:supportsUploading="false"

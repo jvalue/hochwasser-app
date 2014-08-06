@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods.utils;
+package de.bitdroid.utils;
 
 import junit.framework.TestCase;
 

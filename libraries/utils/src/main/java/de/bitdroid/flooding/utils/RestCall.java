@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods.utils;
+package de.bitdroid.flooding.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import de.bitdroid.flooding.utils.Assert;
-import de.bitdroid.flooding.utils.Log;
 
 public final class RestCall {
 

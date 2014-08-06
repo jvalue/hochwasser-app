@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import java.io.IOException;
 
+import de.bitdroid.flooding.utils.RestException;
+
 public class RestExceptionTest extends TestCase {
 
     public void testGet() {

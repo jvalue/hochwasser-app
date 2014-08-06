@@ -16,8 +16,8 @@ import java.util.Date;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.data.OdsSource;
 import de.bitdroid.flooding.ods.data.OdsSourceManager;
-import de.bitdroid.flooding.ods.utils.RestCall;
-import de.bitdroid.flooding.ods.utils.RestException;
+import de.bitdroid.flooding.utils.RestCall;
+import de.bitdroid.flooding.utils.RestException;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.Log;
 

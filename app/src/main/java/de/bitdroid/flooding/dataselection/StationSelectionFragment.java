@@ -154,6 +154,12 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 	}
 
 
+	@Override
+	protected void addMapExtras(Intent intent) {
+		intent .putExtra(EXTRA_WATER_NAME, getArguments().getString(EXTRA_WATER_NAME));
+	}
+
+
 	private void addExtraEntries(ArrayAdapter<String> adapter) {
 		if (isShowingAllEntries()) adapter.insert(getActivity().getString(R.string.data_station_all), 0);
 

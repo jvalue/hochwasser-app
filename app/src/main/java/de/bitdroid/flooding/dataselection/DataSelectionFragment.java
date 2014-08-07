@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.map.SelectionMapActivity;
 import de.bitdroid.ods.data.OdsSourceManager;
 import de.bitdroid.ods.data.SyncAdapter;
 import de.bitdroid.utils.Assert;
@@ -60,6 +61,8 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 	protected abstract int getLoaderId();
 	protected abstract Loader<Cursor> getLoader();
 	protected abstract void onLoadFinished(Cursor cursor, ArrayAdapter<T> listAdapter);
+
+	protected abstract void addMapExtras(Intent intent);
 
 
 	@Override
@@ -137,8 +140,8 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 	@Override
 	public final void onListItemClick(ListView list, View item, int position, long id) {
 		// hide keyboard
-		InputMethodManager inputManager 
-			= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
+		InputMethodManager inputManager
+				= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
 		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
 		// start activity
@@ -177,6 +180,13 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 					searchBox.setVisibility(View.GONE);
 					inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 				}
+				return true;
+
+			case R.id.map:
+				Intent mapIntent = new Intent(getActivity().getApplicationContext(), SelectionMapActivity.class);
+				mapIntent.putExtra(SelectionMapActivity.EXTRA_ACTIVITY_CLASS_NAME, getArguments().getString(EXTRA_ACTIVITY));
+				addMapExtras(mapIntent);
+				startActivity(mapIntent);
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

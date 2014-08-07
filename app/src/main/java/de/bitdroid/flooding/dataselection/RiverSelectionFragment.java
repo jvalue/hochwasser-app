@@ -122,7 +122,14 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> i
 	}
 
 
+	@Override
+	protected void addMapExtras(Intent intent) {
+		// nothing to do here
+	}
 
+
+
+	// TOOD remove
 	public static final class River {
 		private final String riverName;
 		private int stationsCount;

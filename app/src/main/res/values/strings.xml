@@ -27,6 +27,7 @@
 
 	<string name="menu_select_water_search">Search</string>
 	<string name="menu_select_water_search_hint">Search river names</string>
+    <string name="menu_select_water_map">Map</string>
 
 	<string name="menu_alarms_add">Add alarm</string>
 

@@ -1,12 +1,10 @@
 package de.bitdroid.flooding.map;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
 import org.osmdroid.util.GeoPoint;
@@ -27,7 +25,7 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
-public class MapActivity extends Activity {
+public abstract class BaseMapActivity extends Activity {
 
 	public static final String
 			EXTRA_WATER_NAME = "EXTRA_WATER_NAME",
@@ -94,21 +92,7 @@ public class MapActivity extends Activity {
 				stationsOverlay = new StationsOverlay(
 						getApplicationContext(), 
 						stations,
-						new StationClickListener() {
-							@Override
-							public void onStationClick(Station station) {
-								new AlertDialog.Builder(new ContextThemeWrapper(
-										MapActivity.this, android.R.style.Theme_Holo_Dialog))
-										.setTitle(StringUtils.toProperCase(station.getName()))
-										.setMessage(getString(
-												R.string.map_dialog_station_info,
-												station.getLat(),
-												station.getLon()))
-										.setPositiveButton(R.string.btn_ok, null)
-										.show();
-
-							}
-						});
+						getStationClickListener());
 				mapView.getOverlays().add(stationsOverlay);
 
 				GeoPoint  point = getCenter(stations);
@@ -205,6 +189,8 @@ public class MapActivity extends Activity {
 				state.getInt(EXTRA_SCROLL_Y, 0));
 	}
 
+
+	protected abstract StationClickListener getStationClickListener();
 
 	private GeoPoint getCenter(List<Station> stations) {
 		double 

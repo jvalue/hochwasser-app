@@ -31,7 +31,7 @@ import java.util.Set;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
-import de.bitdroid.flooding.map.MapActivity;
+import de.bitdroid.flooding.map.InfoMapActivity;
 import de.bitdroid.flooding.monitor.MonitorSourceLoader;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -340,8 +340,8 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				return true;
 
 			case R.id.map:
-				Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
-				mapIntent.putExtra(MapActivity.EXTRA_WATER_NAME, waterName);
+				Intent mapIntent = new Intent(getApplicationContext(), InfoMapActivity.class);
+				mapIntent.putExtra(InfoMapActivity.EXTRA_WATER_NAME, waterName);
 				startActivity(mapIntent);
 				overridePendingTransition(
 						R.anim.slide_enter_from_right,

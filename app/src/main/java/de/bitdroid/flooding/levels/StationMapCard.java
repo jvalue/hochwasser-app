@@ -14,7 +14,7 @@ import java.util.List;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.map.ClickableMapView;
-import de.bitdroid.flooding.map.MapActivity;
+import de.bitdroid.flooding.map.InfoMapActivity;
 import de.bitdroid.flooding.map.Station;
 import de.bitdroid.flooding.map.StationClickListener;
 import de.bitdroid.flooding.map.StationsOverlay;
@@ -52,8 +52,8 @@ final class StationMapCard extends Card {
 			@Override
 			public void onClick(View view) {
 				Log.debug("clicked card!");
-				Intent intent = new Intent(context, MapActivity.class);
-				intent.putExtra(MapActivity.EXTRA_STATION_NAME, name);
+				Intent intent = new Intent(context, InfoMapActivity.class);
+				intent.putExtra(InfoMapActivity.EXTRA_STATION_NAME, name);
 				context.startActivity(intent);
 				context.overridePendingTransition(
 						R.anim.slide_enter_from_right,

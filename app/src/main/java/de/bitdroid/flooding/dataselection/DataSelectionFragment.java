@@ -139,20 +139,9 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 
 	@Override
 	public final void onListItemClick(ListView list, View item, int position, long id) {
-		// hide keyboard
-		InputMethodManager inputManager
-				= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
-		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
-
-		// start activity
 		try {
 			Class<?> activityClass = Class.forName(getArguments().getString(EXTRA_ACTIVITY));
-			Intent intent = getActivityIntent(activityClass, listAdapter.getItem(position));
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			getActivity().overridePendingTransition(
-					getArguments().getInt(EXTRA_ANIM_ENTER),
-					getArguments().getInt(EXTRA_ANIM_EXIT));
+			startActivity(getActivityIntent(activityClass, listAdapter.getItem(position)));
 		} catch (ClassNotFoundException cnfe) {
 			Log.error("failed to start activity", cnfe);
 		}
@@ -185,6 +174,8 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 			case R.id.map:
 				Intent mapIntent = new Intent(getActivity().getApplicationContext(), SelectionMapActivity.class);
 				mapIntent.putExtra(SelectionMapActivity.EXTRA_ACTIVITY_CLASS_NAME, getArguments().getString(EXTRA_ACTIVITY));
+				mapIntent.putExtra(SelectionMapActivity.EXTRA_ANIM_ENTER, getArguments().getInt(EXTRA_ANIM_ENTER));
+				mapIntent.putExtra(SelectionMapActivity.EXTRA_ANIM_EXIT, getArguments().getInt(EXTRA_ANIM_EXIT));
 				addMapExtras(mapIntent);
 				startActivity(mapIntent);
 				return true;
@@ -224,6 +215,21 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 		emptyTextView.setText(getString(R.string.data_empty));
 	}
 
+
+	@Override
+	public void startActivity(Intent intent) {
+		// hide keyboard
+		InputMethodManager inputManager
+				= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+
+		// start activity
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		super.startActivity(intent);
+		getActivity().overridePendingTransition(
+				getArguments().getInt(EXTRA_ANIM_ENTER),
+				getArguments().getInt(EXTRA_ANIM_EXIT));
+	}
 
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override

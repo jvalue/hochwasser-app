@@ -158,6 +158,7 @@ public class StationActivity extends BaseActivity
 		StationMapCard mapCard = new StationMapCard(
 				this,
 				stationName,
+				waterName,
 				wrapper.getDouble(4),
 				wrapper.getDouble(5));
 

@@ -72,13 +72,15 @@ public abstract class BaseMapActivity extends Activity implements Extras {
 				int latIdx = cursor.getColumnIndex(COLUMN_STATION_LAT);
 				int longIdx = cursor.getColumnIndex(COLUMN_STATION_LONG);
 				int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
+				int riverIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
 
 				do {
 					String stationName = cursor.getString(nameIdx);
 					double lat = cursor.getDouble(latIdx);
 					double lon = cursor.getDouble(longIdx);
+					String riverName = cursor.getString(riverIdx);
 
-					stations.add(new Station(stationName, lat, lon));
+					stations.add(new Station(stationName, riverName, lat, lon));
 				} while (cursor.moveToNext());
 
 				// filter stations with invalid coordinates
@@ -119,6 +121,7 @@ public abstract class BaseMapActivity extends Activity implements Extras {
 							COLUMN_STATION_LAT, 
 							COLUMN_STATION_LONG, 
 							COLUMN_STATION_NAME,
+							COLUMN_WATER_NAME
 						},
 						selection, selectionParams, null);
 			}

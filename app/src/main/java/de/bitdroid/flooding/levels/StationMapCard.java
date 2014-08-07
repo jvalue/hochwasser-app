@@ -23,19 +23,22 @@ import it.gmariotti.cardslib.library.internal.Card;
 
 final class StationMapCard extends Card {
 
-	private final String name;
+	private final String stationName;
+	private final String riverName;
 	private final Double lat, lon;
 	private final Activity context;
 
 	public StationMapCard(
-			final Activity context,
-			final String name,
+			Activity context,
+			String staionName,
+			String riverName,
 			Double lat,
 			Double lon) {
 
 		super(context.getApplicationContext(), R.layout.station_card_map);
 		this.context = context;
-		this.name = name;
+		this.stationName = staionName;
+		this.riverName = riverName;
 		this.lat = lat;
 		this.lon = lon;
 	}
@@ -53,7 +56,7 @@ final class StationMapCard extends Card {
 			public void onClick(View view) {
 				Log.debug("clicked card!");
 				Intent intent = new Intent(context, InfoMapActivity.class);
-				intent.putExtra(InfoMapActivity.EXTRA_STATION_NAME, name);
+				intent.putExtra(InfoMapActivity.EXTRA_STATION_NAME, stationName);
 				context.startActivity(intent);
 				context.overridePendingTransition(
 						R.anim.slide_enter_from_right,
@@ -63,7 +66,7 @@ final class StationMapCard extends Card {
 
 		// station overlay
 		List<Station> station = new LinkedList<Station>();
-		station.add(new Station(name, lat, lon));
+		station.add(new Station(stationName, riverName, lat, lon));
 		StationsOverlay stationsOverlay = new StationsOverlay(
 				getContext(),
 				station,

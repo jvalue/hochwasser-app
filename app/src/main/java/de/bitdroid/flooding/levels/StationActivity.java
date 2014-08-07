@@ -124,7 +124,8 @@ public class StationActivity extends BaseActivity
 				cursor.getDouble(0),
 				cursor.getString(1));
 
-		levelView.setCard(levelCard);
+		if (levelView.getCard() == null) levelView.setCard(levelCard);
+		else levelView.refreshCard(levelCard);
 		levelView.setVisibility(View.VISIBLE);
 
 		Card infoCard = new StationInfoCard.Builder(getApplicationContext())
@@ -137,7 +138,8 @@ public class StationActivity extends BaseActivity
 				.zeroUnit(wrapper.getString(7))
 				.build();
 
-		infoView.setCard(infoCard);
+		if (infoView.getCard() == null) infoView.setCard(infoCard);
+		else infoView.refreshCard(infoCard);
 		infoView.setVisibility(View.VISIBLE);
 
 		StationCharValuesCard charValuesCard = new StationCharValuesCard.Builder(getApplicationContext())
@@ -152,7 +154,8 @@ public class StationActivity extends BaseActivity
 
 		if (charValuesCard.isEmpty()) charValuesView.setVisibility(View.GONE);
 		else {
-			charValuesView.setCard(charValuesCard);
+			if (charValuesView.getCard() == null) charValuesView.setCard(charValuesCard);
+			else charValuesView.setCard(charValuesCard);
 			charValuesView.setVisibility(View.VISIBLE);
 		}
 
@@ -165,7 +168,8 @@ public class StationActivity extends BaseActivity
 
 		if (mapCard.isEmpty()) mapView.setVisibility(View.GONE);
 		else {
-			mapView.setCard(mapCard);
+			if (mapView.getCard() == null) mapView.setCard(mapCard);
+			else mapView.refreshCard(mapCard);
 			mapView.setVisibility(View.VISIBLE);
 		}
 	}

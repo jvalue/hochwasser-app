@@ -36,4 +36,13 @@ public class SelectionMapActivity extends BaseMapActivity {
 		};
 	}
 
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(
+				getIntent().getIntExtra(EXTRA_ANIM_ENTER, -1),
+				getIntent().getIntExtra(EXTRA_ANIM_EXIT, -1));
+	}
+
 }

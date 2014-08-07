@@ -224,7 +224,6 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 
 		// start activity
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		super.startActivity(intent);
 		getActivity().overridePendingTransition(
 				getArguments().getInt(EXTRA_ANIM_ENTER),

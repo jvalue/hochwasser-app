@@ -154,8 +154,7 @@ public abstract class BaseMapActivity extends Activity implements Extras {
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
 			case android.R.id.home:
-				finish();
-				overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
+				onBackPressed();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

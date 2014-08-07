@@ -12,14 +12,15 @@ import de.bitdroid.utils.StringUtils;
 
 
 public class NewAlarmActivity extends FragmentActivity implements Extras {
+
+	private String waterName, stationName;
+
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_fragment_container);
 
-		String waterName = null;
-		String stationName = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			waterName = extras.getString(EXTRA_WATER_NAME);
@@ -72,7 +73,13 @@ public class NewAlarmActivity extends FragmentActivity implements Extras {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		Toast.makeText(this, getString(R.string.alarms_new_not_created), Toast.LENGTH_SHORT).show();
+
+		// if last screen, show 'abort' message
+		if (waterName == null && stationName == null) {
+			Toast.makeText(this, getString(R.string.alarms_new_not_created), Toast.LENGTH_SHORT).show();
+		} else {
+			overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+		}
 	}
 
 }

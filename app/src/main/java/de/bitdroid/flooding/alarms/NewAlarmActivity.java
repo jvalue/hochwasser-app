@@ -34,6 +34,7 @@ public class NewAlarmActivity extends FragmentActivity implements Extras {
 				.beginTransaction()
 				.replace(R.id.frame, RiverSelectionFragment.newInstance(
 							NewAlarmActivity.class,
+							NewAlarmActivity.class,
 							android.R.anim.fade_in,
 							android.R.anim.fade_out))
 				.commit();

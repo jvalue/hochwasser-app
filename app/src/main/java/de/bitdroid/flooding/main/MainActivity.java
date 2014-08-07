@@ -28,6 +28,7 @@ import android.widget.TextView;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.alarms.AlarmFragment;
 import de.bitdroid.flooding.dataselection.RiverSelectionFragment;
+import de.bitdroid.flooding.levels.StationActivity;
 import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
@@ -266,7 +267,8 @@ public class MainActivity extends FragmentActivity {
 		if (position == 0) fragment = new NewsFragment();
 		else if (position == 1) fragment = new AlarmFragment();
 		else if (position == 2) fragment = RiverSelectionFragment.newInstance(
-				StationListActivity.class, 
+				StationListActivity.class,
+				StationActivity.class,
 				R.anim.slide_enter_from_right,
 				R.anim.slide_exit_to_left);
 		else if (position == 3) fragment = new SettingsFragment();

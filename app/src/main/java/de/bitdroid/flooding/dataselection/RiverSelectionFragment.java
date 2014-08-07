@@ -16,6 +16,7 @@ import java.util.Map;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.RiverSelectionFragment.River;
+import de.bitdroid.flooding.map.SelectionMapActivity;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.utils.StringUtils;
 
@@ -28,10 +29,18 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> i
 
 	private static final int LOADER_ID = 44;
 
+	public static final String EXTRA_SINGLE_STATION_ACTIVITY = "EXTRA_SINGLE_STATION_ACTIVITY";
 
-	public static RiverSelectionFragment newInstance(Class<?> activity, int animEnter, int animExit) {
+
+	public static RiverSelectionFragment newInstance(
+			Class<?> riverSelectionActivity,
+			Class<?> stationSelectionActivity,
+			int animEnter,
+			int animExit) {
+
 		RiverSelectionFragment fragment = new RiverSelectionFragment();
-		Bundle extras = getDefaultExtras(activity, animEnter, animExit);
+		Bundle extras = getDefaultExtras(riverSelectionActivity, animEnter, animExit);
+		extras.putString(EXTRA_SINGLE_STATION_ACTIVITY, stationSelectionActivity.getName());
 		fragment.setArguments(extras);
 		return fragment;
 	}
@@ -124,7 +133,8 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> i
 
 	@Override
 	protected void addMapExtras(Intent intent) {
-		// nothing to do here
+		// do not start river selection next, instead go to final screen
+		intent.putExtra(SelectionMapActivity.EXTRA_ACTIVITY_CLASS_NAME, getArguments().getString(EXTRA_SINGLE_STATION_ACTIVITY));
 	}
 
 

@@ -2,6 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/search"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_select_water_search"
+        android:hint="@string/menu_select_water_search"
+        android:icon="@drawable/ic_action_search"
+        />
+
+    <item
         android:id="@+id/map"
         android:showAsAction="ifRoom"
         android:title="@string/menu_select_water_map"
@@ -9,11 +17,4 @@
         android:icon="@drawable/ic_action_map_light"
         />
 
-	<item
-		android:id="@+id/search"
-		android:showAsAction="ifRoom"
-		android:title="@string/menu_select_water_search"
-		android:hint="@string/menu_select_water_search"
-		android:icon="@drawable/ic_action_search"
-	/>
 </menu>

@@ -156,8 +156,8 @@
         Display &lt;b&gt;station locations&lt;/b&gt; on a map. Click a station for more information.
     </string>
     <string name="help_graph_normalize">
-        The regular graph shows absolute water levels, which is not ideal of analysing the data.
-        &lt;b&gt;Normalizing&lt;/b&gt; the graph will display the current levels in relation
+        The regular graph shows absolute water levels, which is not ideal for analysing data.
+        &lt;b&gt;Normalizing&lt;/b&gt; the graph will display the current levels in relation to
         their average max and min values, effectively treating the distance (max - min) as 100%.
     </string>
 	<string name="help_graph_timestamps_title">Timestamps</string>

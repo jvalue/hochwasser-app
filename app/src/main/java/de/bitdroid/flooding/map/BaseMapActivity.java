@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.utils.StringUtils;
@@ -25,11 +26,7 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
-public abstract class BaseMapActivity extends Activity {
-
-	public static final String
-			EXTRA_WATER_NAME = "EXTRA_WATER_NAME",
-			EXTRA_STATION_NAME = "EXTRA_STATION_NAME";
+public abstract class BaseMapActivity extends Activity implements Extras {
 
 	private static final int LOADER_ID = 43;
 	

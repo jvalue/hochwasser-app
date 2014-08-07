@@ -96,7 +96,8 @@ public abstract class BaseMapActivity extends BaseActivity implements Extras {
 
 				GeoPoint  point = getCenter(stations);
 				mapView.getController().setCenter(point);
-				mapView.getController().setZoom(8);
+				if (waterName != null || stationName != null) mapView.getController().setZoom(8);
+				else mapView.getController().setZoom(7);
 			}
 
 			@Override

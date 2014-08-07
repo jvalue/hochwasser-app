@@ -1,8 +1,11 @@
 package de.bitdroid.flooding.map;
 
 import android.content.Intent;
+import android.os.Bundle;
 
+import de.bitdroid.flooding.R;
 import de.bitdroid.utils.Log;
+import de.bitdroid.utils.StringUtils;
 
 public class SelectionMapActivity extends BaseMapActivity {
 
@@ -11,6 +14,13 @@ public class SelectionMapActivity extends BaseMapActivity {
 			EXTRA_ANIM_ENTER = "EXTRA_ANIM_ENTER",
 			EXTRA_ANIM_EXIT = "EXTRA_ANIM_EXIT";
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		getActionBar().setTitle(getString(R.string.alarms_new_title_station));
+		if (waterName != null) getActionBar().setSubtitle(StringUtils.toProperCase(waterName));
+	}
 
 	@Override
 	protected StationClickListener getStationClickListener() {

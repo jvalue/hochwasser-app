@@ -34,12 +34,15 @@ public abstract class BaseMapActivity extends BaseActivity implements Extras {
 	private FixedMapView mapView;
 	private StationsOverlay stationsOverlay;
 
+	protected String waterName, stationName;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
-		final String waterName = getIntent().getStringExtra(EXTRA_WATER_NAME);
-		final String stationName = getIntent().getStringExtra(EXTRA_STATION_NAME);
+
+		waterName = getIntent().getStringExtra(EXTRA_WATER_NAME);
+		stationName = getIntent().getStringExtra(EXTRA_STATION_NAME);
 
 		// enable action bar back button
 		if (waterName != null) setTitle(StringUtils.toProperCase(waterName));

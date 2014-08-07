@@ -90,14 +90,10 @@ public final class EventReceiver extends BaseEventReceiver {
 					Log.error("failed to recreate alarm", e);
 				}
 
-				String location = 
-					StringUtils.toProperCase(alarm.getRiver()) 
-					+ " - " 
-					+ StringUtils.toProperCase(alarm.getStation());
+				String station = StringUtils.toProperCase(alarm.getStation());
+				String river = StringUtils.toProperCase(alarm.getRiver());
 
-				String title = context.getString(
-						R.string.alarms_triggered_title,
-						location);
+				String title = context.getString(R.string.alarms_triggered_title, station);
 
 				String relation = alarm.getAlarmWhenAbove() 
 					? context.getString(R.string.alarms_new_trigger_above)
@@ -105,7 +101,7 @@ public final class EventReceiver extends BaseEventReceiver {
 
 				String msg = context.getString(
 						R.string.alarms_triggered_msg,
-						location,
+						station + " (" + river + ")",
 						relation,
 						alarm.getLevel());
 

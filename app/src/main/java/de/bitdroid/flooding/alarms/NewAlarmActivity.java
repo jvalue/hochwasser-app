@@ -1,17 +1,17 @@
 package de.bitdroid.flooding.alarms;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.dataselection.RiverSelectionFragment;
 import de.bitdroid.flooding.dataselection.StationSelectionFragment;
+import de.bitdroid.flooding.utils.BaseActivity;
 import de.bitdroid.utils.StringUtils;
 
 
-public class NewAlarmActivity extends FragmentActivity implements Extras {
+public class NewAlarmActivity extends BaseActivity implements Extras {
 
 	private String waterName, stationName;
 
@@ -71,9 +71,7 @@ public class NewAlarmActivity extends FragmentActivity implements Extras {
 
 
 	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-
+	protected void showExitAnimation() {
 		// if last screen, show 'abort' message
 		if (waterName == null && stationName == null) {
 			Toast.makeText(this, getString(R.string.alarms_new_not_created), Toast.LENGTH_SHORT).show();

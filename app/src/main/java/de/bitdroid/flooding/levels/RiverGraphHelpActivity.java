@@ -5,6 +5,7 @@ import android.text.Html;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.utils.BaseActivity;
 
 public class RiverGraphHelpActivity extends BaseActivity {
 

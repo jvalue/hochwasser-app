@@ -1,11 +1,9 @@
 package de.bitdroid.flooding.map;
 
-import android.app.Activity;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -19,15 +17,16 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
+import de.bitdroid.flooding.utils.BaseActivity;
 import de.bitdroid.utils.StringUtils;
 
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LAT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LONG;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 
-public abstract class BaseMapActivity extends Activity implements Extras {
+public abstract class BaseMapActivity extends BaseActivity implements Extras {
 
 	private static final int LOADER_ID = 43;
 	
@@ -43,9 +42,6 @@ public abstract class BaseMapActivity extends Activity implements Extras {
 		final String stationName = getIntent().getStringExtra(EXTRA_STATION_NAME);
 
 		// enable action bar back button
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setDisplayShowHomeEnabled(false);
 		if (waterName != null) setTitle(StringUtils.toProperCase(waterName));
 		else if (stationName != null) setTitle(StringUtils.toProperCase(stationName));
 
@@ -147,24 +143,6 @@ public abstract class BaseMapActivity extends Activity implements Extras {
 	public void onPause() {
 		super.onPause();
 		locationOverlay.disableMyLocation();
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		switch(menuItem.getItemId()) {
-			case android.R.id.home:
-				onBackPressed();
-				return true;
-		}
-		return super.onOptionsItemSelected(menuItem);
-	}
-
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		overridePendingTransition(R.anim.slide_enter_from_left, R.anim.slide_exit_to_right);
 	}
 
 

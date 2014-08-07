@@ -38,11 +38,17 @@ public class SelectionMapActivity extends BaseMapActivity {
 
 
 	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		overridePendingTransition(
-				getIntent().getIntExtra(EXTRA_ANIM_ENTER, -1),
-				getIntent().getIntExtra(EXTRA_ANIM_EXIT, -1));
+	protected void showExitAnimation() {
+		// TODO this is a bad hack. Solution?
+		// Don't use activities, use fragments! Then there would be one activity for
+		// alarm selection and one for regular data selection
+		if (getIntent().getIntExtra(EXTRA_ANIM_ENTER, -1) == android.R.anim.fade_in) {
+			overridePendingTransition(
+					getIntent().getIntExtra(EXTRA_ANIM_ENTER, -1),
+					getIntent().getIntExtra(EXTRA_ANIM_EXIT, -1));
+		} else {
+			super.showExitAnimation();
+		}
 	}
 
 }

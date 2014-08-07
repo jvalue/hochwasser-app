@@ -25,6 +25,7 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_LONG;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 
 public abstract class BaseMapActivity extends Activity implements Extras {
 
@@ -104,14 +105,16 @@ public abstract class BaseMapActivity extends Activity implements Extras {
 
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
-				String selection = null;
+				String selection = COLUMN_LEVEL_TYPE + "=?";
 				String[] selectionParams = null;
 				if (waterName != null) {
-					selection = COLUMN_WATER_NAME + "=?";
-					selectionParams = new String[] { waterName };
+					selection += " AND " + COLUMN_WATER_NAME + "=?";
+					selectionParams = new String[] { "W", waterName };
 				} else if (stationName != null) {
-					selection = COLUMN_STATION_NAME + "=?";
-					selectionParams = new String[] { stationName };
+					selection += " AND " + COLUMN_STATION_NAME + "=?";
+					selectionParams = new String[] { "W", stationName };
+				} else {
+					selectionParams = new String[] { "W" };
 				}
 
 				return new CursorLoader(

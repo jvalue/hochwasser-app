@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.alarms.AlarmFragment;
+import de.bitdroid.flooding.dataselection.BaseRiverSelectionFragment;
+import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
@@ -263,13 +265,7 @@ public class MainActivity extends FragmentActivity {
 		Fragment fragment = null;
 		if (position == 0) fragment = new NewsFragment();
 		else if (position == 1) fragment = new AlarmFragment();
-		/*
-		else if (position == 2) fragment = BaseRiverSelectionFragment.newInstance(
-				StationListActivity.class,
-				StationActivity.class,
-				R.anim.slide_enter_from_right,
-				R.anim.slide_exit_to_left);
-				*/
+		else if (position == 2) fragment = new RiverSelectionFragment();
 		else if (position == 3) fragment = new SettingsFragment();
 
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -290,5 +286,27 @@ public class MainActivity extends FragmentActivity {
 			navigateTo(pos, true, true);
 		}
 	};
+
+
+	public static final class RiverSelectionFragment extends BaseRiverSelectionFragment {
+
+		@Override
+		protected void onItemClicked(River river) {
+			startNextActivity(river.getRiverName());
+		}
+
+		@Override
+		protected void onMapClicked() {
+			startNextActivity(null);
+		}
+
+		private void startNextActivity(String waterName) {
+			Intent intent = new Intent(getActivity().getApplicationContext(), StationListActivity.class);
+			if (waterName != null) intent.putExtra(StationListActivity.EXTRA_WATER_NAME, waterName);
+			startActivity(intent);
+			getActivity().overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
+		}
+
+	}
 
 }

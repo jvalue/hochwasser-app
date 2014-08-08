@@ -6,6 +6,8 @@ import android.os.Bundle;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.BaseStationSelectionFragment;
 import de.bitdroid.flooding.dataselection.Extras;
+import de.bitdroid.flooding.map.BaseMapFragment;
+import de.bitdroid.flooding.map.Station;
 import de.bitdroid.flooding.utils.BaseActivity;
 
 
@@ -16,11 +18,14 @@ public class StationListActivity extends BaseActivity implements Extras {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_fragment_container);
 
-		String waterName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
+		getActionBar().setTitle(R.string.alarms_new_title_station);
+
+		String waterName = null;
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) waterName = extras.getString(EXTRA_WATER_NAME);
 
 		if (waterName != null) {
 			// show regular station list
-			getActionBar().setTitle(R.string.alarms_new_title_station);
 			getSupportFragmentManager()
 					.beginTransaction()
 					.replace(R.id.frame, StationSelectionFragment.newInstance(waterName))
@@ -28,14 +33,20 @@ public class StationListActivity extends BaseActivity implements Extras {
 
 		} else {
 			// show map
-			// TODO
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.frame, MapFragment.newInstance(waterName))
+					.commit();
 		}
 
     }
 
 
 	private void showMapFragment(String waterName) {
-		// TODO
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.frame, MapFragment.newInstance(waterName))
+				.commit();
 	}
 
 
@@ -83,6 +94,22 @@ public class StationListActivity extends BaseActivity implements Extras {
 		@Override
 		protected void onMapClicked(String waterName) {
 			((StationListActivity) getActivity()).showMapFragment(waterName);
+		}
+
+	}
+
+
+	public static final class MapFragment extends BaseMapFragment {
+
+		public static MapFragment newInstance(String waterName) {
+			MapFragment fragment = new MapFragment();
+			setArguments(fragment, waterName, null);
+			return fragment;
+		}
+
+		@Override
+		public void onStationClicked(Station station) {
+			((StationListActivity) getActivity()).showStationInfo(station.getRiver(), station.getName());
 		}
 
 	}

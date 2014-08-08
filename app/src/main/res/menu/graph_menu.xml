@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/seekbar"
+        android:id="@+id/menu_seekbar"
         android:showAsAction="ifRoom"
         android:title="@string/menu_graph_seekbar"
         android:hint="@string/menu_graph_seekbar"
         android:icon="@drawable/ic_action_time_light"
     />
 	<item
-		android:id="@+id/normalize"
+		android:id="@+id/menu_normalize"
 		android:title="@string/menu_graph_normalize"
         android:icon="@drawable/ic_action_normalize_light"
         android:showAsAction="ifRoom"
 	/>
     <item
-        android:id="@+id/map"
+        android:id="@+id/menu_map"
         android:showAsAction="ifRoom"
         android:title="@string/menu_graph_map"
         android:hint="@string/menu_graph_map"
         android:icon="@drawable/ic_action_map_light"
     />
 	<item
-		android:id="@+id/select_series"
+		android:id="@+id/menu_series"
 		android:title="@string/menu_graph_select_series"
 	/>
 	<item 
-		android:id="@+id/timestamp"
+		android:id="@+id/menu_timestamp"
 		android:title="@string/menu_graph_timestamp"
 	/>
 	<item
-		android:id="@+id/help"
+		android:id="@+id/menu_help"
 		android:title="@string/help"
 		android:hint="@string/help"
 		android:icon="@drawable/ic_action_help"

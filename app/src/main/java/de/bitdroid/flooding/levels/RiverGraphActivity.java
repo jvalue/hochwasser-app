@@ -230,7 +230,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		MenuItem item = menu.findItem(R.id.normalize);
+		MenuItem item = menu.findItem(R.id.menu_normalize);
 		if (showingRegularSeries) {
 			item.setTitle(getString(R.string.menu_graph_normalize));
 			item.setIcon(getResources().getDrawable(R.drawable.ic_action_normalize_light));
@@ -245,7 +245,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
-			case R.id.select_series:
+			case R.id.menu_series:
 				List<String> seriesKeys = graph.getSeriesKeys();
 				final String[] items = seriesKeys.toArray(new String[seriesKeys.size()]);
 				final boolean[] selectedItems = new boolean[seriesKeys.size()];
@@ -281,7 +281,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 					}).create().show();
 				return true;
 
-			case R.id.normalize:
+			case R.id.menu_normalize:
 				if (showingRegularSeries) {
 					showRelativeRangeLabel();
 					graph.setSeries(getNormalizedSeries());
@@ -294,7 +294,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				invalidateOptionsMenu();
 				return true;
 
-			case R.id.timestamp:
+			case R.id.menu_timestamp:
 				final List<Long> timestamps = SourceMonitor
 					.getInstance(getApplicationContext())
 					.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
@@ -333,14 +333,14 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 
 				return true;
 
-			case R.id.seekbar:
+			case R.id.menu_seekbar:
 				showingSeekbar = !showingSeekbar;
 				SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
 				if (showingSeekbar) seekbar.setVisibility(View.VISIBLE);
 				else seekbar.setVisibility(View.GONE);
 				return true;
 
-			case R.id.map:
+			case R.id.menu_map:
 				Intent mapIntent = new Intent(getApplicationContext(), InfoMapActivity.class);
 				mapIntent.putExtra(InfoMapActivity.EXTRA_WATER_NAME, waterName);
 				startActivity(mapIntent);
@@ -349,7 +349,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 						R.anim.slide_exit_to_left);
 				return true;
 
-			case R.id.help:
+			case R.id.menu_help:
 				Intent intent = new Intent(this, RiverGraphHelpActivity.class);
 				startActivity(intent);
 				overridePendingTransition(

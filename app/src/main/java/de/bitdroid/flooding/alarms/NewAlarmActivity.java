@@ -6,6 +6,8 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.BaseRiverSelectionFragment;
 import de.bitdroid.flooding.dataselection.BaseStationSelectionFragment;
 import de.bitdroid.flooding.dataselection.Extras;
+import de.bitdroid.flooding.map.BaseMapFragment;
+import de.bitdroid.flooding.map.Station;
 import de.bitdroid.flooding.utils.BaseActivity;
 
 
@@ -40,8 +42,11 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 	private void showMapFragment(String waterName) {
 		getActionBar().setTitle(getString(R.string.alarms_new_title_station));
-		// TODO
-		throw new IllegalStateException("not supported");
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.frame, MapFragment.newInstance(waterName))
+				.addToBackStack(null)
+				.commit();
 	}
 
 
@@ -94,6 +99,22 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 		@Override
 		protected void onMapClicked(String waterName) {
 			((NewAlarmActivity) getActivity()).showMapFragment(waterName);
+		}
+
+	}
+
+
+	public static final class MapFragment extends BaseMapFragment {
+
+		public static MapFragment newInstance(String waterName) {
+			MapFragment fragment = new MapFragment();
+			setArguments(fragment, waterName, null);
+			return fragment;
+		}
+
+		@Override
+		public void onStationClicked(Station station) {
+			((NewAlarmActivity) getActivity()).showLevelFragment(station.getRiver(), station.getName());
 		}
 
 	}

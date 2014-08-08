@@ -73,7 +73,7 @@ final class StationMapCard extends Card {
 				station,
 				new StationClickListener() {
 					@Override
-					public void onStationClick(Station station) {  }
+					public void onStationClicked(Station station) {  }
 				});
 		mapView.getOverlays().add(stationsOverlay);
 

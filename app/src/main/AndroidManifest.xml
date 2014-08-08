@@ -35,11 +35,7 @@
 				  android:label="@string/app_name">
 		</activity>
 
-        <activity android:name=".map.SelectionMapActivity"
-                  android:label="@string/app_name">
-        </activity>
-
-		<activity android:name=".alarms.NewAlarmActivity"
+        <activity android:name=".alarms.NewAlarmActivity"
 				  android:label="@string/app_name">
 		</activity>
 

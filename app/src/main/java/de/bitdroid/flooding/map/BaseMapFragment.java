@@ -28,13 +28,14 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
-public abstract class MapFragment extends Fragment implements Extras {
+public abstract class BaseMapFragment extends Fragment implements StationClickListener, Extras {
 
 	private static final int LOADER_ID = 43;
 
+	public abstract void onStationClicked(Station station);
 
 	protected static void setArguments(
-			MapFragment mapFragment,
+			BaseMapFragment mapFragment,
 			String waterName,
 			String stationName) {
 
@@ -101,7 +102,7 @@ public abstract class MapFragment extends Fragment implements Extras {
 				stationsOverlay = new StationsOverlay(
 						getActivity().getApplicationContext(),
 						stations,
-						getStationClickListener());
+						BaseMapFragment.this);
 				mapView.getOverlays().add(stationsOverlay);
 
 				GeoPoint  point = getCenter(stations);
@@ -188,9 +189,6 @@ public abstract class MapFragment extends Fragment implements Extras {
 		state.putInt(EXTRA_SCROLL_Y, mapView.getScrollY());
 		state.putInt(EXTRA_ZOOM_LEVEL, mapView.getZoomLevel());
 	}
-
-
-	protected abstract StationClickListener getStationClickListener();
 
 
 	private GeoPoint getCenter(List<Station> stations) {

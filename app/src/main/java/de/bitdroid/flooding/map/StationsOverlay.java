@@ -68,7 +68,7 @@ public final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected boolean onTap(int index) {
 		Station station = stations.get(index);
-		clickListener.onStationClick(station);
+		clickListener.onStationClicked(station);
 		return true;
 	}
 

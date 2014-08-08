@@ -35,7 +35,7 @@ public class InfoMapActivity extends BaseActivity implements Extras {
 	}
 
 
-	public static final class InfoMapFragment extends MapFragment {
+	public static final class InfoMapFragment extends BaseMapFragment {
 
 		public static InfoMapFragment newInstance(
 				String waterName,
@@ -47,22 +47,17 @@ public class InfoMapActivity extends BaseActivity implements Extras {
 		}
 
 		@Override
-		protected StationClickListener getStationClickListener() {
-			return new StationClickListener() {
-				@Override
-				public void onStationClick(Station station) {
-					new AlertDialog.Builder(new ContextThemeWrapper(
-							getActivity(), android.R.style.Theme_Holo_Dialog))
-							.setTitle(StringUtils.toProperCase(station.getName()))
-							.setMessage(getString(
-									R.string.map_dialog_station_info,
-									station.getLat(),
-									station.getLon()))
-							.setPositiveButton(R.string.btn_ok, null)
-							.show();
+		public void onStationClicked(Station station) {
+			new AlertDialog.Builder(new ContextThemeWrapper(
+					getActivity(), android.R.style.Theme_Holo_Dialog))
+					.setTitle(StringUtils.toProperCase(station.getName()))
+					.setMessage(getString(
+							R.string.map_dialog_station_info,
+							station.getLat(),
+							station.getLon()))
+					.setPositiveButton(R.string.btn_ok, null)
+					.show();
 
-				}
-			};
 		}
 
 	}

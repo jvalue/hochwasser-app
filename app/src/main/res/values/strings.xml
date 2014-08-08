@@ -145,26 +145,40 @@
 
 
     <string name="help_graph">
-        Here you can see all &lt;b&gt;water levels&lt;/b&gt; (y-axis) along a &lt;b&gt;river&lt;/b&gt; (x-axis).
+        The graph shows all &lt;b&gt;water levels&lt;/b&gt; (y-axis) along a &lt;b&gt;river&lt;/b&gt; (x-axis).
     </string>
-    <string name="help_graph_timestamps">
+
+    <string name="help_graph_series">
+        The series displayed in the graph are (by color):
+    </string>
+    <string name="help_graph_series_water">
+        The current &lt;b&gt;water level&lt;/b&gt;. By default this value is relative to a zero point.
+    </string>
+    <string name="help_graph_series_mw">
+        The &lt;b&gt;average low, medium and high water levels&lt;/b&gt; (MNW, MW, MHW) measured over a period of time.
+    </string>
+    <string name="help_graph_series_average_tw">
+        The &lt;b&gt;average low tide and average high tide water levels &lt;/b&gt; (MTnw, MThw) measured over a period of time.
+    </string>
+    <string name="help_graph_series_extreme_tw">
+        The &lt;b&gt;lowest and highest tide water levels &lt;/b&gt; (NTnw, HThw) measured over a period of time.
+    </string>
+
+    <string name="help_graph_action">
+        The available actions are:
+    </string>
+    <string name="help_graph_action_timestamps">
         Selects a &lt;b&gt;timestamp&lt;/b&gt; to display in the graph.
         This app will periodically fetch fresh water data and make it available here. Generally it takes
         a couple of hours before you can see multiple timestamps. For more information check the settings.
     </string>
-    <string name="help_graph_map">
-        Display &lt;b&gt;station locations&lt;/b&gt; on a map. Click a station for more information.
-    </string>
-    <string name="help_graph_normalize">
+    <string name="help_graph_action_normalize">
         The regular graph shows absolute water levels, which is not ideal for analysing data.
         &lt;b&gt;Normalizing&lt;/b&gt; the graph will display the current levels in relation to
         their average max and min values, effectively treating the distance (max - min) as 100%.
     </string>
-	<string name="help_graph_timestamps_title">Timestamps</string>
-	<string name="help_graph_timestamps_content">Choose what timestamp the graph should reflect.</string>
-	<string name="help_graph_map_title">Map</string>
-	<string name="help_graph_map_content">View the stations along this river on a map.</string>
-	<string name="help_graph_normalize_title">Normalize Graph</string>
-	<string name="help_graph_normalize_content">Be sure to check out the option to normalize the graph! It shows the current water level in relation to its average min and max values.</string>
+    <string name="help_graph_action_map">
+        Display &lt;b&gt;station locations&lt;/b&gt; on a map. Click a station for more information.
+    </string>
 
 </resources>

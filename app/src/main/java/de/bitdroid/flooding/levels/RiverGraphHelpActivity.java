@@ -19,14 +19,27 @@ public class RiverGraphHelpActivity extends BaseActivity {
 		TextView textView = (TextView) findViewById(R.id.intro);
 		textView.setText(Html.fromHtml(getString(R.string.help_graph)));
 
+		textView = (TextView) findViewById(R.id.series_water);
+		textView.setText(Html.fromHtml(getString(R.string.help_graph_series_water)));
+
+		textView = (TextView) findViewById(R.id.series_mw);
+		textView.setText(Html.fromHtml(getString(R.string.help_graph_series_mw)));
+
+		textView = (TextView) findViewById(R.id.series_average_tw);
+		textView.setText(Html.fromHtml(getString(R.string.help_graph_series_average_tw)));
+
+		textView = (TextView) findViewById(R.id.series_extreme_tw);
+		textView.setText(Html.fromHtml(getString(R.string.help_graph_series_extreme_tw)));
+
+
 		textView = (TextView) findViewById(R.id.timestamps);
-		textView.setText(Html.fromHtml(getString(R.string.help_graph_timestamps)));
+		textView.setText(Html.fromHtml(getString(R.string.help_graph_action_timestamps)));
 
 		textView = (TextView) findViewById(R.id.map);
-		textView.setText(Html.fromHtml(getString(R.string.help_graph_map)));
+		textView.setText(Html.fromHtml(getString(R.string.help_graph_action_map)));
 
 		textView = (TextView) findViewById(R.id.normalize);
-		textView.setText(Html.fromHtml(getString(R.string.help_graph_normalize)));
+		textView.setText(Html.fromHtml(getString(R.string.help_graph_action_normalize)));
 	}
 
 }

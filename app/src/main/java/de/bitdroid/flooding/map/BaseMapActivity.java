@@ -1,9 +1,9 @@
 package de.bitdroid.flooding.map;
 
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -129,7 +129,7 @@ public abstract class BaseMapActivity extends BaseActivity implements Extras {
 						selection, selectionParams, null);
 			}
 		};
-		getLoaderManager().initLoader(
+		getSupportLoaderManager().initLoader(
 				StationsOverlay.LOADER_ID,
 				null,
 				loaderCallback);

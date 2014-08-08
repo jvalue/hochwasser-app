@@ -3,10 +3,10 @@ package de.bitdroid.flooding.levels;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.Loader;
 import android.util.Pair;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -187,8 +187,8 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 			}
 		};
 
-		getLoaderManager().initLoader(LOADER_ID, null, loaderCallbacks);
-		Loader<Cursor> cursorLoader = getLoaderManager().getLoader(LOADER_ID);
+		getSupportLoaderManager().initLoader(LOADER_ID, null, loaderCallbacks);
+		Loader<Cursor> cursorLoader = getSupportLoaderManager().getLoader(LOADER_ID);
 		this.loader = (MonitorSourceLoader) cursorLoader;
 
 		// if first start show helper screen

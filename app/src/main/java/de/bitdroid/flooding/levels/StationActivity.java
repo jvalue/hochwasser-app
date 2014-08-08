@@ -1,11 +1,11 @@
 package de.bitdroid.flooding.levels;
 
-import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.View;
 
 import de.bitdroid.flooding.R;
@@ -72,7 +72,7 @@ public class StationActivity extends BaseActivity
 		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, stationName);
 		startService(intent);
 
-		getLoaderManager().initLoader(LOADERID, null, this);
+		getSupportLoaderManager().initLoader(LOADERID, null, this);
     }
 
 

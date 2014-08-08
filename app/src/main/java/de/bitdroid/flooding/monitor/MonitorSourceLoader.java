@@ -1,8 +1,8 @@
 package de.bitdroid.flooding.monitor;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.content.AsyncTaskLoader;
 
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.utils.Assert;

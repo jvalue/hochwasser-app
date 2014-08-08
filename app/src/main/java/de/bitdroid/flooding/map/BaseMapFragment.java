@@ -117,15 +117,15 @@ public abstract class BaseMapFragment extends Fragment implements StationClickLi
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
 				String selection = COLUMN_LEVEL_TYPE + "=?";
-				String[] selectionParams = null;
-				if (waterName != null) {
-					selection += " AND " + COLUMN_WATER_NAME + "=?";
-					selectionParams = new String[] { "W", waterName };
+				String[] selectionParams;
+				if (waterName == null && stationName == null) {
+					selectionParams = new String[]{"W"};
 				} else if (stationName != null) {
 					selection += " AND " + COLUMN_STATION_NAME + "=?";
-					selectionParams = new String[] { "W", stationName };
+					selectionParams = new String[]{"W", stationName};
 				} else {
-					selectionParams = new String[] { "W" };
+					selection += " AND " + COLUMN_WATER_NAME + "=?";
+					selectionParams = new String[] { "W", waterName };
 				}
 
 				return new CursorLoader(

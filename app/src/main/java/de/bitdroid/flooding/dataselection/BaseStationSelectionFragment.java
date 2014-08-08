@@ -1,6 +1,5 @@
 package de.bitdroid.flooding.dataselection;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
@@ -16,37 +15,49 @@ import java.util.List;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.utils.Log;
+import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.StringUtils;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
-public final class StationSelectionFragment extends DataSelectionFragment<String> implements Extras {
+public abstract class BaseStationSelectionFragment extends BaseSelectionFragment<String> implements Extras {
 
 	private static final int LOADER_ID = 45;
-	
-	private static final String
-		EXTRA_ACTIVITY_ALL_STATIONS = "EXTRA_ACTIVITY_ALL_STATIONS",
-		EXTRA_SHOW_ALL_STATIONS_ENTRY = "EXTRA_SHOW_ALL_STATIONS_ENTRY";
 
+	private static final String EXTRA_SHOW_ALL_STATIONS_ENTRY = "EXTRA_SHOW_ALL_STATIONS_ENTRY";
 
-	public static StationSelectionFragment newInstance(
-			Class<?> activitySingleStation,
-			int animEnter, 
-			int animExit, 
-			String riverName,
-			Class<?> activityAllStations,
+	protected static void addArguments(
+			BaseStationSelectionFragment fragment,
+			String waterName,
 			boolean showAllStationsEntry) {
 
-		StationSelectionFragment fragment = new StationSelectionFragment();
-		Bundle extras = getDefaultExtras(activitySingleStation, animEnter, animExit);
-		extras.putString(EXTRA_WATER_NAME, riverName);
-		extras.putString(EXTRA_ACTIVITY_ALL_STATIONS, activityAllStations.getName());
-		extras.putBoolean(EXTRA_SHOW_ALL_STATIONS_ENTRY, showAllStationsEntry);
-		fragment.setArguments(extras);
-		return fragment;
+		Assert.assertNotNull(waterName);
+
+		Bundle args = fragment.getArguments();
+		if (args == null) args = new Bundle();
+		args.putString(EXTRA_WATER_NAME, waterName);
+		args.putBoolean(EXTRA_SHOW_ALL_STATIONS_ENTRY, showAllStationsEntry);
+		fragment.setArguments(args);
+	}
+
+
+	protected abstract void onStationClicked(String waterName, String stationName);
+	protected abstract void onWaterClicked(String waterName);
+	protected abstract void onMapClicked(String waterName);
+
+
+	@Override
+	protected final void onItemClicked(String stationName) {
+		if (stationName.equals(getString(R.string.data_station_all))) onWaterClicked(getWaterName());
+		else onStationClicked(getWaterName(), stationName);
+	}
+
+
+	@Override
+	protected final void onMapClicked() {
+		onMapClicked(getWaterName());
 	}
 
 
@@ -82,35 +93,6 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 
 
 	@Override
-	protected Intent getActivityIntent(Class<?> singleStationActivity, String station) {
-		Bundle extras = new Bundle();
-		extras.putString(EXTRA_WATER_NAME, getArguments().getString(EXTRA_WATER_NAME));
-
-		if (station.equals(getActivity().getString(R.string.data_station_all))) {
-			try {
-				Class<?> allStationsActivity = Class.forName(getArguments().getString(EXTRA_ACTIVITY_ALL_STATIONS));
-				Intent intent = new Intent(
-						getActivity().getApplicationContext(),
-						allStationsActivity);
-				intent.putExtras(extras);
-				return intent;
-			} catch (ClassNotFoundException cnfe) {
-				Log.error("failed to get activity", cnfe);
-				return null;
-			}
-
-		} else {
-			extras.putString(EXTRA_STATION_NAME, station);
-			Intent intent = new Intent(
-					getActivity().getApplicationContext(),
-					singleStationActivity);
-			intent.putExtras(extras);
-			return intent;
-		}
-	}
-
-
-	@Override
 	protected int getLoaderId() {
 		return LOADER_ID;
 	}
@@ -123,7 +105,7 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 				PegelOnlineSource.INSTANCE.toUri(),
 				new String[] { COLUMN_STATION_NAME },
 				COLUMN_WATER_NAME + "=? AND " + COLUMN_LEVEL_TYPE + "=?", 
-				new String[] { getArguments().getString(EXTRA_WATER_NAME), "W" }, 
+				new String[] { getWaterName(), "W" },
 				null);
 	}
 
@@ -154,9 +136,8 @@ public final class StationSelectionFragment extends DataSelectionFragment<String
 	}
 
 
-	@Override
-	protected void addMapExtras(Intent intent) {
-		intent .putExtra(EXTRA_WATER_NAME, getArguments().getString(EXTRA_WATER_NAME));
+	private String getWaterName() {
+		return getArguments().getString(EXTRA_WATER_NAME);
 	}
 
 

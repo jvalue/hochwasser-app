@@ -1,14 +1,12 @@
 package de.bitdroid.flooding.alarms;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.dataselection.BaseRiverSelectionFragment;
+import de.bitdroid.flooding.dataselection.BaseStationSelectionFragment;
 import de.bitdroid.flooding.dataselection.Extras;
-import de.bitdroid.flooding.dataselection.RiverSelectionFragment;
-import de.bitdroid.flooding.dataselection.StationSelectionFragment;
 import de.bitdroid.flooding.utils.BaseActivity;
-import de.bitdroid.utils.StringUtils;
 
 
 public class NewAlarmActivity extends BaseActivity implements Extras {
@@ -21,63 +19,84 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_fragment_container);
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			waterName = extras.getString(EXTRA_WATER_NAME);
-			stationName = extras.getString(EXTRA_STATION_NAME);
-		}
-
-		// select river
-		if (waterName == null && stationName == null) {
-			getActionBar().setTitle(StringUtils.toProperCase(getString(
-							R.string.alarms_new_title_river)));
-			getSupportFragmentManager()
+		// show all rivers fragment
+		getActionBar().setTitle(R.string.alarms_new_title_river);
+		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame, RiverSelectionFragment.newInstance(
-							NewAlarmActivity.class,
-							NewAlarmActivity.class,
-							android.R.anim.fade_in,
-							android.R.anim.fade_out))
+				.replace(R.id.frame, new RiverSelectionFragment())
 				.commit();
-
-		// select station
-		} else if (stationName == null) {
-			getActionBar().setTitle(StringUtils.toProperCase(getString(
-							R.string.alarms_new_title_station)));
-			getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.frame, StationSelectionFragment.newInstance(
-							NewAlarmActivity.class,
-							android.R.anim.fade_in,
-							android.R.anim.fade_out,
-							waterName,
-							NewAlarmActivity.class,
-							false))
-				.commit();
-
-		// select level
-		} else {
-			getActionBar().setTitle(StringUtils.toProperCase(getString(
-							R.string.alarms_new_title_level)));
-			getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.frame, SelectLevelFragment.newInstance(
-							waterName,
-							stationName))
-				.commit();
-		}
-
     }
 
 
-	@Override
-	protected void showExitAnimation() {
-		// if last screen, show 'abort' message
-		if (waterName == null && stationName == null) {
-			Toast.makeText(this, getString(R.string.alarms_new_not_created), Toast.LENGTH_SHORT).show();
-		} else {
-			overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-		}
+	private void showStationFragment(String waterName) {
+		getActionBar().setTitle(getString(R.string.alarms_new_title_station));
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.frame, StationSelectionFragment.newInstance(waterName))
+				.addToBackStack(null)
+				.commit();
 	}
+
+
+	private void showMapFragment(String waterName) {
+		getActionBar().setTitle(getString(R.string.alarms_new_title_station));
+		// TODO
+		throw new IllegalStateException("not supported");
+	}
+
+
+	private void showLevelFragment(String waterName, String stationName) {
+		getActionBar().setTitle(getString(R.string.alarms_new_title_level));
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.frame, SelectLevelFragment.newInstance(waterName, stationName))
+				.addToBackStack(null)
+				.commit();
+	}
+
+
+	@Override
+	protected void showExitAnimation() { }
+
+
+
+	public static final class RiverSelectionFragment extends BaseRiverSelectionFragment {
+
+		@Override
+		protected void onItemClicked(River river) {
+			((NewAlarmActivity) getActivity()).showStationFragment(river.getRiverName());
+		}
+
+		@Override
+		protected void onMapClicked() {
+			((NewAlarmActivity) getActivity()).showMapFragment(null);
+		}
+
+	}
+
+
+	public static final class StationSelectionFragment extends BaseStationSelectionFragment {
+
+		public static StationSelectionFragment newInstance(String waterName) {
+			StationSelectionFragment fragment = new StationSelectionFragment();
+			addArguments(fragment, waterName, false);
+			return fragment;
+		}
+
+		@Override
+		protected void onStationClicked(String waterName, String stationName) {
+			((NewAlarmActivity) getActivity()).showLevelFragment(waterName, stationName);
+		}
+
+		@Override
+		protected void onWaterClicked(String waterName) { }
+
+		@Override
+		protected void onMapClicked(String waterName) {
+			((NewAlarmActivity) getActivity()).showMapFragment(waterName);
+		}
+
+	}
+
 
 }

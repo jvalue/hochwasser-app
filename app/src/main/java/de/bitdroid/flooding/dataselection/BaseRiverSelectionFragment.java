@@ -1,8 +1,6 @@
 package de.bitdroid.flooding.dataselection;
 
-import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.View;
@@ -15,8 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.dataselection.RiverSelectionFragment.River;
-import de.bitdroid.flooding.map.SelectionMapActivity;
+import de.bitdroid.flooding.dataselection.BaseRiverSelectionFragment.River;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.utils.StringUtils;
 
@@ -25,25 +22,9 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 
-public final class RiverSelectionFragment extends DataSelectionFragment<River> implements Extras {
+public abstract class BaseRiverSelectionFragment extends BaseSelectionFragment<River> {
 
 	private static final int LOADER_ID = 44;
-
-	public static final String EXTRA_SINGLE_STATION_ACTIVITY = "EXTRA_SINGLE_STATION_ACTIVITY";
-
-
-	public static RiverSelectionFragment newInstance(
-			Class<?> riverSelectionActivity,
-			Class<?> stationSelectionActivity,
-			int animEnter,
-			int animExit) {
-
-		RiverSelectionFragment fragment = new RiverSelectionFragment();
-		Bundle extras = getDefaultExtras(riverSelectionActivity, animEnter, animExit);
-		extras.putString(EXTRA_SINGLE_STATION_ACTIVITY, stationSelectionActivity.getName());
-		fragment.setArguments(extras);
-		return fragment;
-	}
 
 
 	@Override
@@ -70,19 +51,6 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> i
 			}
 			
 		};
-	}
-
-
-	@Override
-	protected Intent getActivityIntent(Class<?> activity, River river) {
-		// start graph activity
-		Bundle extras = new Bundle();
-		extras.putString(EXTRA_WATER_NAME, river.getRiverName());
-		Intent intent = new Intent(
-				getActivity().getApplicationContext(),
-				activity);
-		intent.putExtras(extras);
-		return intent;
 	}
 
 
@@ -129,14 +97,6 @@ public final class RiverSelectionFragment extends DataSelectionFragment<River> i
 		});
 		listAdapter.getFilter().filter("");
 	}
-
-
-	@Override
-	protected void addMapExtras(Intent intent) {
-		// do not start river selection next, instead go to final screen
-		intent.putExtra(SelectionMapActivity.EXTRA_ACTIVITY_CLASS_NAME, getArguments().getString(EXTRA_SINGLE_STATION_ACTIVITY));
-	}
-
 
 
 	// TOOD remove

@@ -27,16 +27,13 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.alarms.AlarmFragment;
-import de.bitdroid.flooding.dataselection.RiverSelectionFragment;
-import de.bitdroid.flooding.levels.StationActivity;
-import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.cep.CepManager;
 import de.bitdroid.ods.cep.CepManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
-import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 public class MainActivity extends FragmentActivity {
 
@@ -266,11 +263,13 @@ public class MainActivity extends FragmentActivity {
 		Fragment fragment = null;
 		if (position == 0) fragment = new NewsFragment();
 		else if (position == 1) fragment = new AlarmFragment();
-		else if (position == 2) fragment = RiverSelectionFragment.newInstance(
+		/*
+		else if (position == 2) fragment = BaseRiverSelectionFragment.newInstance(
 				StationListActivity.class,
 				StationActivity.class,
 				R.anim.slide_enter_from_right,
 				R.anim.slide_exit_to_left);
+				*/
 		else if (position == 3) fragment = new SettingsFragment();
 
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

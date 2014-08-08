@@ -26,28 +26,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.map.SelectionMapActivity;
 import de.bitdroid.ods.data.OdsSourceManager;
 import de.bitdroid.ods.data.SyncAdapter;
-import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
 
-abstract class DataSelectionFragment<T> extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
-	static final String
-		EXTRA_ACTIVITY = "EXTRA_ACTIVITY",
-		EXTRA_ANIM_EXIT = "EXTRA_ANIM_EXIT",
-		EXTRA_ANIM_ENTER = "EXTRA_ANIM_ENTER";
-
-	static Bundle getDefaultExtras(Class<?> activityClass, int animEnter, int animExit) {
-		Assert.assertNotNull(activityClass);
-		Bundle extras = new Bundle();
-		extras.putString(EXTRA_ACTIVITY, activityClass.getName());
-		extras.putInt(EXTRA_ANIM_ENTER, animEnter);
-		extras.putInt(EXTRA_ANIM_EXIT, animExit);
-		return extras;
-	}
-
+abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	private ArrayAdapter<T> listAdapter = null;
 	private EditText searchBox = null;
@@ -56,13 +38,13 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 
 
 	protected abstract ArrayAdapter<T> getAdapter();
-	protected abstract Intent getActivityIntent(Class<?> activityClass, T item);
 
 	protected abstract int getLoaderId();
 	protected abstract Loader<Cursor> getLoader();
 	protected abstract void onLoadFinished(Cursor cursor, ArrayAdapter<T> listAdapter);
 
-	protected abstract void addMapExtras(Intent intent);
+	protected abstract void onItemClicked(T item);
+	protected abstract void onMapClicked();
 
 
 	@Override
@@ -139,12 +121,9 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 
 	@Override
 	public final void onListItemClick(ListView list, View item, int position, long id) {
-		try {
-			Class<?> activityClass = Class.forName(getArguments().getString(EXTRA_ACTIVITY));
-			startActivity(getActivityIntent(activityClass, listAdapter.getItem(position)));
-		} catch (ClassNotFoundException cnfe) {
-			Log.error("failed to start activity", cnfe);
-		}
+		hideKeyboard();
+		// forward requestd to clients
+		onItemClicked(listAdapter.getItem(position));
 	}
 
 
@@ -172,12 +151,9 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 				return true;
 
 			case R.id.map:
-				Intent mapIntent = new Intent(getActivity().getApplicationContext(), SelectionMapActivity.class);
-				mapIntent.putExtra(SelectionMapActivity.EXTRA_ACTIVITY_CLASS_NAME, getArguments().getString(EXTRA_ACTIVITY));
-				mapIntent.putExtra(SelectionMapActivity.EXTRA_ANIM_ENTER, getArguments().getInt(EXTRA_ANIM_ENTER));
-				mapIntent.putExtra(SelectionMapActivity.EXTRA_ANIM_EXIT, getArguments().getInt(EXTRA_ANIM_EXIT));
-				addMapExtras(mapIntent);
-				startActivity(mapIntent);
+				hideKeyboard();
+				// forward request to clients
+				onMapClicked();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
@@ -216,19 +192,13 @@ abstract class DataSelectionFragment<T> extends ListFragment implements LoaderMa
 	}
 
 
-	@Override
-	public void startActivity(Intent intent) {
+	private void hideKeyboard() {
 		// hide keyboard
 		InputMethodManager inputManager
 				= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
 		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
-
-		// start activity
-		super.startActivity(intent);
-		getActivity().overridePendingTransition(
-				getArguments().getInt(EXTRA_ANIM_ENTER),
-				getArguments().getInt(EXTRA_ANIM_EXIT));
 	}
+
 
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override

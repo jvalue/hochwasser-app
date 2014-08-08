@@ -56,6 +56,7 @@ final class StationMapCard extends Card {
 			public void onClick(View view) {
 				Log.debug("clicked card!");
 				Intent intent = new Intent(context, InfoMapActivity.class);
+				intent.putExtra(InfoMapActivity.EXTRA_WATER_NAME, riverName);
 				intent.putExtra(InfoMapActivity.EXTRA_STATION_NAME, stationName);
 				context.startActivity(intent);
 				context.overridePendingTransition(

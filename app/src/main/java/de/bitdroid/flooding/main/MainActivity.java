@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -39,6 +38,7 @@ import de.bitdroid.ods.cep.CepManager;
 import de.bitdroid.ods.cep.CepManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
+import de.bitdroid.utils.Debug;
 
 public class MainActivity extends FragmentActivity {
 
@@ -62,7 +62,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
 		// only start for release builds!
-		if (0 == (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE )) {
+		if (!Debug.isDebugBuild(this)) {
 			Crashlytics.start(this);
 		}
 

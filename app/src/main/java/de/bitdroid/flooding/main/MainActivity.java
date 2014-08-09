@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -24,6 +25,8 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.crashlytics.android.Crashlytics;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.alarms.AlarmFragment;
@@ -57,6 +60,12 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+		// only start for release builds!
+		if (0 == (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE )) {
+			Crashlytics.start(this);
+		}
+
         setContentView(R.layout.main);
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer);

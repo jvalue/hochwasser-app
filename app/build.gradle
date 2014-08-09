@@ -1,12 +1,20 @@
 apply plugin: 'android'
+apply plugin: 'crashlytics'
+
+repositories {
+    maven { url 'http://download.crashlytics.com/maven' }
+}
+
 
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
     }
 
 	dependencies {
 		classpath 'com.android.tools.build:gradle:0.12.+'
+		classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
 	}
 }
 
@@ -25,6 +33,7 @@ dependencies {
     compile 'org.slf4j:slf4j-android:1.6.1-RC1'
     compile 'com.github.amlcurran.showcaseview:library:5.0.0'
 	compile 'com.github.gabrielemariotti.cards:library:1.8.0'
+    compile 'com.crashlytics.android:crashlytics:1.+'
     compile project(':android-support-v4-preferencefragment')
     compile project(':utils')
     compile project(':ods')

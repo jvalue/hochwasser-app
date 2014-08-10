@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.main;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -9,6 +10,8 @@ import android.support.v4.preference.PreferenceFragment;
 import android.text.format.DateFormat;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.Calendar;
 
 import de.bitdroid.flooding.R;
@@ -17,6 +20,7 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.cep.CepManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
+import de.bitdroid.utils.Log;
 
 
 public final class SettingsFragment extends PreferenceFragment {
@@ -110,6 +114,20 @@ public final class SettingsFragment extends PreferenceFragment {
 
 		Preference failSync = findPreference(getString(R.string.prefs_ods_sync_last_fail_key));
 		failSync.setSummary(formatTime(manager.getLastFailedSync(PegelOnlineSource.INSTANCE)));
+
+		// about - version
+		try {
+			Preference versionPref = findPreference(getString(R.string.prefs_about_version_key));
+			String versionName = getActivity()
+					.getPackageManager()
+					.getPackageInfo(getActivity().getPackageName(), 0)
+					.versionName;
+			versionPref.setSummary(versionName);
+		} catch (PackageManager.NameNotFoundException nnfe) {
+			Crashlytics.logException(nnfe);
+			Log.error("failed to get package name", nnfe);
+		}
+
 	}
 
 

@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.main;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -46,6 +47,7 @@ public final class SettingsFragment extends PreferenceFragment {
 		final EditTextPreference monitorDuration
 				= (EditTextPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
 		final Preference monitorInterval = findPreference(getString(R.string.prefs_ods_monitor_interval_key));
+		final CheckBoxPreference wifiOnlySync = (CheckBoxPreference) findPreference(getString(R.string.prefs_ods_monitor_wifi_key));
 
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -62,7 +64,8 @@ public final class SettingsFragment extends PreferenceFragment {
 					double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
 					long interval = (long) (intervalInHours * 60 * 60);
 
-					if (!sourceManager.isRegisteredForPolling(source)) sourceManager.startPolling(interval, source);
+					if (!sourceManager.isRegisteredForPolling(source))
+						sourceManager.startPolling(interval, wifiOnlySync.isChecked(), source);
 				} else {
 					if (monitor.isBeingMonitored(source)) monitor.stopMonitoring(source);
 					if (sourceManager.isRegisteredForPolling(source)) sourceManager.stopPolling();

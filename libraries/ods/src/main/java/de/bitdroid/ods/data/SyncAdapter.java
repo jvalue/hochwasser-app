@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.RemoteException;
 
@@ -17,9 +19,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+import de.bitdroid.utils.Log;
 import de.bitdroid.utils.RestCall;
 import de.bitdroid.utils.RestException;
-import de.bitdroid.utils.Log;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -31,6 +33,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			EXTRA_SOURCE_JSON = "EXTRA_SOURCE_JSON",
 			EXTRA_SOURCE_NAME = "EXTRA_SOURCE_NAME",
 			EXTRA_ODS_URL = "EXTRA_ODS_URL",
+			EXTRA_WIFI_ONLY = "EXTRA_WIFI_ONLY",
 			EXTRA_SYNC_SUCCESSFUL = "EXTRA_SYNC_SUCCESSFUL";
 
 	private static final ObjectMapper mapper = new ObjectMapper();
@@ -58,6 +61,18 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 			String authority,
 			ContentProviderClient provider,
 			SyncResult syncResult) {
+
+		// check for wifi
+		boolean syncWifiOnly = extras.getBoolean(EXTRA_WIFI_ONLY, true);
+		if (syncWifiOnly) {
+			ConnectivityManager connectionManager = (ConnectivityManager)
+					context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo wifiInfo = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+			if (!wifiInfo.isConnected()) {
+				Log.debug("not syncing due to missing wifi");
+				return;
+			}
+		}
 
 		String odsUrl = extras.getString(EXTRA_ODS_URL);
 		String jsonSources = extras.getString(EXTRA_SOURCE_JSON);

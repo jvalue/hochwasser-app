@@ -81,6 +81,7 @@
     <string name="prefs_ods_monitor_days_format">%1$s Tage</string>
     <string name="prefs_ods_monitor_interval">Zeit zwischen Aufnahmen</string>
     <string name="prefs_ods_monitor_interval_format">%1$s Stunden</string>
+    <string name="prefs_ods_monitor_wifi">Aufnahmen nur mit Wifi</string>
 	<string name="prefs_ods_sync_last">Letzte Aufnahme</string>
 	<string name="prefs_ods_sync_last_success">Letzte erfolgreiche Aufnahme</string>
 	<string name="prefs_ods_sync_last_fail">Letzte fehlgeschlagene Aufnahme</string>

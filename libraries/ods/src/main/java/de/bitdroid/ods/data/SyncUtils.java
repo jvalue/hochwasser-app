@@ -44,12 +44,13 @@ public class SyncUtils {
 	public void startPeriodicSync(
 				String odsServerName,
 				List<OdsSource> sources,
-				long pollFrequency) {
+				long pollFrequency,
+				boolean wifiOnly) {
 
 		// adapter specific
 		ArrayNode json = new ArrayNode(JsonNodeFactory.instance);
 		for (OdsSource source : sources) json.add(source.toString());
-		Bundle settingsBundle = getSyncExtras(odsServerName, json.toString());
+		Bundle settingsBundle = getSyncExtras(odsServerName, json.toString(), wifiOnly);
 
 		ContentResolver.setIsSyncable(ACCOUNT, AUTHORITY, 1);
 		ContentResolver.setSyncAutomatically(ACCOUNT, AUTHORITY, true);
@@ -71,7 +72,7 @@ public class SyncUtils {
 		SharedPreferences prefs = getSharedPreferences();
 		String odsServerName = prefs.getString(KEY_PERIODIC_SYNC_SERVERNAME, null);
 		String jsonSources = prefs.getString(KEY_PERIODIC_SYNC_JSON, null);
-		Bundle settingsBundle = getSyncExtras(odsServerName, jsonSources);
+		Bundle settingsBundle = getSyncExtras(odsServerName, jsonSources, false);
 
 		ContentResolver.setSyncAutomatically(ACCOUNT, AUTHORITY, false);
 		ContentResolver.removePeriodicSync(ACCOUNT, AUTHORITY, settingsBundle);
@@ -88,7 +89,7 @@ public class SyncUtils {
 		// adapter specific
 		ArrayNode json = new ArrayNode(JsonNodeFactory.instance);
 		json.add(source.toString());
-		Bundle settingsBundle = getSyncExtras(odsServerName, json.toString());
+		Bundle settingsBundle = getSyncExtras(odsServerName, json.toString(), false);
 
 		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -120,10 +121,11 @@ public class SyncUtils {
 	}
 
 
-	private Bundle getSyncExtras(String odsServerName, String jsonSources) {
+	private Bundle getSyncExtras(String odsServerName, String jsonSources, boolean wifiOnly) {
 		Bundle settingsBundle = new Bundle();
 		settingsBundle.putString(SyncAdapter.EXTRA_ODS_URL, odsServerName);
 		settingsBundle.putString(SyncAdapter.EXTRA_SOURCE_JSON, jsonSources);
+		settingsBundle.putBoolean(SyncAdapter.EXTRA_WIFI_ONLY, wifiOnly);
 		return settingsBundle;
 	}
 

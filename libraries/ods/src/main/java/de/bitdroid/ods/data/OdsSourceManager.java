@@ -70,6 +70,7 @@ public final class OdsSourceManager {
 	 */
 	public void startPolling(
 			long pollFrequency,
+			boolean wifiOnly,
 			OdsSource ... sources) {
 
 		Assert.assertNotNull((Object) sources);
@@ -83,7 +84,8 @@ public final class OdsSourceManager {
 		syncUtils.startPeriodicSync(
 				getOdsServerName(),
 				Arrays.asList(sources),
-				pollFrequency);
+				pollFrequency,
+				wifiOnly);
 	}
 
 

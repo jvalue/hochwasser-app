@@ -93,6 +93,8 @@
     <string name="prefs_ods_monitor_interval_key">monitor_interval</string>
     <string name="prefs_ods_monitor_interval_default">0.5</string>
     <string name="prefs_ods_monitor_interval_format">%1$s hours</string>
+    <string name="prefs_ods_monitor_wifi">Wifi only recording</string>
+    <string name="prefs_ods_monitor_wifi_key">wifi_only</string>
 	<string name="prefs_ods_sync_last">Last recording</string>
 	<string name="prefs_ods_sync_last_key">last_sync</string>
 	<string name="prefs_ods_sync_last_success">Last successful recording</string>

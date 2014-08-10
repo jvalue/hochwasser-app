@@ -22,6 +22,12 @@
             android:dependency="@string/prefs_ods_monitor_key"
             android:defaultValue="@string/prefs_ods_monitor_interval_default"/>
 
+        <CheckBoxPreference
+            android:title="@string/prefs_ods_monitor_wifi"
+            android:key="@string/prefs_ods_monitor_wifi_key"
+            android:dependency="@string/prefs_ods_monitor_key"
+            android:defaultValue="true"/>
+
         <EditTextPreference
 			android:title="@string/prefs_ods_sync_last"
 			android:key="@string/prefs_ods_sync_last_key"

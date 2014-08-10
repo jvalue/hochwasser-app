@@ -11,10 +11,8 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -188,12 +186,9 @@ public final class SettingsFragment extends PreferenceFragment {
 		legalPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				SpannableString msg = new SpannableString(getString(R.string.legal));
-				Linkify.addLinks(msg, Linkify.ALL);
-
 				AlertDialog dialog = new AlertDialog.Builder(getActivity())
 						.setTitle(getString(R.string.prefs_about_legal))
-						.setMessage(msg)
+						.setMessage(Html.fromHtml(getString(R.string.legal)))
 						.setPositiveButton(getString(R.string.ok), null)
 						.create();
 				dialog.show();

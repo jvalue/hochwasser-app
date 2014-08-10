@@ -75,8 +75,11 @@
 	<string name="never">never</string>
 
 
-	<string name="prefs_cat_ods">Open Data Service</string>
-	<string name="prefs_cat_ods_key">open_data_service</string>
+	<string name="prefs_cat_ods_monitor">Monitoring</string>
+	<string name="prefs_cat_ods_monitor_key">cat_ods_monitoring</string>
+    <string name="prefs_cat_advanced">Advanced</string>
+    <string name="prefs_cat_advanced_key">cat_advanced</string>
+
 	<string name="prefs_ods_servername">ODS Servername</string>
 	<string name="prefs_ods_servername_key">ods_server_name</string>
 	<string name="prefs_ods_servername_default">http://faui2o2f.cs.fau.de:8080/open-data-service</string>
@@ -96,9 +99,6 @@
 	<string name="prefs_ods_sync_last_success_key">last_successful_sync</string>
 	<string name="prefs_ods_sync_last_fail">Last failed recording</string>
 	<string name="prefs_ods_sync_last_fail_key">last_failed_sync</string>
-
-	<string name="prefs_cat_ceps">CEP Service</string>
-	<string name="prefs_cat_ceps_key">cep_service</string>
 	<string name="prefs_ceps_servername">CEPS Servername</string>
 	<string name="prefs_ceps_servername_key">ceps_server_name</string>
 	<string name="prefs_ceps_servername_default">http://faui2o2f.cs.fau.de:8080/cep-service</string>

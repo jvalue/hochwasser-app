@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory
-		android:title="@string/prefs_cat_ods"
-		android:key="@string/prefs_cat_ods_key">
-
-		<EditTextPreference
-			android:title="@string/prefs_ods_servername"
-			android:key="@string/prefs_ods_servername_key"
-			android:defaultValue="@string/prefs_ods_servername_default"/>
+	<PreferenceScreen
+		android:title="@string/prefs_cat_ods_monitor"
+		android:key="@string/prefs_cat_ods_monitor_key">
 
 		<CheckBoxPreference
 			android:title="@string/prefs_ods_monitor"
@@ -48,18 +43,24 @@
             android:enabled="false"
             android:shouldDisableView="false" />
 
-	</PreferenceCategory>
+	</PreferenceScreen>
 
-	<PreferenceCategory
-		android:title="@string/prefs_cat_ceps"
-		android:key="@string/prefs_cat_ceps_key">
+
+    <PreferenceScreen
+        android:title="@string/prefs_cat_advanced"
+        android:key="@string/prefs_cat_advanced_key">
+
+        <EditTextPreference
+            android:title="@string/prefs_ods_servername"
+            android:key="@string/prefs_ods_servername_key"
+            android:defaultValue="@string/prefs_ods_servername_default"/>
 
 		<EditTextPreference
 			android:title="@string/prefs_ceps_servername"
 			android:key="@string/prefs_ceps_servername_key"
 			android:defaultValue="@string/prefs_ceps_servername_default"/>
 
-	</PreferenceCategory>
+	</PreferenceScreen>
 
 
 </PreferenceScreen>

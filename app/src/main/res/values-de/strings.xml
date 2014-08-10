@@ -71,7 +71,10 @@
 	<string name="never">nie</string>
 
 
-	<string name="prefs_cat_ods">Open Data Service</string>
+
+    <string name="prefs_cat_ods_monitor">Aufnahmen</string>
+    <string name="prefs_cat_advanced">Erweitert</string>
+
 	<string name="prefs_ods_servername">ODS Servername</string>
 	<string name="prefs_ods_monitor">Wasserstände aufnehmen</string>
     <string name="prefs_ods_monitor_days">Aufnahme Zeitraum</string>
@@ -81,8 +84,6 @@
 	<string name="prefs_ods_sync_last">Letzte Aufnahme</string>
 	<string name="prefs_ods_sync_last_success">Letzte erfolgreiche Aufnahme</string>
 	<string name="prefs_ods_sync_last_fail">Letzte fehlgeschlagene Aufnahme</string>
-
-	<string name="prefs_cat_ceps">CEP Service</string>
 	<string name="prefs_ceps_servername">CEPS Servername</string>
 
 

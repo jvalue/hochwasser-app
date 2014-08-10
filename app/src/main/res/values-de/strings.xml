@@ -134,13 +134,13 @@
 
     <string name="contribute_title">%1$s ist open source!</string>
     <string name="contribute_msg">
-Du bist herzlich dazu eingeladen bei dieser App mitzuhelfen!\n
-
-\nDabei reicht es schon vollkommen wenn du Fehler findest und meldest, Verbesserungen vorschlägst
-oder einfach schreibst was dir bei dieser App durch den Kopf geht.\n
-
-\nSolltest du tiefer einsteigen wollen, so findest du den Quellecode kostenlos unter
-https://github.com/jvalue/hochwasser-app\n
+Du bist herzlich dazu eingeladen bei dieser App mitzuhelfen!
+&lt;p&gt;
+Dabei reicht es schon vollkommen wenn du Fehler findest und meldest, Verbesserungen vorschlägst
+oder einfach schreibst was dir bei dieser App durch den Kopf geht.
+&lt;p&gt;
+Solltest du tiefer einsteigen wollen, so findest du den Quellecode kostenlos auf
+&lt;a href=&quot;https://github.com/jvalue/hochwasser-app&quot;&gt;GitHub&lt;/a&gt;
     </string>
 
 

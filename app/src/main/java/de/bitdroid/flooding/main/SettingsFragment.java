@@ -10,6 +10,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.preference.PreferenceFragment;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.text.method.LinkMovementMethod;
@@ -159,18 +160,15 @@ public final class SettingsFragment extends PreferenceFragment {
 		contributePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				SpannableString msg = new SpannableString(getString(R.string.contribute_msg));
-				Linkify.addLinks(msg, Linkify.ALL);
-
 				AlertDialog dialog = new AlertDialog.Builder(getActivity())
 						.setTitle(getString(R.string.contribute_title, getString(R.string.app_name)))
-						.setMessage(msg)
+						.setMessage(Html.fromHtml(getString(R.string.contribute_msg)))
 						.setPositiveButton(getString(R.string.ok), null)
 						.create();
 				dialog.show();
 				TextView msgView = (TextView) dialog.findViewById(android.R.id.message);
-				msgView.setMovementMethod(LinkMovementMethod.getInstance());
 				msgView.setTextAppearance(getActivity(), R.style.FontRegular);
+				msgView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
 				return false;
 			}
 		});

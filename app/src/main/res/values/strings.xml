@@ -200,12 +200,12 @@
 
     <string name="contribute_title">%1$s is open source!</string>
     <string name="contribute_msg">
-You are more than welcome to help and contribute to this app!\n
-
-\nThis can be as simple as finding errors, coming up with new cool ideas or leaving feedback.\n
-
-\nIf you want to dig a little deeper, the complete source code is freely
-available at https://github.com/jvalue/hochwasser-app\n
+You are more than welcome to help and contribute to this app!
+&lt;p&gt;
+This can be as simple as finding errors, coming up with new cool ideas or leaving feedback.
+&lt;p&gt;
+If you want to dig a little deeper, the complete source code is freely
+available at &lt;a href=&quot;https://github.com/jvalue/hochwasser-app&quot;&gt;GitHub&lt;/a&gt;
     </string>
 
     <string name="legal">

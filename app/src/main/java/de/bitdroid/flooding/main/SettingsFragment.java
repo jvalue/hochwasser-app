@@ -5,17 +5,17 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.preference.PreferenceFragment;
+import android.text.format.DateFormat;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.monitor.SourceMonitor;
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.cep.CepManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
-import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 
 
 public final class SettingsFragment extends PreferenceFragment {
@@ -110,12 +110,10 @@ public final class SettingsFragment extends PreferenceFragment {
 	}
 
 
-	private final static SimpleDateFormat dateFormatter
-		= new SimpleDateFormat("dd/M/yyyy hh:mm a");
-	
 	private String formatTime(Calendar time) {
 		if (time == null) return getString(R.string.never);
-		else return dateFormatter.format(time.getTime());
+		else return DateFormat.getDateFormat(getActivity()).format(time.getTime())
+			+ " " + DateFormat.getTimeFormat(getActivity()).format(time.getTime());
 	}
 
 

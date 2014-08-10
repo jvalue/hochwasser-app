@@ -3,21 +3,19 @@ package de.bitdroid.flooding.news;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.Html;
+import android.text.format.DateFormat;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.main.MainActivity;
 import it.gmariotti.cardslib.library.internal.Card;
 
 final class NewsCard extends Card {
-
-	private static final SimpleDateFormat dateFormatter
-			= new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
 	private final Pair<NewsItem, Boolean> data;
 
@@ -61,8 +59,11 @@ final class NewsCard extends Card {
 		TextView msg  = (TextView) parent.findViewById(R.id.news_timestamp);
 		TextView content = (TextView) parent.findViewById(R.id.news_content);
 
+		Date date = new Date(data.first.getTimestamp());
+
 		title.setText(data.first.getTitle());
-		msg.setText(dateFormatter.format(data.first.getTimestamp()));
+		msg.setText(DateFormat.getDateFormat(getContext()).format(date)
+			+ " " + DateFormat.getTimeFormat(getContext()).format(date));
 		content.setText(Html.fromHtml(data.first.getContent()));
 	}
 

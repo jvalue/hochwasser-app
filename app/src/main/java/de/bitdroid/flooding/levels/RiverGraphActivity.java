@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.Loader;
+import android.text.format.DateFormat;
 import android.util.Pair;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -20,7 +21,6 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -66,7 +66,6 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NA
 public class RiverGraphActivity extends BaseActivity implements Extras {
 	
 	private static final int LOADER_ID = 44;
-	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 
 	private WaterGraph graph;
 	private boolean showingRegularSeries = true;
@@ -135,7 +134,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 
 		// get latest timestamp
 		currentTimestamp = Collections.max(timestamps);
-		graph.setTitle(dateFormatter.format(new Date(currentTimestamp)));
+		setGraphTitle(currentTimestamp);
 
 		AbstractLoaderCallbacks loaderCallbacks = new AbstractLoaderCallbacks(LOADER_ID) {
 
@@ -300,10 +299,11 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 					.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
 				Collections.sort(timestamps);
 
-				SimpleDateFormat formatter = new SimpleDateFormat("dd/M/yyyy hh:mm a");
 				List<String> stringTimestamps = new LinkedList<String>();
 				for (long time : timestamps) {
-					stringTimestamps.add(formatter.format(new Date(time)));
+					Date date = new Date(time);
+					stringTimestamps.add(DateFormat.getDateFormat(this).format(date)
+						+  " " + DateFormat.getTimeFormat(this).format(date));
 				}
 
 				final long originalTimestamp = currentTimestamp;
@@ -391,7 +391,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 
 		// restore timestamp
 		currentTimestamp = state.getLong(EXTRA_TIMESTAMP);
-		graph.setTitle(dateFormatter.format(new Date(currentTimestamp)));
+		setGraphTitle(currentTimestamp);
 		if (loader != null) loader.setTimestamp(currentTimestamp);
 
 		// restore seekbar
@@ -510,7 +510,14 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	private void setTimestamp(long newTimestamp) {
 		currentTimestamp = newTimestamp;
 		loader.setTimestamp(currentTimestamp);
-		graph.setTitle(dateFormatter.format(new Date(currentTimestamp)));
+		setGraphTitle(currentTimestamp);
+	}
+
+
+	private void setGraphTitle(long timestamp) {
+		Date date = new Date(timestamp);
+		graph.setTitle(DateFormat.getDateFormat(this).format(date)
+				+ " " + DateFormat.getTimeFormat(this).format(date));
 	}
 
 	

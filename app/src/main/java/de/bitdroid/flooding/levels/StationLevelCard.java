@@ -16,9 +16,7 @@ import it.gmariotti.cardslib.library.internal.Card;
 
 final class StationLevelCard extends Card {
 
-	private static final DateFormat
-			dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ"),
-			timeFormat = new SimpleDateFormat("dd/MM/yy HH:mm a");
+	private static final DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
 
 	private final String timestamp;
@@ -40,7 +38,9 @@ final class StationLevelCard extends Card {
 
 		try {
 			Date date = dateParser.parse(timestamp);
-			timeView.setText(timeFormat.format(date));
+			timeView.setText(
+					android.text.format.DateFormat.getDateFormat(getContext()).format(date)
+					+ " " + android.text.format.DateFormat.getTimeFormat(getContext()).format(date));
 		} catch (ParseException pe) {
 			Log.error("failed to parse timestamp", pe);
 		}

@@ -69,4 +69,31 @@
 	</PreferenceScreen>
 
 
+    <PreferenceScreen
+        android:title="@string/prefs_cat_about"
+        android:key="@string/prefs_cat_about_key">
+
+        <Preference
+            android:title="@string/prefs_about_version"
+            android:key="@string/prefs_about_version_key"/>
+
+        <Preference
+            android:title="@string/prefs_about_feedback"
+            android:key="@string/prefs_about_feedback_key"/>
+
+        <Preference
+            android:title="@string/prefs_about_contribute"
+            android:key="@string/prefs_about_contribute_key"/>
+
+        <Preference
+            android:title="@string/prefs_about_changelog"
+            android:key="@string/prefs_about_changelog_key"/>
+
+        <Preference
+            android:title="@string/prefs_about_legal"
+            android:key="@string/prefs_about_legal_key"/>
+
+    </PreferenceScreen>
+
+
 </PreferenceScreen>

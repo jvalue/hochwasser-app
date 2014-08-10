@@ -79,6 +79,8 @@
 	<string name="prefs_cat_ods_monitor_key">cat_ods_monitoring</string>
     <string name="prefs_cat_advanced">Advanced</string>
     <string name="prefs_cat_advanced_key">cat_advanced</string>
+    <string name="prefs_cat_about">About</string>
+    <string name="prefs_cat_about_key">cat_advanced</string>
 
 	<string name="prefs_ods_servername">ODS Servername</string>
 	<string name="prefs_ods_servername_key">ods_server_name</string>
@@ -104,6 +106,16 @@
 	<string name="prefs_ceps_servername">CEPS Servername</string>
 	<string name="prefs_ceps_servername_key">ceps_server_name</string>
 	<string name="prefs_ceps_servername_default">http://faui2o2f.cs.fau.de:8080/cep-service</string>
+    <string name="prefs_about_version">Version</string>
+    <string name="prefs_about_version_key">version</string>
+    <string name="prefs_about_feedback">Feedback</string>
+    <string name="prefs_about_feedback_key">feedback</string>
+    <string name="prefs_about_contribute">Contribute</string>
+    <string name="prefs_about_contribute_key">contribute</string>
+    <string name="prefs_about_changelog">Changelog</string>
+    <string name="prefs_about_changelog_key">changelog</string>
+    <string name="prefs_about_legal">Legal</string>
+    <string name="prefs_about_legal_key">legal</string>
 
 
 	<string name="news_empty">Nothing new.</string>

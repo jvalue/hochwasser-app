@@ -74,6 +74,7 @@
 
     <string name="prefs_cat_ods_monitor">Aufnahmen</string>
     <string name="prefs_cat_advanced">Erweitert</string>
+    <string name="prefs_cat_about">Info</string>
 
 	<string name="prefs_ods_servername">ODS Servername</string>
 	<string name="prefs_ods_monitor">Wasserstände aufnehmen</string>
@@ -86,6 +87,9 @@
 	<string name="prefs_ods_sync_last_success">Letzte erfolgreiche Aufnahme</string>
 	<string name="prefs_ods_sync_last_fail">Letzte fehlgeschlagene Aufnahme</string>
 	<string name="prefs_ceps_servername">CEPS Servername</string>
+    <string name="prefs_about_version">Version</string>
+    <string name="prefs_about_contribute">Mithelfen</string>
+    <string name="prefs_about_legal">Impressum</string>
 
 
 	<string name="news_empty">Nichts neues.</string>

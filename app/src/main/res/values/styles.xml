@@ -72,6 +72,7 @@
 
     <style name="StationCard.Row">
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">0dp</item>
     </style>
 
     <style name="StationCard.Row.Left">

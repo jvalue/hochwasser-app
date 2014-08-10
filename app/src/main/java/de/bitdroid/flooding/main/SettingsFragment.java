@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.main;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,7 +10,11 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.preference.PreferenceFragment;
+import android.text.SpannableString;
 import android.text.format.DateFormat;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -143,6 +148,26 @@ public final class SettingsFragment extends PreferenceFragment {
 				Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", address, null));
 				intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 				startActivity(Intent.createChooser(intent, getString(R.string.feedback_mail_chooser)));
+				return false;
+			}
+		});
+
+		// about - contribute
+		Preference contributePref = findPreference(getString(R.string.prefs_about_contribute_key));
+		contributePref.setSummary(getString(R.string.prefs_about_contribute_summary));
+		contributePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				SpannableString msg = new SpannableString(getString(R.string.contribute_msg));
+				Linkify.addLinks(msg, Linkify.ALL);
+
+				AlertDialog dialog = new AlertDialog.Builder(getActivity())
+						.setTitle(getString(R.string.contribute_title, getString(R.string.app_name)))
+						.setMessage(msg)
+						.setPositiveButton(getString(R.string.ok), null)
+						.create();
+				dialog.show();
+				((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
 				return false;
 			}
 		});

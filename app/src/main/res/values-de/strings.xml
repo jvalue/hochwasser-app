@@ -90,6 +90,7 @@
     <string name="prefs_about_version">Version</string>
     <string name="prefs_about_feedback_summary">Wünsche, Anregungen, Kritik, Lob</string>
     <string name="prefs_about_contribute">Mithelfen</string>
+    <string name="prefs_about_contribute_summary">Alles open source!</string>
     <string name="prefs_about_legal">Impressum</string>
 
 
@@ -130,6 +131,17 @@
 
 
     <string name="feedback_mail_chooser">Danke für das Feedback!</string>
+
+    <string name="contribute_title">%1$s ist open source!</string>
+    <string name="contribute_msg">
+Du bist herzlich dazu eingeladen bei dieser App mitzuhelfen!\n
+
+\nDabei reicht es schon vollkommen wenn du Fehler findest und meldest, Verbesserungen vorschlägst
+oder einfach schreibst was dir bei dieser App durch den Kopf geht.\n
+
+\nSolltest du tiefer einsteigen wollen, so findest du den Quellecode kostenlos unter
+https://github.com/jvalue/hochwasser-app\n
+    </string>
 
 
     <string name="help_graph">

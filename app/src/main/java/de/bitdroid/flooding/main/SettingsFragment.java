@@ -168,7 +168,9 @@ public final class SettingsFragment extends PreferenceFragment {
 						.setPositiveButton(getString(R.string.ok), null)
 						.create();
 				dialog.show();
-				((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+				TextView msgView = (TextView) dialog.findViewById(android.R.id.message);
+				msgView.setMovementMethod(LinkMovementMethod.getInstance());
+				msgView.setTextAppearance(getActivity(), R.style.FontRegular);
 				return false;
 			}
 		});
@@ -179,6 +181,27 @@ public final class SettingsFragment extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				new ChangeLogDialog(getActivity()).show();
+				return false;
+			}
+		});
+
+		// about - legal
+		Preference legalPref = findPreference(getString(R.string.prefs_about_legal_key));
+		legalPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				SpannableString msg = new SpannableString(getString(R.string.legal));
+				Linkify.addLinks(msg, Linkify.ALL);
+
+				AlertDialog dialog = new AlertDialog.Builder(getActivity())
+						.setTitle(getString(R.string.prefs_about_legal))
+						.setMessage(msg)
+						.setPositiveButton(getString(R.string.ok), null)
+						.create();
+				dialog.show();
+				TextView msgView = (TextView) dialog.findViewById(android.R.id.message);
+				msgView.setMovementMethod(LinkMovementMethod.getInstance());
+				msgView.setTextAppearance(getActivity(), R.style.FontRegular);
 				return false;
 			}
 		});

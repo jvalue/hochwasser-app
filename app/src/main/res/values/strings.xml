@@ -156,21 +156,6 @@
     <string name="error_play_services_missing_msg">Sorry, this action requires the Google Play Services to be installed on your device.</string>
 
 
-    <string name="feedback_mail_chooser">Thanks for the feedback!</string>
-    <string name="feedback_mail_address">philipp.eichhorn@bitdroid.de</string>
-    <string name="feedback_mail_subject">%1$s feedback (v%2$s)</string>
-
-    <string name="contribute_title">%1$s is open source!</string>
-    <string name="contribute_msg">
-You are more than welcome to help and contribute to this app!\n
-
-\nThis can be as simple as finding errors, coming up with new cool ideas or leaving feedback.\n
-
-\nIf you want to dig a little deeper, the complete source code is freely
-available at https://github.com/jvalue/hochwasser-app\n
-    </string>
-
-
     <string name="help_graph">
         The graph shows all &lt;b&gt;water levels&lt;/b&gt; (y-axis) along a &lt;b&gt;river&lt;/b&gt; (x-axis).
     </string>
@@ -206,6 +191,51 @@ available at https://github.com/jvalue/hochwasser-app\n
     </string>
     <string name="help_graph_action_map">
         Display &lt;b&gt;station locations&lt;/b&gt; on a map. Click a station for more information.
+    </string>
+
+
+    <string name="feedback_mail_chooser">Thanks for the feedback!</string>
+    <string name="feedback_mail_address">philipp.eichhorn@bitdroid.de</string>
+    <string name="feedback_mail_subject">%1$s feedback (v%2$s)</string>
+
+    <string name="contribute_title">%1$s is open source!</string>
+    <string name="contribute_msg">
+You are more than welcome to help and contribute to this app!\n
+
+\nThis can be as simple as finding errors, coming up with new cool ideas or leaving feedback.\n
+
+\nIf you want to dig a little deeper, the complete source code is freely
+available at https://github.com/jvalue/hochwasser-app\n
+    </string>
+
+    <string name="legal">
+This application was developed at the Professorship for Open Source Software lead by Prof. Dr. Dirk
+Riehle at the Friedrich-Alexander-University of Erlangen-Nürnberg (FAU) by Philipp Eichhorn.\n
+
+\nThe app itself is licensed under the Apache v2 license and uses numerous open source libraries
+itself. They are\n
+
+\nOpen Data Service, AGPL v3 (https://github.com/jvalue/open-data-service)\n
+\nCEP Service, GPL v2 (https://github.com/jvalue/cep-service)\n
+\nAndroidPlot 0.6.1, Apache v2 (http://androidplot.com)\n
+\nGoogle Support v4, Apache v2\n
+\nGoogle Play Services, Apache v2\n
+\nfasterxml jackson, Apache v2 (http://wiki.fasterxml.com/JacksonHome)\n
+\nosmdorid, Apache v2 (https://github.com/osmdroid/osmdroid)\n
+\nCard Library, Apache v2 (https://github.com/gabrielemariotti/cardslib)\n
+\nInscription, Apache v2 (https://github.com/MartinvanZ/Inscription)\n
+\nSLF4J, MIT License (http://www.slf4j.org)\n
+\ncrashlytics, Apache v2 (https://www.crashlytics.com)\n
+\nandroid-support-v4-preferencefragment, Apache v2 (https://github.com/kolavar/android-support-v4-preferencefragment)\n
+
+\nThe individual licenses are available at
+\nApache v2 (https://www.apache.org/licenses/LICENSE-2.0.html)
+\nMIT license (http://opensource.org/licenses/MIT)
+\nAGPL v3 (https://www.gnu.org/licenses/agpl-3.0.html)
+\nGPL v2 (https://www.gnu.org/licenses/gpl-2.0.html)
+
+\n\nFurthermore this application uses water related data provided by https://pegelonline.wsv.de,
+which is operated by the Wasser- und Schifffahrtsverwaltung des Bundes (WSV).
     </string>
 
 </resources>

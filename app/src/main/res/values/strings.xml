@@ -32,7 +32,7 @@
 	<string name="menu_alarms_add">Add alarm</string>
 
 
-	<string name="alarms_empty">No alarms present.</string>
+	<string name="alarms_empty">No alarms started.</string>
 	<string name="alarms_description_above">When level above %1$.2f cm</string>
 	<string name="alarms_description_below">When level below %1$.2f cm</string>
 	<string name="alarms_new_add">Start alarm</string>
@@ -55,8 +55,8 @@
 	<string name="alarms_triggered_msg">%1$s is %2$s %3$.2f cm</string>
 
 
-	<string name="series_select_dialog_title">Select Series to Display</string>
-	<string name="series_monitor_dialog_title">Select a Timestamp to Display</string>
+	<string name="series_select_dialog_title">Select Series</string>
+	<string name="series_monitor_dialog_title">Select a Timestamp</string>
 	<string name="series_water_levels">Water Levels</string>
 	<string name="series_water_levels_normalized">Normalized Water Levels</string>
 	<string name="series_mw">MW</string>
@@ -90,11 +90,11 @@
     <string name="prefs_ods_monitor_interval_key">monitor_interval</string>
     <string name="prefs_ods_monitor_interval_default">0.5</string>
     <string name="prefs_ods_monitor_interval_format">%1$s hours</string>
-	<string name="prefs_ods_sync_last">Last sync</string>
+	<string name="prefs_ods_sync_last">Last recording</string>
 	<string name="prefs_ods_sync_last_key">last_sync</string>
-	<string name="prefs_ods_sync_last_success">Last successful sync</string>
+	<string name="prefs_ods_sync_last_success">Last successful recording</string>
 	<string name="prefs_ods_sync_last_success_key">last_successful_sync</string>
-	<string name="prefs_ods_sync_last_fail">Last failed sync</string>
+	<string name="prefs_ods_sync_last_fail">Last failed recording</string>
 	<string name="prefs_ods_sync_last_fail_key">last_failed_sync</string>
 
 	<string name="prefs_cat_ceps">CEP Service</string>
@@ -104,11 +104,11 @@
 	<string name="prefs_ceps_servername_default">http://faui2o2f.cs.fau.de:8080/cep-service</string>
 
 
-	<string name="news_empty">Nothing new, please come back later.</string>
+	<string name="news_empty">Nothing new.</string>
 
 	<string name="news_intro_alarms_title">Alarms</string>
     <string name="news_intro_alarms_content">Want alarms when water levels reach a certain level? &lt;b&gt;Click here!&lt;/b&gt;</string>
-	<string name="news_intro_data_title">Data</string>
+	<string name="news_intro_data_title">Water levels</string>
 	<string name="news_intro_data_content">Want more details about the current water situation? &lt;b&gt;Click here!&lt;/b&gt;</string>
 
 
@@ -123,7 +123,7 @@
     <string name="station_card_info_station">Station</string>
     <string name="station_card_info_water">Water</string>
     <string name="station_card_info_river_km">River Km</string>
-    <string name="station_card_info_coordinates">Station Coordinates</string>
+    <string name="station_card_info_coordinates">Coordinates</string>
     <string name="station_card_info_zero_height">Zero height</string>
     <string name="station_card_char_title">Characteristic Values</string>
     <string name="station_card_char_mhw">Average high water level (MHW)</string>
@@ -135,10 +135,7 @@
     <string name="station_card_char_ntnw">Lowest tide low water level (NTnw)</string>
 
 
-	<string name="error_invalid_server_url">Invalid server url!</string>
-	<string name="error_server_connection">Sorry, there was an error while communicating with the server.\nReason: %1$s\nPlease try closing and opening your app in a couple of minutes.</string>
-	<string name="error_gcm_failed_title">Push Notifications</string>
-	<string name="error_gcm_failed_content">Registration for push notifications failed. Tap to retry.</string>
+	<string name="error_invalid_server_url">Invalid server URL!</string>
     <string name="error_play_services_missing_title">Google Play Services missing</string>
     <string name="error_play_services_missing_msg">Sorry, this action requires the Google Play Services to be installed on your device.</string>
 

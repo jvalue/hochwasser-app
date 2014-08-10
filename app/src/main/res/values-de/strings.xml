@@ -88,6 +88,7 @@
 	<string name="prefs_ods_sync_last_fail">Letzte fehlgeschlagene Aufnahme</string>
 	<string name="prefs_ceps_servername">CEPS Servername</string>
     <string name="prefs_about_version">Version</string>
+    <string name="prefs_about_feedback_summary">Wünsche, Anregungen, Kritik, Lob</string>
     <string name="prefs_about_contribute">Mithelfen</string>
     <string name="prefs_about_legal">Impressum</string>
 
@@ -126,6 +127,9 @@
 	<string name="error_invalid_server_url">Ungültige Server URL!</string>
     <string name="error_play_services_missing_title">Google Play Services nicht installiert!</string>
     <string name="error_play_services_missing_msg">Das tut uns Leid, aber für diese Aktion müssen die Google Play Services installiert sein.</string>
+
+
+    <string name="feedback_mail_chooser">Danke für das Feedback!</string>
 
 
     <string name="help_graph">

@@ -110,6 +110,7 @@
     <string name="prefs_about_version_key">version</string>
     <string name="prefs_about_feedback">Feedback</string>
     <string name="prefs_about_feedback_key">feedback</string>
+    <string name="prefs_about_feedback_summary">Change requests, thoughts, criticism, praise</string>
     <string name="prefs_about_contribute">Contribute</string>
     <string name="prefs_about_contribute_key">contribute</string>
     <string name="prefs_about_changelog">Changelog</string>
@@ -153,6 +154,10 @@
     <string name="error_play_services_missing_title">Google Play Services missing</string>
     <string name="error_play_services_missing_msg">Sorry, this action requires the Google Play Services to be installed on your device.</string>
 
+
+    <string name="feedback_mail_chooser">Thanks for the feedback!</string>
+    <string name="feedback_mail_address">philipp.eichhorn@bitdroid.de</string>
+    <string name="feedback_mail_subject">%1$s feedback (v%2$s)</string>
 
 
     <string name="help_graph">

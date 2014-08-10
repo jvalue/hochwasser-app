@@ -1,6 +1,8 @@
 package de.bitdroid.flooding.main;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -116,8 +118,8 @@ public final class SettingsFragment extends PreferenceFragment {
 		failSync.setSummary(formatTime(manager.getLastFailedSync(PegelOnlineSource.INSTANCE)));
 
 		// about - version
+		final Preference versionPref = findPreference(getString(R.string.prefs_about_version_key));
 		try {
-			Preference versionPref = findPreference(getString(R.string.prefs_about_version_key));
 			String versionName = getActivity()
 					.getPackageManager()
 					.getPackageInfo(getActivity().getPackageName(), 0)
@@ -127,6 +129,23 @@ public final class SettingsFragment extends PreferenceFragment {
 			Crashlytics.logException(nnfe);
 			Log.error("failed to get package name", nnfe);
 		}
+
+		// about - feedback
+		Preference feebackPref = findPreference(getString(R.string.prefs_about_feedback_key));
+		feebackPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				String address = getString(R.string.feedback_mail_address);
+				String subject = getString(
+						R.string.feedback_mail_subject,
+						getString(R.string.app_name),
+						versionPref.getSummary().toString());
+				Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", address, null));
+				intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+				startActivity(Intent.createChooser(intent, getString(R.string.feedback_mail_chooser)));
+				return false;
+			}
+		});
 
 	}
 

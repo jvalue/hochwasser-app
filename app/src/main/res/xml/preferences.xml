@@ -79,7 +79,8 @@
 
         <Preference
             android:title="@string/prefs_about_feedback"
-            android:key="@string/prefs_about_feedback_key"/>
+            android:key="@string/prefs_about_feedback_key"
+            android:summary="@string/prefs_about_feedback_summary"/>
 
         <Preference
             android:title="@string/prefs_about_contribute"

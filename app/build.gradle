@@ -37,6 +37,7 @@ dependencies {
     compile project(':android-support-v4-preferencefragment')
     compile project(':utils')
     compile project(':ods')
+    compile project(':changelog')
 
 	androidTestCompile 'com.squareup.okhttp:mockwebserver:2.0.0'
 	androidTestCompile 'com.google.dexmaker:dexmaker:1.1'

@@ -1,5 +1,6 @@
-include ':app', ':android-support-v4-preferencefragment', ':utils', ':testUtils', ':ods'
+include ':app', ':android-support-v4-preferencefragment', ':utils', ':testUtils', ':ods', ':changelog'
 project(':android-support-v4-preferencefragment').projectDir = new File('libraries/android-support-v4-preferencefragment')
 project(':utils').projectDir = new File('libraries/utils')
 project(':testUtils').projectDir = new File('libraries/testUtils')
 project(':ods').projectDir = new File('libraries/ods')
+project(':changelog').projectDir = new File('libraries/changelog')

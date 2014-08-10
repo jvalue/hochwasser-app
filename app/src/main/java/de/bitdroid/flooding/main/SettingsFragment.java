@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.inscription.ChangeLogDialog;
 
 import java.util.Calendar;
 
@@ -168,6 +169,16 @@ public final class SettingsFragment extends PreferenceFragment {
 						.create();
 				dialog.show();
 				((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+				return false;
+			}
+		});
+
+		// about - changelog
+		Preference changelogPref = findPreference(getString(R.string.prefs_about_changelog_key));
+		changelogPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				new ChangeLogDialog(getActivity()).show();
 				return false;
 			}
 		});

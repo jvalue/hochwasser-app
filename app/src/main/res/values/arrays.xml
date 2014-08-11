@@ -36,4 +36,25 @@
         <item name="365">365</item>
     </string-array>
 
+
+    <string-array name="prefs_monitor_interval_entries">
+        <item name="0.25">15 minutes</item>
+        <item name="0.5">30 minutes</item>
+        <item name="1">1 hour</item>
+        <item name="3">3 hours</item>
+        <item name="6">6 hours</item>
+        <item name="12">12 hours</item>
+        <item name="24">1 day</item>
+    </string-array>
+
+    <string-array name="prefs_monitor_interval_values">
+        <item name="0.25">0.25</item>
+        <item name="0.5">0.5</item>
+        <item name="1">1</item>
+        <item name="3">3</item>
+        <item name="6">6</item>
+        <item name="12">12</item>
+        <item name="24">24</item>
+    </string-array>
+
 </resources>

@@ -3,7 +3,6 @@ package de.bitdroid.flooding.main;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceManager;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.Html;
 import android.text.format.DateFormat;
@@ -60,13 +58,16 @@ public final class SettingsFragment extends PreferenceFragment {
 		// source monitoring
 		Preference monitoring = findPreference(getString(R.string.prefs_ods_monitor_key));
 		final ListPreference monitorDurationPref = (ListPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
-		final Preference monitorInterval = findPreference(getString(R.string.prefs_ods_monitor_interval_key));
+		final ListPreference monitorIntervalPref = (ListPreference) findPreference(getString(R.string.prefs_ods_monitor_interval_key));
 		final CheckBoxPreference wifiPref = (CheckBoxPreference) findPreference(getString(R.string.prefs_ods_monitor_wifi_key));
 
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				toggleMonitoring((Boolean) newValue, wifiPref.isChecked());
+				toggleMonitoring(
+						(Boolean) newValue,
+						wifiPref.isChecked(),
+						Double.valueOf(monitorIntervalPref.getValue()));
 				return true;
 			}
 		});
@@ -75,8 +76,9 @@ public final class SettingsFragment extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean wifiOnlySync = (Boolean) newValue;
-				toggleMonitoring(false, !wifiOnlySync);
-				toggleMonitoring(true, wifiOnlySync);
+				double interval = Double.valueOf(monitorIntervalPref.getValue());
+				toggleMonitoring(false, !wifiOnlySync, interval);
+				toggleMonitoring(true, wifiOnlySync, interval);
 				return true;
 			}
 		});
@@ -92,13 +94,20 @@ public final class SettingsFragment extends PreferenceFragment {
 			}
 		});
 
-		double intervalValue = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
-		monitorInterval.setSummary(getString(R.string.prefs_ods_monitor_interval_format, intervalValue));
-		monitorInterval.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		monitorIntervalPref.setSummary(monitorIntervalPref.getEntry());
+		monitorIntervalPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				Toast.makeText(getActivity(), "stub", Toast.LENGTH_SHORT).show();
-				return false;
+				monitorIntervalPref.setSummary(
+						monitorIntervalPref.getEntries()[
+								monitorIntervalPref.findIndexOfValue(newValue.toString())]);
+
+				boolean wifiOnlySync = wifiPref.isChecked();
+				double intervalInHours = Double.valueOf(newValue.toString());
+
+				toggleMonitoring(false, wifiOnlySync, intervalInHours);
+				toggleMonitoring(true, wifiOnlySync, intervalInHours);
+				return true;
 			}
 		});
 
@@ -227,15 +236,13 @@ public final class SettingsFragment extends PreferenceFragment {
 	}
 
 
-	private void toggleMonitoring(boolean start, boolean wifiOnlySync) {
+	private void toggleMonitoring(boolean start, boolean wifiOnlySync, double intervalInHours) {
 		Context context = getActivity().getApplicationContext();
 		SourceMonitor monitor = SourceMonitor.getInstance(context);
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance(context);
 		OdsSource source = PegelOnlineSource.INSTANCE;
 
 		if (start) {
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-			double intervalInHours = Double.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_interval_key), null));
 			long interval = (long) (intervalInHours * 60 * 60);
 
 			if (!monitor.isBeingMonitored(source))

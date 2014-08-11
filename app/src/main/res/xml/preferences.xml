@@ -17,11 +17,13 @@
             android:entryValues="@array/prefs_monitor_duration_values"
             android:defaultValue="7"/>
 
-        <EditTextPreference
+        <ListPreference
             android:title="@string/prefs_ods_monitor_interval"
             android:key="@string/prefs_ods_monitor_interval_key"
             android:dependency="@string/prefs_ods_monitor_key"
-            android:defaultValue="@string/prefs_ods_monitor_interval_default"/>
+            android:entries="@array/prefs_monitor_interval_entries"
+            android:entryValues="@array/prefs_monitor_interval_values"
+            android:defaultValue="0.5"/>
 
         <CheckBoxPreference
             android:title="@string/prefs_ods_monitor_wifi"

@@ -41,15 +41,16 @@ final class NewsCard extends Card {
 			}
 		});
 
-
-		setOnClickListener(new OnCardClickListener() {
-			@Override
-			public void onClick(Card card, View view) {
-				Intent intent = new Intent(MainActivity.ACTION_NAVIGATE);
-				intent.putExtra(MainActivity.EXTRA_POSITION, data.first.getNavigationPos());
-				activity.sendBroadcast(intent);
-			}
-		});
+		if (getNewsItem().isNavigationEnabled()) {
+			setOnClickListener(new OnCardClickListener() {
+				@Override
+				public void onClick(Card card, View view) {
+					Intent intent = new Intent(MainActivity.ACTION_NAVIGATE);
+					intent.putExtra(MainActivity.EXTRA_POSITION, data.first.getNavigationPos());
+					activity.sendBroadcast(intent);
+				}
+			});
+		}
 	}
 
 

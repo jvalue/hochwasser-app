@@ -58,22 +58,24 @@ public final class SettingsFragment extends PreferenceFragment {
 
 		// source monitoring
 		Preference monitoring = findPreference(getString(R.string.prefs_ods_monitor_key));
-		final EditTextPreference monitorDuration
-				= (EditTextPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
+		final EditTextPreference monitorDuration = (EditTextPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
 		final Preference monitorInterval = findPreference(getString(R.string.prefs_ods_monitor_interval_key));
+		final CheckBoxPreference wifiPref = (CheckBoxPreference) findPreference(getString(R.string.prefs_ods_monitor_wifi_key));
 
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				toggleMonitoring((Boolean) newValue);
+				toggleMonitoring((Boolean) newValue, wifiPref.isChecked());
 				return true;
 			}
 		});
 
-		CheckBoxPreference wifiPref = (CheckBoxPreference) findPreference(getString(R.string.prefs_ods_monitor_wifi_key));
 		wifiPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean wifiOnlySync = (Boolean) newValue;
+				toggleMonitoring(false, !wifiOnlySync);
+				toggleMonitoring(true, wifiOnlySync);
 				return true;
 			}
 		});
@@ -226,7 +228,7 @@ public final class SettingsFragment extends PreferenceFragment {
 	}
 
 
-	private void toggleMonitoring(boolean start) {
+	private void toggleMonitoring(boolean start, boolean wifiOnlySync) {
 		Context context = getActivity().getApplicationContext();
 		SourceMonitor monitor = SourceMonitor.getInstance(context);
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance(context);
@@ -236,7 +238,6 @@ public final class SettingsFragment extends PreferenceFragment {
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 			double intervalInHours = Double.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_interval_key), null));
 			long interval = (long) (intervalInHours * 60 * 60);
-			boolean wifiOnlySync = prefs.getBoolean(getString(R.string.prefs_ods_monitor_wifi_key),true);
 
 			if (!monitor.isBeingMonitored(source))
 				monitor.startMonitoring(source);

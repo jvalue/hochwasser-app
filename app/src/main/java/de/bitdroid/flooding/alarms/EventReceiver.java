@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Vibrator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -105,7 +106,12 @@ public final class EventReceiver extends BaseEventReceiver {
 						relation,
 						alarm.getLevel());
 
+				// show notification and pass to news manager
 				NewsManager.getInstance(context).addItem(title, msg, 1, true, true);
+
+				// vibrate
+				Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+				vibrator.vibrate(400);
 			}
 		}
 	}

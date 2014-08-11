@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceManager;
@@ -58,7 +59,7 @@ public final class SettingsFragment extends PreferenceFragment {
 
 		// source monitoring
 		Preference monitoring = findPreference(getString(R.string.prefs_ods_monitor_key));
-		final EditTextPreference monitorDuration = (EditTextPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
+		final ListPreference monitorDurationPref = (ListPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
 		final Preference monitorInterval = findPreference(getString(R.string.prefs_ods_monitor_interval_key));
 		final CheckBoxPreference wifiPref = (CheckBoxPreference) findPreference(getString(R.string.prefs_ods_monitor_wifi_key));
 
@@ -80,15 +81,13 @@ public final class SettingsFragment extends PreferenceFragment {
 			}
 		});
 
-		int days = Integer.valueOf(monitorDuration.getText().toString());
-		monitorDuration.setSummary(getString(R.string.prefs_ods_monitor_days_format, days));
-		monitorDuration.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		monitorDurationPref.setSummary(monitorDurationPref.getEntry());
+		monitorDurationPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				int newDays = Integer.valueOf(newValue.toString());
-				if (newDays <= 0) return false;
-
-				monitorDuration.setSummary(getString(R.string.prefs_ods_monitor_days_format, newDays));
+				monitorDurationPref.setSummary(
+						monitorDurationPref.getEntries()[
+								monitorDurationPref.findIndexOfValue(newValue.toString())]);
 				return true;
 			}
 		});

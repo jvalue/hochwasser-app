@@ -9,12 +9,13 @@
 			android:key="@string/prefs_ods_monitor_key"
 			android:defaultValue="true"/>
 
-        <EditTextPreference
+        <ListPreference
             android:title="@string/prefs_ods_monitor_days"
             android:key="@string/prefs_ods_monitor_days_key"
             android:dependency="@string/prefs_ods_monitor_key"
-            android:numeric="integer"
-            android:defaultValue="@string/prefs_ods_monitor_days_default"/>
+            android:entries="@array/prefs_monitor_duration_entries"
+            android:entryValues="@array/prefs_monitor_duration_values"
+            android:defaultValue="7"/>
 
         <EditTextPreference
             android:title="@string/prefs_ods_monitor_interval"

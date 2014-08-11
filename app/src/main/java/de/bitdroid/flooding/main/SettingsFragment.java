@@ -1,7 +1,9 @@
 package de.bitdroid.flooding.main;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.PreferenceManager;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.Html;
 import android.text.format.DateFormat;
@@ -58,30 +61,19 @@ public final class SettingsFragment extends PreferenceFragment {
 		final EditTextPreference monitorDuration
 				= (EditTextPreference) findPreference(getString(R.string.prefs_ods_monitor_days_key));
 		final Preference monitorInterval = findPreference(getString(R.string.prefs_ods_monitor_interval_key));
-		final CheckBoxPreference wifiOnlySync = (CheckBoxPreference) findPreference(getString(R.string.prefs_ods_monitor_wifi_key));
 
 		monitoring.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				SourceMonitor monitor = SourceMonitor
-						.getInstance(getActivity().getApplicationContext());
-				OdsSourceManager sourceManager = OdsSourceManager
-						.getInstance(getActivity().getApplicationContext());
-				OdsSource source = PegelOnlineSource.INSTANCE;
+				toggleMonitoring((Boolean) newValue);
+				return true;
+			}
+		});
 
-				boolean startMonitor = (Boolean) newValue;
-				if (startMonitor) {
-					if (!monitor.isBeingMonitored(source)) monitor.startMonitoring(source);
-					double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
-					long interval = (long) (intervalInHours * 60 * 60);
-
-					if (!sourceManager.isRegisteredForPolling(source))
-						sourceManager.startPolling(interval, wifiOnlySync.isChecked(), source);
-				} else {
-					if (monitor.isBeingMonitored(source)) monitor.stopMonitoring(source);
-					if (sourceManager.isRegisteredForPolling(source)) sourceManager.stopPolling();
-				}
-
+		CheckBoxPreference wifiPref = (CheckBoxPreference) findPreference(getString(R.string.prefs_ods_monitor_wifi_key));
+		wifiPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				return true;
 			}
 		});
@@ -148,7 +140,7 @@ public final class SettingsFragment extends PreferenceFragment {
 				Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", address, null));
 				intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 				startActivity(Intent.createChooser(intent, getString(R.string.feedback_mail_chooser)));
-				return false;
+				return true;
 			}
 		});
 
@@ -167,7 +159,7 @@ public final class SettingsFragment extends PreferenceFragment {
 				TextView msgView = (TextView) dialog.findViewById(android.R.id.message);
 				msgView.setTextAppearance(getActivity(), R.style.FontRegular);
 				msgView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
-				return false;
+				return true;
 			}
 		});
 
@@ -177,7 +169,7 @@ public final class SettingsFragment extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				new ChangeLogDialog(getActivity()).show();
-				return false;
+				return true;
 			}
 		});
 
@@ -195,7 +187,7 @@ public final class SettingsFragment extends PreferenceFragment {
 				TextView msgView = (TextView) dialog.findViewById(android.R.id.message);
 				msgView.setMovementMethod(LinkMovementMethod.getInstance());
 				msgView.setTextAppearance(getActivity(), R.style.FontRegular);
-				return false;
+				return true;
 			}
 		});
 
@@ -233,6 +225,28 @@ public final class SettingsFragment extends PreferenceFragment {
 		});
 	}
 
+
+	private void toggleMonitoring(boolean start) {
+		Context context = getActivity().getApplicationContext();
+		SourceMonitor monitor = SourceMonitor.getInstance(context);
+		OdsSourceManager sourceManager = OdsSourceManager.getInstance(context);
+		OdsSource source = PegelOnlineSource.INSTANCE;
+
+		if (start) {
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			double intervalInHours = Double.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_interval_key), null));
+			long interval = (long) (intervalInHours * 60 * 60);
+			boolean wifiOnlySync = prefs.getBoolean(getString(R.string.prefs_ods_monitor_wifi_key),true);
+
+			if (!monitor.isBeingMonitored(source))
+				monitor.startMonitoring(source);
+			if (!sourceManager.isRegisteredForPolling(source))
+				sourceManager.startPolling(interval, wifiOnlySync, source);
+		} else {
+			if (monitor.isBeingMonitored(source)) monitor.stopMonitoring(source);
+			if (sourceManager.isRegisteredForPolling(source)) sourceManager.stopPolling();
+		}
+	}
 
 
 	private static interface ChangeServerName {

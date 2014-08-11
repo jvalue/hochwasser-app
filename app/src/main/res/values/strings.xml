@@ -126,6 +126,8 @@
     <string name="news_intro_alarms_content">Want alarms when water levels reach a certain level? &lt;b&gt;Click here!&lt;/b&gt;</string>
 	<string name="news_intro_data_title">Water levels</string>
 	<string name="news_intro_data_content">Want more details about the current water situation? &lt;b&gt;Click here!&lt;/b&gt;</string>
+    <string name="news_intro_dismiss_title">Swipe to dismiss</string>
+    <string name="news_intro_dismiss_content">Done with a card? &lt;b&gt;Swipe&lt;/b&gt; left or right to remove it!</string>
 
 
 	<string name="data_empty">No data found. Loading might take a little while when first starting the app.</string>

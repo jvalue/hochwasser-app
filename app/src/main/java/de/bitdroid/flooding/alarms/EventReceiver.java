@@ -105,7 +105,7 @@ public final class EventReceiver extends BaseEventReceiver {
 						relation,
 						alarm.getLevel());
 
-				NewsManager.getInstance(context).addItem(title, msg, 1, true);
+				NewsManager.getInstance(context).addItem(title, msg, 1, true, true);
 			}
 		}
 	}

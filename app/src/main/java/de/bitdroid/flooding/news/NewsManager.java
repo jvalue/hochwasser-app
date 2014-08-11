@@ -113,13 +113,19 @@ public final class NewsManager {
 	}
 
 
-	public NewsItem addItem(String title, String content, int navPos, boolean showNotification) {
-		Assert.assertNotNull(title, content);
-		Assert.assertTrue(navPos > 0 && navPos < 4, "invalid navPos");
+	public NewsItem addItem(
+			String title,
+			String content,
+			int navPos,
+			boolean navigationEnabled,
+			boolean showNotification) {
 
-		NewsItem item = new NewsItem.Builder(title, content, System.currentTimeMillis())
-				.setNavigationPos(navPos)
-				.build();
+		Assert.assertNotNull(title, content);
+		Assert.assertTrue(!navigationEnabled || (navPos > 0 && navPos < 4), "invalid nav pos");
+
+		NewsItem.Builder builder = new NewsItem.Builder(title, content, System.currentTimeMillis());
+		if (navigationEnabled) builder.setNavigationPos(navPos);
+		NewsItem item = builder.build();
 
 		addItem(item, showNotification);
 		return item;

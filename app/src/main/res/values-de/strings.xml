@@ -100,6 +100,8 @@
     <string name="news_intro_alarms_content">Interessiert an Alarmen sobald bestimmte Wasserstände überschritten wurden? &lt;b&gt;Klicke hier!&lt;/b&gt;</string>
 	<string name="news_intro_data_title">Wasserstände</string>
 	<string name="news_intro_data_content">Auf der Suche nach mehr Details über aktuelle Wasserstände? &lt;b&gt;Klicke hier!&lt;/b&gt;</string>
+    <string name="news_intro_dismiss_title">Karten entfernen</string>
+    <string name="news_intro_dismiss_content">Fertig mit einer Karte? &lt;b&gt;Wische&lt;/b&gt; nach links oder rechts um sie zu löschen!</string>
 
 
 	<string name="data_empty">Keine Daten gefunden. Das Laden kann beim ersten Start etwas Zeit beanspruchen.</string>

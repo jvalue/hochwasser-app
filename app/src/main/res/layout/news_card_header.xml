@@ -2,12 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     style="@style/CardBackground"
-    android:layout_marginBottom="0dp"
     >
 
     <TextView
         android:id="@+id/news_title"
         style="@style/FontHeader"
+        android:layout_margin="1dp"
+        />
+
+    <TextView
+        android:id="@+id/news_timestamp"
+        style="@style/FontSecundary"
+        android:layout_margin="1dp"
+        />
+
+    <TextView
+        android:id="@+id/news_content"
+        style="@style/FontRegular"
         android:layout_margin="1dp"
         />
 

@@ -56,11 +56,21 @@ final class NewsCard extends Card {
 		}
 
 		// custom header with overflow button
+		// header contains all data since this makes creating custom layouts easier
 		CardHeader header = new CardHeader(getContext(), R.layout.news_card_header) {
 			@Override
 			public void setupInnerViewElements(ViewGroup parent, View view) {
 				TextView title = (TextView) parent.findViewById(R.id.news_title);
 				title.setText(data.first.getTitle());
+
+				TextView msg  = (TextView) parent.findViewById(R.id.news_timestamp);
+				TextView content = (TextView) parent.findViewById(R.id.news_content);
+
+				Date date = new Date(data.first.getTimestamp());
+
+				msg.setText(DateFormat.getDateFormat(getContext()).format(date)
+						+ " " + DateFormat.getTimeFormat(getContext()).format(date));
+				content.setText(Html.fromHtml(data.first.getContent()));
 			}
 		};
 
@@ -89,14 +99,7 @@ final class NewsCard extends Card {
 
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
-		TextView msg  = (TextView) parent.findViewById(R.id.news_timestamp);
-		TextView content = (TextView) parent.findViewById(R.id.news_content);
-
-		Date date = new Date(data.first.getTimestamp());
-
-		msg.setText(DateFormat.getDateFormat(getContext()).format(date)
-			+ " " + DateFormat.getTimeFormat(getContext()).format(date));
-		content.setText(Html.fromHtml(data.first.getContent()));
+		//  nothing to do here, layout is in header
 	}
 
 	public NewsItem getNewsItem() {

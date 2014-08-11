@@ -173,14 +173,13 @@ public final class NewsManager {
 			.setContentTitle(item.getTitle())
 			.setContentText(item.getContent())
 			.setAutoCancel(true)
+			.setLights(context.getResources().getColor(R.color.notification_light), 1000, 3000)
 			.setContentIntent(pendingIntent);
 
 
-		NotificationManager manager 
+		NotificationManager manager
 			= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(NOTIFICATION_ID, builder.build());
-
-
 	}
 
 

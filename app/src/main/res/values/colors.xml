@@ -19,4 +19,6 @@
 
 	<color name="showcase_background">#DD000000</color>
 
+    <color name="notification_light">#000000FF</color>
+
 </resources>

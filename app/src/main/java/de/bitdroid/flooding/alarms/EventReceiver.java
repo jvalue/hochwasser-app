@@ -97,8 +97,8 @@ public final class EventReceiver extends BaseEventReceiver {
 				String title = context.getString(R.string.alarms_triggered_title, station);
 
 				String relation = alarm.getAlarmWhenAbove() 
-					? context.getString(R.string.alarms_new_trigger_above)
-					: context.getString(R.string.alarms_new_trigger_below);
+					? context.getString(R.string.alarms_triggered_msg_above)
+					: context.getString(R.string.alarms_triggered_msg_below);
 
 				String msg = context.getString(
 						R.string.alarms_triggered_msg,

@@ -48,7 +48,9 @@
 	<string name="alarms_registration_pending">Alarm wird gestartet ...</string>
     <string name="alarms_registration_error">Fehler beim Starten, hier drücken um erneut zu probieren.</string>
 	<string name="alarms_triggered_title">%1$s Alarm ausgelöst!</string>
-	<string name="alarms_triggered_msg">%1$s ist %2$s %3$.2f cm</string>
+	<string name="alarms_triggered_msg">%1$s hat den Pegel %3$.2f cm %2$s.</string>
+    <string name="alarms_triggered_msg_above">überschritten</string>
+    <string name="alarms_triggered_msg_below">unterschritten</string>
 
 
 	<string name="series_select_dialog_title">Linien auswählen</string>

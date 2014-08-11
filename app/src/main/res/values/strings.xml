@@ -53,6 +53,8 @@
 	<string name="alarms_registration_error">Error starting alarm, tap to retry.</string>
 	<string name="alarms_triggered_title">%1$s alarm triggered!</string>
 	<string name="alarms_triggered_msg">%1$s is %2$s %3$.2f cm</string>
+    <string name="alarms_triggered_msg_above">above level</string>
+    <string name="alarms_triggered_msg_below">below level</string>
 
 
 	<string name="series_select_dialog_title">Select Series</string>

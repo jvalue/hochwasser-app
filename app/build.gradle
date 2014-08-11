@@ -52,6 +52,10 @@ android {
         exclude 'META-INF/NOTICE'
     }
 
+	lintOptions {
+		warning 'MissingTranslation'
+	}
+
 	compileSdkVersion 'Google Inc.:Google APIs:19'
 	buildToolsVersion '19.1.0'
 }

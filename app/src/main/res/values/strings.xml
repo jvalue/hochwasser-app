@@ -75,6 +75,8 @@
 	<string name="delete">Delete</string>
 	<string name="select_all">Select all</string>
 	<string name="never">never</string>
+    <string name="share">Share</string>
+    <string name="share_with">Share with</string>
 
 
 	<string name="prefs_cat_ods_monitor">Monitoring</string>

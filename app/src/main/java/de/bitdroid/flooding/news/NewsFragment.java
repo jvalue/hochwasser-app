@@ -8,9 +8,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -40,7 +37,6 @@ public final class NewsFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
 		this.manager = NewsManager.getInstance(getActivity().getApplicationContext());
 	}
 
@@ -88,23 +84,6 @@ public final class NewsFragment extends Fragment implements
 	public Loader<Map<NewsItem, Boolean>> onCreateLoader(int id, Bundle bundle) {
 		if (id != LOADER_ID) return null;
 		return new NewsLoader(getActivity().getApplicationContext());
-	}
-
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.news_menu, menu);
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		switch(menuItem.getItemId()) {
-			case R.id.news:
-				addHelperNews();
-				return true;
-		}
-		return super.onOptionsItemSelected(menuItem);
 	}
 
 

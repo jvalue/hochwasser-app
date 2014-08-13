@@ -10,8 +10,12 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.Set;
 
+import de.bitdroid.utils.Log;
+
 
 public abstract class BaseGcmReceiver extends BroadcastReceiver {
+
+	private static final String DATA_KEY_PING = "ping";
 
 	@Override
 	public final void onReceive(Context context, Intent intent) {
@@ -25,6 +29,15 @@ public abstract class BaseGcmReceiver extends BroadcastReceiver {
 
 			if (!GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) return;
 
+			// check for server ping
+			String pingExtra = intent.getExtras().getString(DATA_KEY_PING);
+			if (pingExtra != null && Boolean.valueOf(pingExtra)) {
+				Log.debug("found server ping, ignoring");
+				return;
+			}
+
+			// forward msg to correct subclass, assuming that all subclasses
+			// except disjunkt message parameters
 			Bundle extras = intent.getExtras();
 			for (String key : getRequiredExtras()) {
 				if (!extras.containsKey(key)) return;

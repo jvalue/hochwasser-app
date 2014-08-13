@@ -72,7 +72,7 @@ public class OdsSourceManagerTest extends BaseAndroidTestCase {
 		OdsSource source1 = mock(OdsSource.class);
 		OdsSource source2 = mock(OdsSource.class);
 
-		sourceManager.startPolling(100,  source1, source2);
+		sourceManager.startPolling(100,  false, source1, source2);
 		sourceManager.stopPolling();
 
 		assertEquals(serverName, sourceManager.getOdsServerName());
@@ -95,11 +95,11 @@ public class OdsSourceManagerTest extends BaseAndroidTestCase {
 		assertEquals(0, sourceManager.getPollingSources().size());
 
 		sourceManager.setOdsServerName(serverName);
-		sourceManager.startPolling(pollFrequency, source1, source2);
+		sourceManager.startPolling(pollFrequency, false, source1, source2);
 
 		assertTrue(sourceManager.isPollingActive());
 		assertEquals(2, sourceManager.getPollingSources().size());
-		verify(syncUtils).startPeriodicSync(eq(serverName), any(List.class), eq(pollFrequency));
+		verify(syncUtils).startPeriodicSync(eq(serverName), any(List.class), eq(pollFrequency), eq(false));
 
 		sourceManager.stopPolling();
 

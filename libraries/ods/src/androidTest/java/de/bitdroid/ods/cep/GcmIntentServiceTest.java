@@ -13,15 +13,17 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 
 	private final static String
-			EPL_STMT = "select * from *",
 			CLIENT_ID = "someId";
+	private final static Rule rule = new Rule.Builder("somePath")
+			.parameter("key1", "value1")
+			.parameter("key2", "value2")
+			.build();
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -44,12 +46,12 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		this.receiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				String eplStmt = intent.getStringExtra(GcmIntentService.EXTRA_EPL_STMT);
+				Rule rule = intent.getParcelableExtra(GcmIntentService.EXTRA_RULE);
 				String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
 				String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
 				boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
 
-				assertEquals(EPL_STMT, eplStmt);
+				assertEquals(GcmIntentServiceTest.rule, rule);
 				assertNull(errorMsg);
 				assertEquals(CLIENT_ID, clientId);
 				assertEquals(GcmIntentServiceTest.this.register, register);
@@ -89,7 +91,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 
 		// start service
 		Intent intent = new Intent(getContext(), GcmIntentService.class);
-		intent.putExtra(GcmIntentService.EXTRA_EPL_STMT, EPL_STMT);
+		intent.putExtra(GcmIntentService.EXTRA_RULE, rule);
 		intent.putExtra(GcmIntentService.EXTRA_REGISTER, true);
 		getContext().startService(intent);
 
@@ -98,8 +100,9 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 
 		assertEquals(1, server.getRequestCount());
 		RecordedRequest request = server.takeRequest();
-		assertTrue(request.getPath().contains("cep/gcm/register"));
-		assertTrue(request.getPath().contains("eplStmt=" + URLEncoder.encode(EPL_STMT)));
+		assertTrue(request.getPath().contains("somePath"));
+		assertTrue(request.getPath().contains("key1=value1"));
+		assertTrue(request.getPath().contains("key2=value2"));
 		assertEquals(1, counter);
 	}
 
@@ -116,7 +119,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		// start service
 		Intent intent = new Intent(getContext(), GcmIntentService.class);
 		intent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, CLIENT_ID);
-		intent.putExtra(GcmIntentService.EXTRA_EPL_STMT, EPL_STMT);
+		intent.putExtra(GcmIntentService.EXTRA_RULE, rule);
 		intent.putExtra(GcmIntentService.EXTRA_REGISTER, false);
 		getContext().startService(intent);
 

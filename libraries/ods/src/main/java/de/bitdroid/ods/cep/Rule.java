@@ -112,7 +112,7 @@ public final class Rule implements Parcelable {
 
 	public static class Builder {
 
-		private final String uuid;
+		private String uuid;
 		private final String cepsRulePath;
 		private final Map<String, String> params = new HashMap <String, String>();
 
@@ -120,6 +120,13 @@ public final class Rule implements Parcelable {
 			Assert.assertNotNull(cepsRulePath);
 			this.uuid = UUID.randomUUID().toString();
 			this.cepsRulePath = cepsRulePath;
+		}
+
+
+		public Builder uuid(String uuid) {
+			Assert.assertNotNull(uuid);
+			this.uuid = uuid;
+			return this;
 		}
 
 

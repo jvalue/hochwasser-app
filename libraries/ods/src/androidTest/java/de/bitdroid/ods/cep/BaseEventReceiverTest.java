@@ -8,8 +8,9 @@ import android.test.AndroidTestCase;
 public class BaseEventReceiverTest extends AndroidTestCase {
 
 	private static final String
-			EPL_STMT = "select * from *",
 			EVENT_ID = "eventId";
+	private static final Rule
+			RULE = new Rule.Builder("theBestPath").parameter("key1", "value1").build();
 
 	private int callCounter = 0;
 
@@ -17,9 +18,9 @@ public class BaseEventReceiverTest extends AndroidTestCase {
 		BroadcastReceiver receiver = new BaseEventReceiver() {
 
 			@Override
-			public void onReceive(Context context, String eplStmt, String eventId) {
+			public void onReceive(Context context, Rule rule, String eventId) {
 				assertNotNull(context);
-				assertEquals(EPL_STMT, eplStmt);
+				assertEquals(RULE, rule);
 				assertEquals(EVENT_ID, eventId);
 				callCounter++;
 			}
@@ -27,8 +28,8 @@ public class BaseEventReceiverTest extends AndroidTestCase {
 		};
 
 		Intent intent = new Intent();
-		intent.putExtra(BaseEventReceiver.EXTRA_EPLSTMT, EPL_STMT);
-		intent.putExtra(BaseEventReceiver.EXTRA_EVENTID, EVENT_ID);
+		intent.putExtra(BaseEventReceiver.EXTRA_RULE, RULE);
+		intent.putExtra(BaseEventReceiver.EXTRA_EVENT_ID, EVENT_ID);
 
 		receiver.onReceive(getContext(), intent);
 		assertEquals(1, callCounter);

@@ -1,5 +1,8 @@
 package de.bitdroid.ods.cep;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,7 +14,7 @@ import java.util.UUID;
 import de.bitdroid.utils.Assert;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class Rule {
+public final class Rule implements Parcelable {
 
 	private final String uuid;
 	private final String cepsRulePath;
@@ -27,6 +30,14 @@ public final class Rule {
 		this.uuid = uuid;
 		this.cepsRulePath = cepsRulePath;
 		this.params = params;
+	}
+
+
+	private Rule(Parcel parcel) {
+		this.uuid = parcel.readString();
+		this.cepsRulePath = parcel.readString();
+		this.params = new HashMap<String, String>();
+		while (parcel.dataAvail() > 0) params.put(parcel.readString(), parcel.readString());
 	}
 
 
@@ -65,6 +76,38 @@ public final class Rule {
 		hash = hash + MULT * params.hashCode();
 		return hash;
 	}
+
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(uuid);
+		dest.writeString(cepsRulePath);
+		for (Map.Entry<String, String> param : params.entrySet()) {
+			dest.writeString(param.getKey());
+			dest.writeString(param.getValue());
+		}
+	}
+
+
+	public static final Parcelable.Creator<Rule> CREATOR = new Parcelable.Creator<Rule>() {
+		@Override
+		public Rule createFromParcel(Parcel in) {
+			return new Rule(in);
+		}
+
+		@Override
+		public Rule[] newArray(int size) {
+			return new Rule[size];
+		}
+	};
+
+
 
 
 	public static class Builder {

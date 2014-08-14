@@ -185,6 +185,7 @@ public abstract class BaseMapFragment extends Fragment implements StationClickLi
 	@Override
 	public void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
+		if (mapView == null) return;
 		state.putInt(EXTRA_SCROLL_X, mapView.getScrollX());
 		state.putInt(EXTRA_SCROLL_Y, mapView.getScrollY());
 		state.putInt(EXTRA_ZOOM_LEVEL, mapView.getZoomLevel());

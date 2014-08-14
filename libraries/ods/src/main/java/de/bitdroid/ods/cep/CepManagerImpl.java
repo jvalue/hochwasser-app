@@ -1,27 +1,19 @@
 package de.bitdroid.ods.cep;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URL;
-import java.util.HashSet;
 import java.util.Set;
 
 import de.bitdroid.ods.gcm.GcmRegistrationManager;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.Log;
-
-import static de.bitdroid.ods.cep.RuleDbSchema.COLUMN_JSON;
-import static de.bitdroid.ods.cep.RuleDbSchema.TABLE_NAME;
 
 
 final class CepManagerImpl implements CepManager {
@@ -73,17 +65,8 @@ final class CepManagerImpl implements CepManager {
 
 		sourceRegistrationHelper(null, rule, true);
 
-		// store in db
-		SQLiteDatabase database = null;
-		try {
-			database = ruleDb.getWritableDatabase();
-			ContentValues values = new ContentValues();
-			values.put(COLUMN_JSON, ((Object) mapper.valueToTree(rule)).toString());
-			database.insert(TABLE_NAME, null, values);
-			// TODO alert?
-		} finally {
-			if (database != null) database.close();
-		}
+		ruleDb.insert(rule);
+		// TODO alert?
 	}
 
 
@@ -96,17 +79,8 @@ final class CepManagerImpl implements CepManager {
 		String clientId =  registrationManager.getClientIdForObjectId(rule.getUuid());
 		sourceRegistrationHelper(clientId, rule, false);
 
-		// remove from db
-		SQLiteDatabase database = null;
-		try {
-			database = ruleDb.getWritableDatabase();
-			database.delete(
-					TABLE_NAME,
-					COLUMN_JSON + "=?",
-					new String[]{((Object) mapper.valueToTree(rule)).toString()});
-		} finally {
-			if (database != null) database.close();
-		}
+		ruleDb.delete(rule);
+		// TODO alert?
 	}
 
 
@@ -160,29 +134,7 @@ final class CepManagerImpl implements CepManager {
 
 	@Override
 	public Set<Rule> getAll() {
-		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-		builder.setTables(TABLE_NAME);
-		String[] columns = { COLUMN_JSON };
-		Cursor cursor = builder.query(
-				ruleDb.getReadableDatabase(),
-				columns,
-				null, null, null, null, null);
-
-		Set<Rule> rules = new HashSet<Rule>();
-
-		if (cursor.getCount() <= 0) return rules;
-		cursor.moveToFirst();
-		do {
-			String json = cursor.getString(0);
-			try {
-				Rule rule = mapper.treeToValue(mapper.readTree(json), Rule.class);;
-				rules.add(rule);
-			} catch (Exception e) {
-				Log.error("failed to read rule from db", e);
-			}
-		} while (cursor.moveToNext());
-
-		return rules;
+		return ruleDb.getAll();
 	}
 
 

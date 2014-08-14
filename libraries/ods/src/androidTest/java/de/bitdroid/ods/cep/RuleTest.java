@@ -11,7 +11,7 @@ public class RuleTest extends TestCase {
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	public void testBuilder() {
-		Rule rule = getRule();
+		Rule rule = getRule(2);
 
 		assertNotNull(rule.getUuid());
 		assertEquals("dummyPath", rule.getCepsRulePath());
@@ -21,18 +21,27 @@ public class RuleTest extends TestCase {
 
 
 	public void testParcel() {
-		Rule rule = getRule();
+		testParcel(0);
+		testParcel(1);
+		testParcel(2);
+		testParcel(10);
+	}
+
+
+	private void testParcel(int paramCount) {
+		Rule rule = getRule(paramCount);
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("rule", rule);
 		assertEquals(rule, bundle.getParcelable("rule"));
 	}
 
 
-	private Rule getRule() {
-		return new Rule.Builder("dummyPath")
-				.parameter("key1", "value1")
-				.parameter("key2", "value2")
-				.build();
+	private Rule getRule(int paramCount) {
+		Rule.Builder builder =  new Rule.Builder("dummyPath");
+		for (int i = 0; i < paramCount; i++) {
+			builder.parameter("key" + (i + 1), "value" + (i + 1));
+		}
+		return builder.build();
 	}
 
 }

@@ -9,7 +9,7 @@ public interface CepManager {
 	public static final String ACTION_REGISTRATION_STATUS_CHANGED = "de.bitdroid.ods.cep.ACTION_REGISTRATION_STATUS_CHANGED";
 
 	public static final String
-			EXTRA_RULE_JSON = "EXTRA_RULE_JSON",
+			EXTRA_RULE = "EXTRA_RULE",
 			EXTRA_REGISTER = "EXTRA_REGISTER",
 			EXTRA_ERROR_MSG = "EXTRA_ERROR_MSG";
 

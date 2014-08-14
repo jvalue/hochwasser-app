@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,9 +15,7 @@ import de.bitdroid.utils.Log;
 
 public final class GcmReceiver extends BaseGcmReceiver {
 
-	private static final ObjectMapper mapper = new ObjectMapper();
-
-	private final static String 
+	private final static String
 		EXTRA_CLIENT_ID = "client",
 		EXTRA_EVENT_ID = "event",
 		EXTRA_DEBUG = "debug";
@@ -54,10 +50,9 @@ public final class GcmReceiver extends BaseGcmReceiver {
 
 		// broadcast new event
 		Intent eventIntent = new Intent(BaseEventReceiver.ACTION_EVENT_RECEIVED);
-		eventIntent.putExtra(BaseEventReceiver.EXTRA_RULE_JSON, mapper.valueToTree(rule).toString());
+		eventIntent.putExtra(BaseEventReceiver.EXTRA_RULE, rule);
 		eventIntent.putExtra(BaseEventReceiver.EXTRA_EVENT_ID, eventId);
 		context.sendBroadcast(eventIntent);
-
 	}
 
 

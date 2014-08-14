@@ -9,18 +9,18 @@ public abstract class BaseEventReceiver extends BroadcastReceiver {
 
 	protected final static String ACTION_EVENT_RECEIVED = "de.bitdroid.ods.cep.ACTION_EVENT_RECEIVED";
 	protected final static String 
-		EXTRA_EVENT_ID = "event",
-		EXTRA_RULE_JSON = "rule";
+		EXTRA_EVENT_ID = "EXTRA_EVENT_ID",
+		EXTRA_RULE = "EXTRA_RULE";
 
 
 	@Override
 	public final void onReceive(Context context, Intent intent) {
-		String ruleJson = intent.getStringExtra(EXTRA_RULE_JSON);
+		Rule rule = intent.getParcelableExtra(EXTRA_RULE);
 		String eventId = intent.getStringExtra(EXTRA_EVENT_ID);
-		onReceive(context, ruleJson, eventId);
+		onReceive(context, rule, eventId);
 	}
 
 
-	protected abstract void onReceive(Context context, String ruleJson, String eventId);
+	protected abstract void onReceive(Context context, Rule rule, String eventId);
 
 }

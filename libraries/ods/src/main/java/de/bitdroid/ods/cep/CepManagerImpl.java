@@ -119,7 +119,7 @@ final class CepManagerImpl implements CepManager {
 
 		// execute in background
 		Intent registrationIntent = new Intent(context, GcmIntentService.class);
-		registrationIntent.putExtra(GcmIntentService.EXTRA_RULE_JSON, mapper.valueToTree(rule).toString());
+		registrationIntent.putExtra(GcmIntentService.EXTRA_RULE, rule);
 		registrationIntent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, clientId);
 		registrationIntent.putExtra(GcmIntentService.EXTRA_REGISTER, register);
 		context.startService(registrationIntent);
@@ -195,21 +195,14 @@ final class CepManagerImpl implements CepManager {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			String ruleJson = intent.getStringExtra(GcmIntentService.EXTRA_RULE_JSON);
+			Rule rule = intent.getParcelableExtra(GcmIntentService.EXTRA_RULE);
 			String errorMsg = intent.getStringExtra(GcmIntentService.EXTRA_ERROR_MSG);
 			String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
 			boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
 
-			Rule rule = null;
-			try {
-				rule = mapper.treeToValue(mapper.readTree(ruleJson), Rule.class);
-			} catch (Exception e) {
-				Log.error("Failed to read rule", e);
-				return;
-			}
 
 			// abort if stmt was registered on server, but not on client
-			if (ruleJson == null && !register) {
+			if (rule == null && !register) {
 				Log.info("not forwarding unregistration action since ruleJson was null");
 				return;
 			}
@@ -224,7 +217,7 @@ final class CepManagerImpl implements CepManager {
 
 			// send broadcast about changed status
 			Intent registrationChangedIntent = new Intent(ACTION_REGISTRATION_STATUS_CHANGED);
-			registrationChangedIntent.putExtra(EXTRA_RULE_JSON, ruleJson);
+			registrationChangedIntent.putExtra(EXTRA_RULE, rule);
 			registrationChangedIntent.putExtra(EXTRA_ERROR_MSG, errorMsg);
 			registrationChangedIntent.putExtra(EXTRA_REGISTER, register);
 			context.sendBroadcast(registrationChangedIntent);

@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 
 import de.bitdroid.ods.gcm.BaseGcmIntentService;
-import de.bitdroid.utils.Log;
 import de.bitdroid.utils.RestCall;
 
 
@@ -19,7 +18,7 @@ public final class GcmIntentService extends BaseGcmIntentService {
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	static final String
-		EXTRA_RULE_JSON = "EXTRA_RULE_JSON";
+		EXTRA_RULE = "EXTRA_RULE";
 
 	private static final String 
 		PATH_UNREGISTER = "cep/unregister";
@@ -36,13 +35,7 @@ public final class GcmIntentService extends BaseGcmIntentService {
 			String cepsClientId,
 			boolean register) throws Exception {
 
-		Rule rule = null;
-		try {
-			rule = mapper.treeToValue(mapper.readTree(intent.getStringExtra(EXTRA_RULE_JSON)), Rule.class);
-		} catch (Exception e) {
-			Log.error("failed to read rule", e);
-			return null;
-		}
+		Rule rule = intent.getParcelableExtra(EXTRA_RULE);
 
 		RestCall.Builder builder = new RestCall.Builder(
 				RestCall.RequestType.POST,
@@ -70,8 +63,8 @@ public final class GcmIntentService extends BaseGcmIntentService {
 
 	@Override
 	protected void prepareResultIntent(Intent originalIntent, Intent resultIntent) {
-		String ruleJson = originalIntent.getStringExtra(EXTRA_RULE_JSON);
-		resultIntent.putExtra(EXTRA_RULE_JSON, ruleJson);
+		Rule rule = originalIntent.getParcelableExtra(EXTRA_RULE);
+		resultIntent.putExtra(EXTRA_RULE, rule);
 	}
 
 

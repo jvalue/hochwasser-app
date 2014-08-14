@@ -13,9 +13,6 @@ import de.bitdroid.flooding.utils.BaseActivity;
 
 public class NewAlarmActivity extends BaseActivity implements Extras {
 
-	private String waterName, stationName;
-
-	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

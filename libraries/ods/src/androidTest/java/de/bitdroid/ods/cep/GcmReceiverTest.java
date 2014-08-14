@@ -1,83 +1,62 @@
 package de.bitdroid.ods.cep;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+
+import org.mockito.ArgumentCaptor;
 
 import de.bitdroid.testUtils.BaseAndroidTestCase;
-import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.testUtils.SharedPreferencesHelper;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GcmReceiverTest extends BaseAndroidTestCase {
 
-	private static final String PREFIX = GcmReceiverTest.class.getSimpleName();
 	private static final String
 			CLIENTID = "someClientId",
-			EPL_STMT = "select * from *",
 			EVENTID = "someEventId";
 
-	private BroadcastReceiver eventReceiver;
-	private int receiverCount;
+	private static final Rule RULE = new Rule.Builder("theBestPath").parameter("key1", "value1").build();
 
 
 	@Override
 	public void beforeClass() {
-		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
-	}
-
-
-	@Override
-	public void beforeTest() {
-		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
-
-		this.receiverCount = 0;
-		this.eventReceiver = new BaseEventReceiver() {
-			@Override
-			protected void onReceive(Context context, String eplStmt, String eventId) {
-				assertEquals(EPL_STMT, eplStmt);
-				assertEquals(EVENTID, eventId);
-				receiverCount++;
-			}
-		};
-
-		getContext().registerReceiver(
-				eventReceiver,
-				new IntentFilter("de.bitdroid.ods.cep.ACTION_EVENT_RECEIVED"));
-	}
-
-
-	@Override
-	public void tearDown() throws Exception {
-		getContext().unregisterReceiver(eventReceiver);
+		// some love potion for our two friends: dexmaker and mockito
+		System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
 	}
 
 
 	public void testValidEvent() throws Exception {
-		CepManager manager = mock(CepManager.class);
-		when(manager.getEplStmtForClientId(CLIENTID)).thenReturn(EPL_STMT);
-		CepManagerFactory.setCepManager(manager);
+		CepManager mockManager = mock(CepManager.class);
+		when(mockManager.getRuleForClientId(CLIENTID)).thenReturn(RULE);
+		CepManagerFactory.setCepManager(mockManager);
 
-		new GcmReceiver().handle(getContext(), getIntent());
+		Context mockContext = mock(Context.class);
 
-		Thread.sleep(200);
+		new GcmReceiver().handle(mockContext, getIntent());
 
-		assertEquals(1, receiverCount);
+		ArgumentCaptor<Intent> captor = ArgumentCaptor.forClass(Intent.class);
+		verify(mockContext).sendBroadcast(captor.capture());
+
+		Intent broadcastIntent = captor.getValue();
+		assertEquals(RULE, broadcastIntent.getParcelableExtra(BaseEventReceiver.EXTRA_RULE));
+		assertEquals(EVENTID, broadcastIntent.getStringExtra(BaseEventReceiver.EXTRA_EVENT_ID));
 	}
 
 
 	public void testInvalidRequest() throws Exception {
-		CepManager manager = mock(CepManager.class);
-		CepManagerFactory.setCepManager(manager);
+		CepManager mockManager = mock(CepManager.class);
+		CepManagerFactory.setCepManager(mockManager);
 
-		new GcmReceiver().handle(getContext(), getIntent());
+		Context mockContext = mock(Context.class);
 
-		verify(manager).unregisterClientId(CLIENTID);
-		assertEquals(0, receiverCount);
+		new GcmReceiver().handle(mockContext, getIntent());
+
+		verify(mockManager).unregisterClientId(CLIENTID);
+		verify(mockContext, never()).sendBroadcast(any(Intent.class));
 	}
 
 

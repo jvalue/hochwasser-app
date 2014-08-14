@@ -62,6 +62,8 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		getContext().registerReceiver(
 				receiver,
 				new IntentFilter("de.bitdroid.ods.cep.ACTION_GCM_FINISH"));
+
+		CepManagerFactory.setCepManager(new CepManagerImpl(getContext(), new RuleDb(getContext())));
 	}
 
 

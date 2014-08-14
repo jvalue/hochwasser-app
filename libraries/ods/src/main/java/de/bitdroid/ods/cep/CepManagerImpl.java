@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URL;
 import java.util.Set;
 
-import de.bitdroid.ods.gcm.GcmRegistrationManager;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.Log;
@@ -25,13 +24,11 @@ final class CepManagerImpl implements CepManager {
 
 
 	private final Context context;
-	private final GcmRegistrationManager registrationManager;
 	private final RuleDb ruleDb;
 
 	CepManagerImpl(Context context, RuleDb ruleDb) {
 		Assert.assertNotNull(context, ruleDb);
 		this.context = context;
-		this.registrationManager = new GcmRegistrationManager(context, PREFS_NAME);
 		this.ruleDb = ruleDb;
 	}
 
@@ -63,10 +60,10 @@ final class CepManagerImpl implements CepManager {
 		GcmStatus status = getRegistrationStatus(rule);
 		Assert.assertEquals(status, GcmStatus.UNREGISTERED, "Already registered");
 
-		sourceRegistrationHelper(null, rule, true);
-
 		ruleDb.insert(rule);
 		// TODO alert?
+
+		sourceRegistrationHelper(null, rule, true);
 	}
 
 
@@ -76,11 +73,11 @@ final class CepManagerImpl implements CepManager {
 		GcmStatus status = getRegistrationStatus(rule);
 		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
 
-		String clientId =  registrationManager.getClientIdForObjectId(rule.getUuid());
-		sourceRegistrationHelper(clientId, rule, false);
-
 		ruleDb.delete(rule);
 		// TODO alert?
+
+		String clientId = ruleDb.getClientIdForRule(rule);
+		sourceRegistrationHelper(clientId, rule, false);
 	}
 
 
@@ -89,7 +86,7 @@ final class CepManagerImpl implements CepManager {
 		GcmStatus status = null;
 		if (register) status = GcmStatus.PENDING_REGISTRATION;
 		else status = GcmStatus.PENDING_UNREGISTRATION;
-		registrationManager.update(rule.getUuid(), clientId, status);
+		ruleDb.updateCepsData(rule, clientId, status);
 
 		// execute in background
 		Intent registrationIntent = new Intent(context, GcmIntentService.class);
@@ -100,23 +97,17 @@ final class CepManagerImpl implements CepManager {
 	}
 
 
-	// TODO registration status + clientId are kept in SharedPreferences, while rule is in an
-	// sqlite db --> big error potential
 	@Override
 	public GcmStatus getRegistrationStatus(Rule rule) {
-		return registrationManager.getStatusForObjectId(rule.getUuid());
+		GcmStatus status = ruleDb.getStatusForRule(rule);
+		if (status == null) return GcmStatus.UNREGISTERED;
+		return status;
 	}
 
 
 	@Override
 	public Rule getRuleForClientId(String clientId) {
-		// TODO performance??
-		Assert.assertNotNull(clientId);
-		String ruleId = registrationManager.getObjectIdForClientId(clientId);
-		for (Rule rule : getAll()) {
-			if (rule.getUuid().equals(ruleId)) return rule;
-		}
-		return null;
+		return ruleDb.getRuleForClientId(clientId);
 	}
 
 
@@ -165,7 +156,8 @@ final class CepManagerImpl implements CepManager {
 			GcmStatus status = null;
 			if (register) status = GcmStatus.REGISTERED;
 			else status = GcmStatus.UNREGISTERED;
-			((CepManagerImpl) CepManagerFactory.createCepManager(context)).registrationManager.update(rule.getUuid(), clientId, status);
+			((CepManagerImpl) CepManagerFactory.createCepManager(context))
+					.ruleDb.updateCepsData(rule, clientId, status);
 
 			// send broadcast about changed status
 			Intent registrationChangedIntent = new Intent(ACTION_REGISTRATION_STATUS_CHANGED);

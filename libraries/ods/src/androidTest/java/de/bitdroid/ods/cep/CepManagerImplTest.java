@@ -1,34 +1,36 @@
 package de.bitdroid.ods.cep;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
+import android.content.Context;
+import android.content.Intent;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.testUtils.BaseAndroidTestCase;
 import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.testUtils.SharedPreferencesHelper;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 public class CepManagerImplTest extends BaseAndroidTestCase {
 
 	private static final String PREFIX = CepManagerImplTest.class.getSimpleName();
-	private static final ObjectMapper mapper = new ObjectMapper();
 
-	private CepManager manager;
 
 	@Override
 	public void beforeClass() {
-		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
-		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) getContext());
-		this.manager = CepManagerFactory.createCepManager(getContext());
+		// some love potion for our two friends: dexmaker and mockito
+		System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
 	}
 
 
 	public void testServerName() {
+		Context context = new PrefsRenamingDelegatingContext(getContext(), PREFIX);
+		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) context);
+		CepManager manager = new CepManagerImpl(context, new RuleDb(context));
+
 		String serverName1 = "http://somedomain.com";
 		String serverName2 = "http://someotherdomain.com";
 
@@ -40,63 +42,79 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 	}
 
 
-	public void testEplStmtCrud() throws Exception {
-		String stmt1 = "select * from *";
-		String stmt2 = "select foo from bar";
+	public void testRuleCrud() throws Exception {
+		Context mockContext = Mockito.mock(Context.class);
+		Context renamingContext = new PrefsRenamingDelegatingContext(getContext(), PREFIX);
+		RuleDb ruleDb = new RuleDb(renamingContext);
+		CepManager manager = new CepManagerImpl(mockContext, ruleDb);
 
-		MockWebServer server = new MockWebServer();
-		server.enqueue(getRegistrationResponse("someId1"));
-		server.enqueue(getRegistrationResponse("someId2"));
-		server.enqueue(new MockResponse());
-		server.enqueue(new MockResponse());
-		server.play();
-		manager.setCepServerName(server.getUrl("").toString());
+		Rule rule1 = newRule("path1", 2);
+		Rule rule2 = newRule("path2", 0);
 
-		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt1));
-		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt2));
-		assertEquals(0, manager.getRegisteredStmts().size());
+		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(rule1));
+		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(rule2));
+		assertEquals(0, manager.getAllRules().size());
 
-		manager.registerEplStmt(stmt1);
-		Thread.sleep(500);
+		manager.registerRule(rule1);
 
-		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(stmt1));
-		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt2));
-		assertEquals(1, manager.getRegisteredStmts().size());
-		assertTrue(manager.getRegisteredStmts().contains(stmt1));
+		// test status
+		assertEquals(GcmStatus.PENDING_REGISTRATION, manager.getRegistrationStatus(rule1));
+		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(rule2));
+		assertEquals(1, manager.getAllRules().size());
+		assertTrue(manager.getAllRules().contains(rule1));
 
-		manager.registerEplStmt(stmt2);
-		Thread.sleep(500);
+		// test started service
+		ArgumentCaptor<Intent> captor  = ArgumentCaptor.forClass(Intent.class);
+		verify(mockContext).startService(captor.capture());
+		Intent serviceIntent = captor.getValue();
+		assertEquals(rule1, serviceIntent.getParcelableExtra(GcmIntentService.EXTRA_RULE));
+		assertEquals(true, serviceIntent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false));
 
-		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(stmt1));
-		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(stmt2));
-		assertEquals(2, manager.getRegisteredStmts().size());
-		assertTrue(manager.getRegisteredStmts().contains(stmt1));
-		assertTrue(manager.getRegisteredStmts().contains(stmt2));
+		// test registration response
+		CepManagerFactory.setCepManager(manager);
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra(GcmIntentService.EXTRA_RULE, rule1);
+		resultIntent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, "someClientId");
+		resultIntent.putExtra(GcmIntentService.EXTRA_REGISTER, true);
+		new CepManagerImpl.StatusUpdater().onReceive(mockContext, resultIntent);
 
-		manager.unregisterEplStmt(stmt1);
-		Thread.sleep(500);
+		// test broadcast sent
+		captor  = ArgumentCaptor.forClass(Intent.class);
+		verify(mockContext).sendBroadcast(captor.capture());
+		Intent broadcastIntent = captor.getValue();
+		assertEquals(rule1, broadcastIntent.getParcelableExtra(CepManager.EXTRA_RULE));
+		assertTrue(broadcastIntent.getBooleanExtra(CepManager.EXTRA_REGISTER, false));
+		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(rule1));
+		assertEquals(1, manager.getAllRules().size());
 
-		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt1));
-		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(stmt2));
-		assertEquals(1, manager.getRegisteredStmts().size());
-		assertTrue(manager.getRegisteredStmts().contains(stmt2));
+		// test unregister
+		manager.unregisterRule(rule1);
+		captor  = ArgumentCaptor.forClass(Intent.class);
+		verify(mockContext, times(2)).startService(captor.capture());
+		serviceIntent = captor.getValue();
+		assertEquals(rule1, serviceIntent.getParcelableExtra(GcmIntentService.EXTRA_RULE));
+		assertEquals(false, serviceIntent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, true));
+		assertEquals(GcmStatus.PENDING_UNREGISTRATION, manager.getRegistrationStatus(rule1));
 
-		manager.unregisterEplStmt(stmt2);
-		Thread.sleep(500);
+		// test registration response
+		CepManagerFactory.setCepManager(manager);
+		resultIntent = new Intent();
+		resultIntent.putExtra(GcmIntentService.EXTRA_RULE, rule1);
+		resultIntent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, "someClientId");
+		resultIntent.putExtra(GcmIntentService.EXTRA_REGISTER, false);
+		new CepManagerImpl.StatusUpdater().onReceive(mockContext, resultIntent);
+		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(rule1));
+		assertEquals(0, manager.getAllRules().size());
 
-		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt1));
-		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(stmt2));
-		assertEquals(0, manager.getRegisteredStmts().size());
-
-		server.shutdown();
 	}
 
 
-	private MockResponse getRegistrationResponse(String clientId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("clientId", clientId);
-		JsonNode json = mapper.valueToTree(map);
-		return new MockResponse().setBody(((Object) json).toString());
+	private Rule newRule(String path, int paramCount) {
+		Rule.Builder builder = new Rule.Builder(path);
+		for (int i = 0; i < paramCount; i++) {
+			builder.parameter("key" + i, "value" + i);
+		}
+		return builder.build();
 	}
 
 }

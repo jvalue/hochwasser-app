@@ -52,7 +52,7 @@ public interface CepManager {
 
 
 	/**
-	 * Returns all rules, regardles of their registration status.
+	 * Returns all rules, regardless of their registration status.
 	 */
-	public Set<Rule> getAll();
+	public Set<Rule> getAllRules();
 }

@@ -73,9 +73,6 @@ final class CepManagerImpl implements CepManager {
 		GcmStatus status = getRegistrationStatus(rule);
 		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
 
-		ruleDb.delete(rule);
-		// TODO alert?
-
 		String clientId = ruleDb.getClientIdForRule(rule);
 		sourceRegistrationHelper(clientId, rule, false);
 	}
@@ -124,8 +121,14 @@ final class CepManagerImpl implements CepManager {
 
 
 	@Override
-	public Set<Rule> getAll() {
+	public Set<Rule> getAllRules() {
 		return ruleDb.getAll();
+	}
+
+
+	private void updateCepsData(Rule rule, String clientId, GcmStatus status) {
+		if (status.equals(GcmStatus.UNREGISTERED)) ruleDb.delete(rule);
+		else ruleDb.updateCepsData(rule, clientId, status);
 	}
 
 
@@ -157,7 +160,7 @@ final class CepManagerImpl implements CepManager {
 			if (register) status = GcmStatus.REGISTERED;
 			else status = GcmStatus.UNREGISTERED;
 			((CepManagerImpl) CepManagerFactory.createCepManager(context))
-					.ruleDb.updateCepsData(rule, clientId, status);
+					.updateCepsData(rule, clientId, status);
 
 			// send broadcast about changed status
 			Intent registrationChangedIntent = new Intent(ACTION_REGISTRATION_STATUS_CHANGED);

@@ -194,6 +194,7 @@ final class RuleDb extends SQLiteOpenHelper {
 
 		SQLiteDatabase database = null;
 		try {
+			database = getWritableDatabase();
 			database.update(TABLE_NAME, values, COLUMN_UUID + "=?", new String[] { rule.getUuid() });
 		} finally {
 			if (database != null) database.close();

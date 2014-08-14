@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.alarms;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.BaseRiverSelectionFragment;
@@ -13,16 +14,28 @@ import de.bitdroid.flooding.utils.BaseActivity;
 
 public class NewAlarmActivity extends BaseActivity implements Extras {
 
+	private static final String
+			STATE_FRAGMENT = "currentFragment",
+			STATE_TITLE = "title";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_fragment_container);
 
+		Fragment fragment;
+		if (savedInstanceState != null) {
+			fragment = getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
+			getActionBar().setTitle(savedInstanceState.getString(STATE_TITLE));
+		} else {
+			fragment = new RiverSelectionFragment();
+			getActionBar().setTitle(R.string.alarms_new_title_river);
+		}
+
 		// show all rivers fragment
-		getActionBar().setTitle(R.string.alarms_new_title_river);
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame, new RiverSelectionFragment())
+				.replace(R.id.frame, fragment)
 				.commit();
     }
 
@@ -31,7 +44,7 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 		getActionBar().setTitle(getString(R.string.alarms_new_title_station));
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame, StationSelectionFragment.newInstance(waterName))
+				.replace(R.id.frame,  StationSelectionFragment.newInstance(waterName))
 				.addToBackStack(null)
 				.commit();
 	}
@@ -41,7 +54,7 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 		getActionBar().setTitle(getString(R.string.alarms_new_title_station));
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame, MapFragment.newInstance(waterName))
+				.replace(R.id.frame,  MapFragment.newInstance(waterName))
 				.addToBackStack(null)
 				.commit();
 	}
@@ -54,6 +67,15 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 				.replace(R.id.frame, SelectLevelFragment.newInstance(waterName, stationName))
 				.addToBackStack(null)
 				.commit();
+	}
+
+
+	@Override
+	public void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+		getSupportFragmentManager().putFragment(state, STATE_FRAGMENT, currentFragment);
+		state.putString(STATE_TITLE, getActionBar().getTitle().toString());
 	}
 
 

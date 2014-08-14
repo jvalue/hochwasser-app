@@ -3,17 +3,12 @@ package de.bitdroid.ods.cep;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import de.bitdroid.utils.Assert;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Rule implements Parcelable {
 
 	private final String uuid;
@@ -21,11 +16,10 @@ public final class Rule implements Parcelable {
 	private final Map<String, String> params;
 
 
-	@JsonCreator
 	private Rule(
-			@JsonProperty("uuid") String uuid,
-			@JsonProperty("cepsRulePath") String cepsRulePath,
-			@JsonProperty("params") Map<String, String> params) {
+			String uuid,
+			String cepsRulePath,
+			Map<String, String> params) {
 
 		this.uuid = uuid;
 		this.cepsRulePath = cepsRulePath;

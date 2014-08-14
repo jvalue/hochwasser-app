@@ -55,7 +55,7 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 
 
     @Override
-	public final View onCreateView(
+	public View onCreateView(
 			LayoutInflater inflater,
 			ViewGroup container,
 			Bundle savedInstanceState) {

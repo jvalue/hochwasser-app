@@ -55,6 +55,8 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 			ViewGroup container, 
 			Bundle savedInstanceState) {
 
+		getActivity().getActionBar().setTitle(getString(R.string.alarms_new_title_level));
+
 		View view = inflater.inflate(R.layout.alarms_new, container, false);
 
 		TextView stationView = (TextView) view.findViewById(R.id.station);

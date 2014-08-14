@@ -2,6 +2,9 @@ package de.bitdroid.flooding.alarms;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.BaseRiverSelectionFragment;
@@ -14,9 +17,7 @@ import de.bitdroid.flooding.utils.BaseActivity;
 
 public class NewAlarmActivity extends BaseActivity implements Extras {
 
-	private static final String
-			STATE_FRAGMENT = "currentFragment",
-			STATE_TITLE = "title";
+	private static final String STATE_FRAGMENT = "currentFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,10 +27,8 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 		Fragment fragment;
 		if (savedInstanceState != null) {
 			fragment = getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
-			getActionBar().setTitle(savedInstanceState.getString(STATE_TITLE));
 		} else {
 			fragment = new RiverSelectionFragment();
-			getActionBar().setTitle(R.string.alarms_new_title_river);
 		}
 
 		// show all rivers fragment
@@ -41,27 +40,24 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 
 	private void showStationFragment(String waterName) {
-		getActionBar().setTitle(getString(R.string.alarms_new_title_station));
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame,  StationSelectionFragment.newInstance(waterName))
+				.replace(R.id.frame, StationSelectionFragment.newInstance(waterName))
 				.addToBackStack(null)
 				.commit();
 	}
 
 
 	private void showMapFragment(String waterName) {
-		getActionBar().setTitle(getString(R.string.alarms_new_title_station));
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame,  MapFragment.newInstance(waterName))
+				.replace(R.id.frame, MapFragment.newInstance(waterName))
 				.addToBackStack(null)
 				.commit();
 	}
 
 
 	private void showLevelFragment(String waterName, String stationName) {
-		getActionBar().setTitle(getString(R.string.alarms_new_title_level));
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.frame, SelectLevelFragment.newInstance(waterName, stationName))
@@ -75,7 +71,6 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 		super.onSaveInstanceState(state);
 		Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame);
 		getSupportFragmentManager().putFragment(state, STATE_FRAGMENT, currentFragment);
-		state.putString(STATE_TITLE, getActionBar().getTitle().toString());
 	}
 
 
@@ -85,6 +80,12 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 
 	public static final class RiverSelectionFragment extends BaseRiverSelectionFragment {
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			getActivity().getActionBar().setTitle(R.string.alarms_new_title_river);
+			return super.onCreateView(inflater, container, savedInstanceState);
+		}
 
 		@Override
 		protected void onItemClicked(River river) {
@@ -108,6 +109,12 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 		}
 
 		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			getActivity().getActionBar().setTitle(getString(R.string.alarms_new_title_station));
+			return super.onCreateView(inflater, container, savedInstanceState);
+		}
+
+		@Override
 		protected void onStationClicked(String waterName, String stationName) {
 			((NewAlarmActivity) getActivity()).showLevelFragment(waterName, stationName);
 		}
@@ -124,6 +131,12 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 
 	public static final class MapFragment extends BaseMapFragment {
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			getActivity().getActionBar().setTitle(getString(R.string.alarms_new_title_station));
+			return super.onCreateView(inflater, container, savedInstanceState);
+		}
 
 		public static MapFragment newInstance(String waterName) {
 			MapFragment fragment = new MapFragment();

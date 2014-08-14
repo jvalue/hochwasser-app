@@ -1,6 +1,7 @@
 package de.bitdroid.ods.cep;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import android.os.Bundle;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import junit.framework.TestCase;
@@ -19,10 +20,11 @@ public class RuleTest extends TestCase {
 	}
 
 
-	public void testJson() throws Exception {
+	public void testParcel() {
 		Rule rule = getRule();
-		JsonNode json = mapper.valueToTree(rule);
-		assertEquals(rule, mapper.treeToValue(json, Rule.class));
+		Bundle bundle = new Bundle();
+		bundle.putParcelable("rule", rule);
+		assertEquals(rule, bundle.getParcelable("rule"));
 	}
 
 

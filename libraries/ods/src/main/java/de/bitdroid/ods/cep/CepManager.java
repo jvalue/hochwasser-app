@@ -9,7 +9,7 @@ public interface CepManager {
 	public static final String ACTION_REGISTRATION_STATUS_CHANGED = "de.bitdroid.ods.cep.ACTION_REGISTRATION_STATUS_CHANGED";
 
 	public static final String
-			EXTRA_EPL_STMT = "EXTRA_EPL_STMT",
+			EXTRA_RULE_JSON = "EXTRA_RULE_JSON",
 			EXTRA_REGISTER = "EXTRA_REGISTER",
 			EXTRA_ERROR_MSG = "EXTRA_ERROR_MSG";
 
@@ -26,32 +26,33 @@ public interface CepManager {
 	public String getCepServerName();
 
 	/**
-	 * Registered a stmt with the CEPS service.
+	 * Registered a rule with the CEPS service.
 	 */
-	public void registerEplStmt(String eplStmt);
+	public void registerRule(Rule rule);
 
 	/**
-	 * Unregisteres a stmt from the CEPS service.
+	 * Unregisteres a rule from the CEPS service.
 	 */
-	public void unregisterEplStmt(String eplStmt);
+	public void unregisterRule(Rule rule);
 
 	/**
-	 * @return the registration status for this epl stmt.
+	 * @return the registration status for this rule.
 	 */
-	public GcmStatus getRegistrationStatus(String eplStmt);
+	public GcmStatus getRegistrationStatus(Rule rule);
 
 	/**
-	 * @return all registered epl stmts.
+	 * @return a rule for a clientId if present.
 	 */
-	public Set<String> getRegisteredStmts();
-
-	/**
-	 * @return a CEPS client id (if registered) for a given epl stmt
-	 */
-	public String getEplStmtForClientId(String clientId);
+	public Rule getRuleForClientId(String clientId);
 
 	/**
 	 * Unregisters a client from the CEPS
 	 */
 	public void unregisterClientId(String clientId);
+
+
+	/**
+	 * Returns all rules, regardles of their registration status.
+	 */
+	public Set<Rule> getAll();
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,23 +17,25 @@ import de.bitdroid.utils.Log;
 
 public final class GcmReceiver extends BaseGcmReceiver {
 
+	private static final ObjectMapper mapper = new ObjectMapper();
+
 	private final static String 
-		EXTRA_CLIENTID = "client",
-		EXTRA_EVENTID = "event",
+		EXTRA_CLIENT_ID = "client",
+		EXTRA_EVENT_ID = "event",
 		EXTRA_DEBUG = "debug";
 
 	private static final Set<String> REQUIRED_EXTRAS;
 
 	static {
-		Set<String> extras = new HashSet<String>(Arrays.asList(EXTRA_CLIENTID, EXTRA_EVENTID));
+		Set<String> extras = new HashSet<String>(Arrays.asList(EXTRA_CLIENT_ID, EXTRA_EVENT_ID));
 		REQUIRED_EXTRAS = Collections.unmodifiableSet(extras);
 	}
 
 
 	@Override
 	protected void handle(Context context, Intent intent) {
-		String clientId = intent.getStringExtra(EXTRA_CLIENTID);
-		String eventId = intent.getStringExtra(EXTRA_EVENTID);
+		String clientId = intent.getStringExtra(EXTRA_CLIENT_ID);
+		String eventId = intent.getStringExtra(EXTRA_EVENT_ID);
 
 		// debug output
 		String debug = intent.getStringExtra(EXTRA_DEBUG);
@@ -39,19 +43,19 @@ public final class GcmReceiver extends BaseGcmReceiver {
 			handleDebug(context, intent);
 		}
 
-		// get stmt for id
+		// get rule for id
 		CepManager manager = CepManagerFactory.createCepManager(context);
-		String eplStmt = manager.getEplStmtForClientId(clientId);
-		if (eplStmt == null) {
-			Log.warning("found eplStmt that should be registered, but wasn't");
+		Rule rule = manager.getRuleForClientId(clientId);
+		if (rule == null) {
+			Log.warning("found rule that should be registered, but wasn't");
 			manager.unregisterClientId(clientId);
 			return;
 		}
 
 		// broadcast new event
 		Intent eventIntent = new Intent(BaseEventReceiver.ACTION_EVENT_RECEIVED);
-		eventIntent.putExtra(BaseEventReceiver.EXTRA_EPLSTMT, eplStmt);
-		eventIntent.putExtra(BaseEventReceiver.EXTRA_EVENTID, eventId);
+		eventIntent.putExtra(BaseEventReceiver.EXTRA_RULE_JSON, mapper.valueToTree(rule).toString());
+		eventIntent.putExtra(BaseEventReceiver.EXTRA_EVENT_ID, eventId);
 		context.sendBroadcast(eventIntent);
 
 	}

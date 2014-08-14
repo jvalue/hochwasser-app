@@ -5,7 +5,10 @@ import android.content.Intent;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Map;
+
 import de.bitdroid.ods.gcm.BaseGcmIntentService;
+import de.bitdroid.utils.Log;
 import de.bitdroid.utils.RestCall;
 
 
@@ -15,17 +18,15 @@ public final class GcmIntentService extends BaseGcmIntentService {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
-	static final String 
-		EXTRA_EPL_STMT = "EXTRA_EPL_STMT";
+	static final String
+		EXTRA_RULE_JSON = "EXTRA_RULE_JSON";
 
 	private static final String 
-		PATH_REGISTER = "cep/gcm/register",
 		PATH_UNREGISTER = "cep/unregister";
 
 	private static final String
-		PARAM_GCM_CLIENTID = "regId",
-		PARAM_EPL_STMT = "eplStmt",
-		PARAM_CEPS_CLIENTID = "clientId";
+		PARAM_GCM_CLIENT_ID = "deviceId",
+		PARAM_CEPS_CLIENT_ID = "clientId";
 
 
 	@Override
@@ -35,25 +36,32 @@ public final class GcmIntentService extends BaseGcmIntentService {
 			String cepsClientId,
 			boolean register) throws Exception {
 
-		String eplStmt = intent.getStringExtra(EXTRA_EPL_STMT);
+		Rule rule = null;
+		try {
+			rule = mapper.treeToValue(mapper.readTree(intent.getStringExtra(EXTRA_RULE_JSON)), Rule.class);
+		} catch (Exception e) {
+			Log.error("failed to read rule", e);
+			return null;
+		}
 
 		RestCall.Builder builder = new RestCall.Builder(
 				RestCall.RequestType.POST,
 				CepManagerFactory.createCepManager(getApplicationContext()).getCepServerName());
 
 		if (register) {
-			String jsonString = builder
-				.path(PATH_REGISTER)
-				.parameter(PARAM_GCM_CLIENTID, gcmClientId)
-				.parameter(PARAM_EPL_STMT, eplStmt)
-				.build().execute();
+			builder.path(rule.getCepsRulePath()).parameter(PARAM_GCM_CLIENT_ID, gcmClientId);
+			for (Map.Entry<String, String> params : rule.getParams().entrySet()) {
+				builder.parameter(params.getKey(), params.getValue());
+			}
+			String jsonString = builder.build().execute();
+
 			JsonNode json = mapper.readTree(jsonString);
-			return json.get(PARAM_CEPS_CLIENTID).asText();
+			return json.get(PARAM_CEPS_CLIENT_ID).asText();
 
 		} else {
 			builder
 				.path(PATH_UNREGISTER)
-				.parameter(PARAM_CEPS_CLIENTID, cepsClientId)
+				.parameter(PARAM_CEPS_CLIENT_ID, cepsClientId)
 				.build().execute();
 			return cepsClientId;
 		}
@@ -62,8 +70,8 @@ public final class GcmIntentService extends BaseGcmIntentService {
 
 	@Override
 	protected void prepareResultIntent(Intent originalIntent, Intent resultIntent) {
-		String eplStmt = originalIntent.getStringExtra(EXTRA_EPL_STMT);
-		resultIntent.putExtra(EXTRA_EPL_STMT, eplStmt);
+		String ruleJson = originalIntent.getStringExtra(EXTRA_RULE_JSON);
+		resultIntent.putExtra(EXTRA_RULE_JSON, ruleJson);
 	}
 
 

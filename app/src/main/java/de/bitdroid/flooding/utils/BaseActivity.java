@@ -29,8 +29,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
 			case android.R.id.home:
-				finish();
-				showExitAnimation();
+				onBackPressed();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

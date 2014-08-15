@@ -86,7 +86,7 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 		verify(mockContext).sendBroadcast(captor.capture());
 		Intent broadcastIntent = captor.getValue();
 		assertEquals(rule1, broadcastIntent.getParcelableExtra(CepManager.EXTRA_RULE));
-		assertTrue(broadcastIntent.getBooleanExtra(CepManager.EXTRA_REGISTER, false));
+		assertEquals(GcmStatus.REGISTERED.name(), broadcastIntent.getStringExtra(CepManager.EXTRA_STATUS));
 		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(rule1));
 		assertEquals(1, manager.getAllRules().size());
 

@@ -12,7 +12,6 @@ import java.util.Set;
 
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
 
 
 final class CepManagerImpl implements CepManager {
@@ -57,9 +56,9 @@ final class CepManagerImpl implements CepManager {
 	public void registerRule(Rule rule) {
 		Assert.assertNotNull(rule);
 		GcmStatus status = getRegistrationStatus(rule);
-		Assert.assertEquals(status, GcmStatus.UNREGISTERED, "Already registered");
+		Assert.assertTrue(status.equals(GcmStatus.ERROR_REGISTRATION) || status.equals(GcmStatus.UNREGISTERED), "Already registered");
 
-		ruleDb.insert(rule);
+		if (status.equals(GcmStatus.UNREGISTERED)) ruleDb.insert(rule);
 
 		sourceRegistrationHelper(null, rule, true);
 	}
@@ -69,7 +68,7 @@ final class CepManagerImpl implements CepManager {
 	public void unregisterRule(Rule rule) {
 		Assert.assertNotNull(rule);
 		GcmStatus status = getRegistrationStatus(rule);
-		Assert.assertEquals(status, GcmStatus.REGISTERED, "Not registered");
+		Assert.assertTrue(status.equals(GcmStatus.ERROR_UNREGISTRATION) || status.equals(GcmStatus.REGISTERED), "Not registered");
 
 		String clientId = ruleDb.getClientIdForRule(rule);
 		sourceRegistrationHelper(clientId, rule, false);
@@ -78,7 +77,7 @@ final class CepManagerImpl implements CepManager {
 
 	private void sourceRegistrationHelper(String clientId, Rule rule, boolean register) {
 		// mark task pending
-		GcmStatus status = null;
+		GcmStatus status;
 		if (register) status = GcmStatus.PENDING_REGISTRATION;
 		else status = GcmStatus.PENDING_UNREGISTRATION;
 		ruleDb.updateCepsData(rule, clientId, status);
@@ -166,27 +165,25 @@ final class CepManagerImpl implements CepManager {
 			String clientId = intent.getStringExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID);
 			boolean register = intent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false);
 
-
-			// abort if stmt was registered on server, but not on client
-			if (rule == null && !register) {
-				Log.info("not forwarding unregistration action since ruleJson was null");
-				return;
+			// determine status
+			GcmStatus status;
+			if (errorMsg != null) {
+				if (register) status = GcmStatus.ERROR_REGISTRATION;
+				else status = GcmStatus.ERROR_UNREGISTRATION;
+			} else {
+				if (register) status = GcmStatus.REGISTERED;
+				else status = GcmStatus.UNREGISTERED;
 			}
 
-			// clear pending flag
-			if (errorMsg != null) register = !register;
-
-			GcmStatus status = null;
-			if (register) status = GcmStatus.REGISTERED;
-			else status = GcmStatus.UNREGISTERED;
+			// update status
 			((CepManagerImpl) CepManagerFactory.createCepManager(context))
 					.updateCepsData(rule, clientId, status);
 
 			// send broadcast about changed status
 			Intent registrationChangedIntent = new Intent(ACTION_REGISTRATION_STATUS_CHANGED);
 			registrationChangedIntent.putExtra(EXTRA_RULE, rule);
+			registrationChangedIntent.putExtra(EXTRA_STATUS, status.name());
 			registrationChangedIntent.putExtra(EXTRA_ERROR_MSG, errorMsg);
-			registrationChangedIntent.putExtra(EXTRA_REGISTER, register);
 			context.sendBroadcast(registrationChangedIntent);
 		}
 

@@ -10,7 +10,7 @@ public interface CepManager {
 
 	public static final String
 			EXTRA_RULE = "EXTRA_RULE",
-			EXTRA_REGISTER = "EXTRA_REGISTER",
+			EXTRA_STATUS = "EXTRA_STATUS",
 			EXTRA_ERROR_MSG = "EXTRA_ERROR_MSG";
 
 

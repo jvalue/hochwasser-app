@@ -10,7 +10,7 @@ import de.bitdroid.utils.Assert;
 final class LevelAlarm {
 
 	private static final String
-		CEPS_RULE_PATH = "/cep/register/de/pegelonline/levelAlarm";
+		CEPS_RULE_PATH = "cep/register/de/pegelonline/levelAlarm";
 
 	private static final String
 		PARAM_RIVER = "river",

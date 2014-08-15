@@ -93,12 +93,12 @@ final class AlarmCard extends Card {
 				view.findViewById(R.id.registration_pending).setVisibility(View.VISIBLE);
 				regStatusView.setText(getContext().getString(R.string.alarms_registration_pending));
 				break;
-			case UNREGISTERED:
+			case ERROR_REGISTRATION:
 				view.findViewById(R.id.registration_error).setVisibility(View.VISIBLE);
 				regStatusView.setText(getContext().getString(R.string.alarms_registration_error));
 				break;
-			case PENDING_UNREGISTRATION:
-				Log.warning("Found alarm with PENDING_UNREGISTRATION");
+			default:
+				Log.warning("Found alarm with status " + regStatus.toString());
 			}
 
 	}

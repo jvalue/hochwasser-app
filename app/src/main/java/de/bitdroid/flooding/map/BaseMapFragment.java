@@ -70,81 +70,6 @@ public abstract class BaseMapFragment extends Fragment implements StationClickLi
 				mapView);
 		mapView.getOverlays().add(locationOverlay);
 		
-		// load station data
-		AbstractLoaderCallbacks loaderCallback = new AbstractLoaderCallbacks(LOADER_ID) {
-
-			@Override
-			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				cursor.moveToFirst();
-				if (cursor.getCount() == 0) return;
-
-				List<Station> stations = new ArrayList<Station>();
-
-				int latIdx = cursor.getColumnIndex(COLUMN_STATION_LAT);
-				int longIdx = cursor.getColumnIndex(COLUMN_STATION_LONG);
-				int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
-				int riverIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
-
-				do {
-					String stationName = cursor.getString(nameIdx);
-					double lat = cursor.getDouble(latIdx);
-					double lon = cursor.getDouble(longIdx);
-					String riverName = cursor.getString(riverIdx);
-
-					stations.add(new Station(stationName, riverName, lat, lon));
-				} while (cursor.moveToNext());
-
-				// filter stations with invalid coordinates
-				filterInvalidStations(stations);
-
-				// add to overlays
-				if (stationsOverlay != null) mapView.getOverlays().remove(stationsOverlay);
-				stationsOverlay = new StationsOverlay(
-						getActivity().getApplicationContext(),
-						stations,
-						BaseMapFragment.this);
-				mapView.getOverlays().add(stationsOverlay);
-
-				GeoPoint  point = getCenter(stations);
-				mapView.getController().setCenter(point);
-				if (waterName != null || stationName != null) mapView.getController().setZoom(8);
-				else mapView.getController().setZoom(7);
-			}
-
-			@Override
-			protected void onLoaderResetHelper(Loader<Cursor> loader) { }
-
-			@Override
-			protected Loader<Cursor> getCursorLoader() {
-				String selection = COLUMN_LEVEL_TYPE + "=?";
-				String[] selectionParams;
-				if (waterName == null && stationName == null) {
-					selectionParams = new String[]{"W"};
-				} else if (stationName != null) {
-					selection += " AND " + COLUMN_STATION_NAME + "=?";
-					selectionParams = new String[]{"W", stationName};
-				} else {
-					selection += " AND " + COLUMN_WATER_NAME + "=?";
-					selectionParams = new String[] { "W", waterName };
-				}
-
-				return new CursorLoader(
-						getActivity().getApplicationContext(),
-						PegelOnlineSource.INSTANCE.toUri(),
-						new String[] {
-							COLUMN_STATION_LAT, 
-							COLUMN_STATION_LONG, 
-							COLUMN_STATION_NAME,
-							COLUMN_WATER_NAME
-						},
-						selection, selectionParams, null);
-			}
-		};
-		getLoaderManager().initLoader(
-				StationsOverlay.LOADER_ID,
-				null,
-				loaderCallback);
-
 		return view;
     }
 
@@ -167,6 +92,11 @@ public abstract class BaseMapFragment extends Fragment implements StationClickLi
 	public void onResume() {
 		super.onResume();
 		locationOverlay.enableMyLocation();
+
+		getLoaderManager().initLoader(
+				StationsOverlay.LOADER_ID,
+				null,
+				loaderCallback);
 	}
 
 	
@@ -217,5 +147,77 @@ public abstract class BaseMapFragment extends Fragment implements StationClickLi
 			if (s.getLat() == 0 && s.getLon() == 0) iter.remove();
 		}
 	}
+
+
+	// load station data
+	private final AbstractLoaderCallbacks loaderCallback = new AbstractLoaderCallbacks(LOADER_ID) {
+
+		@Override
+		protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
+			cursor.moveToFirst();
+			if (cursor.getCount() == 0) return;
+
+			List<Station> stations = new ArrayList<Station>();
+
+			int latIdx = cursor.getColumnIndex(COLUMN_STATION_LAT);
+			int longIdx = cursor.getColumnIndex(COLUMN_STATION_LONG);
+			int nameIdx = cursor.getColumnIndex(COLUMN_STATION_NAME);
+			int riverIdx = cursor.getColumnIndex(COLUMN_WATER_NAME);
+
+			do {
+				String stationName = cursor.getString(nameIdx);
+				double lat = cursor.getDouble(latIdx);
+				double lon = cursor.getDouble(longIdx);
+				String riverName = cursor.getString(riverIdx);
+
+				stations.add(new Station(stationName, riverName, lat, lon));
+			} while (cursor.moveToNext());
+
+			// filter stations with invalid coordinates
+			filterInvalidStations(stations);
+
+			// add to overlays
+			if (stationsOverlay != null) mapView.getOverlays().remove(stationsOverlay);
+			stationsOverlay = new StationsOverlay(
+					getActivity().getApplicationContext(),
+					stations,
+					BaseMapFragment.this);
+			mapView.getOverlays().add(stationsOverlay);
+
+			GeoPoint  point = getCenter(stations);
+			mapView.getController().setCenter(point);
+			if (waterName != null || stationName != null) mapView.getController().setZoom(8);
+			else mapView.getController().setZoom(7);
+		}
+
+		@Override
+		protected void onLoaderResetHelper(Loader<Cursor> loader) { }
+
+		@Override
+		protected Loader<Cursor> getCursorLoader() {
+			String selection = COLUMN_LEVEL_TYPE + "=?";
+			String[] selectionParams;
+			if (waterName == null && stationName == null) {
+				selectionParams = new String[]{"W"};
+			} else if (stationName != null) {
+				selection += " AND " + COLUMN_STATION_NAME + "=?";
+				selectionParams = new String[]{"W", stationName};
+			} else {
+				selection += " AND " + COLUMN_WATER_NAME + "=?";
+				selectionParams = new String[] { "W", waterName };
+			}
+
+			return new CursorLoader(
+					getActivity().getApplicationContext(),
+					PegelOnlineSource.INSTANCE.toUri(),
+					new String[] {
+							COLUMN_STATION_LAT,
+							COLUMN_STATION_LONG,
+							COLUMN_STATION_NAME,
+							COLUMN_WATER_NAME
+					},
+					selection, selectionParams, null);
+		}
+	};
 
 }

@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import de.bitdroid.ods.gcm.GcmStatus;
@@ -20,11 +20,10 @@ final class CepManagerImpl implements CepManager {
 	private static final String PREFS_NAME = CepManagerImpl.class.getName();
 	private static final String KEY_SERVER_NAME = "serverName";
 
-	private static final ObjectMapper mapper = new ObjectMapper();
-
 
 	private final Context context;
 	private final RuleDb ruleDb;
+	private final List<RuleUpdateListener> listeners = new LinkedList<RuleUpdateListener>();
 
 	CepManagerImpl(Context context, RuleDb ruleDb) {
 		Assert.assertNotNull(context, ruleDb);
@@ -61,7 +60,6 @@ final class CepManagerImpl implements CepManager {
 		Assert.assertEquals(status, GcmStatus.UNREGISTERED, "Already registered");
 
 		ruleDb.insert(rule);
-		// TODO alert?
 
 		sourceRegistrationHelper(null, rule, true);
 	}
@@ -84,6 +82,7 @@ final class CepManagerImpl implements CepManager {
 		if (register) status = GcmStatus.PENDING_REGISTRATION;
 		else status = GcmStatus.PENDING_UNREGISTRATION;
 		ruleDb.updateCepsData(rule, clientId, status);
+		alertListeners(rule, status);
 
 		// execute in background
 		Intent registrationIntent = new Intent(context, GcmIntentService.class);
@@ -126,9 +125,30 @@ final class CepManagerImpl implements CepManager {
 	}
 
 
+	@Override
+	public void registerRuleUpdateListener(RuleUpdateListener listener) {
+		Assert.assertNotNull(listener);
+		listeners.add(listener);
+	}
+
+
+	@Override
+	public void unregisterRuleUpdateListener(RuleUpdateListener listener) {
+		Assert.assertNotNull(listener);
+		listeners.remove(listener);
+	}
+
+
+	private void alertListeners(Rule rule, GcmStatus status) {
+		for (RuleUpdateListener listener : listeners) {
+			listener.onStatusChanged(rule, status);
+		}
+	}
+
 	private void updateCepsData(Rule rule, String clientId, GcmStatus status) {
 		if (status.equals(GcmStatus.UNREGISTERED)) ruleDb.delete(rule);
 		else ruleDb.updateCepsData(rule, clientId, status);
+		alertListeners(rule, status);
 	}
 
 

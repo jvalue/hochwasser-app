@@ -50,9 +50,18 @@ public interface CepManager {
 	 */
 	public void unregisterClientId(String clientId);
 
-
 	/**
 	 * Returns all rules, regardless of their registration status.
 	 */
 	public Set<Rule> getAllRules();
+
+	/**
+	 * Registeres a listener to receive updates whenever a registration status changes.
+	 */
+	public void registerRuleUpdateListener(RuleUpdateListener listener);
+
+	/**
+	 * Stops a listener from receiving callbacks.
+	 */
+	public void unregisterRuleUpdateListener(RuleUpdateListener listener);
 }

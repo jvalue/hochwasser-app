@@ -51,6 +51,9 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 		Rule rule1 = newRule("path1", 2);
 		Rule rule2 = newRule("path2", 0);
 
+		RuleUpdateListenerTest listener = new RuleUpdateListenerTest(rule1);
+		manager.registerRuleUpdateListener(listener);
+
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(rule1));
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(rule2));
 		assertEquals(0, manager.getAllRules().size());
@@ -106,6 +109,9 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(rule1));
 		assertEquals(0, manager.getAllRules().size());
 
+		// test listener
+		assertEquals(4, listener.getCallCount());
+		manager.unregisterRuleUpdateListener(listener);
 	}
 
 
@@ -115,6 +121,44 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 			builder.parameter("key" + i, "value" + i);
 		}
 		return builder.build();
+	}
+
+
+	private static final class RuleUpdateListenerTest  implements RuleUpdateListener {
+
+		private final Rule rule;
+		private int callCount = 0;
+
+		public RuleUpdateListenerTest(Rule rule) {
+			this.rule = rule;
+		}
+
+		@Override
+		public void onStatusChanged(Rule rule, GcmStatus status) {
+			assertEquals(this.rule, rule);
+			switch(callCount) {
+				case 0:
+					assertEquals(GcmStatus.PENDING_REGISTRATION, status);
+					break;
+				case 1:
+					assertEquals(GcmStatus.REGISTERED, status);
+					break;
+				case 2:
+					assertEquals(GcmStatus.PENDING_UNREGISTRATION, status);
+					break;
+				case 3:
+					assertEquals(GcmStatus.UNREGISTERED, status);
+					break;
+				default:
+					fail();
+			}
+			callCount++;
+		}
+
+		private int getCallCount() {
+			return callCount;
+		}
+
 	}
 
 }

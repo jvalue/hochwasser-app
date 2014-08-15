@@ -120,7 +120,10 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 		if (loader.getId() != LOADER_ID) return;
 
 		List<AlarmCard> cards = new LinkedList<AlarmCard>();
-		for (Rule rule : rules.keySet()) {
+		for (Map.Entry<Rule, GcmStatus> entry : rules.entrySet()) {
+			if (entry.getValue().equals(GcmStatus.ERROR_UNREGISTRATION)) continue; // hide those rules
+
+			Rule rule = entry.getKey();
 			AlarmCard card = new AlarmCard(getActivity(), cepManager, new LevelAlarm(rule));
 			card.setId(String.valueOf(rule.hashCode()));
 			cards.add(card);

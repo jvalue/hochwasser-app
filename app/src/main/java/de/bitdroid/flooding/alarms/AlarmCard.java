@@ -50,7 +50,7 @@ final class AlarmCard extends Card {
 			@Override
 			public void onClick(Card card, View view) {
 				// tap to retry
-				if (manager.getRegistrationStatus(alarm.getRule()).equals(GcmStatus.UNREGISTERED)) {
+				if (manager.getRegistrationStatus(alarm.getRule()).equals(GcmStatus.ERROR_REGISTRATION)) {
 					manager.registerRule(alarm.getRule());
 
 				// goto station graph

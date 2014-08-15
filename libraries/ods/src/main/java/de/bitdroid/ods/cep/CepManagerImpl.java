@@ -56,11 +56,17 @@ final class CepManagerImpl implements CepManager {
 	public void registerRule(Rule rule) {
 		Assert.assertNotNull(rule);
 		GcmStatus status = getRegistrationStatus(rule);
-		Assert.assertTrue(status.equals(GcmStatus.ERROR_REGISTRATION) || status.equals(GcmStatus.UNREGISTERED), "Already registered");
+		Assert.assertTrue(status.equals(GcmStatus.ERROR_REGISTRATION)
+				|| status.equals(GcmStatus.UNREGISTERED)
+				|| status.equals(GcmStatus.ERROR_UNREGISTRATION), "Already registered");
 
-		if (status.equals(GcmStatus.UNREGISTERED)) ruleDb.insert(rule);
 
-		sourceRegistrationHelper(null, rule, true);
+		if (status.equals(GcmStatus.ERROR_UNREGISTRATION)) {
+			updateCepsData(rule, ruleDb.getClientIdForRule(rule), GcmStatus.REGISTERED);
+		} else {
+			if (status.equals(GcmStatus.UNREGISTERED)) ruleDb.insert(rule);
+			sourceRegistrationHelper(null, rule, true);
+		}
 	}
 
 
@@ -75,7 +81,7 @@ final class CepManagerImpl implements CepManager {
 				"Not registered"
 		);
 
-		if  (status.equals(GcmStatus.ERROR_REGISTRATION)) {
+		if (status.equals(GcmStatus.ERROR_REGISTRATION)) {
 			updateCepsData(rule, null, GcmStatus.UNREGISTERED);
 		} else {
 			String clientId = ruleDb.getClientIdForRule(rule);

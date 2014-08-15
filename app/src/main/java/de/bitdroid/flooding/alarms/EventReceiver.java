@@ -26,6 +26,7 @@ public final class EventReceiver extends BaseEventReceiver {
 		CepManager manager = CepManagerFactory.createCepManager(context);
 		if (manager.getRegistrationStatus(alarm.getRule()).equals(GcmStatus.ERROR_UNREGISTRATION)) {
 			manager.unregisterRule(alarm.getRule());
+			return;
 		}
 
 		// show news

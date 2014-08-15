@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Flooding</string>
+    <string name="app_name">Pegel Alarm</string>
     <string name="content_provider_authority">de.bitdroid.flooding.provider</string>
 
 	<string name="nav_home">News</string>

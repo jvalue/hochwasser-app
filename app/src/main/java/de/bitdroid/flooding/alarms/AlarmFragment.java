@@ -161,7 +161,7 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 			new AlertDialog.Builder(context)
 					.setTitle(getString(R.string.error_play_services_missing_title))
 					.setMessage(getString(R.string.error_play_services_missing_msg))
-					.setPositiveButton(getString(R.string.ok), null)
+					.setPositiveButton(getString(R.string.btn_ok), null)
 					.create()
 					.show();
 		}

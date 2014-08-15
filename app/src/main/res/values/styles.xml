@@ -42,11 +42,6 @@
     <style name="card.content_outer_layout"></style>
 
 
-	<style name="CustomShowcaseTheme" parent="ShowcaseView">
-		<item name="sv_backgroundColor">@color/showcase_background</item>
-		<item name="sv_tintButtonColor">false</item>
-	</style>
-
 	<style name="FontHeader">
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>

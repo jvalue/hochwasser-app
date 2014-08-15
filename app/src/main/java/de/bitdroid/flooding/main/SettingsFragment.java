@@ -163,7 +163,7 @@ public final class SettingsFragment extends PreferenceFragment {
 				AlertDialog dialog = new AlertDialog.Builder(getActivity())
 						.setTitle(getString(R.string.contribute_title, getString(R.string.app_name)))
 						.setMessage(Html.fromHtml(getString(R.string.contribute_msg)))
-						.setPositiveButton(getString(R.string.ok), null)
+						.setPositiveButton(getString(R.string.btn_ok), null)
 						.create();
 				dialog.show();
 				TextView msgView = (TextView) dialog.findViewById(android.R.id.message);
@@ -191,7 +191,7 @@ public final class SettingsFragment extends PreferenceFragment {
 				AlertDialog dialog = new AlertDialog.Builder(getActivity())
 						.setTitle(getString(R.string.prefs_about_legal))
 						.setMessage(Html.fromHtml(getString(R.string.legal)))
-						.setPositiveButton(getString(R.string.ok), null)
+						.setPositiveButton(getString(R.string.btn_ok), null)
 						.create();
 				dialog.show();
 				TextView msgView = (TextView) dialog.findViewById(android.R.id.message);

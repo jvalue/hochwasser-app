@@ -82,10 +82,6 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 		this.emptyProgressBar = (ProgressBar) view.findViewById(R.id.empty_progressBar);
 		this.emptyTextView = (TextView) view.findViewById(R.id.empty_text);
 
-		OdsSourceManager manager = OdsSourceManager.getInstance(getActivity().getApplicationContext());
-		if (manager.isSyncRunning()) showSyncRunning();
-		else showSyncStopped();
-
 		return view;
     }
 
@@ -108,6 +104,11 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 		filter.addAction(SyncAdapter.ACTION_SYNC_ALL_START);
 		filter.addAction(SyncAdapter.ACTION_SYNC_ALL_FINISH);
 		getActivity().registerReceiver(receiver, filter);
+
+		// check if sync is already running
+		OdsSourceManager manager = OdsSourceManager.getInstance(getActivity().getApplicationContext());
+		if (manager.isSyncRunning()) showSyncRunning();
+		else showSyncStopped();
 	}
 
 

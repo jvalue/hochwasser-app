@@ -1,49 +1,65 @@
 package de.bitdroid.flooding.alarms;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import de.bitdroid.ods.cep.Rule;
 import de.bitdroid.utils.Assert;
 
 
-final class LevelAlarm extends Alarm {
+/**
+ * Wrapper for nicer access to the underlying data.
+ */
+final class LevelAlarm {
 
-	private final String river, station;
-	private final double level;
-	private final boolean alarmWhenAbove;
+	private static final String
+		CEPS_RULE_PATH = "/cep/register/de/pegelonline/levelAlarm";
 
-	@JsonCreator
-	public LevelAlarm(
-			@JsonProperty("river") String river, 
-			@JsonProperty("station") String station, 
-			@JsonProperty("level") double level, 
-			@JsonProperty("alarmWhenAbove") boolean alarmWhenAbove) {
+	private static final String
+		PARAM_RIVER = "river",
+		PARAM_STATION = "station",
+		PARAM_LEVEL = "level",
+		PARAM_ABOVE = "above";
 
+
+	private final Rule rule;
+
+	public LevelAlarm(Rule rule) {
+		Assert.assertNotNull(rule);
+		this.rule = rule;
+	}
+
+
+	public LevelAlarm(String river, String station, double level, boolean alarmWhenAbove) {
 		Assert.assertNotNull(river, station);
-		this.river = river;
-		this.station = station;
-		this.level = level;
-		this.alarmWhenAbove = alarmWhenAbove;
+		this.rule = new Rule.Builder(CEPS_RULE_PATH)
+				.parameter(PARAM_RIVER, river)
+				.parameter(PARAM_STATION, station)
+				.parameter(PARAM_LEVEL, String.valueOf(level))
+				.parameter(PARAM_ABOVE, String.valueOf(alarmWhenAbove))
+				.build();
 	}
 
 
 	public String getRiver() {
-		return river;
+		return rule.getParams().get(PARAM_RIVER);
 	}
 
 
 	public String getStation() {
-		return station;
+		return rule.getParams().get(PARAM_STATION);
 	}
 
 
 	public double getLevel() {
-		return level;
+		return Double.valueOf(rule.getParams().get(PARAM_LEVEL));
 	}
 
 
 	public boolean getAlarmWhenAbove() {
-		return alarmWhenAbove;
+		return Boolean.valueOf(rule.getParams().get(PARAM_ABOVE));
+	}
+
+
+	public Rule getRule() {
+		return rule;
 	}
 
 
@@ -52,28 +68,13 @@ final class LevelAlarm extends Alarm {
 		if (other == null || !(other instanceof LevelAlarm)) return false;
 		if (other == this) return true;
 		LevelAlarm alarm = (LevelAlarm) other;
-		return river.equals(alarm.river)
-			&& station.equals(alarm.station)
-			&& level == alarm.level
-			&& alarmWhenAbove == alarm.alarmWhenAbove;
+		return rule.equals(alarm.getRule());
 	}
 
 
 	@Override
 	public int hashCode() {
-		final int MULT = 17;
-		int hash = 13;
-		hash = hash + MULT * river.hashCode();
-		hash = hash + MULT * station.hashCode();
-		hash = hash + MULT * Double.valueOf(level).hashCode();
-		hash = hash + MULT * Boolean.valueOf(alarmWhenAbove).hashCode();
-		return hash;
-	}
-
-
-	@Override
-	public <P,R> R accept(AlarmVisitor<P,R> visitor, P param) {
-		return visitor.visit(this, param);
+		return rule.hashCode();
 	}
 
 }

@@ -76,12 +76,6 @@
 			</intent-filter>
 		</receiver>
 
-		<service android:name=".alarms.EventReceiver$EventIntentService">
-		</service>
-
-		<receiver android:name=".alarms.EventReceiver$EventToNewsReceiver">
-		</receiver>
-
 		<meta-data
 			android:name="com.crashlytics.ApiKey"
 			android:value="6ae640ca185488710a3a658b71e06d695a109b71"

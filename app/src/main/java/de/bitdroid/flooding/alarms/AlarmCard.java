@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.levels.StationActivity;
+import de.bitdroid.ods.cep.CepManager;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.Log;
@@ -18,11 +19,11 @@ import it.gmariotti.cardslib.library.internal.Card;
 final class AlarmCard extends Card {
 
 	private final LevelAlarm alarm;
-	private final AlarmManager manager;
+	private final CepManager manager;
 
 	public AlarmCard(
 			final Activity activity,
-			final AlarmManager manager,
+			final CepManager manager,
 			final LevelAlarm alarm) {
 
 		super(activity, R.layout.alarms_card);
@@ -34,13 +35,13 @@ final class AlarmCard extends Card {
 		setOnSwipeListener(new OnSwipeListener() {
 			@Override
 			public void onSwipe(Card card) {
-				manager.unregister(alarm);
+				manager.unregisterRule(alarm.getRule());
 			}
 		});
 		setOnUndoSwipeListListener(new OnUndoSwipeListListener() {
 			@Override
 			public void onUndoSwipe(Card card) {
-				manager.register(alarm);
+				manager.registerRule(alarm.getRule());
 			}
 		});
 
@@ -49,11 +50,11 @@ final class AlarmCard extends Card {
 			@Override
 			public void onClick(Card card, View view) {
 				// tap to retry
-				if (manager.getRegistrationStatus(alarm).equals(GcmStatus.UNREGISTERED)) {
-					manager.register(alarm);
+				if (manager.getRegistrationStatus(alarm.getRule()).equals(GcmStatus.UNREGISTERED)) {
+					manager.registerRule(alarm.getRule());
 
 				// goto station graph
-				} else if (manager.getRegistrationStatus(alarm).equals(GcmStatus.REGISTERED)) {
+				} else if (manager.getRegistrationStatus(alarm.getRule()).equals(GcmStatus.REGISTERED)) {
 					Intent intent = new Intent(activity, StationActivity.class);
 					intent.putExtra(StationActivity.EXTRA_WATER_NAME, alarm.getRiver());
 					intent.putExtra(StationActivity.EXTRA_STATION_NAME, alarm.getStation());
@@ -83,7 +84,7 @@ final class AlarmCard extends Card {
 		LinearLayout regView = (LinearLayout) view.findViewById(R.id.registration);
 		TextView regStatusView = (TextView) view.findViewById(R.id.registration_status);
 
-		GcmStatus regStatus = manager.getRegistrationStatus(alarm);
+		GcmStatus regStatus = manager.getRegistrationStatus(alarm.getRule());
 		if (regStatus.equals(GcmStatus.REGISTERED)) return;
 
 		regView.setVisibility(View.VISIBLE);
@@ -100,11 +101,6 @@ final class AlarmCard extends Card {
 				Log.warning("Found alarm with PENDING_UNREGISTRATION");
 			}
 
-	}
-
-
-	public Alarm getAlarm() {
-		return alarm;
 	}
 
 

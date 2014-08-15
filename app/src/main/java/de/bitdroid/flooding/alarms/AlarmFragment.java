@@ -24,27 +24,31 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.ods.cep.CepManager;
+import de.bitdroid.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.cep.Rule;
+import de.bitdroid.ods.cep.RuleLoader;
+import de.bitdroid.ods.gcm.GcmStatus;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 
 
-public final class AlarmFragment extends Fragment implements LoaderManager.LoaderCallbacks<Set<Alarm>> {
+public final class AlarmFragment extends Fragment implements LoaderManager.LoaderCallbacks<Map<Rule, GcmStatus>> {
 
 	private static final int LOADER_ID  = 47;
 
 	private CardListView listView;
 	private CardArrayAdapter listAdapter;
-	private AlarmManager alarmManager;
+	private CepManager cepManager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		alarmManager = AlarmManager.getInstance(getActivity().getApplicationContext());
+		cepManager = CepManagerFactory.createCepManager(getActivity().getApplicationContext());
 	}
 
 
@@ -105,20 +109,20 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 
 
 	@Override
-	public Loader<Set<Alarm>> onCreateLoader(int id, Bundle bundle) {
+	public Loader<Map<Rule, GcmStatus>> onCreateLoader(int id, Bundle bundle) {
 		if (id != LOADER_ID) return null;
-		return new AlarmLoader(getActivity().getApplicationContext());
+		return new RuleLoader(getActivity().getApplicationContext(), cepManager);
 	}
 
 
 	@Override
-	public void onLoadFinished(Loader<Set<Alarm>> loader, Set<Alarm> alarms) {
+	public void onLoadFinished(Loader<Map<Rule, GcmStatus>> loader, Map<Rule, GcmStatus> rules) {
 		if (loader.getId() != LOADER_ID) return;
 
 		List<AlarmCard> cards = new LinkedList<AlarmCard>();
-		for (Alarm alarm : alarms) {
-			AlarmCard card = new AlarmCard(getActivity(), alarmManager, (LevelAlarm) alarm);
-			card.setId(String.valueOf(alarm.hashCode()));
+		for (Rule rule : rules.keySet()) {
+			AlarmCard card = new AlarmCard(getActivity(), cepManager, new LevelAlarm(rule));
+			card.setId(String.valueOf(rule.hashCode()));
 			cards.add(card);
 		}
 
@@ -136,7 +140,7 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 
 
 	@Override
-	public void onLoaderReset(Loader<Set<Alarm>> loader) {
+	public void onLoaderReset(Loader<Map<Rule, GcmStatus>> loader) {
 		listAdapter.clear();
 	}
 

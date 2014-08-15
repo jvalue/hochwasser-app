@@ -2,6 +2,7 @@ package de.bitdroid.flooding.levels;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.BaseStationSelectionFragment;
@@ -12,6 +13,9 @@ import de.bitdroid.flooding.utils.BaseActivity;
 
 
 public class StationListActivity extends BaseActivity implements Extras {
+
+	private static final String STATE_FRAGMENT = "STATE_FRAGMENT";
+
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,22 +28,28 @@ public class StationListActivity extends BaseActivity implements Extras {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) waterName = extras.getString(EXTRA_WATER_NAME);
 
-		if (waterName != null) {
-			// show regular station list
-			getSupportFragmentManager()
-					.beginTransaction()
-					.replace(R.id.frame, StationSelectionFragment.newInstance(waterName))
-					.commit();
-
+		Fragment fragment;
+		if (savedInstanceState != null) {
+			fragment = getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
 		} else {
-			// show map
-			getSupportFragmentManager()
-					.beginTransaction()
-					.replace(R.id.frame, MapFragment.newInstance(waterName))
-					.commit();
+			if (waterName != null) fragment = StationSelectionFragment.newInstance(waterName);
+			else fragment = MapFragment.newInstance(waterName);
 		}
 
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.frame, fragment)
+				.commit();
+
     }
+
+
+	@Override
+	public void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+		getSupportFragmentManager().putFragment(state, STATE_FRAGMENT, currentFragment);
+	}
 
 
 	private void showMapFragment(String waterName) {

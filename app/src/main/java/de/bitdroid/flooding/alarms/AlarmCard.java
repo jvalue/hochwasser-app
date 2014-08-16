@@ -85,7 +85,10 @@ final class AlarmCard extends Card {
 		TextView regStatusView = (TextView) view.findViewById(R.id.registration_status);
 
 		GcmStatus regStatus = manager.getRegistrationStatus(alarm.getRule());
-		if (regStatus.equals(GcmStatus.REGISTERED)) return;
+		if (regStatus.equals(GcmStatus.REGISTERED)) {
+			regView.setVisibility(View.GONE);
+			return;
+		}
 
 		regView.setVisibility(View.VISIBLE);
 		switch (regStatus) {

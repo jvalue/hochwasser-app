@@ -11,8 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.utils.Log;
 import it.gmariotti.cardslib.library.internal.Card;
+import timber.log.Timber;
 
 final class StationLevelCard extends Card {
 
@@ -42,7 +42,7 @@ final class StationLevelCard extends Card {
 					android.text.format.DateFormat.getDateFormat(getContext()).format(date)
 					+ " " + android.text.format.DateFormat.getTimeFormat(getContext()).format(date));
 		} catch (ParseException pe) {
-			Log.error("failed to parse timestamp", pe);
+			Timber.e(pe, "Failed to parse timestamp " + timestamp);
 		}
 
 		levelView.setText(value + " " + unit);

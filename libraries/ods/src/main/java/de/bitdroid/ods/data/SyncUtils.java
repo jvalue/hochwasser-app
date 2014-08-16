@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import java.util.List;
 
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 import static de.bitdroid.ods.data.OdsSource.ACCOUNT;
 import static de.bitdroid.ods.data.OdsSource.AUTHORITY;
@@ -106,7 +106,7 @@ public class SyncUtils {
 			= (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 
 		if (!accountManager.addAccountExplicitly(ACCOUNT, null, null)) {
-			Log.warning("Adding account failed");
+			Timber.d("Adding account failed");
 		}
 
 		SharedPreferences.Editor editor = getSharedPreferences().edit();

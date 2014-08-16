@@ -61,11 +61,6 @@ public class MainActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-		// only start for release builds!
-		if (!Debug.isDebugBuild(this)) {
-			Crashlytics.start(this);
-		}
-
         setContentView(R.layout.main);
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer);

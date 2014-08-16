@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 final class Processor {
@@ -35,7 +35,7 @@ final class Processor {
 		// insert new entries
 		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 		JSONArray json = new JSONArray(jsonString);
-		Log.debug("Fetched " + json.length() + " items from server");
+		Timber.d("Fetched " + json.length() + " items from server");
 		for (int i = 0; i < json.length(); i++) {
 			ContentProviderOperation operation = insertIntoProvider(json.getJSONObject(i), currentTimestamp);
 			if (operation != null) operations.add(operation);
@@ -72,7 +72,7 @@ final class Processor {
 				data.put(OdsSource.COLUMN_ID, id);
 
 				if (cursor.getCount() > 1) {
-					Log.warning("Found multiple objects in db with server id " + serverId);
+					Timber.w("Found multiple objects in water level db with server id " + serverId);
 				}
 
 				return ContentProviderOperation

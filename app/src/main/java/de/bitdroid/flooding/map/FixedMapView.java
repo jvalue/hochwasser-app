@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 
 import org.osmdroid.views.MapView;
 
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 public class FixedMapView extends MapView {
@@ -26,7 +26,7 @@ public class FixedMapView extends MapView {
 
 				if (moveCount > 0) {
 					moveCount--;
-					Log.debug("Ignored move event");
+					Timber.d("Ignored move event");
 					return true;
 				}
 				break;

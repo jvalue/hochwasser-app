@@ -15,7 +15,7 @@ import java.util.Set;
 
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 import static de.bitdroid.ods.cep.RuleDbSchema.COLUMN_CEPS_CLIENT_ID;
 import static de.bitdroid.ods.cep.RuleDbSchema.COLUMN_CEPS_RULE_PATH;
@@ -55,7 +55,7 @@ final class RuleDb extends SQLiteOpenHelper {
 			int oldVersion,
 			int newVersion) {
 
-		Log.warning("Upgrading table. This will erase all data.");
+		Timber.w("Upgrading rule table, this will erase all data!");
 		database.execSQL("DROP TABLE *");
 		onCreate(database);
 	}
@@ -147,7 +147,7 @@ final class RuleDb extends SQLiteOpenHelper {
 				ruleBuilder.parameter(key, jsonParams.opt(key).toString());
 			}
 		} catch (Exception e) {
-			Log.error("failed to read rule", e);
+			Timber.e(e, "failed to read rule");
 		}
 
 		return ruleBuilder.build();

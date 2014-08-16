@@ -1,9 +1,5 @@
 package de.bitdroid.flooding.levels;
 
-import java.text.Format;
-import java.util.List;
-import java.util.Set;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -22,8 +18,12 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
 
+import java.text.Format;
+import java.util.List;
+import java.util.Set;
+
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 final class WaterGraph implements OnTouchListener {
@@ -301,7 +301,7 @@ final class WaterGraph implements OnTouchListener {
 				try {
 					Thread.sleep(REFRESH_RATE);
 				} catch (InterruptedException ie) {
-					Log.warning("Thread was interrupted");
+					Timber.d("Smooth scroll thread was interrupted");
 				}
 			} while (Math.abs(pan) > 0.3);
 		}

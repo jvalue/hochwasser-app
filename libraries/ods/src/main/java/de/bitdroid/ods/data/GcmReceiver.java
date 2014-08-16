@@ -1,16 +1,16 @@
 package de.bitdroid.ods.data;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-
 import de.bitdroid.ods.gcm.BaseGcmReceiver;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 public final class GcmReceiver extends BaseGcmReceiver {
@@ -65,7 +65,7 @@ public final class GcmReceiver extends BaseGcmReceiver {
 			builder.append(key + ":\t" + value.toString() + "\n");
 		}
 
-		Log.debug(builder.toString());
+		Timber.d(builder.toString());
 	}
 
 }

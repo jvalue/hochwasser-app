@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.Map;
 
 import de.bitdroid.ods.data.OdsSource;
-import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
 import de.bitdroid.ods.data.SQLiteType;
+import de.bitdroid.utils.Assert;
+import timber.log.Timber;
 
 import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_ID;
 
@@ -49,7 +49,7 @@ final class MonitorDatabase extends SQLiteOpenHelper {
 			int oldVersion,
 			int newVersion) {
 
-		Log.warning("Upgrading table. This will erase all data.");
+		Timber.w("Upgrading monitor table, this will erase all data!");
 		database.execSQL("DROP TABLE *");
 		onCreate(database);
 	}

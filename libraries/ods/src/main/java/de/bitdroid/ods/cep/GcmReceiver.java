@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.bitdroid.ods.gcm.BaseGcmReceiver;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 public final class GcmReceiver extends BaseGcmReceiver {
@@ -43,7 +43,7 @@ public final class GcmReceiver extends BaseGcmReceiver {
 		CepManager manager = CepManagerFactory.createCepManager(context);
 		Rule rule = manager.getRuleForClientId(clientId);
 		if (rule == null) {
-			Log.warning("found rule that should be registered, but wasn't");
+			Timber.w("found rule that should be registered, but wasn't");
 			manager.unregisterClientId(clientId);
 			return;
 		}
@@ -72,7 +72,7 @@ public final class GcmReceiver extends BaseGcmReceiver {
 			builder.append(key + ":\t" + value.toString() + "\n");
 		}
 
-		Log.debug(builder.toString());
+		Timber.d(builder.toString());
 	}
 
 }

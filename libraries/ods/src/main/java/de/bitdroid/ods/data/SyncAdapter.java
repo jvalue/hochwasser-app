@@ -19,9 +19,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-import de.bitdroid.utils.Log;
 import de.bitdroid.utils.RestCall;
 import de.bitdroid.utils.RestException;
+import timber.log.Timber;
 
 public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -69,7 +69,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 					context.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo wifiInfo = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 			if (!wifiInfo.isConnected()) {
-				Log.debug("not syncing due to missing wifi");
+				Timber.d("not syncing due to missing wifi");
 				return;
 			}
 		}
@@ -77,18 +77,18 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 		String odsUrl = extras.getString(EXTRA_ODS_URL);
 		String jsonSources = extras.getString(EXTRA_SOURCE_JSON);
 		if (odsUrl == null && jsonSources == null) {
-			Log.warning("ignoring probable first sync request");
+			Timber.i("ignoring probable first sync request");
 			return;
 		}
 		ArrayNode sourceJson = null;
 		try {
 			sourceJson = mapper.readValue(jsonSources, ArrayNode.class);
 		} catch (IOException ioe) {
-			Log.error("failed to parse sources", ioe);
+			Timber.e(ioe, "SyncAdapter failed to parse sources");
 		}
 
 
-		Log.debug("Sync started");
+		Timber.d("Sync started");
 		sendSyncAllStartBroadcast();
 
 		boolean allSuccess = true;
@@ -102,7 +102,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 
 		sendSyncAllFinishBroadcast(allSuccess);
-		Log.debug("Sync finished");
+		Timber.d("Sync finished");
 	}
 
 
@@ -115,7 +115,7 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 		boolean success = false;
 
 		try {
-			Log.debug("Syncing " +  source.getSourceUrlPath());
+			Timber.d("Syncing " +  source.getSourceUrlPath());
 			Processor processor = new Processor(provider, source);
 			String retString = new RestCall.Builder(
 					RestCall.RequestType.GET,
@@ -129,16 +129,16 @@ public final class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 		} catch (RestException re1) {
 			syncResult.stats.numIoExceptions++;
-			Log.error(android.util.Log.getStackTraceString(re1));
+			Timber.e(re1, "sync failed");
 		} catch (JSONException je) {
 			syncResult.stats.numParseExceptions++;
-			Log.error(android.util.Log.getStackTraceString(je));
+			Timber.e(je, "sync failed");
 		} catch (RemoteException re2) {
 			syncResult.databaseError = true;
-			Log.error(android.util.Log.getStackTraceString(re2));
+			Timber.e(re2, "sync failed");
 		} catch (OperationApplicationException oae) {
 			syncResult.databaseError = true;
-			Log.error(android.util.Log.getStackTraceString(oae));
+			Timber.e(oae, "sync failed");
 		}
 
 		return success;

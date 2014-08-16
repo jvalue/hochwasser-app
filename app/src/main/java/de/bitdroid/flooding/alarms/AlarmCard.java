@@ -12,9 +12,9 @@ import de.bitdroid.flooding.levels.StationActivity;
 import de.bitdroid.ods.cep.CepManager;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
 import de.bitdroid.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
+import timber.log.Timber;
 
 final class AlarmCard extends Card {
 
@@ -98,7 +98,7 @@ final class AlarmCard extends Card {
 				regStatusView.setText(getContext().getString(R.string.alarms_registration_error));
 				break;
 			default:
-				Log.warning("Found alarm with status " + regStatus.toString());
+				Timber.w("Found alarm with status " + regStatus.toString() + " which doesn't have any view actions");
 			}
 
 	}

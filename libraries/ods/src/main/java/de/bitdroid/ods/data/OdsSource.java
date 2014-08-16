@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 /**
@@ -193,7 +193,7 @@ public abstract class OdsSource {
 
 	// the content provider authority must be unique for each app. However, since this provider
 	// will be part of a library, clients must define their own unique id.
-	// --> try looking up some field and getting the autority from that
+	// --> try looking up some field and getting the authority from that
 	private static final String CLASS_NAME = "de.bitdroid.ods.ContentProviderAuthority";
 	private static final String FIELD_NAME = "AUTHORITY";
 
@@ -206,7 +206,8 @@ public abstract class OdsSource {
 			Field field = clazz.getDeclaredField(FIELD_NAME);
 			return field.get(null).toString();
 		} catch (Exception e) {
-			Log.warning("could not find any class " + CLASS_NAME + " with field " + FIELD_NAME);
+			Timber.e(e, "Failed to find class with authority field. Must be called " + CLASS_NAME
+					+ " and have a public String field " + FIELD_NAME);
 		}
 
 		return defaultAuthority;

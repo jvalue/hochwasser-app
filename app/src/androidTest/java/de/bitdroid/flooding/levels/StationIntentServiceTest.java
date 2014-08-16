@@ -22,13 +22,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
-import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.testUtils.ContentProviderContext;
 import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.testUtils.SharedPreferencesHelper;
-import de.bitdroid.utils.Log;
 
 public class StationIntentServiceTest extends ServiceTestCase {
 
@@ -55,7 +54,6 @@ public class StationIntentServiceTest extends ServiceTestCase {
 
 	public void testSyncStation() throws Exception {
 		int maxAge = getContext().getResources().getInteger(R.integer.station_max_age_in_ms);
-		Log.info("maxAge is " + maxAge);
 
 		// setup context
 		MockContentResolver resolver = new MockContentResolver();

@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.SyncAdapter;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 public final class MonitorSyncListener extends BroadcastReceiver {
@@ -18,7 +18,7 @@ public final class MonitorSyncListener extends BroadcastReceiver {
 		boolean success = intent.getBooleanExtra(SyncAdapter.EXTRA_SYNC_SUCCESSFUL, false);
 
 		if (SourceMonitor.getInstance(context).isBeingMonitored(source) && success) {
-			Log.info("Monitor is copying db");
+			Timber.d("Monitor is copying db");
 			Intent serviceIntent = new Intent(context, CopySourceService.class);
 			serviceIntent.putExtra(CopySourceService.EXTRA_SOURCE_NAME, source.toString());
 			context.startService(serviceIntent);

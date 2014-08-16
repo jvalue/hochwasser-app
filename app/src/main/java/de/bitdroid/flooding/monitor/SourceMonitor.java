@@ -13,7 +13,7 @@ import java.util.Set;
 
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 import static de.bitdroid.ods.data.OdsSource.COLUMN_TIMESTAMP;
 
@@ -54,7 +54,7 @@ public final class SourceMonitor {
 				source.toSqlTableName(), 
 				source);
 
-		Log.debug("Starting SourceMonitor for " + source.getSourceId());
+		Timber.d("Starting SourceMonitor for " + source.getSourceId());
 	}
 
 
@@ -65,7 +65,7 @@ public final class SourceMonitor {
 		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.remove(source.toString()).commit();
 
-		Log.debug("Stopping SourceMonitor for " + source.getSourceId());
+		Timber.d("Stopping SourceMonitor for " + source.getSourceId());
 	}
 
 

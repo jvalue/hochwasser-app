@@ -14,12 +14,12 @@ import java.net.URLEncoder;
 import java.util.Date;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
 import de.bitdroid.utils.RestCall;
 import de.bitdroid.utils.RestException;
-import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 public class StationIntentService extends IntentService {
 
@@ -56,7 +56,8 @@ public class StationIntentService extends IntentService {
 
 
 		} else if (cursor.getCount() > 1) {
-			Log.warning("found more than one timestamp!");
+			Timber.w("Found more than one timestamp when querying ods db for station " + station
+					+ " --> ignoring sync request");
 		} else {
 			synchronizeStation(station, false, 0);
 		}
@@ -93,11 +94,11 @@ public class StationIntentService extends IntentService {
 			}
 
 		} catch(RestException re) {
-			Log.error("failed to synchronize station", re);
+			Timber.e(re, "Failed to synchronize station " + stationName);
 		} catch(JSONException je) {
-			Log.error("failed to read json", je);
+			Timber.e(je, "Failed to synchronize station " + stationName);
 		} catch (UnsupportedEncodingException uee) {
-			Log.error("wrong encoding", uee);
+			Timber.e(uee, "Failed to synchronize station " + stationName);
 		}
 	}
 

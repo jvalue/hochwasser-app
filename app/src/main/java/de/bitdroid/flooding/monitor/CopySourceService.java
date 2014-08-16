@@ -16,8 +16,8 @@ import java.util.Set;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.ods.data.OdsSource;
-import de.bitdroid.utils.Log;
 import de.bitdroid.ods.data.SQLiteType;
+import timber.log.Timber;
 
 import static de.bitdroid.ods.data.OdsSource.COLUMN_TIMESTAMP;
 
@@ -87,7 +87,7 @@ public final class CopySourceService extends IntentService {
 			long monitorPeriod = Long.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_days_key), "-1"));
 			double monitorInterval = Float.valueOf(prefs.getString(getString(R.string.prefs_ods_monitor_interval_key), "-1"));
 			if (monitorPeriod == -1 || monitorInterval == -1) {
-				Log.error("failed to read settings for removing old monitor data");
+				Timber.e("failed to read settings for removing old monitor data");
 				return;
 			}
 
@@ -100,13 +100,13 @@ public final class CopySourceService extends IntentService {
 						COLUMN_TIMESTAMP + "=?",
 						new String[] { String.valueOf(timestamp) });
 			}
-			Log.debug("deleted " + deletionCount + " old monitor entries");
+			Timber.d("deleted " + deletionCount + " old monitor entries");
 
 
 		} finally {
 			if (cursor != null) cursor.close();
 			if (database != null) database.close();
-			Log.debug("Inserted " + copyCount + " entries into monitor db");
+			Timber.d("Inserted " + copyCount + " entries into monitor db");
 		}
 	}
 

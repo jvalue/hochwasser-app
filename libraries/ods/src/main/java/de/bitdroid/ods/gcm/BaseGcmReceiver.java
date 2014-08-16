@@ -10,7 +10,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.Set;
 
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 public abstract class BaseGcmReceiver extends BroadcastReceiver {
@@ -32,7 +32,7 @@ public abstract class BaseGcmReceiver extends BroadcastReceiver {
 			// check for server ping
 			String pingExtra = intent.getExtras().getString(DATA_KEY_PING);
 			if (pingExtra != null && Boolean.valueOf(pingExtra)) {
-				Log.debug("found server ping, ignoring");
+				Timber.d("found server ping, ignoring");
 				return;
 			}
 

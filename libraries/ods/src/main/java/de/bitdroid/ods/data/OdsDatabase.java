@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 import static de.bitdroid.ods.data.OdsSource.COLUMN_ID;
 
@@ -49,7 +49,7 @@ final class OdsDatabase extends SQLiteOpenHelper {
 			int oldVersion,
 			int newVersion) {
 
-		Log.warning("Upgrading table. This will erase all data.");
+		Timber.w("Upgrading ods db, this will erase all data!");
 		database.execSQL("DROP TABLE *");
 		onCreate(database);
 	}

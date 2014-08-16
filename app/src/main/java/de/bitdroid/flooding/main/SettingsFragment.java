@@ -18,7 +18,6 @@ import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.inscription.ChangeLogDialog;
 
 import java.util.Calendar;
@@ -29,7 +28,7 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.cep.CepManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 public final class SettingsFragment extends PreferenceFragment {
@@ -133,8 +132,7 @@ public final class SettingsFragment extends PreferenceFragment {
 					.versionName;
 			versionPref.setSummary(versionName);
 		} catch (PackageManager.NameNotFoundException nnfe) {
-			Crashlytics.logException(nnfe);
-			Log.error("failed to get package name", nnfe);
+			Timber.e(nnfe, "Failed to get package name");
 		}
 
 		// about - feedback

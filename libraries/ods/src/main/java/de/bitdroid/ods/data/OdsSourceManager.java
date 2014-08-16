@@ -9,10 +9,11 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
 
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 public final class OdsSourceManager {
@@ -77,7 +78,7 @@ public final class OdsSourceManager {
 		Assert.assertTrue(pollFrequency > 0, "pollFrequency must be > 0");
 		Assert.assertFalse(syncUtils.isPeriodicSyncScheduled(), "sync already scheduled");
 
-		Log.debug("started polling with frequency " + pollFrequency);
+		Timber.d("started polling with frequency " + pollFrequency);
 
 		addSyncAccount();
 		for (OdsSource source : sources) registerSource(source);
@@ -95,7 +96,7 @@ public final class OdsSourceManager {
 	public void stopPolling() {
 		Assert.assertTrue(syncUtils.isPeriodicSyncScheduled(), "sync not scheduled");
 
-		Log.debug("stopped polling");
+		Timber.d("stopped polling");
 
 		syncUtils.stopPeriodicSync();
 
@@ -195,7 +196,7 @@ public final class OdsSourceManager {
 	public void startManualSync(OdsSource source) {
 		Assert.assertNotNull(source);
 
-		Log.debug("starting manual sync");
+		Timber.d("starting manual sync");
 
 		addSyncAccount();
 		syncUtils.startManualSync(getOdsServerName(), source);

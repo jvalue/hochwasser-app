@@ -18,7 +18,6 @@ import de.bitdroid.flooding.map.InfoMapActivity;
 import de.bitdroid.flooding.map.Station;
 import de.bitdroid.flooding.map.StationClickListener;
 import de.bitdroid.flooding.map.StationsOverlay;
-import de.bitdroid.utils.Log;
 import it.gmariotti.cardslib.library.internal.Card;
 
 final class StationMapCard extends Card {
@@ -54,7 +53,6 @@ final class StationMapCard extends Card {
 		mapView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Log.debug("clicked card!");
 				Intent intent = new Intent(context, InfoMapActivity.class);
 				intent.putExtra(InfoMapActivity.EXTRA_WATER_NAME, riverName);
 				intent.putExtra(InfoMapActivity.EXTRA_STATION_NAME, stationName);

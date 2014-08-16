@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 final class NewsDatabase extends SQLiteOpenHelper {
@@ -43,7 +43,7 @@ final class NewsDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-		Log.warning("Upgrading table. This will erase all data.");
+		Timber.w("Upgrading news table, this will erase all data!");
 		database.execSQL("drop table " + TABLE_NAME); 
 		onCreate(database);
 	}

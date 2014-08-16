@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import timber.log.Timber;
+
 public final class RestCall {
 
 	public enum RequestType {
@@ -75,7 +77,7 @@ public final class RestCall {
 			}
 		}
 
-		Log.debug("Fetching " + urlBuilder.toString());
+		Timber.d("Fetching " + urlBuilder.toString());
 
 
 		// create connection
@@ -111,7 +113,7 @@ public final class RestCall {
 			try {
 				if (dataReader != null) dataReader.close();
 			} catch (IOException e) {
-                Log.error("failed to close dataReader", e);
+                Timber.e(e, "failed to close dataReader");
             }
 
 			if (conn != null) conn.disconnect();

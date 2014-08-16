@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import de.bitdroid.utils.Log;
+import timber.log.Timber;
 
 
 public abstract class BaseGcmIntentService extends IntentService {
@@ -46,8 +46,8 @@ public abstract class BaseGcmIntentService extends IntentService {
 			serviceClientId = handleRegistration(intent, gcmClientId, serviceClientId, register);
 
 		} catch (Exception e) {
+			Timber.e(e, "register (" + register + ") failed for gcmClientId " + gcmClientId);
 			errorMsg = e.getMessage();
-			Log.error(errorMsg);
 		}
 
 		Intent resultIntent = new Intent(getActionName());

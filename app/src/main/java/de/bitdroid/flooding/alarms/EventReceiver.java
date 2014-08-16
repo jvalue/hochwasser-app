@@ -10,15 +10,15 @@ import de.bitdroid.ods.cep.CepManager;
 import de.bitdroid.ods.cep.CepManagerFactory;
 import de.bitdroid.ods.cep.Rule;
 import de.bitdroid.ods.gcm.GcmStatus;
-import de.bitdroid.utils.Log;
 import de.bitdroid.utils.StringUtils;
+import timber.log.Timber;
 
 
 public final class EventReceiver extends BaseEventReceiver {
 
 	@Override
 	protected void onReceive(Context context, Rule rule, String eventId) {
-		Log.debug("Received event with id " + eventId);
+		Timber.d("Received event with id " + eventId);
 
 		LevelAlarm alarm = new LevelAlarm(rule);
 

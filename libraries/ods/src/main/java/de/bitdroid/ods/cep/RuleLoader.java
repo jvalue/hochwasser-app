@@ -45,6 +45,7 @@ public final class RuleLoader extends AsyncTaskLoader<Map<Rule, GcmStatus>> impl
 	public void deliverResult(Map<Rule, GcmStatus> rules) {
 		if (isReset()) return;
 
+
 		this.rules = rules;
 
 		if (isStarted()) {
@@ -69,12 +70,6 @@ public final class RuleLoader extends AsyncTaskLoader<Map<Rule, GcmStatus>> impl
 	@Override
 	protected void onStopLoading() {
 		cancelLoad();
-	}
-
-
-	@Override
-	public void onCanceled(Map<Rule, GcmStatus> rules) {
-		super.onCanceled(rules);
 	}
 
 

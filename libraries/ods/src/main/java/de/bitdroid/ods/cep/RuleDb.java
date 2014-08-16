@@ -63,32 +63,22 @@ final class RuleDb extends SQLiteOpenHelper {
 
 	public void insert(Rule rule) {
 		Assert.assertNotNull(rule);
-		SQLiteDatabase database = null;
-		try {
-			database = getWritableDatabase();
-			ContentValues values = new ContentValues();
-			values.put(COLUMN_UUID, rule.getUuid());
-			values.put(COLUMN_CEPS_RULE_PATH, rule.getCepsRulePath());
-			values.put(COLUMN_PARAMS, new JSONObject(rule.getParams()).toString());
-			database.insert(TABLE_NAME, null, values);
-		} finally {
-			if (database != null) database.close();
-		}
+		SQLiteDatabase database = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_UUID, rule.getUuid());
+		values.put(COLUMN_CEPS_RULE_PATH, rule.getCepsRulePath());
+		values.put(COLUMN_PARAMS, new JSONObject(rule.getParams()).toString());
+		database.insert(TABLE_NAME, null, values);
 	}
 
 
 	public void delete(Rule rule) {
 		Assert.assertNotNull(rule);
-		SQLiteDatabase database = null;
-		try {
-			database = getWritableDatabase();
-			database.delete(
-					TABLE_NAME,
-					COLUMN_UUID + "=?",
-					new String[]{ rule.getUuid() });
-		} finally {
-			if (database != null) database.close();
-		}
+		SQLiteDatabase database = getWritableDatabase();
+		database.delete(
+				TABLE_NAME,
+				COLUMN_UUID + "=?",
+				new String[]{ rule.getUuid() });
 	}
 
 
@@ -192,13 +182,8 @@ final class RuleDb extends SQLiteOpenHelper {
 		values.put(COLUMN_CEPS_CLIENT_ID, clientId);
 		values.put(COLUMN_REGISTRATION_STATUS, registrationStatus.name());
 
-		SQLiteDatabase database = null;
-		try {
-			database = getWritableDatabase();
-			database.update(TABLE_NAME, values, COLUMN_UUID + "=?", new String[] { rule.getUuid() });
-		} finally {
-			if (database != null) database.close();
-		}
+		SQLiteDatabase database = getWritableDatabase();
+		database.update(TABLE_NAME, values, COLUMN_UUID + "=?", new String[] { rule.getUuid() });
 	}
 
 }

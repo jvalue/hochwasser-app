@@ -43,32 +43,49 @@ public final class AlarmRegistrationQueueTest extends ServiceTestCase<AlarmRegis
 		// register
 		Rule rule = new Rule.Builder("somePath").build();
 		when(cepManager.getRegistrationStatus(rule)).thenReturn(GcmStatus.UNREGISTERED);
-		Intent intent = new Intent();
-		intent.putExtra(AlarmRegistrationQueue.EXTRA_RULE, rule);
-		intent.putExtra(AlarmRegistrationQueue.EXTRA_REGISTER, true);
-		startService(intent);
+		startService(getServiceIntent(rule, true));
+
 		verify(cepManager, times(1)).registerRule(eq(rule));
 
-		Intent resultIntent = new Intent(getContext(), AlarmRegistrationQueue.StatusReceiver.class);
-		resultIntent.putExtra(CepManager.EXTRA_RULE, rule);
-		resultIntent.putExtra(CepManager.EXTRA_STATUS, GcmStatus.REGISTERED.name());
-		getContext().sendBroadcast(resultIntent);
+		getContext().sendBroadcast(getStatusIntent(rule, GcmStatus.PENDING_REGISTRATION));
+		getContext().sendBroadcast(getStatusIntent(rule, GcmStatus.REGISTERED));
+
 		verify(cepManager, times(1)).registerRule(eq(rule));
 		verify(cepManager, never()).unregisterRule(eq(rule));
 
 
 		// unregister
 		when(cepManager.getRegistrationStatus(rule)).thenReturn(GcmStatus.REGISTERED);
-		intent.putExtra(AlarmRegistrationQueue.EXTRA_REGISTER, false);
-		startService(intent);
+		startService(getServiceIntent(rule, false));
+
 		verify(cepManager, times(1)).unregisterRule(eq(rule));
 
-		resultIntent = new Intent(getContext(), AlarmRegistrationQueue.StatusReceiver.class);
-		resultIntent.putExtra(CepManager.EXTRA_RULE, rule);
-		resultIntent.putExtra(CepManager.EXTRA_STATUS, GcmStatus.UNREGISTERED.name());
-		getContext().sendBroadcast(resultIntent);
+		getContext().sendBroadcast(getStatusIntent(rule, GcmStatus.PENDING_UNREGISTRATION));
+		getContext().sendBroadcast(getStatusIntent(rule, GcmStatus.UNREGISTERED));
+
 		verify(cepManager, times(1)).registerRule(eq(rule));
 		verify(cepManager, times(1)).unregisterRule(eq(rule));
+	}
+
+
+	public void testQueue() {
+
+	}
+
+
+	private Intent getServiceIntent(Rule rule, boolean register) {
+		Intent intent = new Intent();
+		intent.putExtra(AlarmRegistrationQueue.EXTRA_RULE, rule);
+		intent.putExtra(AlarmRegistrationQueue.EXTRA_REGISTER, register);
+		return intent;
+	}
+
+
+	private Intent getStatusIntent(Rule rule, GcmStatus status) {
+		Intent intent = new Intent(getContext(), AlarmRegistrationQueue.StatusReceiver.class);
+		intent.putExtra(CepManager.EXTRA_RULE, rule);
+		intent.putExtra(CepManager.EXTRA_STATUS, status.name());
+		return intent;
 	}
 
 }

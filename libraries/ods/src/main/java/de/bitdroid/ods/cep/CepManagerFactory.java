@@ -20,7 +20,7 @@ public class CepManagerFactory {
 
 
 	// use only for testing!
-	static void setCepManager(CepManager manager) {
+	public static void setCepManager(CepManager manager) {
 		Assert.assertNotNull(manager);
 		CepManagerFactory.manager = manager;
 	}

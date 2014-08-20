@@ -43,10 +43,10 @@ public final class AlarmRegistrationQueue extends Service {
 
 			if (!status.equals(GcmStatus.PENDING_UNREGISTRATION) && !status.equals(GcmStatus.PENDING_REGISTRATION)) {
 				// if currently not pending simply execute the command
-				processRule(rule, register);
+				processRule(cepManager, rule, register);
 			} else {
 				// otherwise store it for late (the next broadcast)
-				SharedPreferences.Editor editor = getSharedPreferences().edit();
+				SharedPreferences.Editor editor = getSharedPreferences(this).edit();
 				editor.putBoolean(rule.getUuid(), register);
 				editor.commit();
 			}
@@ -70,15 +70,16 @@ public final class AlarmRegistrationQueue extends Service {
 
 
 
-	private void processRule(Rule rule, boolean start) {
+	private static void processRule(CepManager cepManager, Rule rule, boolean start) {
 		if (start) cepManager.registerRule(rule);
 		else cepManager.unregisterRule(rule);
 	}
 
 
+	private static final String PREFS_NAME = AlarmRegistrationQueue.class.getName();
 
-	private SharedPreferences getSharedPreferences() {
-		return getSharedPreferences(getClass().getName(), Context.MODE_PRIVATE);
+	private static SharedPreferences getSharedPreferences(Context context) {
+		return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 	}
 
 
@@ -94,7 +95,7 @@ public final class AlarmRegistrationQueue extends Service {
 				return;
 
 			// otherwise check if others should be started / stopped
-			SharedPreferences prefs = getSharedPreferences();
+			SharedPreferences prefs = getSharedPreferences(context);
 			if (prefs.contains(rule.getUuid())) {
 				boolean register = prefs.getBoolean(rule.getUuid(), false);
 				if (( register && status.equals(GcmStatus.REGISTERED))
@@ -102,7 +103,7 @@ public final class AlarmRegistrationQueue extends Service {
 					// nothing to do here
 					return;
 				}
-				processRule(rule, register);
+				processRule(CepManagerFactory.createCepManager(context), rule, register);
 			}
 		}
 

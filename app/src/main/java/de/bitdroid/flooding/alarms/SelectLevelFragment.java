@@ -20,8 +20,8 @@ import android.widget.Toast;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.levels.StationActivity;
-import de.bitdroid.ods.cep.CepManager;
-import de.bitdroid.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.cep.RuleManager;
+import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.StringUtils;
 
@@ -78,7 +78,7 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 				boolean whenAbove = relationRadioGroup.getCheckedRadioButtonId() == R.id.above;
 
 				LevelAlarm alarm = new LevelAlarm(river, station, level, whenAbove);
-				CepManager manager = CepManagerFactory.createCepManager(getActivity().getApplicationContext());
+				RuleManager manager = RuleManagerFactory.createRuleManager(getActivity().getApplicationContext());
 				if (!manager.getRegistrationStatus(alarm.getRule()).equals(GcmStatus.UNREGISTERED)) {
 					Toast.makeText(getActivity(), getString(R.string.alarms_new_already_added), Toast.LENGTH_SHORT).show();
 					return;

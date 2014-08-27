@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.ods.cep.CepManager;
-import de.bitdroid.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.cep.RuleManager;
+import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.cep.Rule;
 import de.bitdroid.ods.cep.RuleLoader;
 import de.bitdroid.ods.gcm.GcmStatus;
@@ -42,13 +42,13 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 
 	private CardListView listView;
 	private CardArrayAdapter listAdapter;
-	private CepManager cepManager;
+	private RuleManager ruleManager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		cepManager = CepManagerFactory.createCepManager(getActivity().getApplicationContext());
+		ruleManager = RuleManagerFactory.createRuleManager(getActivity().getApplicationContext());
 	}
 
 
@@ -111,7 +111,7 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 	@Override
 	public Loader<Map<Rule, GcmStatus>> onCreateLoader(int id, Bundle bundle) {
 		if (id != LOADER_ID) return null;
-		return new RuleLoader(getActivity().getApplicationContext(), cepManager);
+		return new RuleLoader(getActivity().getApplicationContext(), ruleManager);
 	}
 
 
@@ -125,7 +125,7 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 			if (entry.getValue().equals(GcmStatus.PENDING_UNREGISTRATION)) continue; // ... and those
 
 			Rule rule = entry.getKey();
-			AlarmCard card = new AlarmCard(getActivity(), cepManager, new LevelAlarm(rule));
+			AlarmCard card = new AlarmCard(getActivity(), ruleManager, new LevelAlarm(rule));
 			card.setId(String.valueOf(rule.hashCode()));
 			cards.add(card);
 		}

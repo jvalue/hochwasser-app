@@ -4,8 +4,8 @@ package de.bitdroid.flooding.alarms;
 import android.content.Intent;
 import android.test.ServiceTestCase;
 
-import de.bitdroid.ods.cep.CepManager;
-import de.bitdroid.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.cep.RuleManager;
+import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.cep.Rule;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
@@ -21,7 +21,7 @@ public final class AlarmRegistrationQueueTest extends ServiceTestCase<AlarmRegis
 
 	private static final String PREFIX = AlarmRegistrationQueueTest.class.getSimpleName();
 
-	private CepManager cepManager;
+	private RuleManager ruleManager;
 
 
 	public AlarmRegistrationQueueTest() {
@@ -33,8 +33,8 @@ public final class AlarmRegistrationQueueTest extends ServiceTestCase<AlarmRegis
 	public void setUp() throws Exception {
 		super.setUp();
 
-		this.cepManager = mock(CepManager.class);
-		CepManagerFactory.setCepManager(this.cepManager);
+		this.ruleManager = mock(RuleManager.class);
+		RuleManagerFactory.setRuleManager(this.ruleManager);
 		setContext(new PrefsRenamingDelegatingContext(getContext(), PREFIX));
 	}
 
@@ -42,29 +42,29 @@ public final class AlarmRegistrationQueueTest extends ServiceTestCase<AlarmRegis
 	public void testSimpleActions() {
 		// register
 		Rule rule = new Rule.Builder("somePath").build();
-		when(cepManager.getRegistrationStatus(rule)).thenReturn(GcmStatus.UNREGISTERED);
+		when(ruleManager.getRegistrationStatus(rule)).thenReturn(GcmStatus.UNREGISTERED);
 		startService(getServiceIntent(rule, true));
 
-		verify(cepManager, times(1)).registerRule(eq(rule));
+		verify(ruleManager, times(1)).registerRule(eq(rule));
 
 		getContext().sendBroadcast(getStatusIntent(rule, GcmStatus.PENDING_REGISTRATION));
 		getContext().sendBroadcast(getStatusIntent(rule, GcmStatus.REGISTERED));
 
-		verify(cepManager, times(1)).registerRule(eq(rule));
-		verify(cepManager, never()).unregisterRule(eq(rule));
+		verify(ruleManager, times(1)).registerRule(eq(rule));
+		verify(ruleManager, never()).unregisterRule(eq(rule));
 
 
 		// unregister
-		when(cepManager.getRegistrationStatus(rule)).thenReturn(GcmStatus.REGISTERED);
+		when(ruleManager.getRegistrationStatus(rule)).thenReturn(GcmStatus.REGISTERED);
 		startService(getServiceIntent(rule, false));
 
-		verify(cepManager, times(1)).unregisterRule(eq(rule));
+		verify(ruleManager, times(1)).unregisterRule(eq(rule));
 
 		getContext().sendBroadcast(getStatusIntent(rule, GcmStatus.PENDING_UNREGISTRATION));
 		getContext().sendBroadcast(getStatusIntent(rule, GcmStatus.UNREGISTERED));
 
-		verify(cepManager, times(1)).registerRule(eq(rule));
-		verify(cepManager, times(1)).unregisterRule(eq(rule));
+		verify(ruleManager, times(1)).registerRule(eq(rule));
+		verify(ruleManager, times(1)).unregisterRule(eq(rule));
 	}
 
 
@@ -83,8 +83,8 @@ public final class AlarmRegistrationQueueTest extends ServiceTestCase<AlarmRegis
 
 	private Intent getStatusIntent(Rule rule, GcmStatus status) {
 		Intent intent = new Intent(getContext(), AlarmRegistrationQueue.StatusReceiver.class);
-		intent.putExtra(CepManager.EXTRA_RULE, rule);
-		intent.putExtra(CepManager.EXTRA_STATUS, status.name());
+		intent.putExtra(RuleManager.EXTRA_RULE, rule);
+		intent.putExtra(RuleManager.EXTRA_STATUS, status.name());
 		return intent;
 	}
 

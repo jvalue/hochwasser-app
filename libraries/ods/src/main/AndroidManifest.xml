@@ -75,7 +75,7 @@
         <service android:name=".cep.GcmIntentService">
         </service>
 
-        <receiver android:name=".cep.CepManagerImpl$StatusUpdater">
+        <receiver android:name=".cep.RuleManagerImpl$StatusUpdater">
             <intent-filter>
                 <action android:name="de.bitdroid.ods.cep.ACTION_GCM_FINISH"/>
             </intent-filter>

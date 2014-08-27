@@ -14,9 +14,9 @@ import de.bitdroid.testUtils.SharedPreferencesHelper;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class CepManagerImplTest extends BaseAndroidTestCase {
+public class RuleManagerImplTest extends BaseAndroidTestCase {
 
-	private static final String PREFIX = CepManagerImplTest.class.getSimpleName();
+	private static final String PREFIX = RuleManagerImplTest.class.getSimpleName();
 
 
 	@Override
@@ -29,7 +29,7 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 	public void testServerName() {
 		Context context = new PrefsRenamingDelegatingContext(getContext(), PREFIX);
 		SharedPreferencesHelper.clearAll((PrefsRenamingDelegatingContext) context);
-		CepManager manager = new CepManagerImpl(context, new RuleDb(context));
+		RuleManager manager = new RuleManagerImpl(context, new RuleDb(context));
 
 		String serverName1 = "http://somedomain.com";
 		String serverName2 = "http://someotherdomain.com";
@@ -46,7 +46,7 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 		Context mockContext = Mockito.mock(Context.class);
 		Context renamingContext = new PrefsRenamingDelegatingContext(getContext(), PREFIX);
 		RuleDb ruleDb = new RuleDb(renamingContext);
-		CepManager manager = new CepManagerImpl(mockContext, ruleDb);
+		RuleManager manager = new RuleManagerImpl(mockContext, ruleDb);
 
 		Rule rule1 = newRule("path1", 2);
 		Rule rule2 = newRule("path2", 0);
@@ -74,19 +74,19 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 		assertEquals(true, serviceIntent.getBooleanExtra(GcmIntentService.EXTRA_REGISTER, false));
 
 		// test registration response
-		CepManagerFactory.setCepManager(manager);
+		RuleManagerFactory.setRuleManager(manager);
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(GcmIntentService.EXTRA_RULE, rule1);
 		resultIntent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, "someClientId");
 		resultIntent.putExtra(GcmIntentService.EXTRA_REGISTER, true);
-		new CepManagerImpl.StatusUpdater().onReceive(mockContext, resultIntent);
+		new RuleManagerImpl.StatusUpdater().onReceive(mockContext, resultIntent);
 
 		// test broadcast sent
 		captor  = ArgumentCaptor.forClass(Intent.class);
 		verify(mockContext).sendBroadcast(captor.capture());
 		Intent broadcastIntent = captor.getValue();
-		assertEquals(rule1, broadcastIntent.getParcelableExtra(CepManager.EXTRA_RULE));
-		assertEquals(GcmStatus.REGISTERED.name(), broadcastIntent.getStringExtra(CepManager.EXTRA_STATUS));
+		assertEquals(rule1, broadcastIntent.getParcelableExtra(RuleManager.EXTRA_RULE));
+		assertEquals(GcmStatus.REGISTERED.name(), broadcastIntent.getStringExtra(RuleManager.EXTRA_STATUS));
 		assertEquals(GcmStatus.REGISTERED, manager.getRegistrationStatus(rule1));
 		assertEquals(1, manager.getAllRules().size());
 
@@ -100,12 +100,12 @@ public class CepManagerImplTest extends BaseAndroidTestCase {
 		assertEquals(GcmStatus.PENDING_UNREGISTRATION, manager.getRegistrationStatus(rule1));
 
 		// test registration response
-		CepManagerFactory.setCepManager(manager);
+		RuleManagerFactory.setRuleManager(manager);
 		resultIntent = new Intent();
 		resultIntent.putExtra(GcmIntentService.EXTRA_RULE, rule1);
 		resultIntent.putExtra(GcmIntentService.EXTRA_SERVICE_CLIENTID, "someClientId");
 		resultIntent.putExtra(GcmIntentService.EXTRA_REGISTER, false);
-		new CepManagerImpl.StatusUpdater().onReceive(mockContext, resultIntent);
+		new RuleManagerImpl.StatusUpdater().onReceive(mockContext, resultIntent);
 		assertEquals(GcmStatus.UNREGISTERED, manager.getRegistrationStatus(rule1));
 		assertEquals(0, manager.getAllRules().size());
 

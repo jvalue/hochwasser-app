@@ -19,23 +19,23 @@ import de.bitdroid.ods.gcm.GcmStatus;
  */
 public final class RuleLoader extends AsyncTaskLoader<Map<Rule, GcmStatus>> implements RuleUpdateListener {
 
-	private final CepManager cepManager;
+	private final RuleManager ruleManager;
 
 	private Map<Rule, GcmStatus> rules;
 	private boolean monitoringRules = false;
 
-	public RuleLoader(Context context, CepManager cepManager) {
+	public RuleLoader(Context context, RuleManager ruleManager) {
 		super(context);
-		this.cepManager = cepManager;
+		this.ruleManager = ruleManager;
 	}
 
 
 	@Override
 	public Map<Rule, GcmStatus> loadInBackground() {
-		Set<Rule> rules = cepManager.getAllRules();
+		Set<Rule> rules = ruleManager.getAllRules();
 		Map<Rule, GcmStatus> result = new HashMap<Rule, GcmStatus>();
 		for (Rule rule : rules) {
-			result.put(rule, cepManager.getRegistrationStatus(rule));
+			result.put(rule, ruleManager.getRegistrationStatus(rule));
 		}
 		return result;
 	}
@@ -60,7 +60,7 @@ public final class RuleLoader extends AsyncTaskLoader<Map<Rule, GcmStatus>> impl
 
 		if (!monitoringRules) {
 			monitoringRules = true;
-			cepManager.registerRuleUpdateListener(this);
+			ruleManager.registerRuleUpdateListener(this);
 		}
 
 		if (takeContentChanged() || rules == null) forceLoad();
@@ -80,7 +80,7 @@ public final class RuleLoader extends AsyncTaskLoader<Map<Rule, GcmStatus>> impl
 
 		if (monitoringRules) {
 			monitoringRules = false;
-			cepManager.unregisterRuleUpdateListener(this);
+			ruleManager.unregisterRuleUpdateListener(this);
 		}
 	}
 

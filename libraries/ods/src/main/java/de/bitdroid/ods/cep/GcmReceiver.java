@@ -40,7 +40,7 @@ public final class GcmReceiver extends BaseGcmReceiver {
 		}
 
 		// get rule for id
-		CepManager manager = CepManagerFactory.createCepManager(context);
+		RuleManager manager = RuleManagerFactory.createRuleManager(context);
 		Rule rule = manager.getRuleForClientId(clientId);
 		if (rule == null) {
 			Timber.w("found rule that should be registered, but wasn't");

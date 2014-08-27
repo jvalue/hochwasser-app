@@ -25,8 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.alarms.AlarmFragment;
 import de.bitdroid.flooding.dataselection.BaseRiverSelectionFragment;
@@ -34,11 +32,10 @@ import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.ods.cep.CepManager;
-import de.bitdroid.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.cep.RuleManager;
+import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
-import de.bitdroid.utils.Debug;
 
 public class MainActivity extends FragmentActivity {
 
@@ -171,9 +168,9 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		// set CEPS server name
-		CepManager cepManager = CepManagerFactory.createCepManager(getApplicationContext());
-		if (cepManager.getCepServerName() == null) {
-			cepManager.setCepServerName(
+		RuleManager ruleManager = RuleManagerFactory.createRuleManager(getApplicationContext());
+		if (ruleManager.getCepServerName() == null) {
+			ruleManager.setCepServerName(
 					prefs.getString(getString(R.string.prefs_ceps_servername_key), null));
 		}
 

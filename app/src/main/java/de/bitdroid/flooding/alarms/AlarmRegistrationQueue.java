@@ -9,8 +9,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 
-import de.bitdroid.ods.cep.CepManager;
-import de.bitdroid.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.cep.RuleManager;
+import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.cep.Rule;
 import de.bitdroid.ods.gcm.GcmStatus;
 
@@ -20,7 +20,7 @@ public final class AlarmRegistrationQueue extends Service {
 			EXTRA_RULE = "EXTRA_RULE",
 			EXTRA_REGISTER = "EXTRA_REGISTER";
 
-	private CepManager cepManager;
+	private RuleManager ruleManager;
 	private BroadcastReceiver statusReceiver;
 
 
@@ -28,9 +28,9 @@ public final class AlarmRegistrationQueue extends Service {
 	public void onCreate() {
 		super.onCreate();
 
-		cepManager = CepManagerFactory.createCepManager(this);
+		ruleManager = RuleManagerFactory.createRuleManager(this);
 		statusReceiver = new StatusReceiver();
-		registerReceiver(statusReceiver, new IntentFilter(CepManager.ACTION_REGISTRATION_STATUS_CHANGED));
+		registerReceiver(statusReceiver, new IntentFilter(RuleManager.ACTION_REGISTRATION_STATUS_CHANGED));
 	}
 
 
@@ -39,11 +39,11 @@ public final class AlarmRegistrationQueue extends Service {
 		if (intent != null) {
 			Rule rule = intent.getParcelableExtra(EXTRA_RULE);
 			boolean register = intent.getBooleanExtra(EXTRA_REGISTER, false);
-			GcmStatus status = cepManager.getRegistrationStatus(rule);
+			GcmStatus status = ruleManager.getRegistrationStatus(rule);
 
 			if (!status.equals(GcmStatus.PENDING_UNREGISTRATION) && !status.equals(GcmStatus.PENDING_REGISTRATION)) {
 				// if currently not pending simply execute the command
-				processRule(cepManager, rule, register);
+				processRule(ruleManager, rule, register);
 			} else {
 				// otherwise store it for late (the next broadcast)
 				SharedPreferences.Editor editor = getSharedPreferences(this).edit();
@@ -70,9 +70,9 @@ public final class AlarmRegistrationQueue extends Service {
 
 
 
-	private static void processRule(CepManager cepManager, Rule rule, boolean start) {
-		if (start) cepManager.registerRule(rule);
-		else cepManager.unregisterRule(rule);
+	private static void processRule(RuleManager ruleManager, Rule rule, boolean start) {
+		if (start) ruleManager.registerRule(rule);
+		else ruleManager.unregisterRule(rule);
 	}
 
 
@@ -87,8 +87,8 @@ public final class AlarmRegistrationQueue extends Service {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Rule rule = intent.getParcelableExtra(CepManager.EXTRA_RULE);
-			GcmStatus status = GcmStatus.valueOf(intent.getStringExtra(CepManager.EXTRA_STATUS));
+			Rule rule = intent.getParcelableExtra(RuleManager.EXTRA_RULE);
+			GcmStatus status = GcmStatus.valueOf(intent.getStringExtra(RuleManager.EXTRA_STATUS));
 
 			// if pending then don't start / stop any new rules
 			if (status.equals(GcmStatus.PENDING_REGISTRATION) || status.equals(GcmStatus.PENDING_UNREGISTRATION))
@@ -103,7 +103,7 @@ public final class AlarmRegistrationQueue extends Service {
 					// nothing to do here
 					return;
 				}
-				processRule(CepManagerFactory.createCepManager(context), rule, register);
+				processRule(RuleManagerFactory.createRuleManager(context), rule, register);
 			}
 		}
 

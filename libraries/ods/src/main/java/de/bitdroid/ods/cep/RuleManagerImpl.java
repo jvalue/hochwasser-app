@@ -14,9 +14,9 @@ import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 
 
-final class CepManagerImpl implements CepManager {
+final class RuleManagerImpl implements RuleManager {
 
-	private static final String PREFS_NAME = CepManagerImpl.class.getName();
+	private static final String PREFS_NAME = RuleManagerImpl.class.getName();
 	private static final String KEY_SERVER_NAME = "serverName";
 
 
@@ -24,7 +24,7 @@ final class CepManagerImpl implements CepManager {
 	private final RuleDb ruleDb;
 	private final List<RuleUpdateListener> listeners = new LinkedList<RuleUpdateListener>();
 
-	CepManagerImpl(Context context, RuleDb ruleDb) {
+	RuleManagerImpl(Context context, RuleDb ruleDb) {
 		Assert.assertNotNull(context, ruleDb);
 		this.context = context;
 		this.ruleDb = ruleDb;
@@ -191,7 +191,7 @@ final class CepManagerImpl implements CepManager {
 			}
 
 			// update status
-			((CepManagerImpl) CepManagerFactory.createCepManager(context))
+			((RuleManagerImpl) RuleManagerFactory.createRuleManager(context))
 					.updateCepsData(rule, clientId, status);
 
 			// send broadcast about changed status

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.levels.StationActivity;
-import de.bitdroid.ods.cep.CepManager;
+import de.bitdroid.ods.cep.RuleManager;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.StringUtils;
@@ -19,11 +19,11 @@ import timber.log.Timber;
 final class AlarmCard extends Card {
 
 	private final LevelAlarm alarm;
-	private final CepManager manager;
+	private final RuleManager manager;
 
 	public AlarmCard(
 			final Activity activity,
-			final CepManager manager,
+			final RuleManager manager,
 			final LevelAlarm alarm) {
 
 		super(activity, R.layout.alarms_card);

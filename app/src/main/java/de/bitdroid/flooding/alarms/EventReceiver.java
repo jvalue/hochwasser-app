@@ -6,8 +6,8 @@ import android.os.Vibrator;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.news.NewsManager;
 import de.bitdroid.ods.cep.BaseEventReceiver;
-import de.bitdroid.ods.cep.CepManager;
-import de.bitdroid.ods.cep.CepManagerFactory;
+import de.bitdroid.ods.cep.RuleManager;
+import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.cep.Rule;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.StringUtils;
@@ -23,7 +23,7 @@ public final class EventReceiver extends BaseEventReceiver {
 		LevelAlarm alarm = new LevelAlarm(rule);
 
 		// retry unregistration if necessary
-		CepManager manager = CepManagerFactory.createCepManager(context);
+		RuleManager manager = RuleManagerFactory.createRuleManager(context);
 		if (manager.getRegistrationStatus(alarm.getRule()).equals(GcmStatus.ERROR_UNREGISTRATION)) {
 			manager.unregisterRule(alarm.getRule());
 			return;

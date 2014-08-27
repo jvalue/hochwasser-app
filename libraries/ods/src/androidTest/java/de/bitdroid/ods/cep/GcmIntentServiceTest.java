@@ -63,7 +63,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 				receiver,
 				new IntentFilter("de.bitdroid.ods.cep.ACTION_GCM_FINISH"));
 
-		CepManagerFactory.setCepManager(new CepManagerImpl(getContext(), new RuleDb(getContext())));
+		RuleManagerFactory.setRuleManager(new RuleManagerImpl(getContext(), new RuleDb(getContext())));
 	}
 
 
@@ -89,7 +89,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		server.enqueue(new MockResponse().setBody(((Object) json).toString()));
 		server.play();
 		URL serverUrl = server.getUrl("");
-		CepManagerFactory.createCepManager(getContext()).setCepServerName(serverUrl.toString());
+		RuleManagerFactory.createRuleManager(getContext()).setCepServerName(serverUrl.toString());
 
 		// start service
 		Intent intent = new Intent(getContext(), GcmIntentService.class);
@@ -116,7 +116,7 @@ public class GcmIntentServiceTest extends ServiceTestCase<GcmIntentService> {
 		server.enqueue(new MockResponse());
 		server.play();
 		URL serverUrl = server.getUrl("");
-		CepManagerFactory.createCepManager(getContext()).setCepServerName(serverUrl.toString());
+		RuleManagerFactory.createRuleManager(getContext()).setCepServerName(serverUrl.toString());
 
 		// start service
 		Intent intent = new Intent(getContext(), GcmIntentService.class);

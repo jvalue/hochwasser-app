@@ -4,7 +4,7 @@ import java.util.Set;
 
 import de.bitdroid.ods.gcm.GcmStatus;
 
-public interface CepManager {
+public interface RuleManager {
 
 	public static final String ACTION_REGISTRATION_STATUS_CHANGED = "de.bitdroid.ods.cep.ACTION_REGISTRATION_STATUS_CHANGED";
 

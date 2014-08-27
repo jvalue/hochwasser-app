@@ -39,7 +39,7 @@ public final class GcmIntentService extends BaseGcmIntentService {
 
 		RestCall.Builder builder = new RestCall.Builder(
 				RestCall.RequestType.POST,
-				CepManagerFactory.createCepManager(getApplicationContext()).getCepServerName());
+				RuleManagerFactory.createRuleManager(getApplicationContext()).getCepServerName());
 
 		if (register) {
 			builder.path(rule.getCepsRulePath()).parameter(PARAM_GCM_CLIENT_ID, gcmClientId);

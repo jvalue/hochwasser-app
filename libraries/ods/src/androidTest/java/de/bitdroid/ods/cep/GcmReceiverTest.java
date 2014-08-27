@@ -30,9 +30,9 @@ public class GcmReceiverTest extends BaseAndroidTestCase {
 
 
 	public void testValidEvent() throws Exception {
-		CepManager mockManager = mock(CepManager.class);
+		RuleManager mockManager = mock(RuleManager.class);
 		when(mockManager.getRuleForClientId(CLIENTID)).thenReturn(RULE);
-		CepManagerFactory.setCepManager(mockManager);
+		RuleManagerFactory.setRuleManager(mockManager);
 
 		Context mockContext = mock(Context.class);
 
@@ -48,8 +48,8 @@ public class GcmReceiverTest extends BaseAndroidTestCase {
 
 
 	public void testInvalidRequest() throws Exception {
-		CepManager mockManager = mock(CepManager.class);
-		CepManagerFactory.setCepManager(mockManager);
+		RuleManager mockManager = mock(RuleManager.class);
+		RuleManagerFactory.setRuleManager(mockManager);
 
 		Context mockContext = mock(Context.class);
 

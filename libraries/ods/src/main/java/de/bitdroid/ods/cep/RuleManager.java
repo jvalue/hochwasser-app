@@ -9,9 +9,9 @@ public interface RuleManager {
 	public static final String ACTION_REGISTRATION_STATUS_CHANGED = "de.bitdroid.ods.cep.ACTION_REGISTRATION_STATUS_CHANGED";
 
 	public static final String
-			EXTRA_RULE = "EXTRA_RULE",
-			EXTRA_STATUS = "EXTRA_STATUS",
-			EXTRA_ERROR_MSG = "EXTRA_ERROR_MSG";
+			EXTRA_RULE = "de.bitdroid.ods.cep.EXTRA_RULE",
+			EXTRA_STATUS = "de.bitdroid.ods.cep.EXTRA_STATUS",
+			EXTRA_ERROR_MSG = "de.bitdroid.ods.cep.EXTRA_ERROR_MSG";
 
 
 	/**

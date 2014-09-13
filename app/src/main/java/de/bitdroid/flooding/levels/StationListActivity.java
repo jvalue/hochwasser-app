@@ -55,6 +55,7 @@ public class StationListActivity extends BaseActivity implements Extras {
 	private void showMapFragment(String waterName) {
 		getSupportFragmentManager()
 				.beginTransaction()
+				.addToBackStack(null)
 				.replace(R.id.frame, MapFragment.newInstance(waterName))
 				.commit();
 	}

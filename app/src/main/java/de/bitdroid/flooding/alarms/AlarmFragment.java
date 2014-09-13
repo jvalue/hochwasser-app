@@ -43,12 +43,14 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 	private CardListView listView;
 	private CardArrayAdapter listAdapter;
 	private RuleManager ruleManager;
+	private AlarmDeregistrationQueue alarmDeregistrationQueue;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		ruleManager = RuleManagerFactory.createRuleManager(getActivity().getApplicationContext());
+		alarmDeregistrationQueue = new AlarmDeregistrationQueue(getActivity(), ruleManager);
 	}
 
 
@@ -85,6 +87,11 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 	}
 
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		alarmDeregistrationQueue.executeAllAndShutdown();
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -125,7 +132,7 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 			if (entry.getValue().equals(GcmStatus.PENDING_UNREGISTRATION)) continue; // ... and those
 
 			Rule rule = entry.getKey();
-			AlarmCard card = new AlarmCard(getActivity(), ruleManager, new LevelAlarm(rule));
+			AlarmCard card = new AlarmCard(getActivity(), ruleManager, alarmDeregistrationQueue, new LevelAlarm(rule));
 			card.setId(String.valueOf(rule.hashCode()));
 			cards.add(card);
 		}

@@ -24,6 +24,7 @@ final class AlarmCard extends Card {
 	public AlarmCard(
 			final Activity activity,
 			final RuleManager manager,
+			final AlarmDeregistrationQueue deregistrationQueue,
 			final LevelAlarm alarm) {
 
 		super(activity, R.layout.alarms_card);
@@ -35,13 +36,14 @@ final class AlarmCard extends Card {
 		setOnSwipeListener(new OnSwipeListener() {
 			@Override
 			public void onSwipe(Card card) {
-				manager.unregisterRule(alarm.getRule());
+				deregistrationQueue.unregister(alarm);
 			}
 		});
+
 		setOnUndoSwipeListListener(new OnUndoSwipeListListener() {
 			@Override
 			public void onUndoSwipe(Card card) {
-				manager.registerRule(alarm.getRule());
+				deregistrationQueue.cancelDeregistration(alarm);
 			}
 		});
 

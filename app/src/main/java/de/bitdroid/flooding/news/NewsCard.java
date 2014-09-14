@@ -11,12 +11,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.main.MainActivity;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;
+import it.gmariotti.cardslib.library.internal.dismissanimation.SwipeDismissAnimation;
+import timber.log.Timber;
 
 final class NewsCard extends Card {
 
@@ -25,7 +29,8 @@ final class NewsCard extends Card {
 	public NewsCard(
 			final Activity activity,
 			final NewsManager manager,
-			final Pair<NewsItem, Boolean> data) {
+			final Pair<NewsItem, Boolean> data,
+			final SwipeDismissAnimation dismissAnimation) {
 
 		super(activity, R.layout.news_card);
 		this.data = data;
@@ -87,7 +92,24 @@ final class NewsCard extends Card {
 						return;
 
 					case R.id.delete:
-						manager.removeItem(data.first);
+						dismissAnimation.animateDismiss(NewsCard.this);
+
+						// Delay removing from manager until anim has finished,
+						// otherwise loader will remove card first
+						final Timer timer = new Timer();
+						TimerTask task = new TimerTask() {
+							@Override
+							public void run() {
+								activity.runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										timer.cancel();
+										manager.removeItem(data.first);
+									}
+								});
+							}
+						};
+						timer.schedule(task, 500);
 						return;
 				}
 			}

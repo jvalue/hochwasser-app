@@ -21,6 +21,7 @@ import java.util.Map;
 import de.bitdroid.flooding.R;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.internal.dismissanimation.SwipeDismissAnimation;
 import it.gmariotti.cardslib.library.view.CardListView;
 
 
@@ -31,6 +32,7 @@ public final class NewsFragment extends Fragment implements
 
 	private CardListView listView;
 	private CardArrayAdapter listAdapter;
+	private SwipeDismissAnimation dismissAnimation;
 	private NewsManager manager;
 
 
@@ -65,7 +67,11 @@ public final class NewsFragment extends Fragment implements
 		};
 
 		listAdapter.setEnableUndo(true);
+
+		dismissAnimation = (SwipeDismissAnimation) new SwipeDismissAnimation(getActivity()).setup(listAdapter);
+
 		listView.setAdapter(listAdapter);
+
 
 		if (firstStart()) {
 			addHelperNews();
@@ -106,7 +112,7 @@ public final class NewsFragment extends Fragment implements
 
 		listAdapter.clear();
 		for (Pair<NewsItem, Boolean> item : sortedItems) {
-			NewsCard card =  new NewsCard(getActivity(), manager, item);
+			NewsCard card =  new NewsCard(getActivity(), manager, item, dismissAnimation);
 			card.setId(String.valueOf(item.first.getTimestamp()));
 			listAdapter.add(card);
 		}

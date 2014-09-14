@@ -142,6 +142,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
 				RiverGraphActivity.this.levelData = cursor;
 				graph.setData(cursor);
+				checkForValidData();
 			}
 
 			@Override
@@ -546,4 +547,40 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				XYStepMode.INCREMENT_BY_VAL, 12.5);
 	}
 
+
+	private void checkForValidData() {
+		// check that there are enough stations present to show in graph
+		boolean valid = true;
+
+		levelData.moveToFirst();
+		if (levelData.getCount() <= 1) valid = false;
+		else if (levelData.getCount() == 2) {
+			double km1 = levelData.getDouble(levelData.getColumnIndex(COLUMN_STATION_KM));
+			levelData.moveToNext();
+			double km2 = levelData.getDouble(levelData.getColumnIndex(COLUMN_STATION_KM));
+			if (km1 == km2) valid = false;
+
+			levelData.moveToFirst();
+		}
+
+		if (valid) return;
+
+		new AlertDialog.Builder(this)
+				.setTitle(getString(R.string.invalid_graph_title))
+				.setMessage(getString(R.string.invalid_graph_msg))
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						RiverGraphActivity.this.onBackPressed();
+					}
+				})
+				.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						RiverGraphActivity.this.onBackPressed();
+					}
+				})
+				.create()
+				.show();
+	}
 }

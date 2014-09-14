@@ -1,13 +1,16 @@
 package de.bitdroid.flooding.levels;
 
+import android.util.Pair;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 abstract class AbstractListSeries extends AbstractSeries {
 
-	private final ArrayList<Number> 
-			xValues = new ArrayList<Number>(),
-			yValues = new ArrayList<Number>();
+	private final ArrayList<Pair<Number, Number>> values = new ArrayList<Pair<Number, Number>>();
 
 	protected AbstractListSeries(String title) {
 		super(title);
@@ -15,27 +18,36 @@ abstract class AbstractListSeries extends AbstractSeries {
 
 	@Override
 	public final Number getX(int idx) {
-		return xValues.get(idx);
+		return values.get(idx).first;
 	}
 
 	@Override
 	public final Number getY(int idx) {
-		return yValues.get(idx);
+		return values.get(idx).second;
 	}
 
 	@Override
 	public final int size() {
-		return xValues.size();
+		return values.size();
 	}
 
 	@Override
 	public final void reset() {
-		xValues.clear();
-		yValues.clear();
+		values.clear();
 	}
 
 	protected final void addValues(Number xValue, Number yValue) {
-		xValues.add(xValue);
-		yValues.add(yValue);
+		values.add(new Pair<Number, Number>(xValue, yValue));
+	}
+
+	protected final void sortXValues() {
+		Collections.sort(values, new Comparator<Pair<Number, Number>>() {
+			@Override
+			public int compare(Pair<Number, Number> lhs, Pair<Number, Number> rhs) {
+				// bad hack that only works when Number is not subclassed
+				// right solution would eliminate Number altogether and replace with Double?
+				return new BigDecimal(lhs.first.toString()).compareTo(new BigDecimal(rhs.first.toString()));
+			}
+		});
 	}
 }

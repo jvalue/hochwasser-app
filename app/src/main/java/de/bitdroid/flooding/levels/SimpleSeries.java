@@ -38,5 +38,6 @@ class SimpleSeries extends AbstractListSeries {
 				addValues(xValue, UnitConverter.toCm(yValue, yUnit));
 			}
 		} while(cursor.moveToNext());
+		sortXValues();
 	}
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import de.bitdroid.flooding.R;
 import it.gmariotti.cardslib.library.internal.Card;
 
-final class StationCharValuesCard extends Card {
+public final class StationCharValuesCard extends Card {
 
 	private final CharValue mhw, mw, mnw;
 	private final CharValue mthw,mtnw, hthw, ntnw;

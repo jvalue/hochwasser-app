@@ -1,14 +1,14 @@
 package de.bitdroid.flooding.alarms;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,15 +19,21 @@ import android.widget.Toast;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
-import de.bitdroid.flooding.levels.StationActivity;
+import de.bitdroid.flooding.levels.StationCardFactory;
+import de.bitdroid.flooding.levels.StationCharValuesCard;
+import de.bitdroid.flooding.levels.StationIntentService;
+import de.bitdroid.flooding.levels.StationMapCard;
 import de.bitdroid.ods.cep.RuleManager;
 import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.StringUtils;
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.view.CardView;
 
 
-public final class SelectLevelFragment extends Fragment implements Extras {
+public final class SelectLevelFragment extends Fragment implements Extras, LoaderManager.LoaderCallbacks<Cursor> {
 
+	private static final int LOADERID = 48;
 
 	public static SelectLevelFragment newInstance(String riverName, String stationName) {
 		SelectLevelFragment fragment = new SelectLevelFragment();
@@ -40,15 +46,16 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 
 
 	private String river, station;
+	private CardView detailsCardView, levelView, charValuesView, mapView;
+	private StationCardFactory cardFactory;
+	private boolean showingStationCards = false;
+	private Cursor stationData;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-
 		this.river = getArguments().getString(EXTRA_WATER_NAME);
 		this.station = getArguments().getString(EXTRA_STATION_NAME);
-
 	}
 
 
@@ -110,29 +117,95 @@ public final class SelectLevelFragment extends Fragment implements Extras {
 			}
 		});
 
+		// on card click show other cards
+		this.detailsCardView = (CardView) view.findViewById(R.id.card_show);
+		Card card = new Card(getActivity().getApplicationContext(), R.layout.station_card_more);
+		card.setCheckable(true);
+		card.setOnClickListener(new Card.OnCardClickListener() {
+			@Override
+			public void onClick(Card card, View view) {
+				showingStationCards = true;
+				if (stationData != null) showStationCards();
+				detailsCardView.setVisibility(View.GONE);
+			}
+		});
+		detailsCardView.setCard(card);
+
+		// fetch new station data
+		Intent intent = new Intent(getActivity(), StationIntentService.class);
+		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, station);
+		getActivity().startService(intent);
+
+		levelView = (CardView) view.findViewById(R.id.card_level);
+		charValuesView = (CardView) view.findViewById(R.id.card_charvalues);
+		mapView = (CardView) view.findViewById(R.id.card_map);
+
+		cardFactory = new StationCardFactory(getActivity().getApplicationContext());
+		getLoaderManager().initLoader(LOADERID, null, this);
 
 		return view;
 	}
 
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.alarms_new_menu, menu);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState == null) return;
+		this.showingStationCards = savedInstanceState.getBoolean(KEY_SHOWING_DETAILS);
+		if (showingStationCards) {
+			if (stationData != null) showStationCards();
+			detailsCardView.setVisibility(View.GONE);
+		}
 	}
 
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.data:
-				Intent intent = new Intent(getActivity(), StationActivity.class);
-				intent.putExtra(StationActivity.EXTRA_WATER_NAME, river);
-				intent.putExtra(StationActivity.EXTRA_STATION_NAME, station);
-				getActivity().startActivity(intent);
-				getActivity().overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
-				return true;
-		}
-		return  super.onOptionsItemSelected(item);
+	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+		return cardFactory.createCursorLoader(station);
 	}
 
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		if (loader.getId() != LOADERID) return;
+		this.stationData = cursor;
+		if (showingStationCards) showStationCards();
+	}
+
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) { }
+
+
+	private static final String KEY_SHOWING_DETAILS = "SHOWING_DETAILS";
+	@Override
+	public void onSaveInstanceState(Bundle state) {
+		state.putBoolean(KEY_SHOWING_DETAILS, showingStationCards);
+	}
+
+	private void showStationCards() {
+		if (stationData.getCount() <= 0) return;
+		stationData.moveToFirst();
+
+		Card levelCard = cardFactory.createStationLevelCard(stationData);
+		if (levelView.getCard() == null) levelView.setCard(levelCard);
+		else levelView.refreshCard(levelCard);
+		levelView.setVisibility(View.VISIBLE);
+
+		StationCharValuesCard charValuesCard = cardFactory.createStationCharValuesCard(stationData);
+		if (charValuesCard.isEmpty()) charValuesView.setVisibility(View.GONE);
+		else {
+			if (charValuesView.getCard() == null) charValuesView.setCard(charValuesCard);
+			else charValuesView.setCard(charValuesCard);
+			charValuesView.setVisibility(View.VISIBLE);
+		}
+
+		StationMapCard mapCard = cardFactory.createStationMapCard(stationData, getActivity());
+		if (mapCard.isEmpty()) mapView.setVisibility(View.GONE);
+		else {
+			if (mapView.getCard() == null) mapView.setCard(mapCard);
+			else mapView.refreshCard(mapCard);
+			mapView.setVisibility(View.VISIBLE);
+		}
+	}
 }

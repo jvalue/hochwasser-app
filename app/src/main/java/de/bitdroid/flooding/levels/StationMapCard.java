@@ -20,7 +20,7 @@ import de.bitdroid.flooding.map.StationClickListener;
 import de.bitdroid.flooding.map.StationsOverlay;
 import it.gmariotti.cardslib.library.internal.Card;
 
-final class StationMapCard extends Card {
+public final class StationMapCard extends Card {
 
 	private final String stationName;
 	private final String riverName;

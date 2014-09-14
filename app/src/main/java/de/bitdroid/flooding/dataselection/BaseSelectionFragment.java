@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.dataselection;
 
+import android.app.ActionBar;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,9 +33,10 @@ import de.bitdroid.ods.data.SyncAdapter;
 abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	private ArrayAdapter<T> listAdapter = null;
-	private EditText searchBox = null;
 	private ProgressBar emptyProgressBar;
 	private TextView emptyTextView;
+	private MenuItem searchMenuItem;
+	private EditText searchBox = null;
 
 
 	protected abstract ArrayAdapter<T> getAdapter();
@@ -45,6 +47,8 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 
 	protected abstract void onItemClicked(T item);
 	protected abstract void onMapClicked();
+
+	protected abstract int getSearchHintStringId();
 
 
 	@Override
@@ -61,22 +65,6 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.data_list, container, false);
-
-		// search box
-		searchBox = (EditText) view.findViewById(R.id.search);
-		searchBox.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {
-				listAdapter.getFilter().filter(text);
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence text, int arg1, int arg2, int arg3) { }
-
-			@Override
-			public void afterTextChanged(Editable e) { }
-		});
 
 		// empty view
 		this.emptyProgressBar = (ProgressBar) view.findViewById(R.id.empty_progressBar);
@@ -117,14 +105,57 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 		super.onPause();
 
 		getActivity().unregisterReceiver(receiver);
+		searchMenuItem.collapseActionView();
 	}
 	
 
 	@Override
 	public final void onListItemClick(ListView list, View item, int position, long id) {
 		hideKeyboard();
-		// forward requestd to clients
+		// forward request to clients
 		onItemClicked(listAdapter.getItem(position));
+	}
+
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		final ActionBar actionBar = getActivity().getActionBar();
+		searchMenuItem = menu.findItem(R.id.search);
+		searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				actionBar.setIcon(R.drawable.ic_action_search);
+				showKeyboard();
+				searchBox.requestFocus();
+				emptyTextView.setText(getString(R.string.search_empty));
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				actionBar.setDisplayShowHomeEnabled(true);
+				actionBar.setDisplayHomeAsUpEnabled(true);
+				searchBox.setText("");
+				hideKeyboard();
+				emptyTextView.setText(getString(R.string.data_empty));
+				return true;
+			}
+		});
+
+		searchBox = (EditText) searchMenuItem.getActionView().findViewById(R.id.search_box);
+		searchBox.setHint(getString(getSearchHintStringId()));
+		searchBox.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				listAdapter.getFilter().filter(s);
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) { }
+		});
 	}
 
 
@@ -137,20 +168,6 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 	@Override
 	public final boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
-			case R.id.search:
-				InputMethodManager inputManager = (InputMethodManager) getActivity()
-					.getSystemService(Service.INPUT_METHOD_SERVICE);
-				if (searchBox.getVisibility() == View.GONE) {
-					searchBox.setVisibility(View.VISIBLE);
-					inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-					inputManager.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT);
-					searchBox.requestFocus();
-				} else {
-					searchBox.setVisibility(View.GONE);
-					inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
-				}
-				return true;
-
 			case R.id.map:
 				hideKeyboard();
 				// forward request to clients
@@ -194,10 +211,17 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 
 
 	private void hideKeyboard() {
-		// hide keyboard
 		InputMethodManager inputManager
 				= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
 		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+	}
+
+
+	private void showKeyboard() {
+		InputMethodManager inputManager
+				= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
+		inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+		inputManager.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT);
 	}
 
 

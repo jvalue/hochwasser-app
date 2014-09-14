@@ -99,6 +99,12 @@ public abstract class BaseRiverSelectionFragment extends BaseSelectionFragment<R
 	}
 
 
+	@Override
+	protected final int getSearchHintStringId() {
+		return R.string.menu_select_water_search_hint;
+	}
+
+
 	// TOOD remove
 	public static final class River {
 		private final String riverName;

@@ -136,6 +136,12 @@ public abstract class BaseStationSelectionFragment extends BaseSelectionFragment
 	}
 
 
+	@Override
+	protected final int getSearchHintStringId() {
+		return R.string.menu_select_station_search_hint;
+	}
+
+
 	private String getWaterName() {
 		return getArguments().getString(EXTRA_WATER_NAME);
 	}

@@ -21,9 +21,11 @@
 	<string formatted="false" name="graph_rangelabel_pc">Wasserstand (%)</string>
 	<string name="graph_domainlabel">Flusskilometer (km)</string>
 
-	<string name="menu_select_water_search">Suchen</string>
-	<string name="menu_select_water_search_hint">Flüsse durchsuchen</string>
-    <string name="menu_select_water_map">Karte</string>
+	<string name="menu_search">Suchen</string>
+    <string name="search_empty">Keine Ergebnisse</string>
+	<string name="menu_select_water_search_hint">Flüsse</string>
+    <string name="menu_select_station_search_hint">Stationen</string>
+    <string name="menu_map">Karte</string>
 
 	<string name="menu_alarms_add">Neuer Alarm</string>
 

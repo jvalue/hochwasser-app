@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import de.bitdroid.flooding.R;
@@ -94,5 +97,26 @@ public class StationActivity extends BaseActivity
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) { }
 
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.station_menu, menu);
+		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+			case R.id.show_river_graph:
+				Intent intent = new Intent(getApplicationContext(), RiverGraphActivity.class);
+				intent.putExtra(StationActivity.EXTRA_WATER_NAME, waterName);
+				startActivity(intent);
+				overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
+				return true;
+		}
+		return false;
+	}
 
 }

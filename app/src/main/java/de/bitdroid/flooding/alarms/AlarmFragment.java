@@ -33,6 +33,7 @@ import de.bitdroid.ods.cep.RuleLoader;
 import de.bitdroid.ods.gcm.GcmStatus;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.internal.dismissanimation.SwipeDismissAnimation;
 import it.gmariotti.cardslib.library.view.CardListView;
 
 
@@ -42,6 +43,7 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 
 	private CardListView listView;
 	private CardArrayAdapter listAdapter;
+	private SwipeDismissAnimation dismissAnimation;
 	private RuleManager ruleManager;
 	private AlarmDeregistrationQueue alarmDeregistrationQueue;
 
@@ -74,8 +76,10 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 				if (oldInternalObjects != null) mInternalObjects.putAll(oldInternalObjects);
 			}
 		};
-
 		listAdapter.setEnableUndo(true);
+
+		dismissAnimation = (SwipeDismissAnimation) new SwipeDismissAnimation(getActivity()).setup(listAdapter);
+
 		listView.setAdapter(listAdapter);
 	}
 
@@ -132,7 +136,12 @@ public final class AlarmFragment extends Fragment implements LoaderManager.Loade
 			if (entry.getValue().equals(GcmStatus.PENDING_UNREGISTRATION)) continue; // ... and those
 
 			Rule rule = entry.getKey();
-			AlarmCard card = new AlarmCard(getActivity(), ruleManager, alarmDeregistrationQueue, new LevelAlarm(rule));
+			AlarmCard card = new AlarmCard(
+					getActivity(),
+					ruleManager,
+					alarmDeregistrationQueue,
+					new LevelAlarm(rule),
+					dismissAnimation);
 			card.setId(String.valueOf(rule.hashCode()));
 			cards.add(card);
 		}

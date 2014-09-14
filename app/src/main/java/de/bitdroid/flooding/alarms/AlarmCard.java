@@ -2,6 +2,7 @@ package de.bitdroid.flooding.alarms;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -14,6 +15,9 @@ import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.internal.base.BaseCard;
+import it.gmariotti.cardslib.library.internal.dismissanimation.SwipeDismissAnimation;
 import timber.log.Timber;
 
 final class AlarmCard extends Card {
@@ -25,7 +29,8 @@ final class AlarmCard extends Card {
 			final Activity activity,
 			final RuleManager manager,
 			final AlarmDeregistrationQueue deregistrationQueue,
-			final LevelAlarm alarm) {
+			final LevelAlarm alarm,
+			final SwipeDismissAnimation dismissAnimation) {
 
 		super(activity, R.layout.alarms_card);
 		Assert.assertNotNull(manager, alarm);
@@ -65,47 +70,67 @@ final class AlarmCard extends Card {
 				}
 			}
 		});
+
+		// custom header with overflow button
+		// header contains all data since this makes creating custom layouts easier
+		CardHeader header = new CardHeader(getContext(), R.layout.alarms_card_header) {
+			@Override
+			public void setupInnerViewElements(ViewGroup parent, View view) {
+				TextView text1 = (TextView) parent.findViewById(android.R.id.text1);
+				text1.setText(AlarmCard.this.getTitle());
+
+				TextView text2 = (TextView) parent.findViewById(android.R.id.text2);
+				String description;
+				if (alarm.getAlarmWhenAbove()) {
+					description = getContext().getString(R.string.alarms_description_above, alarm.getLevel());
+				} else {
+					description = getContext().getString(R.string.alarms_description_below, alarm.getLevel());
+				}
+				text2.setText(description);
+
+				LinearLayout regView = (LinearLayout) parent.findViewById(R.id.registration);
+				TextView regStatusView = (TextView) parent.findViewById(R.id.registration_status);
+
+				GcmStatus regStatus = manager.getRegistrationStatus(alarm.getRule());
+				if (regStatus.equals(GcmStatus.REGISTERED)) {
+					regView.setVisibility(View.GONE);
+					return;
+				}
+
+				regView.setVisibility(View.VISIBLE);
+				switch (regStatus) {
+					case PENDING_REGISTRATION:
+						parent.findViewById(R.id.registration_pending).setVisibility(View.VISIBLE);
+						regStatusView.setText(getContext().getString(R.string.alarms_registration_pending));
+						break;
+					case ERROR_REGISTRATION:
+						parent.findViewById(R.id.registration_error).setVisibility(View.VISIBLE);
+						regStatusView.setText(getContext().getString(R.string.alarms_registration_error));
+						break;
+					default:
+						Timber.w("Found alarm with status " + regStatus.toString() + " which doesn't have any view actions");
+				}
+			}
+		};
+
+		header.setPopupMenu(R.menu.alarms_card_menu, new CardHeader.OnClickCardHeaderPopupMenuListener() {
+			@Override
+			public void onMenuItemClick(BaseCard card, MenuItem item) {
+				switch (item.getItemId()) {
+					case R.id.delete:
+						// this will call onSwipe
+						dismissAnimation.animateDismiss(AlarmCard.this);
+				}
+			}
+		});
+
+		addCardHeader(header);
 	}
 
 
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
-
-		TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-		text1.setText(getTitle());
-
-		TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-		String description;
-		if (alarm.getAlarmWhenAbove()) {
-			description = getContext().getString(R.string.alarms_description_above, alarm.getLevel());
-		} else {
-			description = getContext().getString(R.string.alarms_description_below, alarm.getLevel());
-		}
-		text2.setText(description);
-
-		LinearLayout regView = (LinearLayout) view.findViewById(R.id.registration);
-		TextView regStatusView = (TextView) view.findViewById(R.id.registration_status);
-
-		GcmStatus regStatus = manager.getRegistrationStatus(alarm.getRule());
-		if (regStatus.equals(GcmStatus.REGISTERED)) {
-			regView.setVisibility(View.GONE);
-			return;
-		}
-
-		regView.setVisibility(View.VISIBLE);
-		switch (regStatus) {
-			case PENDING_REGISTRATION:
-				view.findViewById(R.id.registration_pending).setVisibility(View.VISIBLE);
-				regStatusView.setText(getContext().getString(R.string.alarms_registration_pending));
-				break;
-			case ERROR_REGISTRATION:
-				view.findViewById(R.id.registration_error).setVisibility(View.VISIBLE);
-				regStatusView.setText(getContext().getString(R.string.alarms_registration_error));
-				break;
-			default:
-				Timber.w("Found alarm with status " + regStatus.toString() + " which doesn't have any view actions");
-			}
-
+		// nothing to do here, layout is in header
 	}
 
 

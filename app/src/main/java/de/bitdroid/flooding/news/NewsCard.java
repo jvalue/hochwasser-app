@@ -20,7 +20,6 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;
 import it.gmariotti.cardslib.library.internal.dismissanimation.SwipeDismissAnimation;
-import timber.log.Timber;
 
 final class NewsCard extends Card {
 
@@ -39,7 +38,23 @@ final class NewsCard extends Card {
 		setOnSwipeListener(new OnSwipeListener() {
 			@Override
 			public void onSwipe(Card card) {
-				manager.removeItem(data.first);
+				// Delay removing from manager until anim has finished,
+				// otherwise loader will remove card first
+				// only relevant if this was called from a manual dismiss animation
+				final Timer timer = new Timer();
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						activity.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								timer.cancel();
+								manager.removeItem(data.first);
+							}
+						});
+					}
+				};
+				timer.schedule(task, 500);
 			}
 		});
 		setOnUndoSwipeListListener(new OnUndoSwipeListListener() {
@@ -92,24 +107,8 @@ final class NewsCard extends Card {
 						return;
 
 					case R.id.delete:
+						// this will call onSwipe
 						dismissAnimation.animateDismiss(NewsCard.this);
-
-						// Delay removing from manager until anim has finished,
-						// otherwise loader will remove card first
-						final Timer timer = new Timer();
-						TimerTask task = new TimerTask() {
-							@Override
-							public void run() {
-								activity.runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										timer.cancel();
-										manager.removeItem(data.first);
-									}
-								});
-							}
-						};
-						timer.schedule(task, 500);
 						return;
 				}
 			}

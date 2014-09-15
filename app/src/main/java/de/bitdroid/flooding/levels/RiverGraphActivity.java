@@ -542,7 +542,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 
 	private void showRelativeRangeLabel() {
 		graph.setRangeAxis(
-				getString(R.string.graph_rangelabel_cm),
+				getString(R.string.graph_rangelabel_pc),
 				new DecimalFormat("@@##"),
 				XYStepMode.INCREMENT_BY_VAL, 12.5);
 	}

@@ -2,7 +2,7 @@ package de.bitdroid.flooding.levels;
 
 import android.database.Cursor;
 
-import de.bitdroid.flooding.pegelonline.UnitConverter;
+import de.bitdroid.flooding.pegelonline.PegelOnlineUtils;
 
 
 class SimpleSeries extends AbstractListSeries {
@@ -35,7 +35,7 @@ class SimpleSeries extends AbstractListSeries {
 			String yUnit = cursor.getString(yUnitIdx);
 
 			if (xValue != null && yUnit != null && yValue != null) {
-				addValues(xValue, UnitConverter.toCm(yValue, yUnit));
+				addValues(xValue, PegelOnlineUtils.toCm(yValue, yUnit));
 			}
 		} while(cursor.moveToNext());
 		sortXValues();

@@ -5,19 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.pegelonline.PegelOnlineUtils;
 import it.gmariotti.cardslib.library.internal.Card;
-import timber.log.Timber;
 
 final class StationLevelCard extends Card {
-
-	private static final DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
-
 
 	private final String timestamp;
 	private final double value;
@@ -36,14 +30,10 @@ final class StationLevelCard extends Card {
 		TextView timeView = (TextView) view.findViewById(R.id.timestamp);
 		TextView levelView = (TextView) view.findViewById(R.id.level);
 
-		try {
-			Date date = dateParser.parse(timestamp);
-			timeView.setText(
-					android.text.format.DateFormat.getDateFormat(getContext()).format(date)
-					+ " " + android.text.format.DateFormat.getTimeFormat(getContext()).format(date));
-		} catch (ParseException pe) {
-			Timber.e(pe, "Failed to parse timestamp " + timestamp);
-		}
+		Date date = new Date(PegelOnlineUtils.parseStringTimestamp(timestamp));
+		timeView.setText(
+				android.text.format.DateFormat.getDateFormat(getContext()).format(date)
+				+ " " + android.text.format.DateFormat.getTimeFormat(getContext()).format(date));
 
 		levelView.setText(value + " " + unit);
 	}

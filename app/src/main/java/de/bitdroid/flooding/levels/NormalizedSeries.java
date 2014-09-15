@@ -2,7 +2,7 @@ package de.bitdroid.flooding.levels;
 
 import android.database.Cursor;
 
-import de.bitdroid.flooding.pegelonline.UnitConverter;
+import de.bitdroid.flooding.pegelonline.PegelOnlineUtils;
 
 
 class NormalizedSeries extends AbstractListSeries {
@@ -72,7 +72,7 @@ class NormalizedSeries extends AbstractListSeries {
 		int unitIdx = cursor.getColumnIndex(unitColumn);
 		Double value = cursor.getDouble(valueIdx);
 		String unit = cursor.getString(unitIdx);
-		if (value != null && unit != null) return UnitConverter.toCm(value, unit);
+		if (value != null && unit != null) return PegelOnlineUtils.toCm(value, unit);
 		return null;
 	}
 }

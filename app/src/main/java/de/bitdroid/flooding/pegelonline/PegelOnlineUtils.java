@@ -1,14 +1,17 @@
 package de.bitdroid.flooding.pegelonline;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
 import de.bitdroid.utils.Assert;
 
 
-public final class UnitConverter {
+public final class PegelOnlineUtils {
 
-	private UnitConverter() { }
+	private PegelOnlineUtils() { }
 
 
 	private static final String relativeCmUnit = "cm";
@@ -27,6 +30,8 @@ public final class UnitConverter {
 		absoluteMeterUnits.add("m. \u00FC. pnp");
 	}
 
+	private static final DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
+
 
 	public static double toCm(
 			double value,
@@ -44,5 +49,14 @@ public final class UnitConverter {
 
 	public static boolean isRelativeCmUnit(String unit) {
 		return unit.toLowerCase().equals(relativeCmUnit);
+	}
+
+	public static long parseStringTimestamp(String stringTimestamp) {
+		Assert.assertNotNull(stringTimestamp);
+		try {
+			return dateParser.parse(stringTimestamp).getTime();
+		} catch (ParseException pe) {
+			throw new IllegalArgumentException(pe);
+		}
 	}
 }

@@ -44,6 +44,7 @@ public class StationIntentService extends IntentService {
 		ResultReceiver syncStatusReceiver = intent.getParcelableExtra(EXTRA_SYNC_STATUS_RECEIVER);
 
 		String odsServerName = OdsSourceManager.getInstance(getApplicationContext()).getOdsServerName();
+		long timestamp = System.currentTimeMillis();
 
 		for (String station : stations) {
 			Cursor cursor = getContentResolver().query(
@@ -64,14 +65,14 @@ public class StationIntentService extends IntentService {
 				int maxAge = getResources().getInteger(R.integer.station_max_age_in_ms);
 				long diff = currentDate.getTime() - lastMeasurement.getTime();
 
-				if (forceSync || diff > maxAge) synchronizeStation(odsServerName, station, true, id);
+				if (forceSync || diff > maxAge || stations.length > 1) synchronizeStation(odsServerName, station, true, id, timestamp);
 
 
 			} else if (cursor.getCount() > 1) {
 				Timber.w("Found more than one timestamp when querying ods db for station " + station
 						+ " --> ignoring sync request");
 			} else {
-				synchronizeStation(odsServerName, station, false, 0);
+				synchronizeStation(odsServerName, station, false, 0, timestamp);
 			}
 			cursor.close();
 		}
@@ -84,7 +85,8 @@ public class StationIntentService extends IntentService {
 			String odsServerName,
 			String stationName,
 			boolean oldValuePresent,
-			long id) {
+			long id,
+			long timestamp) {
 
 		try {
 			PegelOnlineSource source = PegelOnlineSource.INSTANCE;
@@ -96,7 +98,7 @@ public class StationIntentService extends IntentService {
 
 			JSONObject json = new JSONObject(jsonResult);
 
-			ContentValues contentValues = source.saveData(json, System.currentTimeMillis());
+			ContentValues contentValues = source.saveData(json, timestamp);
 
 			if (oldValuePresent) {
 				// update

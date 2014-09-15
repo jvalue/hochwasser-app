@@ -1,10 +1,7 @@
 package de.bitdroid.flooding.levels;
 
 import android.content.Context;
-import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
 import de.bitdroid.flooding.monitor.SourceMonitor;
@@ -47,7 +44,6 @@ public final class CombinedSourceLoader extends AsyncTaskLoader<Cursor> {
 	private long selectedTimestamp;
 
 	private Cursor cursor;
-	private ContentObserver contentObserver;
 
 	public CombinedSourceLoader(Context context, String waterName, long startTimestamp) {
 		super(context);
@@ -137,21 +133,6 @@ public final class CombinedSourceLoader extends AsyncTaskLoader<Cursor> {
 	@Override
 	protected void onStartLoading() {
 		if (cursor != null) deliverResult(cursor);
-		if (contentObserver == null) {
-			contentObserver = new ContentObserver(new Handler()) {
-				@Override
-				public void onChange(boolean selfChange) {
-					CombinedSourceLoader.this.onContentChanged();
-				}
-
-				@Override
-				public void onChange(boolean selfChange, Uri uri) {
-					onChange(selfChange);
-				}
-			};
-			getContext().getContentResolver().registerContentObserver(source.toUri(), true, contentObserver);
-
-		}
 		if (takeContentChanged() || cursor == null) forceLoad();
 	}
 
@@ -175,11 +156,6 @@ public final class CombinedSourceLoader extends AsyncTaskLoader<Cursor> {
 
 		release(cursor);
 		cursor = null;
-
-		if (contentObserver != null) {
-			getContext().getContentResolver().unregisterContentObserver(contentObserver);
-			contentObserver = null;
-		}
 	}
 
 

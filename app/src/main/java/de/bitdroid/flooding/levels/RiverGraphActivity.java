@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateFormat;
 import android.util.Pair;
 import android.view.ContextThemeWrapper;
@@ -35,6 +36,7 @@ import de.bitdroid.flooding.map.InfoMapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.BaseActivity;
+import de.bitdroid.flooding.utils.SwipeRefreshLayoutUtils;
 import de.bitdroid.utils.StringUtils;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
@@ -55,8 +57,13 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TI
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_KM;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
 
-public class RiverGraphActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, Extras {
+public class RiverGraphActivity extends BaseActivity
+		implements LoaderManager.LoaderCallbacks<Cursor>,
+		SwipeRefreshLayout.OnRefreshListener,
+		StationIntentService.SyncStatusReceiver.SyncListener,
+		Extras {
 
 	private static final int
 			TIMESTAMP_LOADER_ID = 48,
@@ -76,7 +83,12 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 	private CombinedSourceLoader dataLoader;
 
 	private Handler handler = new Handler();
-	
+
+	private SwipeRefreshLayout swipeLayout;
+	private StationIntentService.SyncStatusReceiver syncStatusReceiver;
+	private boolean newContentDownloaded = false; // indicates whether download has run
+	private String[] stationNames;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +114,16 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 
 		this.seekbar = (SeekBar) findViewById(R.id.seekbar);
 		getSupportLoaderManager().initLoader(TIMESTAMP_LOADER_ID, null, this);
+
+		// setup pull to refresh
+		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setEnabled(false);
+		syncStatusReceiver = new StationIntentService.SyncStatusReceiver(new Handler());
+		syncStatusReceiver.setSyncListener(this);
+		// syncStationData(false);
+		SwipeRefreshLayoutUtils.setDefaultColors(swipeLayout);
+
     }
 
 
@@ -273,7 +295,8 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 	private static final String 
 		EXTRA_SHOWING_REGULAR_SERIES = "EXTRA_SHOWING_REGULAR_SERIES",
 		EXTRA_TIMESTAMP = "EXTRA_TIMESTAMP",
-		EXTRA_SHOWING_SEEKBAR = "EXTRA_SHOWING_SEEKBAR";
+		EXTRA_SHOWING_SEEKBAR = "EXTRA_SHOWING_SEEKBAR",
+		EXTRA_DATA_DOWNLOADED = "EXTRA_DATA_DOWNLOADED";
 
 	@Override
 	protected void onSaveInstanceState(Bundle state) {
@@ -281,6 +304,7 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 		state.putBoolean(EXTRA_SHOWING_REGULAR_SERIES, showingRegularSeries);
 		state.putLong(EXTRA_TIMESTAMP, selectedTimestamp);
 		state.putBoolean(EXTRA_SHOWING_SEEKBAR, showingSeekbar);
+		state.putBoolean(EXTRA_DATA_DOWNLOADED, newContentDownloaded);
 		graph.saveState(state);
 	}
 
@@ -308,6 +332,8 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 		// restore seekbar
 		showingSeekbar = state.getBoolean(EXTRA_SHOWING_SEEKBAR);
 		if (showingSeekbar) seekbar.setVisibility(View.VISIBLE);
+
+		this.newContentDownloaded =  state.getBoolean(EXTRA_DATA_DOWNLOADED);
 	}
 
 
@@ -346,7 +372,23 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 			case DATA_LOADER_ID:
 				levelData = cursor;
 				graph.setData(cursor);
-				checkForValidData();
+				if (!checkForValidData()) break;
+
+				// download new river data
+				if (!newContentDownloaded) {
+					swipeLayout.setRefreshing(true);
+					newContentDownloaded = true;
+					cursor.moveToFirst();
+					List<String> stationNames = new LinkedList<String>();
+					while (!cursor.isAfterLast()) {
+						stationNames.add(cursor.getString(cursor.getColumnIndex(COLUMN_STATION_NAME)));
+						cursor.moveToNext();
+					}
+					this.stationNames = stationNames.toArray(new String[stationNames.size()]);
+					syncRiverData(false);
+					// only enable once stations have been loaded
+					swipeLayout.setEnabled(true);
+				}
 				break;
 
 			default:
@@ -369,6 +411,20 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 			default:
 				throw new IllegalStateException("found illegal loader id " + loader.getId());
 		}
+	}
+
+
+	@Override
+	public void onRefresh() {
+		syncRiverData(true);
+	}
+
+
+	@Override
+	public void onSyncFinished() {
+		swipeLayout.setRefreshing(false);
+		dataLoader.onContentChanged();
+		setTimestamp(timestamps.get(timestamps.size() - 1));
 	}
 
 
@@ -525,7 +581,7 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 	}
 
 
-	private void checkForValidData() {
+	private boolean checkForValidData() {
 		// check that there are enough stations present to show in graph
 		boolean valid = true;
 
@@ -540,7 +596,7 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 			levelData.moveToFirst();
 		}
 
-		if (valid) return;
+		if (valid) return true;
 
 		new AlertDialog.Builder(this)
 				.setTitle(getString(R.string.invalid_graph_title))
@@ -559,6 +615,16 @@ public class RiverGraphActivity extends BaseActivity implements LoaderManager.Lo
 				})
 				.create()
 				.show();
+
+		return false;
 	}
 
+
+	private void syncRiverData(boolean forceSync) {
+		Intent intent = new Intent(this, StationIntentService.class);
+		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, stationNames);
+		intent.putExtra(StationIntentService.EXTRA_SYNC_STATUS_RECEIVER, syncStatusReceiver);
+		intent.putExtra(StationIntentService.EXTRA_FORCE_SYNC, forceSync);
+		startService(intent);
+	}
 }

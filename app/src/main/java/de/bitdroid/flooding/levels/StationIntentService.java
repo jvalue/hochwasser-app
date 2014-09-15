@@ -40,44 +40,54 @@ public class StationIntentService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		boolean forceSync = intent.getBooleanExtra(EXTRA_FORCE_SYNC, false);
-		String station = intent.getStringExtra(EXTRA_STATION_NAME);
+		String[] stations = intent.getStringArrayExtra(EXTRA_STATION_NAME);
 		ResultReceiver syncStatusReceiver = intent.getParcelableExtra(EXTRA_SYNC_STATUS_RECEIVER);
 
-		PegelOnlineSource source = PegelOnlineSource.INSTANCE;
-		Cursor cursor = getContentResolver().query(
-				source.toUri(),
-				new String[] { OdsSource.COLUMN_TIMESTAMP, OdsSource.COLUMN_ID },
-				PegelOnlineSource.COLUMN_STATION_NAME + "=? AND "
-						+ PegelOnlineSource.COLUMN_LEVEL_TYPE + "=?",
-				new String[] { station, "W" },
-				null);
+		String odsServerName = OdsSourceManager.getInstance(getApplicationContext()).getOdsServerName();
 
-		cursor.moveToFirst();
-		if (cursor.getCount() == 1) {
-			Date lastMeasurement = new Date(cursor.getLong(0));
-			Date currentDate = new Date();
+		for (String station : stations) {
+			Cursor cursor = getContentResolver().query(
+					PegelOnlineSource.INSTANCE.toUri(),
+					new String[]{OdsSource.COLUMN_TIMESTAMP, OdsSource.COLUMN_ID},
+					PegelOnlineSource.COLUMN_STATION_NAME + "=? AND "
+							+ PegelOnlineSource.COLUMN_LEVEL_TYPE + "=?",
+					new String[]{station, "W"},
+					null
+			);
 
-			int maxAge = getResources().getInteger(R.integer.station_max_age_in_ms);
-			long diff = currentDate.getTime() - lastMeasurement.getTime();
+			cursor.moveToFirst();
+			if (cursor.getCount() == 1) {
+				Date lastMeasurement = new Date(cursor.getLong(0));
+				long id = cursor.getLong(1);
+				Date currentDate = new Date();
 
-			if (forceSync || diff > maxAge) synchronizeStation(station, true, cursor.getInt(1));
+				int maxAge = getResources().getInteger(R.integer.station_max_age_in_ms);
+				long diff = currentDate.getTime() - lastMeasurement.getTime();
+
+				if (forceSync || diff > maxAge) synchronizeStation(odsServerName, station, true, id);
 
 
-		} else if (cursor.getCount() > 1) {
-			Timber.w("Found more than one timestamp when querying ods db for station " + station
-					+ " --> ignoring sync request");
-		} else {
-			synchronizeStation(station, false, 0);
+			} else if (cursor.getCount() > 1) {
+				Timber.w("Found more than one timestamp when querying ods db for station " + station
+						+ " --> ignoring sync request");
+			} else {
+				synchronizeStation(odsServerName, station, false, 0);
+			}
+			cursor.close();
 		}
 
 		syncStatusReceiver.send(0, null);
 	}
 
 
-	private void synchronizeStation(String stationName, boolean oldValuePresent, int id) {
+	private void synchronizeStation(
+			String odsServerName,
+			String stationName,
+			boolean oldValuePresent,
+			long id) {
+
 		try {
 			PegelOnlineSource source = PegelOnlineSource.INSTANCE;
-			String odsServerName = OdsSourceManager.getInstance(getApplicationContext()).getOdsServerName();
 			String jsonResult = new RestCall.Builder(RestCall.RequestType.GET, odsServerName)
 					.path(source.getSourceUrlPath())
 					.path(URLEncoder.encode(stationName, "UTF-8"))

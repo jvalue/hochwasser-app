@@ -133,7 +133,7 @@ public final class SelectLevelFragment extends Fragment implements Extras, Loade
 
 		// fetch new station data
 		Intent intent = new Intent(getActivity(), StationIntentService.class);
-		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, station);
+		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, new String[] { station });
 		getActivity().startService(intent);
 
 		levelView = (CardView) view.findViewById(R.id.card_level);

@@ -165,7 +165,7 @@ public class StationActivity extends BaseActivity
 
 	private void syncStationData(boolean forceSync) {
 		Intent intent = new Intent(this, StationIntentService.class);
-		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, stationName);
+		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, new String[] { stationName });
 		intent.putExtra(StationIntentService.EXTRA_SYNC_STATUS_RECEIVER, syncStatusReceiver);
 		intent.putExtra(StationIntentService.EXTRA_FORCE_SYNC, forceSync);
 		startService(intent);

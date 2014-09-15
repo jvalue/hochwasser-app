@@ -24,10 +24,6 @@
 		android:id="@+id/menu_series"
 		android:title="@string/menu_graph_select_series"
 	/>
-	<item 
-		android:id="@+id/menu_timestamp"
-		android:title="@string/menu_graph_timestamp"
-	/>
 	<item
 		android:id="@+id/menu_help"
 		android:title="@string/help"

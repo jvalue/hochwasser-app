@@ -23,7 +23,6 @@ import com.androidplot.xy.XYStepMode;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -34,7 +33,6 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.map.InfoMapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
-import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.utils.BaseActivity;
 import de.bitdroid.flooding.utils.SwipeRefreshLayoutUtils;
 import de.bitdroid.utils.StringUtils;
@@ -223,46 +221,6 @@ public class RiverGraphActivity extends BaseActivity
 				this.showingRegularSeries = !showingRegularSeries;
 				if (levelData != null) graph.setData(levelData);
 				invalidateOptionsMenu();
-				return true;
-
-			case R.id.menu_timestamp:
-				final List<Long> timestamps = SourceMonitor
-					.getInstance(getApplicationContext())
-					.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
-				Collections.sort(timestamps);
-
-				List<String> stringTimestamps = new LinkedList<String>();
-				for (long time : timestamps) {
-					Date date = new Date(time);
-					stringTimestamps.add(DateFormat.getDateFormat(this).format(date)
-						+  " " + DateFormat.getTimeFormat(this).format(date));
-				}
-
-				final long originalTimestamp = selectedTimestamp;
-				int selectedTimestamp = timestamps.indexOf(this.selectedTimestamp);
-
-				new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog))
-					.setTitle(getString(R.string.series_monitor_dialog_title))
-					.setSingleChoiceItems(
-							stringTimestamps.toArray(new String[timestamps.size()]), 
-							selectedTimestamp,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int idx) {
-									setTimestamp(timestamps.get(idx));
-									updateSeekbar();
-								}
-							})
-					.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int idx) {
-							setTimestamp(originalTimestamp);
-							updateSeekbar();
-						}
-					})
-					.setPositiveButton(R.string.btn_ok, null)
-					.create().show();
-
 				return true;
 
 			case R.id.menu_seekbar:

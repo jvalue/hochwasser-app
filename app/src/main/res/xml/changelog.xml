@@ -3,4 +3,10 @@
     <release version="1.0.1" versioncode="2">
         <change>Initial release with lots of awesome features!</change>
     </release>
+    <release version="1.0.2" versioncode="3">
+        <change>Pull to refresh for station and river view</change>
+        <change>Disabled water level monitoring per default</change>
+        <change>River graph is accessible from all stations</change>
+        <change>Lots of bug fixes</change>
+    </release>
 </changelog>

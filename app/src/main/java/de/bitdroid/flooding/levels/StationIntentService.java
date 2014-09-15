@@ -77,7 +77,7 @@ public class StationIntentService extends IntentService {
 			cursor.close();
 		}
 
-		syncStatusReceiver.send(0, null);
+		if (syncStatusReceiver != null) syncStatusReceiver.send(0, null);
 	}
 
 

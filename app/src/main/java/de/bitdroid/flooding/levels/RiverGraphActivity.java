@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.format.DateFormat;
 import android.util.Pair;
@@ -15,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
@@ -32,10 +32,8 @@ import java.util.Set;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.map.InfoMapActivity;
-import de.bitdroid.flooding.monitor.MonitorSourceLoader;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.flooding.utils.AbstractLoaderCallbacks;
 import de.bitdroid.flooding.utils.BaseActivity;
 import de.bitdroid.utils.StringUtils;
 
@@ -53,13 +51,17 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALU
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_NTNW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_NTNW_VALUE;
+import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_KM;
 
-public class RiverGraphActivity extends BaseActivity implements Extras {
-	
-	private static final int LOADER_ID = 44;
+public class RiverGraphActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, Extras {
+
+	private static final int
+			TIMESTAMP_LOADER_ID = 48,
+			DATA_LOADER_ID = 49;
+
 
 	private WaterGraph graph;
 	private boolean showingRegularSeries = true;
@@ -67,8 +69,11 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	private Cursor levelData;
 	private String waterName;
 
-	private CombinedSourceLoader loader;
-	private long currentTimestamp;
+	private SeekBar seekbar;
+	private List<Long> timestamps;
+	private Long selectedTimestamp;
+
+	private CombinedSourceLoader dataLoader;
 
 	private Handler handler = new Handler();
 	
@@ -95,67 +100,8 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				10);
 		showRegularRangeLabel();
 
-		// setup seekbar
-		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
-		final List<Long> timestamps = SourceMonitor
-			.getInstance(getApplicationContext())
-			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
-		timestamps.add(CombinedSourceLoader.MOST_CURRENT_TIMESTAMP);
-		Collections.sort(timestamps);
-		seekbar.setMax(timestamps.size() - 1);
-		seekbar.setProgress(seekbar.getMax());
-		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-			@Override
-			public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
-				if (fromUser) setTimestamp(timestamps.get(progress));
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekbar) { }
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekbar) { }
-		});
-
-		// temp hack to stop race conditions -- will be fixed when ods supports timestamps
-		if (timestamps.size() == 0) {
-			Toast.makeText(this, "No recorded data available yet, please come back in a minute.", Toast.LENGTH_LONG).show();
-			finish();
-			showExitAnimation();
-			return;
-		}
-
-
-		// get latest timestamp
-		currentTimestamp = Collections.max(timestamps);
-		setGraphTitle(currentTimestamp);
-
-		AbstractLoaderCallbacks loaderCallbacks = new AbstractLoaderCallbacks(LOADER_ID) {
-
-			@Override
-			protected void onLoadFinishedHelper(Loader<Cursor> loader, Cursor cursor) {
-				RiverGraphActivity.this.levelData = cursor;
-				graph.setData(cursor);
-				checkForValidData();
-			}
-
-			@Override
-			protected void onLoaderResetHelper(Loader<Cursor> loader) {
-				RiverGraphActivity.this.levelData = null;
-			}
-
-			@Override
-			protected Loader<Cursor> getCursorLoader() {
-				CombinedSourceLoader loader = new CombinedSourceLoader(getApplicationContext(), waterName);
-				loader.setTimestamp(currentTimestamp);
-				return loader;
-			}
-		};
-
-		getSupportLoaderManager().initLoader(LOADER_ID, null, loaderCallbacks);
-		Loader<Cursor> cursorLoader = getSupportLoaderManager().getLoader(LOADER_ID);
-		this.loader = (CombinedSourceLoader) cursorLoader;
+		this.seekbar = (SeekBar) findViewById(R.id.seekbar);
+		getSupportLoaderManager().initLoader(TIMESTAMP_LOADER_ID, null, this);
     }
 
 
@@ -270,8 +216,8 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 						+  " " + DateFormat.getTimeFormat(this).format(date));
 				}
 
-				final long originalTimestamp = currentTimestamp;
-				int selectedTimestamp = timestamps.indexOf(currentTimestamp);
+				final long originalTimestamp = selectedTimestamp;
+				int selectedTimestamp = timestamps.indexOf(this.selectedTimestamp);
 
 				new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog))
 					.setTitle(getString(R.string.series_monitor_dialog_title))
@@ -282,14 +228,14 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 								@Override
 								public void onClick(DialogInterface dialog, int idx) {
 									setTimestamp(timestamps.get(idx));
-									updateScrollbar();
+									updateSeekbar();
 								}
 							})
 					.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int idx) {
 							setTimestamp(originalTimestamp);
-							updateScrollbar();
+							updateSeekbar();
 						}
 					})
 					.setPositiveButton(R.string.btn_ok, null)
@@ -299,7 +245,6 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 
 			case R.id.menu_seekbar:
 				showingSeekbar = !showingSeekbar;
-				SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
 				if (showingSeekbar) seekbar.setVisibility(View.VISIBLE);
 				else seekbar.setVisibility(View.GONE);
 				return true;
@@ -334,7 +279,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	protected void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
 		state.putBoolean(EXTRA_SHOWING_REGULAR_SERIES, showingRegularSeries);
-		state.putLong(EXTRA_TIMESTAMP, currentTimestamp);
+		state.putLong(EXTRA_TIMESTAMP, selectedTimestamp);
 		state.putBoolean(EXTRA_SHOWING_SEEKBAR, showingSeekbar);
 		graph.saveState(state);
 	}
@@ -353,17 +298,78 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 		}
 		graph.restoreState(state);
 
+		// set data loader
+		Loader<Cursor> loader = getSupportLoaderManager().getLoader(DATA_LOADER_ID);
+		this.dataLoader = (CombinedSourceLoader) loader;
+
 		// restore timestamp
-		currentTimestamp = state.getLong(EXTRA_TIMESTAMP);
-		setGraphTitle(currentTimestamp);
-		if (loader != null) loader.setTimestamp(currentTimestamp);
+		setTimestamp(state.getLong(EXTRA_TIMESTAMP));
 
 		// restore seekbar
 		showingSeekbar = state.getBoolean(EXTRA_SHOWING_SEEKBAR);
-		if (showingSeekbar) findViewById(R.id.seekbar).setVisibility(View.VISIBLE);
+		if (showingSeekbar) seekbar.setVisibility(View.VISIBLE);
 	}
 
 
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+		switch(id) {
+			case TIMESTAMP_LOADER_ID:
+				return new TimestampLoader(getApplicationContext(), SourceMonitor.getInstance(getApplicationContext()), waterName);
+
+			case DATA_LOADER_ID:
+				dataLoader = new CombinedSourceLoader(getApplicationContext(), waterName, CombinedSourceLoader.MOST_CURRENT_TIMESTAMP);
+				return dataLoader;
+
+			default:
+				throw new IllegalStateException("found illegal loader id " + id);
+		}
+	}
+
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		switch(loader.getId()) {
+			case TIMESTAMP_LOADER_ID:
+				timestamps = new LinkedList<Long>();
+				cursor.moveToFirst();
+				if (cursor.getCount() == 0) return;
+				while (!cursor.isAfterLast()) {
+					timestamps.add(cursor.getLong(cursor.getColumnIndex(COLUMN_LEVEL_TIMESTAMP)));
+					cursor.moveToNext();
+				}
+				if (selectedTimestamp == null && timestamps.size() > 0) setTimestamp(timestamps.get(timestamps.size() - 1));
+				if (dataLoader == null) getSupportLoaderManager().initLoader(DATA_LOADER_ID, null, this);
+				updateSeekbar();
+				break;
+
+			case DATA_LOADER_ID:
+				levelData = cursor;
+				graph.setData(cursor);
+				checkForValidData();
+				break;
+
+			default:
+				throw new IllegalStateException("found illegal loader id " + loader.getId());
+		}
+	}
+
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		switch(loader.getId()) {
+			case TIMESTAMP_LOADER_ID:
+				timestamps = null;
+				break;
+
+			case DATA_LOADER_ID:
+				levelData = null;
+				break;
+
+			default:
+				throw new IllegalStateException("found illegal loader id " + loader.getId());
+		}
+	}
 
 
 	private List<Pair<AbstractSeries, Integer>> getRegularSeries() {
@@ -472,26 +478,34 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 
 
 	private void setTimestamp(long newTimestamp) {
-		currentTimestamp = newTimestamp;
-		loader.setTimestamp(currentTimestamp);
-		setGraphTitle(currentTimestamp);
-	}
-
-
-	private void setGraphTitle(long timestamp) {
-		Date date = new Date(timestamp);
+		selectedTimestamp = newTimestamp;
+		Date date = new Date(selectedTimestamp);
 		graph.setTitle(DateFormat.getDateFormat(this).format(date)
 				+ " " + DateFormat.getTimeFormat(this).format(date));
+		if (dataLoader != null) {
+			if (timestamps.indexOf(selectedTimestamp) == timestamps.size() - 1)
+				dataLoader.setTimestamp(CombinedSourceLoader.MOST_CURRENT_TIMESTAMP);
+			else dataLoader.setTimestamp(selectedTimestamp);
+		}
 	}
 
-	
-	private void updateScrollbar() {
-		final List<Long> timestamps = SourceMonitor
-			.getInstance(getApplicationContext())
-			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
-		Collections.sort(timestamps);
-		SeekBar seekbar = (SeekBar) findViewById(R.id.seekbar);
-		seekbar.setProgress(timestamps.indexOf(currentTimestamp));
+
+	private void updateSeekbar() {
+		seekbar.setMax(timestamps.size() - 1);
+		seekbar.setProgress(timestamps.indexOf(selectedTimestamp));
+		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+			@Override
+			public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
+				if (fromUser) setTimestamp(timestamps.get(progress));
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekbar) { }
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekbar) { }
+		});
 	}
 
 

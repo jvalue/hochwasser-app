@@ -10,7 +10,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.data.OdsSource;
-import timber.log.Timber;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_VALUE;
@@ -50,7 +49,7 @@ public final class CombinedSourceLoader extends AsyncTaskLoader<Cursor> {
 	private Cursor cursor;
 	private ContentObserver contentObserver;
 
-	public CombinedSourceLoader(Context context, String waterName) {
+	public CombinedSourceLoader(Context context, String waterName, long startTimestamp) {
 		super(context);
 
 		this.source = PegelOnlineSource.INSTANCE;
@@ -78,7 +77,7 @@ public final class CombinedSourceLoader extends AsyncTaskLoader<Cursor> {
 						COLUMN_CHARVALUES_NTNW_UNIT};
 		this.selection = COLUMN_WATER_NAME + "=? AND " + COLUMN_LEVEL_TYPE + "=?";
 		this.selectionArgs = new String[] { waterName, "W" };
-		this.selectedTimestamp = MOST_CURRENT_TIMESTAMP;
+		this.selectedTimestamp = startTimestamp;
 	}
 
 
@@ -87,7 +86,6 @@ public final class CombinedSourceLoader extends AsyncTaskLoader<Cursor> {
 
 		if (selectedTimestamp == MOST_CURRENT_TIMESTAMP) {
 			// get most current one
-			Timber.i("getting most current data");
 			return getContext().getContentResolver().query(
 					source.toUri(),
 					projection,
@@ -97,7 +95,6 @@ public final class CombinedSourceLoader extends AsyncTaskLoader<Cursor> {
 
 		} else {
 			// get recorded data
-			Timber.i("getting recorded data");
 			String timestampSelection = COLUMN_TIMESTAMP + "=?";
 			String timestampArg = String.valueOf(selectedTimestamp);
 

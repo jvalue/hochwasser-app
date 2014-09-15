@@ -14,7 +14,7 @@
 			android:label="@string/app_name"
             android:name=".main.MainApplication"
 			android:icon="@drawable/ic_launcher"
-			android:logo="@drawable/ic_menu_home"
+			android:logo="@drawable/ic_action_logo"
             android:theme="@style/ThemeMain"
             android:allowBackup="true">
 		<activity android:name=".main.MainActivity"

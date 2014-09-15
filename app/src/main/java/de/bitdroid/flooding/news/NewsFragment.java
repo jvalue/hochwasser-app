@@ -145,7 +145,7 @@ public final class NewsFragment extends Fragment implements
 
 
 	private void addHelperNews() {
-		manager.addItem(getString(R.string.news_intro_dismiss_title), getString(R.string.news_intro_dismiss_content), 0, false, false);
+		manager.addItem(getString(R.string.news_intro_recording_title), getString(R.string.news_intro_recording_content), 3, true, false);
 		manager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), 2, true, false);
 		manager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, true, false);
 	}

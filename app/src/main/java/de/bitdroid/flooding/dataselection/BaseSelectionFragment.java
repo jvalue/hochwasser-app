@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -133,8 +134,10 @@ abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderMa
 
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item) {
-				actionBar.setDisplayShowHomeEnabled(true);
 				actionBar.setDisplayHomeAsUpEnabled(true);
+				actionBar.setHomeButtonEnabled(true);
+				actionBar.setDisplayShowHomeEnabled(true);
+				actionBar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 				searchBox.setText("");
 				hideKeyboard();
 				emptyTextView.setText(getString(R.string.data_empty));

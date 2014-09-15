@@ -116,7 +116,7 @@ public class StationActivity extends BaseActivity
 				overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
 				return true;
 		}
-		return false;
+		return super.onOptionsItemSelected(item);
 	}
 
 }

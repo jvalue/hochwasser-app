@@ -21,4 +21,9 @@
 
     <color name="notification_light">#000000FF</color>
 
+    <color name="refresh_blue_light">@color/blue_light</color>
+    <color name="refresh_blue">@color/blue_dark</color>
+    <color name="refresh_blue_dark">#ff233c71</color>
+    <color name="refresh_yellow">#ffffee00</color>
+
 </resources>

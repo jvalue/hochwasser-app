@@ -3,8 +3,10 @@ package de.bitdroid.flooding.levels;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,12 +15,16 @@ import android.view.View;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.utils.BaseActivity;
+import de.bitdroid.flooding.utils.SwipeRefreshLayoutUtils;
 import de.bitdroid.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
 
 public class StationActivity extends BaseActivity
-	implements LoaderManager.LoaderCallbacks<Cursor>, Extras {
+	implements LoaderManager.LoaderCallbacks<Cursor>,
+		SwipeRefreshLayout.OnRefreshListener,
+		StationIntentService.SyncStatusReceiver.SyncListener,
+		Extras {
 	
 	private static final int LOADERID = 46;
 
@@ -26,6 +32,8 @@ public class StationActivity extends BaseActivity
 	private String waterName;
 	private CardView levelView, infoView, charValuesView, mapView;
 	private StationCardFactory factory;
+	private SwipeRefreshLayout swipeLayout;
+	private StationIntentService.SyncStatusReceiver syncStatusReceiver;
 
 
     @Override
@@ -43,15 +51,38 @@ public class StationActivity extends BaseActivity
 		getActionBar().setTitle(StringUtils.toProperCase(stationName));
 		getActionBar().setSubtitle(StringUtils.toProperCase(waterName));
 
-		// fetch new station data
-		Intent intent = new Intent(this, StationIntentService.class);
-		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, stationName);
-		startService(intent);
-
 		factory = new StationCardFactory(getApplicationContext());
 		getSupportLoaderManager().initLoader(LOADERID, null, this);
 
+		// setup pull to refresh
+		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setRefreshing(true);
+		SwipeRefreshLayoutUtils.setDefaultColors(swipeLayout);
+		syncStatusReceiver = new StationIntentService.SyncStatusReceiver(new Handler());
+		syncStatusReceiver.setSyncListener(this);
+
+		// refresh station data manually
+		syncStationData(false);
     }
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		syncStatusReceiver.setSyncListener(null);
+	}
+
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		syncStatusReceiver.setSyncListener(this);
+		if (syncStatusReceiver.isSyncFinished()) {
+			syncStatusReceiver.resetSyncFinished();
+			swipeLayout.setRefreshing(false);
+		}
+	}
 
 
 	@Override
@@ -117,6 +148,27 @@ public class StationActivity extends BaseActivity
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+
+	@Override
+	public void onRefresh() {
+		syncStationData(true);
+	}
+
+
+	@Override
+	public void onSyncFinished() {
+		swipeLayout.setRefreshing(false);
+	}
+
+
+	private void syncStationData(boolean forceSync) {
+		Intent intent = new Intent(this, StationIntentService.class);
+		intent.putExtra(StationIntentService.EXTRA_STATION_NAME, stationName);
+		intent.putExtra(StationIntentService.EXTRA_SYNC_STATUS_RECEIVER, syncStatusReceiver);
+		intent.putExtra(StationIntentService.EXTRA_FORCE_SYNC, forceSync);
+		startService(intent);
 	}
 
 }

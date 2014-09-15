@@ -5,6 +5,9 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +26,10 @@ import timber.log.Timber;
 
 public class StationIntentService extends IntentService {
 
-	public static final String EXTRA_STATION_NAME = "EXTRA_STATION_NAME";
+	public static final String
+			EXTRA_FORCE_SYNC = "de.bitdroid.flooding.levels.EXTRA_FORCE_SYNC",
+			EXTRA_STATION_NAME = "de.bitdroid.flooding.levels.EXTRA_STATION_NAME",
+			EXTRA_SYNC_STATUS_RECEIVER = "de.bitdroid.flooding.levels.EXTRA_SYNC_STATUS_RECEIVER";
 
 
 	public StationIntentService() {
@@ -33,7 +39,9 @@ public class StationIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		boolean forceSync = intent.getBooleanExtra(EXTRA_FORCE_SYNC, false);
 		String station = intent.getStringExtra(EXTRA_STATION_NAME);
+		ResultReceiver syncStatusReceiver = intent.getParcelableExtra(EXTRA_SYNC_STATUS_RECEIVER);
 
 		PegelOnlineSource source = PegelOnlineSource.INSTANCE;
 		Cursor cursor = getContentResolver().query(
@@ -52,7 +60,7 @@ public class StationIntentService extends IntentService {
 			int maxAge = getResources().getInteger(R.integer.station_max_age_in_ms);
 			long diff = currentDate.getTime() - lastMeasurement.getTime();
 
-			if (diff > maxAge) synchronizeStation(station, true, cursor.getInt(1));
+			if (forceSync || diff > maxAge) synchronizeStation(station, true, cursor.getInt(1));
 
 
 		} else if (cursor.getCount() > 1) {
@@ -62,6 +70,7 @@ public class StationIntentService extends IntentService {
 			synchronizeStation(station, false, 0);
 		}
 
+		syncStatusReceiver.send(0, null);
 	}
 
 
@@ -102,4 +111,42 @@ public class StationIntentService extends IntentService {
 		}
 	}
 
+
+
+	public static final class SyncStatusReceiver extends ResultReceiver {
+
+		public interface SyncListener {
+			public void onSyncFinished();
+		}
+
+		private boolean syncFinished = false;
+		private SyncListener listener;
+
+		public SyncStatusReceiver(Handler handler) {
+			super(handler);
+		}
+
+
+		public void setSyncListener(SyncListener listener) {
+			this.listener = listener;
+		}
+
+
+		@Override
+		public void onReceiveResult(int resultCode, Bundle data) {
+			syncFinished = true;
+			if (listener != null) listener.onSyncFinished();
+		}
+
+
+		public boolean isSyncFinished() {
+			return syncFinished;
+		}
+
+
+		public void resetSyncFinished() {
+			syncFinished = false;
+		}
+
+	}
 }

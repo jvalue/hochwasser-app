@@ -53,15 +53,9 @@ import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALU
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_MW_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_NTNW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_NTNW_VALUE;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_VALUE;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_ZERO_UNIT;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_ZERO_VALUE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_KM;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;
-import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
 
 public class RiverGraphActivity extends BaseActivity implements Extras {
 	
@@ -73,7 +67,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 	private Cursor levelData;
 	private String waterName;
 
-	private MonitorSourceLoader loader;
+	private CombinedSourceLoader loader;
 	private long currentTimestamp;
 
 	private Handler handler = new Handler();
@@ -106,6 +100,7 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 		final List<Long> timestamps = SourceMonitor
 			.getInstance(getApplicationContext())
 			.getAvailableTimestamps(PegelOnlineSource.INSTANCE);
+		timestamps.add(CombinedSourceLoader.MOST_CURRENT_TIMESTAMP);
 		Collections.sort(timestamps);
 		seekbar.setMax(timestamps.size() - 1);
 		seekbar.setProgress(seekbar.getMax());
@@ -152,47 +147,15 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 
 			@Override
 			protected Loader<Cursor> getCursorLoader() {
-
-				return new MonitorSourceLoader.Builder(
-						getApplicationContext(),
-						PegelOnlineSource.INSTANCE,
-						new String[] { 
-							COLUMN_STATION_NAME,
-							COLUMN_STATION_KM,
-							COLUMN_LEVEL_TIMESTAMP,
-							COLUMN_LEVEL_VALUE,
-							COLUMN_LEVEL_UNIT,
-							COLUMN_LEVEL_ZERO_VALUE,
-							COLUMN_LEVEL_ZERO_UNIT,
-							COLUMN_CHARVALUES_MW_VALUE,
-							COLUMN_CHARVALUES_MW_UNIT,
-							COLUMN_CHARVALUES_MHW_VALUE,
-							COLUMN_CHARVALUES_MHW_UNIT,
-							COLUMN_CHARVALUES_MNW_VALUE,
-							COLUMN_CHARVALUES_MNW_UNIT,
-							COLUMN_CHARVALUES_MTHW_VALUE,
-							COLUMN_CHARVALUES_MTHW_UNIT,
-							COLUMN_CHARVALUES_MTNW_VALUE,
-							COLUMN_CHARVALUES_MTNW_UNIT,
-							COLUMN_CHARVALUES_HTHW_VALUE,
-							COLUMN_CHARVALUES_HTHW_UNIT,
-							COLUMN_CHARVALUES_NTNW_VALUE,
-							COLUMN_CHARVALUES_NTNW_UNIT
-						}, COLUMN_WATER_NAME + "=? AND " 
-							+ COLUMN_LEVEL_TYPE + "=?",
-						new String[] { waterName, "W" },
-						null)
-						.timestamp(currentTimestamp)
-						.build();
+				CombinedSourceLoader loader = new CombinedSourceLoader(getApplicationContext(), waterName);
+				loader.setTimestamp(currentTimestamp);
+				return loader;
 			}
 		};
 
 		getSupportLoaderManager().initLoader(LOADER_ID, null, loaderCallbacks);
 		Loader<Cursor> cursorLoader = getSupportLoaderManager().getLoader(LOADER_ID);
-		this.loader = (MonitorSourceLoader) cursorLoader;
-
-		// if first start show helper screen
-		// if (firstStart()) showHelpOverlay();
+		this.loader = (CombinedSourceLoader) cursorLoader;
     }
 
 
@@ -583,4 +546,5 @@ public class RiverGraphActivity extends BaseActivity implements Extras {
 				.create()
 				.show();
 	}
+
 }

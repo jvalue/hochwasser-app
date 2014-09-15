@@ -7,7 +7,7 @@
 		<CheckBoxPreference
 			android:title="@string/prefs_ods_monitor"
 			android:key="@string/prefs_ods_monitor_key"
-			android:defaultValue="true"/>
+			android:defaultValue="false"/>
 
         <ListPreference
             android:title="@string/prefs_ods_monitor_days"

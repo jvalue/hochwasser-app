@@ -160,11 +160,13 @@ public class MainActivity extends FragmentActivity {
 		boolean enabled = prefs.getBoolean(getString(R.string.prefs_ods_monitor_key), false);
 		boolean wifiOnlySync = prefs.getBoolean(getString(R.string.prefs_ods_monitor_wifi_key), true);
 		SourceMonitor monitor = SourceMonitor.getInstance(getApplicationContext());
-		if (enabled && !monitor.isBeingMonitored(source)) {
-			monitor.startMonitoring(source);
-			double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
-			long intervalInSeconds = (long) (intervalInHours * 60 * 60);
-			sourceManager.startPolling(intervalInSeconds, wifiOnlySync, source);
+		if (!monitor.isBeingMonitored(source)) {
+			monitor.startMonitoring(source); // start monitoring in any case as it only copies db when refreshed
+			if (enabled) {
+				double intervalInHours = Double.valueOf(getString(R.string.prefs_ods_monitor_interval_default));
+				long intervalInSeconds = (long) (intervalInHours * 60 * 60);
+				sourceManager.startPolling(intervalInSeconds, wifiOnlySync, source);
+			}
 		}
 
 		// set CEPS server name

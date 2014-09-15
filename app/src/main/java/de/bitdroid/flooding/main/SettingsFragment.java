@@ -23,7 +23,6 @@ import com.inscription.ChangeLogDialog;
 import java.util.Calendar;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
@@ -236,19 +235,17 @@ public final class SettingsFragment extends PreferenceFragment {
 
 	private void toggleMonitoring(boolean start, boolean wifiOnlySync, double intervalInHours) {
 		Context context = getActivity().getApplicationContext();
-		SourceMonitor monitor = SourceMonitor.getInstance(context);
 		OdsSourceManager sourceManager = OdsSourceManager.getInstance(context);
 		OdsSource source = PegelOnlineSource.INSTANCE;
 
+		// only toggle polling, not the actual monitoring since SourceMonitor does not
+		// perform any network tasks by itself
 		if (start) {
 			long interval = (long) (intervalInHours * 60 * 60);
 
-			if (!monitor.isBeingMonitored(source))
-				monitor.startMonitoring(source);
 			if (!sourceManager.isRegisteredForPolling(source))
 				sourceManager.startPolling(interval, wifiOnlySync, source);
 		} else {
-			if (monitor.isBeingMonitored(source)) monitor.stopMonitoring(source);
 			if (sourceManager.isRegisteredForPolling(source)) sourceManager.stopPolling();
 		}
 	}

@@ -194,9 +194,9 @@
         The available actions are:
     </string>
     <string name="help_graph_action_timestamps">
-        Selects a &lt;b&gt;timestamp&lt;/b&gt; to display in the graph.
-        This app will periodically fetch fresh water data and make it available here. Generally it takes
-        a couple of hours before you can see multiple timestamps. For more information check the settings.
+        If monitoring water levels is enabled in settings, you will be able to select a
+        &lt;b&gt;timestamp&lt;/b&gt; here to display in the graph. Generally it takes a couple of
+        hours before you can see multiple timestamps.
     </string>
     <string name="help_graph_action_normalize">
         The regular graph shows absolute water levels, which is not ideal for analysing data.

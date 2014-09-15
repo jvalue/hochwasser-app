@@ -185,10 +185,9 @@ Solltest du tiefer einsteigen wollen, so findest du den Quellecode kostenlos auf
         Folgende Werkzeuge stehen zur Auswahl:
     </string>
     <string name="help_graph_action_timestamps">
-        Wählt einen bestimmten &lt;b&gt;Zeitstempel&lt;/b&gt; aus.
-        Diese App lädt in regelmäßigen Abständen neue Wasserstandsdaten herunter und macht sie hier verfügbar.
-        Nochmalerweise dauert es daher einige Zeit bis mehrere Zeitstempel zur Auswahl stehen. Weitere Informationen
-        findest du in den Einstellungen.
+        Sofern die Aufnahme von Wasserpegeln in den Einstellungen eingeschaltet ist,
+        kannst du hier einen bestimmten &lt;b&gt;Zeitstempel&lt;/b&gt; für den Graphen auswählen.
+        Nochmalerweise dauert es einige Zeit bis mehrere Zeitstempel angezeigt werden.
     </string>
     <string name="help_graph_action_normalize">
         Der reguläre Graph zeigt Wasserstände relativ zu einem pro Station definiertem Pegelnullpunkt,

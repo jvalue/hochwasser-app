@@ -6,11 +6,13 @@
 
 	<TextView
 		android:id="@android:id/text1"
+        android:layout_width="match_parent"
 		style="@style/FontHeader"
 	/>
 
 	<TextView
 		android:id="@android:id/text2"
+        android:layout_width="match_parent"
 		style="@style/FontRegular"
 	/>
 
@@ -44,6 +46,7 @@
 			android:id="@+id/registration_status"
 			style="@style/FontRegular"
             android:paddingLeft="6dp"
+            android:layout_width="match_parent"
             android:textColor="@color/gray"
 		/>
 

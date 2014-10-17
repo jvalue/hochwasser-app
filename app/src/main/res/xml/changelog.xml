@@ -9,4 +9,8 @@
         <change>River graph is accessible from all stations</change>
         <change>Lots of bug fixes</change>
     </release>
+    <release version="1.0.3" versioncode="4">
+        <change>Alarms can be started from station screen</change>
+        <change>Fixed crash when downloading river data and leaving screen</change>
+    </release>
 </changelog>

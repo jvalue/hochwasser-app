@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -64,6 +65,10 @@ public class MainActivity extends FragmentActivity {
 		drawerMenu = (LinearLayout) findViewById(R.id.menu);
 		drawerMenuList = (ListView) findViewById(R.id.menu_entries);
 		titleView = (TextView) findViewById(Resources.getSystem().getIdentifier("action_bar_title", "id", "android"));
+
+		// hack to disable clicks through the menu image
+		ImageView menuImage = (ImageView) findViewById(R.id.menu_image);
+		menuImage.setOnClickListener(null);
 
 		if (savedInstanceState == null) {
 			currentNavItem = 0;

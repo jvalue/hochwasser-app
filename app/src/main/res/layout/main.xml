@@ -19,7 +19,7 @@
 		android:background="#111">
 		
 		<ImageView
-			android:id="@+id/menu_test"
+			android:id="@+id/menu_image"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:src="@drawable/nav_alarms"

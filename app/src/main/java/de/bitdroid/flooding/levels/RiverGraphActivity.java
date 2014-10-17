@@ -126,8 +126,20 @@ public class RiverGraphActivity extends BaseActivity
 
 
 	@Override
+	public void onPause() {
+		super.onPause();
+		syncStatusReceiver.setSyncListener(null);
+	}
+
+
+	@Override
 	public void onResume() {
 		super.onResume();
+		syncStatusReceiver.setSyncListener(this);
+		if (syncStatusReceiver.isSyncFinished()) {
+			syncStatusReceiver.resetSyncFinished();
+			swipeLayout.setRefreshing(false);
+		}
 	}
 
 

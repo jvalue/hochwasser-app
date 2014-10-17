@@ -21,7 +21,7 @@ public class ProductionLogTree extends Timber.HollowTree {
 
 	@Override
 	public void d(String message, Object ... args) {
-		Log.d(logPrefix, message);
+		// we are in production, remember?
 	}
 
 

@@ -67,7 +67,6 @@ public final class TimestampLoader extends AsyncTaskLoader<Cursor> {
 		if (currentDataCursor.getCount() == 0) return resultCursor;
 
 		timestamps.add(currentDataCursor.getLong(currentDataCursor.getColumnIndex(COLUMN_TIMESTAMP)));
-		Timber.i("current timestamp is " + currentDataCursor.getLong(currentDataCursor.getColumnIndex(COLUMN_TIMESTAMP)));
 		currentDataCursor.close();
 
 		List<Long> sortedTimemstamps = new LinkedList<Long>();
@@ -76,7 +75,6 @@ public final class TimestampLoader extends AsyncTaskLoader<Cursor> {
 
 		for (Long timestamp : sortedTimemstamps) {
 			resultCursor.addRow(new Object[] { Long.valueOf(timestamp) });
-			Timber.i("added " + timestamp + " to cursor");
 		}
 
 		return resultCursor;

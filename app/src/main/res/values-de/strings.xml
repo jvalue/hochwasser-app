@@ -120,6 +120,7 @@
 	<string name="data_station_all">Alle Stationen</string>
 
     <string name="station_menu_graph">Fluss Graph</string>
+    <string name="station_menu_alarm">Neuer Alarm</string>
     <string name="station_card_level_title">Messwert</string>
     <string name="station_card_level_from">Messzeit</string>
     <string name="station_card_info_title">Stammdaten</string>

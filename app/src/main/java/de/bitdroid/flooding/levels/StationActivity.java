@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.alarms.NewAlarmActivity;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.utils.BaseActivity;
 import de.bitdroid.flooding.utils.SwipeRefreshLayoutUtils;
@@ -141,11 +142,19 @@ public class StationActivity extends BaseActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 			case R.id.show_river_graph:
-				Intent intent = new Intent(getApplicationContext(), RiverGraphActivity.class);
-				intent.putExtra(StationActivity.EXTRA_WATER_NAME, waterName);
-				startActivity(intent);
+				Intent graphIntent = new Intent(getApplicationContext(), RiverGraphActivity.class);
+				graphIntent.putExtra(StationActivity.EXTRA_WATER_NAME, waterName);
+				startActivity(graphIntent);
 				overridePendingTransition(R.anim.slide_enter_from_right, R.anim.slide_exit_to_left);
 				return true;
+
+			case R.id.create_alarm:
+				Intent alarmIntent = new Intent(getApplicationContext(), NewAlarmActivity.class);
+				alarmIntent.putExtra(Extras.EXTRA_WATER_NAME, waterName);
+				alarmIntent.putExtra(Extras.EXTRA_STATION_NAME, stationName);
+				startActivity(alarmIntent);
+				return true;
+
 		}
 		return super.onOptionsItemSelected(item);
 	}

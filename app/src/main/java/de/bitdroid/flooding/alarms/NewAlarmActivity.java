@@ -2,6 +2,7 @@ package de.bitdroid.flooding.alarms;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,45 +25,34 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_fragment_container);
 
-		Fragment fragment;
-		if (savedInstanceState != null) {
-			fragment = getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
-		} else {
-			fragment = new RiverSelectionFragment();
+		// if river and station present --> show level screen
+		if (getIntent() != null && getIntent().getExtras() != null) {
+			String riverName = getIntent().getExtras().getString(EXTRA_WATER_NAME);
+			String stationName = getIntent().getExtras().getString(EXTRA_STATION_NAME);
+			if (riverName != null && stationName != null) {
+				showFragment(SelectLevelFragment.newInstance(riverName, stationName), false);
+				return;
+			}
 		}
 
-		// show all rivers fragment
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.frame, fragment)
-				.commit();
+		// check for orientation change
+		if (savedInstanceState != null) {
+			showFragment(
+					getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT),
+					false);
+		} else {
+			showFragment(new RiverSelectionFragment(), false);
+		}
+
     }
 
 
-	private void showStationFragment(String waterName) {
-		getSupportFragmentManager()
+	private void showFragment(Fragment fragment, boolean addToBackStack) {
+		FragmentTransaction transaction =  getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.frame, StationSelectionFragment.newInstance(waterName))
-				.addToBackStack(null)
-				.commit();
-	}
-
-
-	private void showMapFragment(String waterName) {
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.frame, MapFragment.newInstance(waterName))
-				.addToBackStack(null)
-				.commit();
-	}
-
-
-	private void showLevelFragment(String waterName, String stationName) {
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.frame, SelectLevelFragment.newInstance(waterName, stationName))
-				.addToBackStack(null)
-				.commit();
+				.replace(R.id.frame, fragment);
+		if (addToBackStack) transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
 
@@ -89,12 +79,14 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 		@Override
 		protected void onItemClicked(River river) {
-			((NewAlarmActivity) getActivity()).showStationFragment(river.getRiverName());
+			((NewAlarmActivity) getActivity())
+					.showFragment(StationSelectionFragment.newInstance(river.getRiverName()), true);
 		}
 
 		@Override
 		protected void onMapClicked() {
-			((NewAlarmActivity) getActivity()).showMapFragment(null);
+			((NewAlarmActivity) getActivity()).
+					showFragment(MapFragment.newInstance(null), true);
 		}
 
 	}
@@ -116,7 +108,8 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 		@Override
 		protected void onStationClicked(String waterName, String stationName) {
-			((NewAlarmActivity) getActivity()).showLevelFragment(waterName, stationName);
+			((NewAlarmActivity) getActivity()).
+					showFragment(SelectLevelFragment.newInstance(waterName, stationName), true);
 		}
 
 		@Override
@@ -124,7 +117,8 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 		@Override
 		protected void onMapClicked(String waterName) {
-			((NewAlarmActivity) getActivity()).showMapFragment(waterName);
+			((NewAlarmActivity) getActivity()).
+					showFragment(MapFragment.newInstance(waterName), true);
 		}
 
 	}
@@ -146,10 +140,12 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 		@Override
 		public void onStationClicked(Station station) {
-			((NewAlarmActivity) getActivity()).showLevelFragment(station.getRiver(), station.getName());
+			((NewAlarmActivity) getActivity()).
+					showFragment(SelectLevelFragment.newInstance(
+							station.getRiver(),
+							station.getName()), true);
 		}
 
 	}
-
 
 }

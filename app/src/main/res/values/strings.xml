@@ -145,7 +145,8 @@
 	<string name="data_station_count">%1$d stations</string>
 	<string name="data_station_all">All stations</string>
 
-    <string name="station_menu_graph">River Graph</string>
+    <string name="station_menu_graph">River graph</string>
+    <string name="station_menu_alarm">Create alarm</string>
     <string name="station_card_level_title">Measurement</string>
     <string name="station_card_level_from">Timestamp</string>
     <string name="station_card_info_title">General Information</string>

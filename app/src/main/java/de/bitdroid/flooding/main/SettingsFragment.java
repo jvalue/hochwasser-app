@@ -133,6 +133,13 @@ public final class SettingsFragment extends PreferenceFragment {
 		} catch (PackageManager.NameNotFoundException nnfe) {
 			Timber.e(nnfe, "Failed to get package name");
 		}
+		versionPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				new ChangeLogDialog(getActivity()).show();
+				return true;
+			}
+		});
 
 		// about - feedback
 		Preference feebackPref = findPreference(getString(R.string.prefs_about_feedback_key));
@@ -166,16 +173,6 @@ public final class SettingsFragment extends PreferenceFragment {
 				TextView msgView = (TextView) dialog.findViewById(android.R.id.message);
 				msgView.setTextAppearance(getActivity(), R.style.FontRegular);
 				msgView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
-				return true;
-			}
-		});
-
-		// about - changelog
-		Preference changelogPref = findPreference(getString(R.string.prefs_about_changelog_key));
-		changelogPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				new ChangeLogDialog(getActivity()).show();
 				return true;
 			}
 		});

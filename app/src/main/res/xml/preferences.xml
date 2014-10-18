@@ -90,10 +90,6 @@
             android:key="@string/prefs_about_contribute_key"/>
 
         <Preference
-            android:title="@string/prefs_about_changelog"
-            android:key="@string/prefs_about_changelog_key"/>
-
-        <Preference
             android:title="@string/prefs_about_legal"
             android:key="@string/prefs_about_legal_key"/>
 

@@ -2,6 +2,7 @@ package de.bitdroid.flooding.main;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,10 +16,9 @@ import android.support.v4.preference.PreferenceFragment;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.inscription.ChangeLogDialog;
 
 import java.util.Calendar;
 
@@ -27,6 +27,7 @@ import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
+import it.gmariotti.changelibs.library.view.ChangeLogListView;
 import timber.log.Timber;
 
 
@@ -136,7 +137,19 @@ public final class SettingsFragment extends PreferenceFragment {
 		versionPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				new ChangeLogDialog(getActivity()).show();
+				LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				ChangeLogListView listView = (ChangeLogListView) inflater.inflate(R.layout.changelog, null);
+				new AlertDialog.Builder(getActivity())
+						.setTitle(R.string.prefs_about_changelog)
+						.setView(listView)
+						.setPositiveButton(android.R.string.ok,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int whichButton) {
+										dialog.dismiss();
+									}
+								}
+						)
+						.show();
 				return true;
 			}
 		});

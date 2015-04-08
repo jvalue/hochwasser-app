@@ -1,1 +1,1 @@
-include ':app', ':android-support-v4-preferencefragment', ':utils', ':testUtils', ':ods', ':changelog'
+include ':app', ':android-support-v4-preferencefragment', ':utils', ':testUtils', ':ods'

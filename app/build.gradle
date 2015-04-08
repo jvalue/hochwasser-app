@@ -38,7 +38,6 @@ repositories {
 
 buildscript {
     repositories {
-        mavenCentral()
         maven { url 'http://download.crashlytics.com/maven' }
     }
 
@@ -49,6 +48,7 @@ buildscript {
 
 
 dependencies {
+
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.android.gms:play-services:7.0.0'
@@ -58,11 +58,11 @@ dependencies {
     compile 'org.osmdroid:osmdroid-android:4.2'
     compile 'org.slf4j:slf4j-android:1.6.1-RC1'
 	compile 'com.github.gabrielemariotti.cards:library:1.8.0'
+    compile 'com.github.gabrielemariotti.changeloglib:library:1.5.2'
     compile 'com.crashlytics.android:crashlytics:1.+'
     compile project(':android-support-v4-preferencefragment')
     compile project(':utils')
     compile project(':ods')
-    compile project(':changelog')
 
 	androidTestCompile 'com.squareup.okhttp:mockwebserver:2.0.0'
 	androidTestCompile 'com.google.dexmaker:dexmaker:1.1'

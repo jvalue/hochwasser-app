@@ -1,11 +1,11 @@
 package de.bitdroid.flooding.levels;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,7 +53,7 @@ public class StationActivity extends BaseActivity
 		getActionBar().setSubtitle(StringUtils.toProperCase(waterName));
 
 		factory = new StationCardFactory(getApplicationContext());
-		getSupportLoaderManager().initLoader(LOADERID, null, this);
+		getLoaderManager().initLoader(LOADERID, null, this);
 
 		// setup pull to refresh
 		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);

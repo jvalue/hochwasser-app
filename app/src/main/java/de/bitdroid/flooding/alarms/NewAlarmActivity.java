@@ -1,8 +1,8 @@
 package de.bitdroid.flooding.alarms;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +38,7 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 		// check for orientation change
 		if (savedInstanceState != null) {
 			showFragment(
-					getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT),
+					getFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT),
 					false);
 		} else {
 			showFragment(new RiverSelectionFragment(), false);
@@ -48,7 +48,7 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 
 
 	private void showFragment(Fragment fragment, boolean addToBackStack) {
-		FragmentTransaction transaction =  getSupportFragmentManager()
+		FragmentTransaction transaction =  getFragmentManager()
 				.beginTransaction()
 				.replace(R.id.frame, fragment);
 		if (addToBackStack) transaction.addToBackStack(null);
@@ -59,8 +59,8 @@ public class NewAlarmActivity extends BaseActivity implements Extras {
 	@Override
 	public void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
-		Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame);
-		getSupportFragmentManager().putFragment(state, STATE_FRAGMENT, currentFragment);
+		Fragment currentFragment = getFragmentManager().findFragmentById(R.id.frame);
+		getFragmentManager().putFragment(state, STATE_FRAGMENT, currentFragment);
 	}
 
 

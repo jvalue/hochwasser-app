@@ -1,12 +1,12 @@
 package de.bitdroid.flooding.utils;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
 import de.bitdroid.flooding.R;
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends Activity {
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {

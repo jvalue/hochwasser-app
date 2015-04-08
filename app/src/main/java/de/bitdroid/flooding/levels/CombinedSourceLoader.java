@@ -1,8 +1,8 @@
 package de.bitdroid.flooding.levels;
 
+import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.content.AsyncTaskLoader;
 
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;

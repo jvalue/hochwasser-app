@@ -27,7 +27,7 @@ public class InfoMapActivity extends BaseActivity implements Extras {
 			getActionBar().setSubtitle(StringUtils.toProperCase(waterName));
 		}
 
-		getSupportFragmentManager()
+		getFragmentManager()
 				.beginTransaction()
 				.replace(R.id.frame, InfoMapFragment.newInstance(waterName, stationName))
 				.commit();

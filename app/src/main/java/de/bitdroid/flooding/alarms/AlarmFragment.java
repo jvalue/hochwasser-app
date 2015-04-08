@@ -2,12 +2,12 @@ package de.bitdroid.flooding.alarms;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Map;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.ods.cep.RuleManager;
-import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.cep.Rule;
 import de.bitdroid.ods.cep.RuleLoader;
+import de.bitdroid.ods.cep.RuleManager;
+import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.gcm.GcmStatus;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;

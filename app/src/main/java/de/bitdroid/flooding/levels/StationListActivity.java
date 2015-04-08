@@ -1,8 +1,8 @@
 package de.bitdroid.flooding.levels;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.BaseStationSelectionFragment;
@@ -30,13 +30,13 @@ public class StationListActivity extends BaseActivity implements Extras {
 
 		Fragment fragment;
 		if (savedInstanceState != null) {
-			fragment = getSupportFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
+			fragment = getFragmentManager().getFragment(savedInstanceState, STATE_FRAGMENT);
 		} else {
 			if (waterName != null) fragment = StationSelectionFragment.newInstance(waterName);
 			else fragment = MapFragment.newInstance(waterName);
 		}
 
-		getSupportFragmentManager()
+		getFragmentManager()
 				.beginTransaction()
 				.replace(R.id.frame, fragment)
 				.commit();
@@ -47,13 +47,13 @@ public class StationListActivity extends BaseActivity implements Extras {
 	@Override
 	public void onSaveInstanceState(Bundle state) {
 		super.onSaveInstanceState(state);
-		Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame);
-		getSupportFragmentManager().putFragment(state, STATE_FRAGMENT, currentFragment);
+		Fragment currentFragment = getFragmentManager().findFragmentById(R.id.frame);
+		getFragmentManager().putFragment(state, STATE_FRAGMENT, currentFragment);
 	}
 
 
 	private void showMapFragment(String waterName) {
-		getSupportFragmentManager()
+		getFragmentManager()
 				.beginTransaction()
 				.addToBackStack(null)
 				.replace(R.id.frame, MapFragment.newInstance(waterName))

@@ -1,9 +1,9 @@
 package de.bitdroid.flooding.utils;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 
 
 public abstract class AbstractLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor> {

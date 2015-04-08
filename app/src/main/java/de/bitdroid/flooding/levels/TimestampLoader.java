@@ -1,12 +1,12 @@
 package de.bitdroid.flooding.levels;
 
+import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Handler;
-import android.support.v4.content.AsyncTaskLoader;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +17,6 @@ import java.util.Set;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.ods.data.OdsSource;
-import timber.log.Timber;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;

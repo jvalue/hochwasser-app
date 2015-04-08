@@ -3,9 +3,9 @@ package de.bitdroid.flooding.levels;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.utils.Assert;

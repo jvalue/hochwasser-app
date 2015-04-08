@@ -50,7 +50,6 @@ buildscript {
 dependencies {
 
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.android.gms:play-services:7.0.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.3'
     compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
@@ -60,7 +59,6 @@ dependencies {
 	compile 'com.github.gabrielemariotti.cards:library:1.8.0'
     compile 'com.github.gabrielemariotti.changeloglib:library:1.5.2'
     compile 'com.crashlytics.android:crashlytics:1.+'
-    compile project(':android-support-v4-preferencefragment')
     compile project(':utils')
     compile project(':ods')
 

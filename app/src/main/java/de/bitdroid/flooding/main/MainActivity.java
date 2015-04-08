@@ -1,5 +1,9 @@
 package de.bitdroid.flooding.main;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +15,6 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -38,7 +38,7 @@ import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.data.OdsSource;
 import de.bitdroid.ods.data.OdsSourceManager;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 
 	public static String ACTION_NAVIGATE = "de.bitdroid.flooding.MainActivity.ACTION_NAVIGATE";
 	public static String EXTRA_POSITION = "EXTRA_POSITION";
@@ -245,7 +245,7 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		FragmentManager manager = getSupportFragmentManager();
+		FragmentManager manager = getFragmentManager();
 		int backCount = manager.getBackStackEntryCount();
 		if (backCount == 0) {
 			finish();
@@ -277,7 +277,7 @@ public class MainActivity extends FragmentActivity {
 		else if (position == 2) fragment = new RiverSelectionFragment();
 		else if (position == 3) fragment = new SettingsFragment();
 
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (addToBackStack) transaction.addToBackStack(String.valueOf(oldPosition));
 		if (replaceFragment) transaction.replace(R.id.frame, fragment).commit();
 

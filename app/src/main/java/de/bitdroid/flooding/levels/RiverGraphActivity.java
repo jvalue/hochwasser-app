@@ -1,13 +1,13 @@
 package de.bitdroid.flooding.levels;
 
 import android.app.AlertDialog;
+import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateFormat;
 import android.util.Pair;
@@ -111,7 +111,7 @@ public class RiverGraphActivity extends BaseActivity
 		showRegularRangeLabel();
 
 		this.seekbar = (SeekBar) findViewById(R.id.seekbar);
-		getSupportLoaderManager().initLoader(TIMESTAMP_LOADER_ID, null, this);
+		getLoaderManager().initLoader(TIMESTAMP_LOADER_ID, null, this);
 
 		// setup pull to refresh
 		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -293,7 +293,7 @@ public class RiverGraphActivity extends BaseActivity
 		graph.restoreState(state);
 
 		// set data loader
-		Loader<Cursor> loader = getSupportLoaderManager().getLoader(DATA_LOADER_ID);
+		Loader<Cursor> loader = getLoaderManager().getLoader(DATA_LOADER_ID);
 		this.dataLoader = (CombinedSourceLoader) loader;
 
 		// restore timestamp
@@ -335,7 +335,7 @@ public class RiverGraphActivity extends BaseActivity
 					cursor.moveToNext();
 				}
 				if (selectedTimestamp == null && timestamps.size() > 0) setTimestamp(timestamps.get(timestamps.size() - 1));
-				if (dataLoader == null) getSupportLoaderManager().initLoader(DATA_LOADER_ID, null, this);
+				if (dataLoader == null) getLoaderManager().initLoader(DATA_LOADER_ID, null, this);
 				updateSeekbar();
 				break;
 

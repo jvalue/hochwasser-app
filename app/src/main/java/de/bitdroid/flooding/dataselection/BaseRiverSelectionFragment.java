@@ -15,7 +15,7 @@ import java.util.Map;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.BaseRiverSelectionFragment.River;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.utils.StringUtils;
+import de.bitdroid.flooding.utils.StringUtils;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_STATION_NAME;

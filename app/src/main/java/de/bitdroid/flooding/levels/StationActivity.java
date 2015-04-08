@@ -17,7 +17,7 @@ import de.bitdroid.flooding.alarms.NewAlarmActivity;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.utils.BaseActivity;
 import de.bitdroid.flooding.utils.SwipeRefreshLayoutUtils;
-import de.bitdroid.utils.StringUtils;
+import de.bitdroid.flooding.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
 

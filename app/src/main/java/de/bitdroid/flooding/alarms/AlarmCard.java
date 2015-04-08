@@ -13,7 +13,7 @@ import de.bitdroid.flooding.levels.StationActivity;
 import de.bitdroid.ods.cep.RuleManager;
 import de.bitdroid.ods.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.StringUtils;
+import de.bitdroid.flooding.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;

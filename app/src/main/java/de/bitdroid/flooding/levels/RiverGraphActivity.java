@@ -35,7 +35,7 @@ import de.bitdroid.flooding.map.InfoMapActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.utils.BaseActivity;
 import de.bitdroid.flooding.utils.SwipeRefreshLayoutUtils;
-import de.bitdroid.utils.StringUtils;
+import de.bitdroid.flooding.utils.StringUtils;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_VALUE;

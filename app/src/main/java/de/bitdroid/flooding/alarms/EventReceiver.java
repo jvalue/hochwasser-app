@@ -10,7 +10,7 @@ import de.bitdroid.ods.cep.RuleManager;
 import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.cep.Rule;
 import de.bitdroid.ods.gcm.GcmStatus;
-import de.bitdroid.utils.StringUtils;
+import de.bitdroid.flooding.utils.StringUtils;
 import timber.log.Timber;
 
 

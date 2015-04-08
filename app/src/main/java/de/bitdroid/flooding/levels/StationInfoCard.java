@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.utils.Assert;
-import de.bitdroid.utils.StringUtils;
+import de.bitdroid.flooding.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 
 final class StationInfoCard extends Card {

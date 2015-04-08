@@ -7,7 +7,7 @@ import android.view.ContextThemeWrapper;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.dataselection.Extras;
 import de.bitdroid.flooding.utils.BaseActivity;
-import de.bitdroid.utils.StringUtils;
+import de.bitdroid.flooding.utils.StringUtils;
 
 public class InfoMapActivity extends BaseActivity implements Extras {
 

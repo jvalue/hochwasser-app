@@ -26,7 +26,7 @@ import de.bitdroid.flooding.levels.StationMapCard;
 import de.bitdroid.ods.cep.RuleManager;
 import de.bitdroid.ods.cep.RuleManagerFactory;
 import de.bitdroid.ods.gcm.GcmStatus;
-import de.bitdroid.utils.StringUtils;
+import de.bitdroid.flooding.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
 

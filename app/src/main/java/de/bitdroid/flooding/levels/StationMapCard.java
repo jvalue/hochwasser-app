@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.levels;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -44,6 +45,7 @@ public final class StationMapCard extends Card {
 
 
 	@Override
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	public void setupInnerViewElements(ViewGroup parent, View view) {
 		if (isEmpty()) return;
 

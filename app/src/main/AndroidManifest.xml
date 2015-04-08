@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		package="de.bitdroid.flooding"
-		android:versionCode="4"
-		android:versionName="1.0.3">
-
-	<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19"/>
+		  package="de.bitdroid.flooding" >
 
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>

@@ -21,7 +21,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.+'
-	compile 'com.jakewharton.timber:timber:2.4.+'
+	compile 'com.jakewharton.timber:timber:2.7.1'
 
 	androidTestCompile 'com.squareup.okhttp:mockwebserver:2.0.0'
 }

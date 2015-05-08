@@ -105,7 +105,7 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-		MenuItemCompat.collapseActionView(searchMenuItem);
+	MenuItemCompat.collapseActionView(searchMenuItem);
 	}
 
 

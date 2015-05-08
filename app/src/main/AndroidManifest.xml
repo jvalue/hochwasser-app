@@ -47,5 +47,9 @@
             android:theme="@style/DrawerTheme"
             />
 
+		<activity
+			android:name=".ui.StationSelectionActivity"
+			/>
+
 	</application>
 </manifest>

@@ -6,12 +6,12 @@ import javax.inject.Inject;
 
 import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.auth.RestrictedResource;
-import roboguice.activity.RoboActivity;
+import roboguice.activity.RoboActionBarActivity;
 
 /**
  * Base activity class.
  */
-public class AbstractActivity extends RoboActivity implements RestrictedResource {
+public class AbstractActivity extends RoboActionBarActivity implements RestrictedResource {
 
 	@Inject private LoginManager loginManager;
 

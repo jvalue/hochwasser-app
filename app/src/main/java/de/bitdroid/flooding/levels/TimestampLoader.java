@@ -16,12 +16,12 @@ import java.util.Set;
 
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.ods.data.OdsSource;
+import de.bitdroid.flooding.data.OdsSource;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TIMESTAMP;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_WATER_NAME;
-import static de.bitdroid.ods.data.OdsSource.COLUMN_TIMESTAMP;
+import static de.bitdroid.flooding.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 /**

@@ -26,11 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.ods.cep.Rule;
-import de.bitdroid.ods.cep.RuleLoader;
-import de.bitdroid.ods.cep.RuleManager;
-import de.bitdroid.ods.cep.RuleManagerFactory;
-import de.bitdroid.ods.gcm.GcmStatus;
+import de.bitdroid.flooding.ceps.Rule;
+import de.bitdroid.flooding.ceps.RuleLoader;
+import de.bitdroid.flooding.ceps.RuleManager;
+import de.bitdroid.flooding.ceps.RuleManagerFactory;
+import de.bitdroid.flooding.gcm.GcmStatus;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.internal.dismissanimation.SwipeDismissAnimation;

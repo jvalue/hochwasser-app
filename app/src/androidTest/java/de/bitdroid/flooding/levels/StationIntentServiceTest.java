@@ -23,8 +23,8 @@ import java.util.List;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.ods.data.OdsSource;
-import de.bitdroid.ods.data.OdsSourceManager;
+import de.bitdroid.flooding.data.OdsSource;
+import de.bitdroid.flooding.data.OdsSourceManager;
 import de.bitdroid.testUtils.ContentProviderContext;
 import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
 import de.bitdroid.testUtils.SharedPreferencesHelper;

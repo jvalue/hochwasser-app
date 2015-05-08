@@ -15,11 +15,11 @@ import java.util.Map;
 import java.util.Set;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.ods.data.OdsSource;
-import de.bitdroid.ods.data.SQLiteType;
+import de.bitdroid.flooding.data.OdsSource;
+import de.bitdroid.flooding.data.SQLiteType;
 import timber.log.Timber;
 
-import static de.bitdroid.ods.data.OdsSource.COLUMN_TIMESTAMP;
+import static de.bitdroid.flooding.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 public final class CopySourceService extends IntentService {

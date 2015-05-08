@@ -1,6 +1,6 @@
 package de.bitdroid.flooding.alarms;
 
-import de.bitdroid.ods.cep.Rule;
+import de.bitdroid.flooding.ceps.Rule;
 import de.bitdroid.utils.Assert;
 
 

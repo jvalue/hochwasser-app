@@ -5,11 +5,11 @@ import android.os.Vibrator;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.news.NewsManager;
-import de.bitdroid.ods.cep.BaseEventReceiver;
-import de.bitdroid.ods.cep.RuleManager;
-import de.bitdroid.ods.cep.RuleManagerFactory;
-import de.bitdroid.ods.cep.Rule;
-import de.bitdroid.ods.gcm.GcmStatus;
+import de.bitdroid.flooding.ceps.BaseEventReceiver;
+import de.bitdroid.flooding.ceps.RuleManager;
+import de.bitdroid.flooding.ceps.RuleManagerFactory;
+import de.bitdroid.flooding.ceps.Rule;
+import de.bitdroid.flooding.gcm.GcmStatus;
 import de.bitdroid.flooding.utils.StringUtils;
 import timber.log.Timber;
 

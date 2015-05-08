@@ -18,8 +18,8 @@ import java.util.Date;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.ods.data.OdsSource;
-import de.bitdroid.ods.data.OdsSourceManager;
+import de.bitdroid.flooding.data.OdsSource;
+import de.bitdroid.flooding.data.OdsSourceManager;
 import de.bitdroid.utils.RestCall;
 import de.bitdroid.utils.RestException;
 import timber.log.Timber;

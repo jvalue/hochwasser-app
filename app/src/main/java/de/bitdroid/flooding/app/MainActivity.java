@@ -33,10 +33,10 @@ import de.bitdroid.flooding.levels.StationListActivity;
 import de.bitdroid.flooding.monitor.SourceMonitor;
 import de.bitdroid.flooding.news.NewsFragment;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.ods.cep.RuleManager;
-import de.bitdroid.ods.cep.RuleManagerFactory;
-import de.bitdroid.ods.data.OdsSource;
-import de.bitdroid.ods.data.OdsSourceManager;
+import de.bitdroid.flooding.ceps.RuleManager;
+import de.bitdroid.flooding.ceps.RuleManagerFactory;
+import de.bitdroid.flooding.data.OdsSource;
+import de.bitdroid.flooding.data.OdsSourceManager;
 
 public class MainActivity extends Activity {
 

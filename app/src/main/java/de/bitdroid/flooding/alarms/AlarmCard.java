@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.levels.StationActivity;
-import de.bitdroid.ods.cep.RuleManager;
-import de.bitdroid.ods.gcm.GcmStatus;
+import de.bitdroid.flooding.ceps.RuleManager;
+import de.bitdroid.flooding.gcm.GcmStatus;
 import de.bitdroid.utils.Assert;
 import de.bitdroid.flooding.utils.StringUtils;
 import it.gmariotti.cardslib.library.internal.Card;

@@ -11,11 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import de.bitdroid.ods.data.OdsSource;
+import de.bitdroid.flooding.data.OdsSource;
 import de.bitdroid.utils.Assert;
 import timber.log.Timber;
 
-import static de.bitdroid.ods.data.OdsSource.COLUMN_TIMESTAMP;
+import static de.bitdroid.flooding.data.OdsSource.COLUMN_TIMESTAMP;
 
 
 public final class SourceMonitor {

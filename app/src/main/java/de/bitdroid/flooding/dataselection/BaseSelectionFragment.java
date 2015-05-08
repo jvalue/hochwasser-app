@@ -28,8 +28,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.ods.data.OdsSourceManager;
-import de.bitdroid.ods.data.SyncAdapter;
+import de.bitdroid.flooding.data.OdsSourceManager;
+import de.bitdroid.flooding.data.SyncAdapter;
 
 abstract class BaseSelectionFragment<T> extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

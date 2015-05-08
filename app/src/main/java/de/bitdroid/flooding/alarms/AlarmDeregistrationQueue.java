@@ -9,7 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.ods.cep.RuleManager;
+import de.bitdroid.flooding.ceps.RuleManager;
 
 /* Should only be used from the main thread! */
 public final class AlarmDeregistrationQueue {

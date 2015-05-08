@@ -24,9 +24,9 @@ import java.util.Calendar;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.ods.cep.RuleManagerFactory;
-import de.bitdroid.ods.data.OdsSource;
-import de.bitdroid.ods.data.OdsSourceManager;
+import de.bitdroid.flooding.ceps.RuleManagerFactory;
+import de.bitdroid.flooding.data.OdsSource;
+import de.bitdroid.flooding.data.OdsSourceManager;
 import it.gmariotti.changelibs.library.view.ChangeLogListView;
 import timber.log.Timber;
 

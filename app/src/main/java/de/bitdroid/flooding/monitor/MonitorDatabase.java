@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.Map;
 
-import de.bitdroid.ods.data.OdsSource;
-import de.bitdroid.ods.data.SQLiteType;
+import de.bitdroid.flooding.data.OdsSource;
+import de.bitdroid.flooding.data.SQLiteType;
 import de.bitdroid.utils.Assert;
 import timber.log.Timber;
 

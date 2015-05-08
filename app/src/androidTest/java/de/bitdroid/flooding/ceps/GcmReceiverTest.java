@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import org.mockito.ArgumentCaptor;
 
-import de.bitdroid.testUtils.BaseAndroidTestCase;
+import de.bitdroid.flooding.utils.BaseAndroidTestCase;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;

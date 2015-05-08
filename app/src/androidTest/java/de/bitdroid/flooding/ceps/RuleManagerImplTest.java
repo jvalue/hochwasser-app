@@ -7,9 +7,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import de.bitdroid.ods.gcm.GcmStatus;
-import de.bitdroid.testUtils.BaseAndroidTestCase;
-import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.testUtils.SharedPreferencesHelper;
+import de.bitdroid.flooding.utils.BaseAndroidTestCase;
+import de.bitdroid.flooding.utils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.utils.SharedPreferencesHelper;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

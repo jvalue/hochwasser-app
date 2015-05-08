@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.Set;
 
 import de.bitdroid.ods.gcm.GcmStatus;
-import de.bitdroid.testUtils.BaseAndroidTestCase;
-import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.utils.BaseAndroidTestCase;
+import de.bitdroid.flooding.utils.PrefsRenamingDelegatingContext;
 
 import static de.bitdroid.ods.cep.RuleDbSchema.TABLE_NAME;
 

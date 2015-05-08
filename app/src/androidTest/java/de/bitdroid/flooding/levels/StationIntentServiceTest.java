@@ -25,9 +25,9 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.data.OdsSource;
 import de.bitdroid.flooding.data.OdsSourceManager;
-import de.bitdroid.testUtils.ContentProviderContext;
-import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.testUtils.SharedPreferencesHelper;
+import de.bitdroid.flooding.utils.ContentProviderContext;
+import de.bitdroid.flooding.utils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.utils.SharedPreferencesHelper;
 
 public class StationIntentServiceTest extends ServiceTestCase {
 

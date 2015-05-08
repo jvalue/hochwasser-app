@@ -18,9 +18,9 @@ import java.util.Map;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.data.OdsSource;
-import de.bitdroid.testUtils.ContentProviderContext;
-import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.testUtils.SharedPreferencesHelper;
+import de.bitdroid.flooding.utils.ContentProviderContext;
+import de.bitdroid.flooding.utils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.utils.SharedPreferencesHelper;
 import de.bitdroid.flooding.data.SQLiteType;
 
 public class CopySourceServiceTest extends ServiceTestCase {

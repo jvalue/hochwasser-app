@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.bitdroid.ods.gcm.GcmStatus;
-import de.bitdroid.testUtils.BaseAndroidTestCase;
-import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.testUtils.SharedPreferencesHelper;
+import de.bitdroid.flooding.utils.BaseAndroidTestCase;
+import de.bitdroid.flooding.utils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.utils.SharedPreferencesHelper;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;

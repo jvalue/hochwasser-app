@@ -1,8 +1,8 @@
 package de.bitdroid.flooding.news;
 
-import de.bitdroid.testUtils.BaseAndroidTestCase;
-import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.testUtils.SharedPreferencesHelper;
+import de.bitdroid.flooding.utils.BaseAndroidTestCase;
+import de.bitdroid.flooding.utils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.utils.SharedPreferencesHelper;
 
 
 public final class NewsManagerTest extends BaseAndroidTestCase {

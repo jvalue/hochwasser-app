@@ -2,8 +2,8 @@ package de.bitdroid.flooding.gcm;
 
 import android.test.AndroidTestCase;
 
-import de.bitdroid.testUtils.PrefsRenamingDelegatingContext;
-import de.bitdroid.testUtils.SharedPreferencesHelper;
+import de.bitdroid.flooding.utils.PrefsRenamingDelegatingContext;
+import de.bitdroid.flooding.utils.SharedPreferencesHelper;
 
 public class GcmIdManagerTest extends AndroidTestCase {
 

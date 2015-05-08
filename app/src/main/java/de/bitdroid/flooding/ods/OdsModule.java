@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ceps;
+package de.bitdroid.flooding.ods;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 
-import org.jvalue.ceps.api.UserApi;
+import org.jvalue.ods.api.DataApi;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -15,15 +15,14 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.auth.AuthClient;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
-import timber.log.Timber;
 
 
 /**
  * Dependecy injection configuratoin for CEPS related classes.
  */
-public final class CepsModule implements Module {
+public final class OdsModule implements Module {
 
-	public static final String NAME_CEPS_REST_ADAPTER = "CEPS_REST_ADAPTER";
+	public static final String NAME_ODS_REST_ADAPTER = "ODS_REST_ADAPTER";
 
 	@Override
 	public void configure(Binder binder) {
@@ -33,12 +32,10 @@ public final class CepsModule implements Module {
 
 	@Provides
 	@Inject
-	@Named(NAME_CEPS_REST_ADAPTER)
-	public RestAdapter provideCepsRestAapter(Context context, AuthClient authClient) {
-		Timber.d("base url is " + context.getString(R.string.ceps_base_url));
+	@Named(NAME_ODS_REST_ADAPTER)
+	public RestAdapter provideOdsRestAdapter(Context context, AuthClient authClient) {
 		return new RestAdapter.Builder()
-				.setClient(authClient)
-				.setEndpoint(context.getString(R.string.ceps_base_url))
+				.setEndpoint(context.getString(R.string.ods_base_url))
 				.setConverter(new JacksonConverter())
 				.build();
 	}
@@ -46,8 +43,8 @@ public final class CepsModule implements Module {
 
 	@Provides
 	@Inject
-	public UserApi provideUserApi(@Named(NAME_CEPS_REST_ADAPTER) RestAdapter restAdapter) {
-		return restAdapter.create(UserApi.class);
+	public DataApi provideUserApi(@Named(NAME_ODS_REST_ADAPTER) RestAdapter restAdapter) {
+		return restAdapter.create(DataApi.class);
 	}
 
 }

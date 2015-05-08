@@ -5,6 +5,7 @@ import android.app.Application;
 
 import de.bitdroid.flooding.BuildConfig;
 import de.bitdroid.flooding.ceps.CepsModule;
+import de.bitdroid.flooding.ods.OdsModule;
 import roboguice.RoboGuice;
 import timber.log.Timber;
 
@@ -21,6 +22,7 @@ public class FloodingApplication extends Application {
 				this,
 				RoboGuice.DEFAULT_STAGE,
 				RoboGuice.newDefaultRoboModule(this),
+				new OdsModule(),
 				new CepsModule());
 
 		if (BuildConfig.DEBUG) {

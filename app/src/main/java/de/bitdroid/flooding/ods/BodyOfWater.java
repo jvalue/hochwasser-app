@@ -9,13 +9,19 @@ import com.google.common.base.Objects;
 public class BodyOfWater {
 
 	private final String name;
+	private final int stationCount;
 
-	public BodyOfWater(String name) {
+	public BodyOfWater(String name, int stationCount) {
 		this.name = name;
+		this.stationCount = stationCount;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public int getStationCount() {
+		return stationCount;
 	}
 
 	@Override
@@ -23,11 +29,12 @@ public class BodyOfWater {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		BodyOfWater bodyOfWater = (BodyOfWater) o;
-		return Objects.equal(name, bodyOfWater.name);
+		return Objects.equal(name, bodyOfWater.name)
+				&& Objects.equal(stationCount, bodyOfWater.stationCount);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(name);
+		return Objects.hashCode(name, stationCount);
 	}
 }

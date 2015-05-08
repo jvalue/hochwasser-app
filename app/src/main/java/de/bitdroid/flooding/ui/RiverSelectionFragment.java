@@ -41,9 +41,8 @@ public class RiverSelectionFragment extends AbstractSelectionFragment<BodyOfWate
 				text1.setText(StringUtils.toProperCase(water.getName()));
 				text1.setTextColor(getResources().getColor(android.R.color.black));
 
-				// TODO
 				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-				text2.setText(getString(R.string.data_station_count, 42));
+				text2.setText(getString(R.string.data_station_count, water.getStationCount()));
 				text2.setTextColor(getResources().getColor(R.color.gray));
 
 				return view;

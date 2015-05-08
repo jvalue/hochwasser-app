@@ -1,14 +1,18 @@
 package de.bitdroid.flooding.ods;
 
 
+import android.util.Pair;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jvalue.ods.api.DataApi;
 import org.jvalue.ods.api.data.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -45,18 +49,35 @@ public class OdsManager {
 			return Observable.defer(new Func0<Observable<List<Station>>>() {
 				@Override
 				public Observable<List<Station>> call() {
-					List<Station> stations = new ArrayList<>();
+					// download stations
+					Map<String, List<Station.Builder>> builderMap = new HashMap<>();
 					String startId = null;
 					Data data;
 					do {
+						// iterate over ODS cursor
 						data = dataApi.getObjectsSynchronously(PEGELONLINE_SOURCE_ID, startId, QUERY_COUNT, PROPERTY_FILTER_STATION);
 						for (JsonNode node : data.getResult()) {
-							stations.add(parseStation(node));
+							Pair<String, Station.Builder> pair = parseStation(node);
+							List<Station.Builder> stationsList = builderMap.get(pair.first);
+							if (stationsList == null) {
+								stationsList = new ArrayList<>();
+								builderMap.put(pair.first, stationsList);
+							}
+							stationsList.add(pair.second);
 						}
 						startId = data.getCursor().getNext();
 
 					} while (data.getCursor().getHasNext());
-					return Observable.just(stations);
+
+					// count stations per water and build stations
+					stationCache = new ArrayList<>();
+					for (String waterName : builderMap.keySet()) {
+						BodyOfWater water = new BodyOfWater(waterName, builderMap.get(waterName).size());
+						for (Station.Builder builder : builderMap.get(waterName)) {
+							stationCache.add(builder.setBodyOfWater(water).build());
+						}
+					}
+					return Observable.just(stationCache);
 				}
 			});
 		}
@@ -77,15 +98,18 @@ public class OdsManager {
 	}
 
 
-	private Station parseStation(JsonNode node) {
-		return new Station.Builder()
-				.setUuid(node.path("uuid").asText())
-				.setStationName(node.path("longname").asText())
-				.setBodyOfWater(new BodyOfWater(node.path("water").path("longname").asText()))
-				.setLatitude((float) node.path("latitude").asDouble())
-				.setLongitude((float) node.path("longitude").asDouble())
-				.setRiverKm(node.path("km").intValue())
-				.build();
+	/**
+	 * Parse station and return station along with water name.
+	 */
+	private Pair<String, Station.Builder> parseStation(JsonNode node) {
+		return new Pair<>(
+				node.path("water").path("longname").asText(),
+				new Station.Builder()
+						.setUuid(node.path("uuid").asText())
+						.setStationName(node.path("longname").asText())
+						.setLatitude((float) node.path("latitude").asDouble())
+						.setLongitude((float) node.path("longitude").asDouble())
+						.setRiverKm(node.path("km").intValue()));
 	}
 
 

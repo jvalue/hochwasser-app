@@ -24,6 +24,8 @@ public class OdsManager {
 
 	private static final String PEGELONLINE_SOURCE_ID = "pegelonline";
 	private static final int QUERY_COUNT = 100;
+	private static final String PROPERTY_FILTER_STATION
+			= "result.shortname,result.longname,result.km,result.latitude,result.longitude,result.water.longname,cursor";
 
 	private final DataApi dataApi;
 
@@ -47,7 +49,7 @@ public class OdsManager {
 					String startId = null;
 					Data data;
 					do {
-						data = dataApi.getObjectsSynchronously(PEGELONLINE_SOURCE_ID, startId, QUERY_COUNT, null);
+						data = dataApi.getObjectsSynchronously(PEGELONLINE_SOURCE_ID, startId, QUERY_COUNT, PROPERTY_FILTER_STATION);
 						for (JsonNode node : data.getResult()) {
 							stations.add(parseStation(node));
 						}

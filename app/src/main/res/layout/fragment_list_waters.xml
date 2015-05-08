@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+	>
+
+	<EditText
+		android:id="@+id/search"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/menu_select_water_search_hint"
+		android:visibility="gone"
+	/>
+
+	<ListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:listSelector="@drawable/list_selector_light"
+	/>
+
+</LinearLayout>

@@ -5,15 +5,17 @@ import android.content.Intent;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.auth.LoginManager;
+import de.bitdroid.flooding.auth.RestrictedResource;
 import roboguice.activity.RoboActivity;
 
 /**
- * An activity which requires the user to be authenticated
+ * Base activity class.
  */
-public class AbstractRestrictedActivity extends RoboActivity {
+public class AbstractActivity extends RoboActivity implements RestrictedResource {
 
-	@Inject LoginManager loginManager;
+	@Inject private LoginManager loginManager;
 
+	@Override
 	public void logout() {
 		loginManager.clearToken();
 		loginManager.clearAccountName();

@@ -5,7 +5,14 @@
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/blue_dark</item>
         <item name="colorAccent">@android:color/white</item>
-        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="DrawerTheme" parent="MaterialNavigationDrawerTheme">
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/blue_dark</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="singleAccount">true</item>
+        <item name="learningPattern">false</item>
     </style>
 
 </resources>

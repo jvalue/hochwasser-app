@@ -68,7 +68,7 @@ public class LoginActivity extends RoboActivity {
 
 
 	private void showMainActivity() {
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = new Intent(this, MainDrawerActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		finish();

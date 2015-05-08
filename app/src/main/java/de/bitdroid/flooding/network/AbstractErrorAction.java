@@ -2,7 +2,7 @@ package de.bitdroid.flooding.network;
 
 
 import de.bitdroid.flooding.auth.AuthException;
-import de.bitdroid.flooding.ui.AbstractRestrictedActivity;
+import de.bitdroid.flooding.auth.RestrictedResource;
 import rx.functions.Action1;
 
 /**
@@ -10,17 +10,17 @@ import rx.functions.Action1;
  */
 public abstract class AbstractErrorAction implements Action1<Throwable> {
 
-	private final AbstractRestrictedActivity restrictedActivity;
+	private final RestrictedResource restrictedResource;
 
-	public AbstractErrorAction(AbstractRestrictedActivity restrictedActivity) {
-		this.restrictedActivity = restrictedActivity;
+	public AbstractErrorAction(RestrictedResource restrictedResource) {
+		this.restrictedResource = restrictedResource;
 	}
 
 
 	@Override
 	public final void call(Throwable throwable) {
 		if (throwable instanceof AuthException) {
-			restrictedActivity.logout();
+			restrictedResource.logout();
 			return;
 		}
 		doCall(throwable);

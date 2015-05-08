@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/CardBackground"
+	>
+
+    <TextView
+        style="@style/StationCard.Title"
+        android:text="@string/station_card_level_title"
+        />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow>
+            <TextView
+                style="@style/StationCard.Row.Left"
+                android:text="@string/station_card_level_from"
+                />
+
+            <TextView
+                android:id="@+id/timestamp"
+                style="@style/StationCard.Row.Right"
+                />
+        </TableRow>
+
+        <TextView
+            android:id="@+id/level"
+            style="@style/FontHeader"
+            android:textSize="40dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dp"
+            />
+
+        </TableLayout>
+
+</LinearLayout>

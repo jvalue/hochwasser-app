@@ -1,1 +1,1 @@
-include ':app', ':testUtils'
+include ':app-old', ':app'

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/CardBackground"
+    android:padding="10dp"
+	>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/station_card_more"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:textColor="@color/gray"
+        />
+
+</LinearLayout>

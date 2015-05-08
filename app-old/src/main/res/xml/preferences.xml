@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceScreen
+		android:title="@string/prefs_cat_ods_monitor"
+		android:key="@string/prefs_cat_ods_monitor_key">
+
+		<CheckBoxPreference
+			android:title="@string/prefs_ods_monitor"
+			android:key="@string/prefs_ods_monitor_key"
+			android:defaultValue="false"/>
+
+        <ListPreference
+            android:title="@string/prefs_ods_monitor_days"
+            android:key="@string/prefs_ods_monitor_days_key"
+            android:dependency="@string/prefs_ods_monitor_key"
+            android:entries="@array/prefs_monitor_duration_entries"
+            android:entryValues="@array/prefs_monitor_duration_values"
+            android:defaultValue="7"/>
+
+        <ListPreference
+            android:title="@string/prefs_ods_monitor_interval"
+            android:key="@string/prefs_ods_monitor_interval_key"
+            android:dependency="@string/prefs_ods_monitor_key"
+            android:entries="@array/prefs_monitor_interval_entries"
+            android:entryValues="@array/prefs_monitor_interval_values"
+            android:defaultValue="0.5"/>
+
+        <CheckBoxPreference
+            android:title="@string/prefs_ods_monitor_wifi"
+            android:key="@string/prefs_ods_monitor_wifi_key"
+            android:dependency="@string/prefs_ods_monitor_key"
+            android:defaultValue="true"/>
+
+        <EditTextPreference
+			android:title="@string/prefs_ods_sync_last"
+			android:key="@string/prefs_ods_sync_last_key"
+			android:defaultValue="@string/never"
+            android:enabled="false"
+            android:shouldDisableView="false" />
+
+        <EditTextPreference
+			android:title="@string/prefs_ods_sync_last_success"
+			android:key="@string/prefs_ods_sync_last_success_key"
+			android:defaultValue="@string/never"
+            android:enabled="false"
+            android:shouldDisableView="false" />
+
+        <EditTextPreference
+			android:title="@string/prefs_ods_sync_last_fail"
+			android:key="@string/prefs_ods_sync_last_fail_key"
+			android:defaultValue="@string/never"
+            android:enabled="false"
+            android:shouldDisableView="false" />
+
+	</PreferenceScreen>
+
+
+    <PreferenceScreen
+        android:title="@string/prefs_cat_advanced"
+        android:key="@string/prefs_cat_advanced_key">
+
+        <EditTextPreference
+            android:title="@string/prefs_ods_servername"
+            android:key="@string/prefs_ods_servername_key"
+            android:defaultValue="@string/prefs_ods_servername_default"/>
+
+		<EditTextPreference
+			android:title="@string/prefs_ceps_servername"
+			android:key="@string/prefs_ceps_servername_key"
+			android:defaultValue="@string/prefs_ceps_servername_default"/>
+
+	</PreferenceScreen>
+
+
+    <PreferenceScreen
+        android:title="@string/prefs_cat_about"
+        android:key="@string/prefs_cat_about_key">
+
+        <Preference
+            android:title="@string/prefs_about_version"
+            android:key="@string/prefs_about_version_key"/>
+
+        <Preference
+            android:title="@string/prefs_about_feedback"
+            android:key="@string/prefs_about_feedback_key"
+            android:summary="@string/prefs_about_feedback_summary"/>
+
+        <Preference
+            android:title="@string/prefs_about_contribute"
+            android:key="@string/prefs_about_contribute_key"/>
+
+        <Preference
+            android:title="@string/prefs_about_legal"
+            android:key="@string/prefs_about_legal_key"/>
+
+    </PreferenceScreen>
+
+
+</PreferenceScreen>

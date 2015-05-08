@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+	>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                >
+                <TextView
+                    style="@style/FontHeader"
+                    android:text="@string/alarms_new_station_description"
+                />
+
+                <TextView
+                    style="@style/FontRegular"
+                    android:id="@+id/station"
+                />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="3dp"
+                >
+                <TextView
+                    style="@style/FontHeader"
+                    android:text="@string/alarms_new_level_description"
+                />
+
+                <EditText
+                    style="@style/FontRegular"
+                    android:id="@+id/level"
+                    android:layout_width="match_parent"
+                    android:hint="@string/alarms_new_level_hint"
+                    android:inputType="numberDecimal"
+                    android:layout_marginBottom="3dp"
+                />
+
+                <TextView
+                    style="@style/FontRegular"
+                    android:text="@string/alarms_new_trigger_description"
+                    android:layout_marginTop="3dp"
+                />
+
+                <RadioGroup
+                    android:id="@+id/relation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:checkedButton="@+id/above"
+                    >
+                    <RadioButton
+                        android:id="@id/above"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/alarms_new_trigger_above"
+                        style="@style/FontRegular"
+                    />
+                    <RadioButton
+                        android:id="@+id/below"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/alarms_new_trigger_below"
+                        style="@style/FontRegular"
+                    />
+                </RadioGroup>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alarms_new_add"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="3dp"
+                android:enabled="false"
+            />
+
+        </LinearLayout>
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_light">
+
+            <View
+                android:id="@+id/shadow"
+                android:layout_width="match_parent"
+                android:layout_height="5dip"
+                android:background="@drawable/card_shadow"
+                >
+            </View>
+
+            <it.gmariotti.cardslib.library.view.CardView
+                android:id="@+id/card_show"
+                android:layout_below="@id/shadow"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+
+            <it.gmariotti.cardslib.library.view.CardView
+                android:id="@+id/card_level"
+                android:layout_below="@id/card_show"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+
+            <it.gmariotti.cardslib.library.view.CardView
+                android:id="@+id/card_charvalues"
+                android:layout_below="@id/card_level"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+
+            <it.gmariotti.cardslib.library.view.CardView
+                android:id="@+id/card_map"
+                android:layout_below="@id/card_charvalues"
+                android:visibility="gone"
+                android:layout_height="300dp"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                />
+
+
+            </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+

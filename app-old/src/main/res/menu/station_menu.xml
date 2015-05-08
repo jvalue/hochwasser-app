@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item 
+		android:id="@+id/show_river_graph"
+		android:showAsAction="always"
+		android:title="@string/station_menu_graph"
+		android:hint="@string/station_menu_graph"
+		android:icon="@drawable/ic_action_data"
+	/>
+    <item
+        android:id="@+id/create_alarm"
+        android:showAsAction="always"
+        android:title="@string/station_menu_alarm"
+        android:hint="@string/station_menu_alarm"
+        android:icon="@drawable/ic_action_alarms"
+        />
+</menu>

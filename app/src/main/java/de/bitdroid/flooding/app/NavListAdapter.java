@@ -1,10 +1,6 @@
-package de.bitdroid.flooding.main;
-
-import java.util.List;
+package de.bitdroid.flooding.app;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.R.id;
-import de.bitdroid.flooding.R.layout;
 
 import android.content.Context;
 import android.view.LayoutInflater;

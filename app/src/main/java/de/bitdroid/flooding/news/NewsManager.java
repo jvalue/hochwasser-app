@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.main.MainActivity;
+import de.bitdroid.flooding.app.MainActivity;
 import de.bitdroid.utils.Assert;
 
 

@@ -15,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.main.MainActivity;
+import de.bitdroid.flooding.app.MainActivity;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;

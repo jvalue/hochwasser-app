@@ -7,8 +7,13 @@ buildscript {
     }
 }
 
-allprojects {
+subprojects {
     repositories {
+		mavenLocal()
         jcenter()
     }
+
+	task wrapper(type: Wrapper) {
+		gradleVersion = '2.3'
+	}
 }

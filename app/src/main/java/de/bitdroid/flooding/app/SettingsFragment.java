@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.main;
+package de.bitdroid.flooding.app;
 
 import android.app.AlertDialog;
 import android.content.Context;

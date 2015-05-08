@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
 
 import de.bitdroid.flooding.data.OdsSource;
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 
 import static de.bitdroid.flooding.data.OdsSource.COLUMN_TIMESTAMP;
 

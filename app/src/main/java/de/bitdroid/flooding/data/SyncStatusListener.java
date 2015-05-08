@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 
 import java.util.Calendar;
 
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 
 
 public class SyncStatusListener extends BroadcastReceiver {

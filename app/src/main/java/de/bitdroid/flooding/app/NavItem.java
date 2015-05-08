@@ -1,6 +1,6 @@
 package de.bitdroid.flooding.app;
 
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 
 
 final class NavItem {

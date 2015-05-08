@@ -20,8 +20,8 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
 import de.bitdroid.flooding.data.OdsSource;
 import de.bitdroid.flooding.data.OdsSourceManager;
-import de.bitdroid.utils.RestCall;
-import de.bitdroid.utils.RestException;
+import de.bitdroid.flooding.utils.RestCall;
+import de.bitdroid.flooding.utils.RestException;
 import timber.log.Timber;
 
 public class StationIntentService extends IntentService {

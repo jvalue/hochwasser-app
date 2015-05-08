@@ -12,7 +12,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 
 
 public final class StationsOverlay extends ItemizedOverlay<OverlayItem> {

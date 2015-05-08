@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.bitdroid.flooding.gcm.GcmStatus;
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 import timber.log.Timber;
 
 

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 
 public final class Rule implements Parcelable {
 

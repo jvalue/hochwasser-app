@@ -8,7 +8,7 @@ import java.util.Map;
 
 import de.bitdroid.flooding.data.OdsSource;
 import de.bitdroid.flooding.data.SQLiteType;
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 import timber.log.Timber;
 
 import static de.bitdroid.flooding.monitor.SourceMonitor.COLUMN_ID;

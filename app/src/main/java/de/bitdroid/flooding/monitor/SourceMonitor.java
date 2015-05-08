@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.bitdroid.flooding.data.OdsSource;
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 import timber.log.Timber;
 
 import static de.bitdroid.flooding.data.OdsSource.COLUMN_TIMESTAMP;

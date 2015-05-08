@@ -1,4 +1,4 @@
-package de.bitdroid.utils;
+package de.bitdroid.flooding.utils;
 
 import android.test.AndroidTestCase;
 

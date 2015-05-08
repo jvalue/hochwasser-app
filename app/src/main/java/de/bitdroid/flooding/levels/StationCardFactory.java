@@ -8,7 +8,7 @@ import android.content.Loader;
 import android.database.Cursor;
 
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_UNIT;
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_CHARVALUES_HTHW_VALUE;

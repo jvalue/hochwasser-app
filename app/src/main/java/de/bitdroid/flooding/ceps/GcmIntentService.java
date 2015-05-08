@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 
 import de.bitdroid.flooding.gcm.BaseGcmIntentService;
-import de.bitdroid.utils.RestCall;
+import de.bitdroid.flooding.utils.RestCall;
 
 
 public final class GcmIntentService extends BaseGcmIntentService {

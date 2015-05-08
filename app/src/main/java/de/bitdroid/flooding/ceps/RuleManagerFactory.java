@@ -3,7 +3,7 @@ package de.bitdroid.flooding.ceps;
 
 import android.content.Context;
 
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 
 public class RuleManagerFactory {
 

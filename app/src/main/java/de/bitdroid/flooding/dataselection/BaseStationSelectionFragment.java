@@ -15,7 +15,7 @@ import java.util.List;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.pegelonline.PegelOnlineSource;
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 import de.bitdroid.flooding.utils.StringUtils;
 
 import static de.bitdroid.flooding.pegelonline.PegelOnlineSource.COLUMN_LEVEL_TYPE;

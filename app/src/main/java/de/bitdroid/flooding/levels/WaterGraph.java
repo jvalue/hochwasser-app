@@ -22,7 +22,7 @@ import java.text.Format;
 import java.util.List;
 import java.util.Set;
 
-import de.bitdroid.utils.Assert;
+import de.bitdroid.flooding.utils.Assert;
 import timber.log.Timber;
 
 

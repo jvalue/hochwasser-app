@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -24,7 +25,6 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.app.MainActivity;
 import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.network.NetworkUtils;
-import retrofit.RetrofitError;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -110,90 +110,29 @@ public final class LoginActivity extends RoboActivity {
 						return userApi.addUser(new OAuthUserDescription(Role.PUBLIC, accessToken));
 					}
 				})
-				// .retryWhen(new RegistrationRetryFunc())
 				.compose(networkUtils.<User>getDefaultTransformer())
 				.subscribe(new Action1<User>() {
 					@Override
 					public void call(User user) {
-						Timber.d("success (" + user.getId() + ")");
+						Timber.d("login success (" + user.getId() + ")");
 						showMainActivity();
 					}
 				}, new Action1<Throwable>() {
 					@Override
 					public void call(Throwable throwable) {
-						Timber.d(throwable, "error");
+						Timber.e(throwable, "login error");
 						if (throwable instanceof UserRecoverableAuthException) {
-							Timber.d("starting main activity");
+							Timber.d("starting recover activity");
 							startActivityForResult(((UserRecoverableAuthException) throwable).getIntent(), REQUEST_CODE_AUTH);
 
 						} else if (throwable instanceof IOException) {
-							Timber.d("io exception, should retry later again");
+							Toast.makeText(LoginActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
 
 						} else {
-							Timber.e("unknown error, failed to get token");
+							Toast.makeText(LoginActivity.this, "unknown error", Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
-	}
-
-
-	/**
-	 * If CEPS returns an error trying to get current user, try registering this user first, assume
-	 * error otherwise.
-	 */
-	private final class RegistrationRetryFunc implements Func1<Observable<? extends Throwable>, Observable<?>> {
-
-		private boolean userRegistered = false;
-
-		@Override
-		public Observable<?> call(Observable<? extends Throwable> observable) {
-			return observable.flatMap(new Func1<Throwable, Observable<?>>() {
-				@Override
-				public Observable<?> call(Throwable throwable) {
-					Timber.d(throwable, "retrying");
-					if (!(throwable instanceof RetrofitError) || userRegistered) {
-						Timber.d("abort second try or wrong error");
-						return Observable.error(throwable);
-					}
-
-					RetrofitError retrofitError = (RetrofitError) throwable;
-					if (!retrofitError.getKind().equals(RetrofitError.Kind.HTTP) || retrofitError.getResponse().getStatus() != 401) {
-						Timber.d("abort invalid http code");
-						return Observable.error(throwable);
-					}
-
-					// try registration
-					Timber.d("try registration");
-					try {
-						userRegistered = true;
-						return Observable
-								.defer(new Func0<Observable<String>>() {
-									@Override
-									public Observable<String> call() {
-										Timber.d("retry: getting token");
-										try {
-											return Observable.just(loginManager.getToken());
-										} catch (GoogleAuthException | IOException e) {
-											return Observable.error(e);
-										}
-									}
-								})
-								.flatMap(new Func1<String, Observable<?>>() {
-									@Override
-									public Observable<?> call(String token) {
-										Timber.d("retry: registering");
-										OAuthUserDescription userDescription = new OAuthUserDescription(Role.PUBLIC, token);
-										return userApi.addUser(userDescription);
-									}
-								});
-
-					} catch (Exception e) {
-						return Observable.error(e);
-					}
-				}
-			});
-		}
-
 	}
 
 }

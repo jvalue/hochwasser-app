@@ -7,12 +7,15 @@ import org.jvalue.ods.api.DataApi;
 import org.jvalue.ods.api.data.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import rx.Observable;
 import rx.functions.Func0;
+import rx.functions.Func1;
 
 /**
  * Responsible for communicating with the ODS.
@@ -25,6 +28,7 @@ public class OdsManager {
 	private final DataApi dataApi;
 
 	private List<Station> stationCache;
+
 
 	@Inject
 	OdsManager(DataApi dataApi) {
@@ -57,11 +61,25 @@ public class OdsManager {
 	}
 
 
+	public Observable<List<BodyOfWater>> getBodyOfWaters() {
+		return getStations()
+				.flatMap(new Func1<List<Station>, Observable<List<BodyOfWater>>>() {
+					@Override
+					public Observable<List<BodyOfWater>> call(List<Station> stations) {
+						Set<BodyOfWater> bodies = new HashSet<>();
+						for (Station station : stations) bodies.add(station.getBodyOfWater());
+						List<BodyOfWater> result = new ArrayList<>(bodies);
+						return Observable.just(result);
+					}
+				});
+	}
+
+
 	private Station parseStation(JsonNode node) {
 		return new Station.Builder()
 				.setUuid(node.path("uuid").asText())
 				.setStationName(node.path("longname").asText())
-				.setWaterName(node.path("water").path("longname").asText())
+				.setBodyOfWater(new BodyOfWater(node.path("water").path("longname").asText()))
 				.setLatitude((float) node.path("latitude").asDouble())
 				.setLongitude((float) node.path("longitude").asDouble())
 				.setRiverKm(node.path("km").intValue())

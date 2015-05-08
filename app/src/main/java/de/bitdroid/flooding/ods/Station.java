@@ -9,20 +9,21 @@ import com.google.common.base.Objects;
 public class Station {
 
 	private final String uuid;
-	private final String stationName, waterName;
+	private final String stationName;
+	private final BodyOfWater bodyOfWater;
 	private final float latitude, longitude;
 	private final float riverKm;
 
 	public Station(
 			String uuid,
 			String stationName,
-			String waterName,
+			BodyOfWater bodyOfWater,
 			float latitude, float longitude,
 			float riverKm) {
 
 		this.uuid = uuid;
 		this.stationName = stationName;
-		this.waterName = waterName;
+		this.bodyOfWater = bodyOfWater;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.riverKm = riverKm;
@@ -36,8 +37,8 @@ public class Station {
 		return stationName;
 	}
 
-	public String getWaterName() {
-		return waterName;
+	public BodyOfWater getBodyOfWater() {
+		return bodyOfWater;
 	}
 
 	public float getLatitude() {
@@ -62,18 +63,18 @@ public class Station {
 				Objects.equal(longitude, station.longitude) &&
 				Objects.equal(riverKm, station.riverKm) &&
 				Objects.equal(stationName, station.stationName) &&
-				Objects.equal(waterName, station.waterName);
+				Objects.equal(bodyOfWater, station.bodyOfWater);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(uuid, stationName, waterName, latitude, longitude, riverKm);
+		return Objects.hashCode(uuid, stationName, bodyOfWater, latitude, longitude, riverKm);
 	}
 
 	public static class Builder {
 		private String uuid;
 		private String stationName;
-		private String waterName;
+		private BodyOfWater bodyOfWater;
 		private float latitude;
 		private float longitude;
 		private float riverKm;
@@ -88,8 +89,8 @@ public class Station {
 			return this;
 		}
 
-		public Builder setWaterName(String waterName) {
-			this.waterName = waterName;
+		public Builder setBodyOfWater(BodyOfWater bodyOfWater) {
+			this.bodyOfWater = bodyOfWater;
 			return this;
 		}
 
@@ -109,7 +110,7 @@ public class Station {
 		}
 
 		public Station build() {
-			return new Station(uuid, stationName, waterName, latitude, longitude, riverKm);
+			return new Station(uuid, stationName, bodyOfWater, latitude, longitude, riverKm);
 		}
 	}
 }

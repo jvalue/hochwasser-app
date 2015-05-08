@@ -12,8 +12,8 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.network.NetworkUtils;
+import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.OdsManager;
-import de.bitdroid.flooding.ods.Station;
 import roboguice.activity.RoboListActivity;
 import rx.functions.Action1;
 import timber.log.Timber;
@@ -30,13 +30,13 @@ public class MainActivity extends RoboListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		odsManager.getStations()
-				.compose(networkUtils.<List<Station>>getDefaultTransformer())
-				.subscribe(new Action1<List<Station>>() {
+		odsManager.getBodyOfWaters()
+				.compose(networkUtils.<List<BodyOfWater>>getDefaultTransformer())
+				.subscribe(new Action1<List<BodyOfWater>>() {
 					@Override
-					public void call(List<Station> stations) {
-						Set<String> waters = new HashSet<>();
-						for (Station station : stations) waters.add(station.getWaterName());
+					public void call(List<BodyOfWater> waters) {
+						Set<String> waterNames = new HashSet<>();
+						for (BodyOfWater water : waters) waterNames.add(water.getName());
 						setListAdapter(new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, new ArrayList<>(waters)));
 					}
 				}, new Action1<Throwable>() {

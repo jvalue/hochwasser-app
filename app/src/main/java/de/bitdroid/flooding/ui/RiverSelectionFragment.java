@@ -1,10 +1,10 @@
 package de.bitdroid.flooding.ui;
 
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,41 +21,9 @@ public class RiverSelectionFragment extends AbstractSelectionFragment<BodyOfWate
 	@Inject private OdsManager odsManager;
 
 	public RiverSelectionFragment() {
-		super(R.string.menu_select_water_search_hint);
+		super(R.string.menu_select_water_search_hint, R.layout.item_data);
 	}
 
-
-	@Override
-	protected ArrayAdapter<BodyOfWater> getAdapter() {
-		return new ArrayAdapter<BodyOfWater>(
-				getActivity().getApplicationContext(), 
-				R.layout.data_item,
-				android.R.id.text1) {
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				BodyOfWater water = getItem(position);
-				View view = super.getView(position, convertView, parent);
-
-				TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-				text1.setText(StringUtils.toProperCase(water.getName()));
-				text1.setTextColor(getResources().getColor(android.R.color.black));
-
-				TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-				text2.setText(getString(R.string.data_station_count, water.getStationCount()));
-				text2.setTextColor(getResources().getColor(R.color.gray));
-
-				return view;
-			}
-			
-		};
-	}
-
-
-	@Override
-	protected void onItemClicked(BodyOfWater item) {
-		Timber.d("on item clicked");
-	}
 
 	@Override
 	protected void onMapClicked() {
@@ -66,6 +34,33 @@ public class RiverSelectionFragment extends AbstractSelectionFragment<BodyOfWate
 	@Override
 	protected Observable<List<BodyOfWater>> loadItems() {
 		return odsManager.getBodyOfWaters();
+	}
+
+
+	@Override
+	protected void setDataView(BodyOfWater water, View view) {
+		TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+		text1.setText(StringUtils.toProperCase(water.getName()));
+		text1.setTextColor(getResources().getColor(android.R.color.black));
+
+		TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+		text2.setText(getString(R.string.data_station_count, water.getStationCount()));
+		text2.setTextColor(getResources().getColor(R.color.gray));
+	}
+
+
+	@Override
+	protected List<BodyOfWater> filterItems(CharSequence constraint, List<BodyOfWater> items) {
+		List<BodyOfWater> result = new ArrayList<>(items);
+		if (constraint == null || constraint.length() == 0) return result;
+		String stringConstraint= constraint.toString().toLowerCase();
+		Iterator<BodyOfWater> iter = result.iterator();
+		while (iter.hasNext()) {
+			if (!iter.next().getName().toLowerCase().contains(stringConstraint)) {
+				iter.remove();
+			}
+		}
+		return result;
 	}
 
 }

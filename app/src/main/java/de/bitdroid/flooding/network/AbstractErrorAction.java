@@ -6,7 +6,7 @@ import de.bitdroid.flooding.ui.AbstractRestrictedActivity;
 import rx.functions.Action1;
 
 /**
- * Base RxJava error handler.
+ * Base RxJava error handler for triggering logout on auth exception.
  */
 public abstract class AbstractErrorAction implements Action1<Throwable> {
 

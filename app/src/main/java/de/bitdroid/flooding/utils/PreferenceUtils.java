@@ -6,12 +6,15 @@ import android.content.SharedPreferences;
 
 import javax.inject.Inject;
 
-public final class PreferenceManager {
+/**
+ * Easier android shared preferences handling.
+ */
+public class PreferenceUtils {
 
 	private final Context context;
 
 	@Inject
-	PreferenceManager(Context context) {
+	PreferenceUtils(Context context) {
 		this.context = context;
 	}
 

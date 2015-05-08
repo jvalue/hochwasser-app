@@ -15,7 +15,12 @@ import retrofit.client.Response;
 import retrofit.client.UrlConnectionClient;
 import timber.log.Timber;
 
-public final class AuthClient extends UrlConnectionClient {
+
+/**
+ * A retrofit {@link UrlConnectionClient} which signs outgoing
+ * requests with access token.
+ */
+public class AuthClient extends UrlConnectionClient {
 
 	private final LoginManager loginManager;
 

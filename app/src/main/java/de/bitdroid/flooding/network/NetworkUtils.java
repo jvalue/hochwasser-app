@@ -6,7 +6,11 @@ import javax.inject.Inject;
 import de.bitdroid.flooding.auth.LoginManager;
 import rx.Observable;
 
-public final class NetworkUtils {
+
+/**
+ * Utils for RxJava network operations.
+ */
+public class NetworkUtils {
 
 	private final DefaultTransformer defaultTransformer;
 

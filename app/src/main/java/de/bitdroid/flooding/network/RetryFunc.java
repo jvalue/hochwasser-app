@@ -11,7 +11,11 @@ import rx.functions.Func1;
 import timber.log.Timber;
 
 
-public final class RetryFunc implements Func1<Observable<? extends Throwable>, Observable<?>> {
+/**
+ * RxJava function which refreshes the google auth key on errors
+ * and retries the network request.
+ */
+public class RetryFunc implements Func1<Observable<? extends Throwable>, Observable<?>> {
 
 	private static final int MAX_RETRY = 1;
 	private static final long DELAY = 200; // ms

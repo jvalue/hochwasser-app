@@ -5,7 +5,10 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public final class DefaultTransformer<T> implements Observable.Transformer<T, T> {
+/**
+ * Default android RxJava transformer for common thread handling.
+ */
+public class DefaultTransformer<T> implements Observable.Transformer<T, T> {
 
 	private final RetryFunc retryFunc;
 

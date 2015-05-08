@@ -3,6 +3,9 @@ package de.bitdroid.flooding.utils;
 import java.util.List;
 
 
+/**
+ * Assert utility methods.
+ */
 public class Assert {
 
 	private Assert() { }

@@ -26,10 +26,10 @@
 
 	<application 
 			android:label="@string/app_name"
-            android:name=".app.MainApplication"
+            android:name=".app.FloodingApplication"
 			android:icon="@drawable/ic_launcher"
             android:logo="@android:color/transparent"
-            android:theme="@style/ThemeMain"
+            android:theme="@style/AppTheme"
             android:allowBackup="true">
 
 		<activity android:name=".ui.LoginActivity"
@@ -41,139 +41,6 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-
-		<activity android:name=".app.MainActivity"
-                  android:logo="@drawable/ic_action_logo"
-				  android:label="@string/app_name"
-                  android:windowSoftInputMode="adjustResize"
-				  />
-
-		<activity android:name=".map.InfoMapActivity"
-				  android:label="@string/app_name"
-				  />
-
-        <activity android:name=".alarms.NewAlarmActivity"
-				  android:label="@string/app_name"
-                  android:windowSoftInputMode="adjustResize"
-				  />
-
-		<activity android:name=".levels.StationListActivity"
-				  android:label="@string/app_name"
-                  android:windowSoftInputMode="adjustResize"
-				  />
-
-		<activity android:name=".levels.RiverGraphActivity"
-				  android:label="@string/app_name"
-				  />
-
-        <activity android:name=".levels.RiverGraphHelpActivity"
-                  android:label="@string/app_name"
-				  />
-
-		<activity android:name=".levels.StationActivity"
-				  android:label="@string/app_name"
-				  />
-
-
-		<service android:name="de.bitdroid.flooding.data.AuthenticatorService">
-			<intent-filter>
-				<action android:name="android.accounts.AccountAuthenticator"/>
-			</intent-filter>
-			<meta-data
-				android:name="android.accounts.AccountAuthenticator"
-				android:resource="@xml/authenticator" />
-		</service>
-
-		<service
-			android:name="de.bitdroid.flooding.data.SyncService"
-			android:exported="true"
-			android:process=":sync">
-			<intent-filter>
-				<action android:name="android.content.SyncAdapter"/>
-			</intent-filter>
-
-			<meta-data
-				android:name="android.content.SyncAdapter"
-				android:resource="@xml/syncadapter" />
-		</service>
-
-		<receiver
-			android:name="de.bitdroid.flooding.data.SyncStatusListener">
-			<intent-filter>
-				<action android:name="de.bitdroid.ods.data.ACTION_SYNC_START"/>
-				<action android:name="de.bitdroid.ods.data.ACTION_SYNC_ALL_START"/>
-				<action android:name="de.bitdroid.ods.data.ACTION_SYNC_FINISH"/>
-				<action android:name="de.bitdroid.ods.data.ACTION_SYNC_ALL_FINISH"/>
-			</intent-filter>
-		</receiver>
-
-		<!-- ODS GCM registration and updates -->
-		<service android:name="de.bitdroid.flooding.data.GcmIntentService">
-		</service>
-
-		<receiver android:name="de.bitdroid.flooding.data.GcmManager$StatusUpdater">
-			<intent-filter>
-				<action android:name="de.bitdroid.ods.data.ACTION_GCM_FINISH"/>
-			</intent-filter>
-		</receiver>
-
-		<receiver android:name="de.bitdroid.flooding.data.GcmReceiver">
-			<intent-filter>
-				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
-				<category android:name="de.bitdroid.ods" />
-			</intent-filter>
-		</receiver>
-
-		<!-- CEPS GCM registration and updates -->
-		<service android:name="de.bitdroid.flooding.ceps.GcmIntentService">
-		</service>
-
-		<receiver android:name=".ceps.RuleManagerImpl$StatusUpdater">
-			<intent-filter>
-				<action android:name="de.bitdroid.ods.cep.ACTION_GCM_FINISH"/>
-			</intent-filter>
-		</receiver>
-
-		<receiver android:name="de.bitdroid.flooding.ceps.GcmReceiver">
-			<intent-filter>
-				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
-				<category android:name="de.bitdroid.ods" />
-			</intent-filter>
-		</receiver>
-
-		<meta-data
-			android:name="com.google.android.gms.version"
-			android:value="@integer/google_play_services_version"
-			/>
-
-		<provider
-			android:name=".data.OdsContentProvider"
-			android:authorities="@string/content_provider_authority"
-			android:exported="true"
-			android:syncable="true"
-			android:grantUriPermissions="true"
-			/>
-
-
-        <service android:name=".levels.StationIntentService">
-        </service>
-
-		<receiver
-				android:name=".monitor.MonitorSyncListener">
-			<intent-filter>
-				<action android:name="de.bitdroid.ods.data.ACTION_SYNC_FINISH"/>
-			</intent-filter>
-		</receiver>
-
-		<service android:name=".monitor.CopySourceService">
-		</service>
-
-		<!-- Alarms -->
-		<receiver android:name=".alarms.EventReceiver">
-			<intent-filter>
-				<action android:name="de.bitdroid.ods.cep.ACTION_EVENT_RECEIVED"/>
-			</intent-filter>
-		</receiver>
 
 	</application>
 </manifest>

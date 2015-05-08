@@ -22,7 +22,6 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.app.MainActivity;
 import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.network.NetworkUtils;
 import roboguice.activity.RoboActivity;
@@ -35,7 +34,7 @@ import rx.functions.Func1;
 import timber.log.Timber;
 
 @ContentView(R.layout.activity_login)
-public final class LoginActivity extends RoboActivity {
+public class LoginActivity extends RoboActivity {
 
 	private static final int
 			REQUEST_CODE_AUTH = 42,

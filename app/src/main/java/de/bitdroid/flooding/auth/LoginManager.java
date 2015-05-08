@@ -13,15 +13,19 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.utils.PreferenceManager;
+import de.bitdroid.flooding.utils.PreferenceUtils;
 import timber.log.Timber;
 
-public final class LoginManager {
+
+/**
+ * Handles login / logout to the app.
+ */
+public class LoginManager {
 
 	private static final String KEY_ACCOUNT_NAME = "accountName";
 
 	private final Context context;
-	private final PreferenceManager preferenceManager;
+	private final PreferenceUtils preferenceUtils;
 	private final String scope;
 
 	// cache token for future calls to clearToken
@@ -30,10 +34,10 @@ public final class LoginManager {
 	@Inject
 	LoginManager(
 			Context context,
-			PreferenceManager preferenceManager) {
+			PreferenceUtils preferenceUtils) {
 
 		this.context = context;
-		this.preferenceManager = preferenceManager;
+		this.preferenceUtils = preferenceUtils;
 		this.scope = "audience:server:client_id:" + context.getString(R.string.google_oauth_web_client_id);
 
 	}
@@ -41,22 +45,22 @@ public final class LoginManager {
 
 	public void setAccountName(String accountName) {
 		Timber.d("setting account name to " + accountName);
-		preferenceManager.set(KEY_ACCOUNT_NAME, accountName);
+		preferenceUtils.set(KEY_ACCOUNT_NAME, accountName);
 	}
 
 
 	public void clearAccountName() {
-		preferenceManager.clear(KEY_ACCOUNT_NAME);
+		preferenceUtils.clear(KEY_ACCOUNT_NAME);
 	}
 
 
 	public String getAccountName() {
-		return preferenceManager.get(KEY_ACCOUNT_NAME);
+		return preferenceUtils.get(KEY_ACCOUNT_NAME);
 	}
 
 
 	public String getToken() throws IOException, UserRecoverableAuthException, GoogleAuthException {
-		cachedToken = GoogleAuthUtil.getToken(context, preferenceManager.get(KEY_ACCOUNT_NAME), scope, new Bundle());
+		cachedToken = GoogleAuthUtil.getToken(context, preferenceUtils.get(KEY_ACCOUNT_NAME), scope, new Bundle());
 		return cachedToken;
 	}
 

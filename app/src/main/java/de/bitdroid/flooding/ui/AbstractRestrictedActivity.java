@@ -12,8 +12,7 @@ import roboguice.activity.RoboActivity;
  */
 public class AbstractRestrictedActivity extends RoboActivity {
 
-	@Inject
-	LoginManager loginManager;
+	@Inject LoginManager loginManager;
 
 	public void logout() {
 		loginManager.clearToken();

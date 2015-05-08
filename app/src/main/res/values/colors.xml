@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<color name="black">#000000</color>
-	<color name="white">#ffffff</color>
 	<color name="blue">#6699FF</color>
     <color name="blue_dark">#3b77e7</color>
     <color name="blue_light">#ff88bbff</color>
 	<color name="gray">#777777</color>
     <color name="gray_light">#ffe1e1e1</color>
     <color name="gray_dark">#ff474747</color>
-
-	<color name="line_green">#007700</color>
-	<color name="line_orange">#CCFF33</color>
-	<color name="line_green_light">#BFA730</color>
-	<color name="line_green_dark">#8A0808</color>
-	<color name="line_blue_light">#0505E6</color>
-	<color name="line_blue_dark">#8686FE</color>
-
-	<color name="showcase_background">#DD000000</color>
-
-    <color name="notification_light">#000000FF</color>
 
     <color name="refresh_blue_light">@color/blue_light</color>
     <color name="refresh_blue">@color/blue_dark</color>

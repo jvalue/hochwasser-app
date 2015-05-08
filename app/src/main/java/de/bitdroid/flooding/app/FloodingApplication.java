@@ -8,7 +8,10 @@ import de.bitdroid.flooding.ceps.CepsModule;
 import roboguice.RoboGuice;
 import timber.log.Timber;
 
-public final class MainApplication extends Application {
+/**
+ * Main application for flooding.
+ */
+public class FloodingApplication extends Application {
 
 	@Override
 	public void onCreate() {

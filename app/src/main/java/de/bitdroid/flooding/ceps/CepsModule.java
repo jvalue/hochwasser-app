@@ -16,6 +16,10 @@ import de.bitdroid.flooding.auth.AuthClient;
 import retrofit.RestAdapter;
 import timber.log.Timber;
 
+
+/**
+ * Dependecy injection configuratoin for CEPS related classes.
+ */
 public final class CepsModule implements Module {
 
 	public static final String NAME_CEPS_REST_ADAPTER = "CEPS_REST_ADAPTER";

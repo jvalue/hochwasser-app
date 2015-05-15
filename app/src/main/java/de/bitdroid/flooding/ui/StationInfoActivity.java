@@ -3,11 +3,17 @@ package de.bitdroid.flooding.ui;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -51,6 +57,7 @@ public class StationInfoActivity extends AbstractActivity {
 	@InjectView(R.id.zero) private TextView zeroView;
 
 	@InjectView(R.id.card_map) private CardView mapCard;
+	@InjectView(R.id.map) private MapView mapView;
 
 	@Inject private NetworkUtils networkUtils;
 	@Inject private OdsManager odsManager;
@@ -76,6 +83,7 @@ public class StationInfoActivity extends AbstractActivity {
 						setupLevelCard();
 						setupCharValuesCard();
 						setupMetadataCard();
+						setupMapCard();
 						if (!hasCharValues()) charValuesCard.setVisibility(View.GONE);
 					}
 				}, new Action1<Throwable>() {
@@ -137,6 +145,27 @@ public class StationInfoActivity extends AbstractActivity {
 		} else {
 			hideParentView(zeroView);
 		}
+	}
+
+
+	private void setupMapCard() {
+		List<Station> stationList = new ArrayList<>();
+		stationList.add(measurements.getStation());
+		StationsOverlay overlay = new StationsOverlay(
+				this,
+				stationList,
+				null);
+		mapView.getOverlays().add(overlay);
+
+		GeoPoint point = new GeoPoint(measurements.getStation().getLatitude(), measurements.getStation().getLongitude());
+		mapView.getController().setCenter(point);
+		mapView.getController().setZoom(9);
+		mapView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return true;
+			}
+		});
 	}
 
 

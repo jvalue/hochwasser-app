@@ -31,7 +31,7 @@ public final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 				context.getResources().getDrawable(android.R.drawable.presence_online),
 				new ResourceProxyImpl(context));
 
-		Assert.assertNotNull(context, stations, clickListener);
+		Assert.assertNotNull(context, stations);
 
 		this.stations.addAll(stations);
 		this.clickListener = clickListener;
@@ -67,7 +67,7 @@ public final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected boolean onTap(int index) {
 		Station station = stations.get(index);
-		clickListener.onStationClicked(station);
+		if (clickListener != null) clickListener.onStationClicked(station);
 		return true;
 	}
 

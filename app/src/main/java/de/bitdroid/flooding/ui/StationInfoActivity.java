@@ -51,13 +51,11 @@ public class StationInfoActivity extends AbstractActivity {
 	@InjectView(R.id.zero) private TextView zeroView;
 
 	@InjectView(R.id.card_map) private CardView mapCard;
-	@InjectView(R.id.card_more) private CardView moreCard;
 
 	@Inject private NetworkUtils networkUtils;
 	@Inject private OdsManager odsManager;
 
 	private StationMeasurements measurements;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

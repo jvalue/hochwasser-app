@@ -1,7 +1,6 @@
 package de.bitdroid.flooding.ui;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,17 +26,9 @@ public class StationSelectionActivity extends AbstractSelectionActivity<Station>
 			EXTRA_STATION = "EXTRA_STATION";
 
 	@Inject private OdsManager odsManager;
-	private BodyOfWater selectedWater;
 
 	public StationSelectionActivity() {
 		super(R.string.menu_select_station_search_hint, R.layout.item_data);
-	}
-
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		selectedWater = getIntent().getParcelableExtra(EXTRA_BODY_OF_WATER);
 	}
 
 
@@ -49,13 +40,16 @@ public class StationSelectionActivity extends AbstractSelectionActivity<Station>
 
 	@Override
 	protected Observable<List<Station>> loadItems() {
+		Timber.d("loading stations");
 		return odsManager.getStations()
 				.flatMap(new Func1<List<Station>, Observable<List<Station>>>() {
 					@Override
 					public Observable<List<Station>> call(List<Station> stations) {
+						BodyOfWater selectedWater = getIntent().getParcelableExtra(EXTRA_BODY_OF_WATER);
 						List<Station> filteredStations = new ArrayList<>();
 						for (Station station : stations) {
-							if (station.getBodyOfWater().getName().equals(selectedWater.getName())) filteredStations.add(station);
+							if (station.getBodyOfWater().getName().equals(selectedWater.getName()))
+								filteredStations.add(station);
 						}
 						return Observable.just(filteredStations);
 					}

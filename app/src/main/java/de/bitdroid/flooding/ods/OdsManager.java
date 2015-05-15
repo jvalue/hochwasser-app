@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.functions.Func0;
@@ -23,7 +24,11 @@ import rx.functions.Func1;
 
 /**
  * Responsible for communicating with the ODS.
+ *
+ * Note that this class is a singleton, meaning that it will be kept around in memory even if
+ * no activities are visible.
  */
+@Singleton
 public class OdsManager {
 
 	private static final String PEGELONLINE_SOURCE_ID = "pegelonline";

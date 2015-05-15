@@ -1,12 +1,15 @@
 package de.bitdroid.flooding.ods;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.common.base.Objects;
 
 /**
  * Model class for meta data of one station.
  */
-public class Station {
+public class Station implements Parcelable {
 
 	private final String uuid;
 	private final String stationName;
@@ -52,6 +55,43 @@ public class Station {
 	public float getRiverKm() {
 		return riverKm;
 	}
+
+	protected Station(Parcel in) {
+		this.uuid = in.readString();
+		this.stationName = in.readString();
+		this.bodyOfWater = (BodyOfWater) in.readValue(BodyOfWater.class.getClassLoader());
+		this.latitude = in.readFloat();
+		this.longitude = in.readFloat();
+		this.riverKm = in.readFloat();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(uuid);
+		dest.writeString(stationName);
+		dest.writeValue(bodyOfWater);
+		dest.writeFloat(latitude);
+		dest.writeFloat(longitude);
+		dest.writeFloat(riverKm);
+	}
+
+	@SuppressWarnings("unused")
+	public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
+		@Override
+		public Station createFromParcel(Parcel in) {
+			return new Station(in);
+		}
+
+		@Override
+		public Station[] newArray(int size) {
+			return new Station[size];
+		}
+	};
 
 	@Override
 	public boolean equals(Object o) {

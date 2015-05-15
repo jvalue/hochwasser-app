@@ -61,7 +61,7 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 
 
 	@Override
-	public final void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// setup list

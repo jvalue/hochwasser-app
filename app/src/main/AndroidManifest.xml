@@ -53,6 +53,12 @@
 
         <activity
             android:name=".ui.RiverSelectionActivity"
+            android:label="Select River"
+            />
+
+        <activity
+            android:name=".ui.StationSelectionActivity"
+            android:label="Select Station"
             />
 
 	</application>

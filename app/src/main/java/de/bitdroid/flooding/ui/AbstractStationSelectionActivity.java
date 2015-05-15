@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
+import rx.functions.Func1;
 
 abstract class AbstractStationSelectionActivity extends AbstractListSelectionActivity<Station> {
 
@@ -26,7 +29,20 @@ abstract class AbstractStationSelectionActivity extends AbstractListSelectionAct
 
 	@Override
 	protected Observable<List<Station>> loadItems() {
-		return odsManager.getStationsByBodyOfWater(stationSelection.getWater());
+		return odsManager
+				.getStationsByBodyOfWater(stationSelection.getWater())
+				.flatMap(new Func1<List<Station>, Observable<List<Station>>>() {
+					@Override
+					public Observable<List<Station>> call(List<Station> stations) {
+						Collections.sort(stations, new Comparator<Station>() {
+							@Override
+							public int compare(Station lhs, Station rhs) {
+								return lhs.getStationName().compareTo(rhs.getStationName());
+							}
+						});
+						return Observable.just(stations);
+					}
+				});
 	}
 
 

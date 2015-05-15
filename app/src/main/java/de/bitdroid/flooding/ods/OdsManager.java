@@ -89,6 +89,22 @@ public class OdsManager {
 	}
 
 
+	public Observable<List<Station>> getStationsByBodyOfWater(final BodyOfWater water) {
+		return getStations()
+				.flatMap(new Func1<List<Station>, Observable<List<Station>>>() {
+					@Override
+					public Observable<List<Station>> call(List<Station> stations) {
+						List<Station> filteredStations = new ArrayList<>();
+						for (Station station : stations) {
+							if (station.getBodyOfWater().getName().equals(water.getName()))
+								filteredStations.add(station);
+						}
+						return Observable.just(filteredStations);
+					}
+				});
+	}
+
+
 	public Observable<List<BodyOfWater>> getBodyOfWaters() {
 		return getStations()
 				.flatMap(new Func1<List<Station>, Observable<List<BodyOfWater>>>() {

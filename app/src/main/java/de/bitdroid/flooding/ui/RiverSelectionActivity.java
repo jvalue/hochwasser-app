@@ -1,6 +1,5 @@
 package de.bitdroid.flooding.ui;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,22 +14,13 @@ import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
-import timber.log.Timber;
 
 public class RiverSelectionActivity extends AbstractSelectionActivity<BodyOfWater> {
-
-	static final String EXTRA_BODY_OF_WATER = "EXTRA_BODY_OF_WATER";
 
 	@Inject private OdsManager odsManager;
 
 	public RiverSelectionActivity() {
 		super(R.string.menu_select_water_search_hint, R.layout.item_data);
-	}
-
-
-	@Override
-	protected void onMapClicked() {
-		Timber.d("on map clicked");
 	}
 
 
@@ -56,9 +46,7 @@ public class RiverSelectionActivity extends AbstractSelectionActivity<BodyOfWate
 		view.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.putExtra(EXTRA_BODY_OF_WATER, water);
-				setResult(RESULT_OK, intent);
+				setResult(RESULT_OK, new StationSelection(water).toIntent());
 				finish();
 			}
 		});

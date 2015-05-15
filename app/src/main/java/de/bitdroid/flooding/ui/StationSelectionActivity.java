@@ -1,6 +1,5 @@
 package de.bitdroid.flooding.ui;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,19 +10,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
-import rx.functions.Func1;
-import timber.log.Timber;
 
 public class StationSelectionActivity extends AbstractSelectionActivity<Station> {
-
-	static final String
-			EXTRA_BODY_OF_WATER = "EXTRA_BODY_OF_WATER",
-			EXTRA_STATION = "EXTRA_STATION";
 
 	@Inject private OdsManager odsManager;
 
@@ -33,27 +25,8 @@ public class StationSelectionActivity extends AbstractSelectionActivity<Station>
 
 
 	@Override
-	protected void onMapClicked() {
-		Timber.d("on map clicked");
-	}
-
-
-	@Override
 	protected Observable<List<Station>> loadItems() {
-		Timber.d("loading stations");
-		return odsManager.getStations()
-				.flatMap(new Func1<List<Station>, Observable<List<Station>>>() {
-					@Override
-					public Observable<List<Station>> call(List<Station> stations) {
-						BodyOfWater selectedWater = getIntent().getParcelableExtra(EXTRA_BODY_OF_WATER);
-						List<Station> filteredStations = new ArrayList<>();
-						for (Station station : stations) {
-							if (station.getBodyOfWater().getName().equals(selectedWater.getName()))
-								filteredStations.add(station);
-						}
-						return Observable.just(filteredStations);
-					}
-				});
+		return odsManager.getStationsByBodyOfWater(stationSelection.getWater());
 	}
 
 
@@ -71,9 +44,7 @@ public class StationSelectionActivity extends AbstractSelectionActivity<Station>
 		view.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.putExtra(EXTRA_STATION, station);
-				setResult(RESULT_OK, intent);
+				setResult(RESULT_OK, new StationSelection(stationSelection.getWater(), station).toIntent());
 				finish();
 			}
 		});

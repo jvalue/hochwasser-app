@@ -61,5 +61,9 @@
             android:label="Select Station"
             />
 
+        <activity
+            android:name=".ui.MapSelectionActivity"
+            />
+
 	</application>
 </manifest>

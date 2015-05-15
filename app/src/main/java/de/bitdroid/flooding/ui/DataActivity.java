@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import de.bitdroid.flooding.ods.BodyOfWater;
-import de.bitdroid.flooding.ods.Station;
 import timber.log.Timber;
 
 
@@ -27,6 +26,8 @@ public class DataActivity extends AbstractActivity {
 
 	@Override
 	public void onActivityResult(int request, int status, Intent data) {
+		StationSelection selection = new StationSelection(data);
+
 		switch(request) {
 			case REQUEST_SELECT_RIVER:
 				// check if aborted
@@ -35,9 +36,15 @@ public class DataActivity extends AbstractActivity {
 					return;
 				}
 
-				BodyOfWater water = data.getParcelableExtra(RiverSelectionActivity.EXTRA_BODY_OF_WATER);
-				startStationSelection(water);
-				Timber.d("selected " + water.getName());
+				startStationSelection(selection.getWater());
+				Timber.d("selected " + selection.getWater().getName());
+
+				if (selection.getStation() != null) {
+					Timber.d("selected " + selection.getStation().getStationName());
+					finish();
+					return;
+				}
+
 				break;
 
 			case REQUEST_SELECT_STATION:
@@ -47,8 +54,7 @@ public class DataActivity extends AbstractActivity {
 					return;
 				}
 
-				Station station = data.getParcelableExtra(StationSelectionActivity.EXTRA_STATION);
-				Timber.d("selected " + station.getStationName());
+				Timber.d("selected " + selection.getStation().getStationName());
 				finish();
 				break;
 		}
@@ -56,15 +62,16 @@ public class DataActivity extends AbstractActivity {
 
 
 	private void startRiverSelection() {
-		Intent intent = new Intent(this, RiverSelectionActivity.class);
-		startActivityForResult(intent, REQUEST_SELECT_RIVER);
+		startActivityForResult(
+				new StationSelection().toIntent(this, RiverSelectionActivity.class),
+				REQUEST_SELECT_RIVER);
 	}
 
 
 	private void startStationSelection(BodyOfWater water) {
-		Intent intent = new Intent(this, StationSelectionActivity.class);
-		intent.putExtra(StationSelectionActivity.EXTRA_BODY_OF_WATER, water);
-		startActivityForResult(intent, REQUEST_SELECT_STATION);
+		startActivityForResult(
+				new StationSelection(water).toIntent(this, StationSelectionActivity.class),
+				REQUEST_SELECT_STATION);
 	}
 
 }

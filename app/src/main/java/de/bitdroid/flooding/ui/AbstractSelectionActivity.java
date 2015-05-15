@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.ui;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -35,6 +36,8 @@ import timber.log.Timber;
 @ContentView(R.layout.activity_select)
 abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 
+	private static final int REQUEST_MAP = 44;
+
 	private final int searchHintStringId;
 	private final int itemViewLayoutResource;
 
@@ -47,6 +50,8 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 	private EditText searchBox = null;
 	private SelectionAdapter adapter;
 
+	protected StationSelection stationSelection;
+
 
 	AbstractSelectionActivity(int searchHintStringId, int itemViewLayoutResource) {
 		this.searchHintStringId = searchHintStringId;
@@ -54,7 +59,6 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 	}
 
 
-	protected abstract void onMapClicked();
 	protected abstract Observable<List<T>> loadItems();
 	protected abstract void setDataView(T data, View view);
 	protected abstract List<T> filterItems(CharSequence constraint, List<T> items);
@@ -64,9 +68,11 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// read args
+		stationSelection = new StationSelection(getIntent());
+
 		// action bar back button
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
 		// setup list
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -135,7 +141,8 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 		searchBox.setHint(getString(searchHintStringId));
 		searchBox.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -143,7 +150,8 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) { }
+			public void afterTextChanged(Editable s) {
+			}
 		});
 
 		return true;
@@ -155,8 +163,7 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 		switch(menuItem.getItemId()) {
 			case R.id.map:
 				hideKeyboard();
-				// forward request to clients
-				onMapClicked();
+				startActivityForResult(stationSelection.toIntent(this, MapSelectionActivity.class), REQUEST_MAP);
 				return true;
 
 			case android.R.id.home:
@@ -164,6 +171,18 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);
+	}
+
+
+	@Override
+	public void onActivityResult(int request, int status, Intent data) {
+		switch(request) {
+			case REQUEST_MAP:
+				if (status != RESULT_OK) return;
+				setResult(RESULT_OK, data);
+				finish();
+				break;
+		}
 	}
 
 

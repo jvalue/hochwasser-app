@@ -52,7 +52,8 @@ dependencies {
 		exclude group: 'org.jvalue.commons'
 	}
     compile 'com.jakewharton.timber:timber:3.0.1'
-    compile 'org.osmdroid:osmdroid-android:4.2'
+    compile 'org.osmdroid:osmdroid-android:4.3'
+    compile 'org.slf4j:slf4j-android:1.7.12'
     compile 'org.roboguice:roboguice:3.0.1'
     provided 'org.roboguice:roboblender:3.0.1'
 

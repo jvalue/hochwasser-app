@@ -27,7 +27,7 @@ import timber.log.Timber;
  * Select one station from a map.
  */
 @ContentView(R.layout.activity_select_map)
-public class MapSelectionActivity extends AbstractActivity implements StationClickListener {
+abstract class AbstractMapSelectionActivity extends AbstractActivity implements StationClickListener {
 
 	private static final String
 			EXTRA_SCROLL_X = "EXTRA_SCROLL_X",
@@ -43,6 +43,8 @@ public class MapSelectionActivity extends AbstractActivity implements StationCli
 	@Inject private OdsManager odsManager;
 
 	private StationSelection stationSelection;
+
+	public abstract void onStationClicked(Station station);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -109,9 +111,9 @@ public class MapSelectionActivity extends AbstractActivity implements StationCli
 					public void call(List<Station> stations) {
 						if (stationsOverlay != null) mapView.getOverlays().remove(stationsOverlay);
 						stationsOverlay = new StationsOverlay(
-								MapSelectionActivity.this,
+								AbstractMapSelectionActivity.this,
 								stations,
-								MapSelectionActivity.this);
+								AbstractMapSelectionActivity.this);
 						mapView.getOverlays().add(stationsOverlay);
 
 						GeoPoint point = getCenter(stations);
@@ -154,13 +156,6 @@ public class MapSelectionActivity extends AbstractActivity implements StationCli
 		}
 
 		return new GeoPoint((minX + maxX) / 2.0f, (minY + maxY) / 2.0f);
-	}
-
-
-	@Override
-	public void onStationClicked(Station station) {
-		setResult(RESULT_OK, new StationSelection(station.getBodyOfWater(), station).toIntent());
-		finish();
 	}
 
 }

@@ -48,21 +48,18 @@
             />
 
 		<activity
-            android:name=".ui.DataActivity"
-            />
+			android:name=".ui.DataSelectionHandler$WaterSelectionActivity"
+			android:label="Select River"
+
+			/>
+
+		<activity
+			android:name=".ui.DataSelectionHandler$StationSelectionActivity"
+			android:label="Select Station"
+			/>
 
         <activity
-            android:name=".ui.RiverSelectionActivity"
-            android:label="Select River"
-            />
-
-        <activity
-            android:name=".ui.StationSelectionActivity"
-            android:label="Select Station"
-            />
-
-        <activity
-            android:name=".ui.MapSelectionActivity"
+            android:name=".ui.DataSelectionHandler$MapSelectionActivity"
             />
 
         <activity

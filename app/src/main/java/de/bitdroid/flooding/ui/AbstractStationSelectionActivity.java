@@ -15,11 +15,11 @@ import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
 
-public class StationSelectionActivity extends AbstractSelectionActivity<Station> {
+abstract class AbstractStationSelectionActivity extends AbstractSelectionActivity<Station> {
 
 	@Inject private OdsManager odsManager;
 
-	public StationSelectionActivity() {
+	public AbstractStationSelectionActivity() {
 		super(R.string.menu_select_station_search_hint, R.layout.item_data);
 	}
 
@@ -39,15 +39,6 @@ public class StationSelectionActivity extends AbstractSelectionActivity<Station>
 
 		// hide second text
 		view.findViewById(android.R.id.text2).setVisibility(View.GONE);
-
-		// return on click
-		view.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setResult(RESULT_OK, new StationSelection(stationSelection.getWater(), station).toIntent());
-				finish();
-			}
-		});
 	}
 
 

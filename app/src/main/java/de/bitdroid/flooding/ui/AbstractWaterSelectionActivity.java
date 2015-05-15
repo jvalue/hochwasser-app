@@ -1,7 +1,5 @@
 package de.bitdroid.flooding.ui;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,24 +15,12 @@ import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
 
-public class RiverSelectionActivity extends AbstractSelectionActivity<BodyOfWater> {
-
-	private static final int REQUEST_STATION = 45;
+abstract class AbstractWaterSelectionActivity extends AbstractSelectionActivity<BodyOfWater> {
 
 	@Inject private OdsManager odsManager;
 
-	public RiverSelectionActivity() {
+	public AbstractWaterSelectionActivity() {
 		super(R.string.menu_select_water_search_hint, R.layout.item_data);
-	}
-
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		// if river has already been selected, go to station selection
-		StationSelection selection = new StationSelection(getIntent());
-		if (selection.getWater() != null) onWaterSelected(selection.getWater());
 	}
 
 
@@ -55,14 +41,6 @@ public class RiverSelectionActivity extends AbstractSelectionActivity<BodyOfWate
 		TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 		text2.setText(getString(R.string.data_station_count, water.getStationCount()));
 		text2.setTextColor(getResources().getColor(R.color.gray));
-
-		// return on click
-		view.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onWaterSelected(water);
-			}
-		});
 	}
 
 
@@ -78,25 +56,6 @@ public class RiverSelectionActivity extends AbstractSelectionActivity<BodyOfWate
 			}
 		}
 		return result;
-	}
-
-
-	@Override
-	public void onActivityResult(int request, int status, Intent data) {
-		// return station result
-		switch(request) {
-			case REQUEST_STATION:
-				if (status != RESULT_OK) return;
-				setResult(RESULT_OK, data);
-				finish();
-		}
-	}
-
-
-	private void onWaterSelected(BodyOfWater water) {
-		startActivityForResult(
-				new StationSelection(water).toIntent(this, StationSelectionActivity.class),
-				REQUEST_STATION);
 	}
 
 }

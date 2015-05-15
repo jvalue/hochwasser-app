@@ -62,6 +62,8 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 	protected abstract Observable<List<T>> loadItems();
 	protected abstract void setDataView(T data, View view);
 	protected abstract List<T> filterItems(CharSequence constraint, List<T> items);
+	protected abstract void onDataSelected(T data);
+	protected abstract Class<? extends AbstractMapSelectionActivity> getMapSelectionClass();
 
 
 	@Override
@@ -163,7 +165,7 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 		switch(menuItem.getItemId()) {
 			case R.id.map:
 				hideKeyboard();
-				startActivityForResult(stationSelection.toIntent(this, MapSelectionActivity.class), REQUEST_MAP);
+				startActivityForResult(stationSelection.toIntent(this, getMapSelectionClass()), REQUEST_MAP);
 				return true;
 
 			case android.R.id.home:
@@ -253,8 +255,14 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 			this.itemView = itemView;
 		}
 
-		public void setItem(T item) {
+		public void setItem(final T item) {
 			setDataView(item, itemView);
+			itemView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onDataSelected(item);
+				}
+			});
 		}
 
 	}

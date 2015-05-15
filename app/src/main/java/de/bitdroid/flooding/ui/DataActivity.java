@@ -8,6 +8,10 @@ import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
 import timber.log.Timber;
 
+
+/**
+ * Launches and manages the station selection process for viewing data.
+ */
 public class DataActivity extends AbstractActivity {
 
 	private static final int

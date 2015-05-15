@@ -64,6 +64,10 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// action bar back button
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 		// setup list
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
@@ -153,6 +157,10 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 				hideKeyboard();
 				// forward request to clients
 				onMapClicked();
+				return true;
+
+			case android.R.id.home:
+				onBackPressed();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

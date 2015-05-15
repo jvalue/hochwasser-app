@@ -73,9 +73,6 @@ abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 		// read args
 		stationSelection = new StationSelection(getIntent());
 
-		// action bar back button
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 		// setup list
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
@@ -166,10 +163,6 @@ abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 			case R.id.map:
 				hideKeyboard();
 				startActivityForResult(stationSelection.toIntent(this, getMapSelectionClass()), REQUEST_MAP);
-				return true;
-
-			case android.R.id.home:
-				onBackPressed();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

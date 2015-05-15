@@ -1,7 +1,6 @@
 package de.bitdroid.flooding.ui;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -50,11 +49,6 @@ abstract class AbstractMapSelectionActivity extends AbstractActivity implements 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// action bar back button
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 		// load args
 		stationSelection = new StationSelection(getIntent());
@@ -143,17 +137,6 @@ abstract class AbstractMapSelectionActivity extends AbstractActivity implements 
 		state.putInt(EXTRA_SCROLL_X, mapView.getScrollX());
 		state.putInt(EXTRA_SCROLL_Y, mapView.getScrollY());
 		state.putInt(EXTRA_ZOOM_LEVEL, mapView.getZoomLevel());
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case android.R.id.home:
-				onBackPressed();
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 

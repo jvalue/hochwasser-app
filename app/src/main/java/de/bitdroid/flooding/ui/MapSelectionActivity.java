@@ -98,7 +98,7 @@ public class MapSelectionActivity extends AbstractActivity implements StationCli
 						Iterator<Station> iter = stations.iterator();
 						while (iter.hasNext()) {
 							Station s = iter.next();
-							if (s.getLatitude() == 0 && s.getLongitude() == 0) iter.remove();
+							if (s.getLatitude() == null && s.getLongitude() == null) iter.remove();
 						}
 						return Observable.just(stations);
 					}

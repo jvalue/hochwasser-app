@@ -46,7 +46,7 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 
 	@InjectView(R.id.list) RecyclerView recyclerView;
 
-	private MenuItem searchMenuItem;
+	private MenuItem searchMenuItem = null;
 	private EditText searchBox = null;
 	private SelectionAdapter adapter;
 
@@ -100,7 +100,7 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		MenuItemCompat.collapseActionView(searchMenuItem);
+		if (searchMenuItem != null) MenuItemCompat.collapseActionView(searchMenuItem);
 	}
 
 

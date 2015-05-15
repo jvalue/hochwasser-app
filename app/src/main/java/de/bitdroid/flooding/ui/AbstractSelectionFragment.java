@@ -26,7 +26,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.network.AbstractErrorAction;
 import de.bitdroid.flooding.network.NetworkUtils;
 import roboguice.inject.InjectView;
@@ -40,7 +39,6 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 	private final int searchHintStringId;
 	private final int itemViewLayoutResource;
 
-	@Inject private LoginManager loginManager;
 	@Inject private NetworkUtils networkUtils;
 
 	@InjectView(R.id.list) RecyclerView recyclerView;
@@ -71,7 +69,7 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 
     @Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_list_waters, container, false);
+		return inflater.inflate(R.layout.fragment_select_item, container, false);
     }
 
 
@@ -105,7 +103,7 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-	MenuItemCompat.collapseActionView(searchMenuItem);
+		MenuItemCompat.collapseActionView(searchMenuItem);
 	}
 
 

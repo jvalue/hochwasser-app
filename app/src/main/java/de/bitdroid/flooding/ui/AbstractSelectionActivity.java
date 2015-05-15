@@ -91,7 +91,7 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 				}, new AbstractErrorAction(AbstractSelectionActivity.this) {
 					@Override
 					protected void doCall(Throwable throwable) {
-						Timber.e("failed to load data");
+						Timber.e(throwable, "failed to load data");
 					}
 				});
 	}

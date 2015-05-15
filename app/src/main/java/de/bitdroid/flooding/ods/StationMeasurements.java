@@ -11,7 +11,7 @@ public class StationMeasurements {
 	private final Station station;
 	private final Measurement level;
 	private final Measurement levelZero;
-	private final long levelTimestamp;
+	private final long levelTimestamp; // unix timestamp in seconds
 
 	// statistical values are in German
 	private final Measurement
@@ -92,7 +92,7 @@ public class StationMeasurements {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		StationMeasurements measurement = (StationMeasurements) o;
-		return Objects.equal(measurement, measurement.station) &&
+		return Objects.equal(station, measurement.station) &&
 				Objects.equal(levelTimestamp, measurement.levelTimestamp) &&
 				Objects.equal(level, measurement.level) &&
 				Objects.equal(levelZero, measurement.levelZero) &&

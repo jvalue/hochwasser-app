@@ -21,6 +21,7 @@ import javax.inject.Singleton;
 import rx.Observable;
 import rx.functions.Func0;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 /**
  * Responsible for communicating with the ODS.
@@ -34,16 +35,18 @@ public class OdsManager {
 	private static final String PEGELONLINE_SOURCE_ID = "pegelonline";
 	private static final int QUERY_COUNT = 100;
 	private static final String PROPERTY_FILTER_STATION
-			= "result.shortname,result.longname,result.km,result.latitude,result.longitude,result.water.longname,cursor";
+			= "result.uuid,result.shortname,result.longname,result.km,result.latitude,result.longitude,result.water.longname,cursor";
 
 	private final DataApi dataApi;
+	private final PegelOnlineUtils pegelOnlineUtils;
 
 	private List<Station> stationCache;
 
 
 	@Inject
-	OdsManager(DataApi dataApi) {
+	OdsManager(DataApi dataApi, PegelOnlineUtils pegelOnlineUtils) {
 		this.dataApi = dataApi;
+		this.pegelOnlineUtils = pegelOnlineUtils;
 	}
 
 
@@ -119,34 +122,71 @@ public class OdsManager {
 	}
 
 
+	public Observable<StationMeasurements> getMeasurements(final Station station) {
+		Timber.d("loading station " + station.getUuid());
+		return dataApi.getObjectAttribute(PEGELONLINE_SOURCE_ID, station.getUuid(), "")
+				.flatMap(new Func1<JsonNode, Observable<StationMeasurements>>() {
+					@Override
+					public Observable<StationMeasurements> call(JsonNode data) {
+						return Observable.just(parseMeasurements(station, data));
+					}
+				});
+	}
+
+
 	/**
 	 * Parse station and return station along with water name.
 	 */
 	private Pair<String, Station.Builder> parseStation(JsonNode node) {
+		Station.Builder builder = new Station.Builder()
+				.setUuid(node.path("uuid").asText())
+				.setStationName(node.path("longname").asText());
+
+		Float lat = parseFloat(node.path("latitude"));
+		if (lat != null) builder.setLatitude(lat);
+		Float lon = parseFloat(node.path("longitude"));
+		if (lon != null) builder.setLongitude(lon);
+		Float riverKm = parseFloat(node.path("km"));
+		if (riverKm != null) builder.setRiverKm(riverKm);
+
 		return new Pair<>(
 				node.path("water").path("longname").asText(),
-				new Station.Builder()
-						.setUuid(node.path("uuid").asText())
-						.setStationName(node.path("longname").asText())
-						.setLatitude((float) node.path("latitude").asDouble())
-						.setLongitude((float) node.path("longitude").asDouble())
-						.setRiverKm(node.path("km").intValue()));
+				builder);
 	}
 
 
-	/*
-	private void foobar() {
+	private Float parseFloat(JsonNode value) {
+		if (value.isMissingNode()) return null;
+		return (float) value.asDouble();
+	}
 
-		JsonNode timeseries = node.path("timeseries");
-		JsonNode currentMeasurement = timeseries.path("currentMeasurement");
-		builder
-				.setLevel(new Measurement(
-						(float) currentMeasurement.path("value").asDouble(),
-						timeseries.path("unit").asText()));
 
-		for (JsonNode charValue : timeseries.path("characteristicValues")) {
+	private StationMeasurements parseMeasurements(Station station, JsonNode data) {
+		StationMeasurements.Builder builder = new StationMeasurements.Builder(station);
+
+		JsonNode timeSeries = data.path("timeseries").path(0);
+
+		// current measurement
+		JsonNode currentMeasurement = timeSeries.path("currentMeasurement");
+		if (!currentMeasurement.isMissingNode()) {
+			builder.setLevel(new Measurement(
+					(float) currentMeasurement.path("value").asDouble(),
+					timeSeries.path("unit").asText()));
+			builder.setLevelTimestamp(pegelOnlineUtils.parseStringTimestamp(currentMeasurement.path("timestamp").asText()));
+		}
+
+		// gauge zero
+		JsonNode gaugeZero = timeSeries.path("gaugeZero");
+		if (!gaugeZero.isMissingNode()) {
+			builder.setLevelZero(new Measurement(
+					(float) gaugeZero.path("value").asDouble(),
+					gaugeZero.path("unit").asText()));
+		}
+
+		// characteristic values
+		for (JsonNode charValue : timeSeries.path("characteristicValues")) {
 			Measurement measurement = new Measurement((float) charValue.path("value").asDouble(), charValue.path("unit").asText());
-			String charType = charValue.path("longname").asText();
+			String charType = charValue.path("shortname").asText();
 
 			if ("MNW".equalsIgnoreCase(charType)) {
 				builder.setMnw(measurement);
@@ -167,7 +207,5 @@ public class OdsManager {
 
 		return builder.build();
 	}
-
-*/
 
 }

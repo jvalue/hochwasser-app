@@ -14,15 +14,15 @@ public class Station implements Parcelable {
 	private final String uuid;
 	private final String stationName;
 	private final BodyOfWater bodyOfWater;
-	private final float latitude, longitude;
-	private final float riverKm;
+	private final Float latitude, longitude;
+	private final Float riverKm;
 
 	public Station(
 			String uuid,
 			String stationName,
 			BodyOfWater bodyOfWater,
-			float latitude, float longitude,
-			float riverKm) {
+			Float latitude, Float longitude,
+			Float riverKm) {
 
 		this.uuid = uuid;
 		this.stationName = stationName;
@@ -44,15 +44,15 @@ public class Station implements Parcelable {
 		return bodyOfWater;
 	}
 
-	public float getLatitude() {
+	public Float getLatitude() {
 		return latitude;
 	}
 
-	public float getLongitude() {
+	public Float getLongitude() {
 		return longitude;
 	}
 
-	public float getRiverKm() {
+	public Float getRiverKm() {
 		return riverKm;
 	}
 
@@ -115,9 +115,8 @@ public class Station implements Parcelable {
 		private String uuid;
 		private String stationName;
 		private BodyOfWater bodyOfWater;
-		private float latitude;
-		private float longitude;
-		private float riverKm;
+		private Float latitude, longitude;
+		private Float riverKm;
 
 		public Builder setUuid(String uuid) {
 			this.uuid = uuid;

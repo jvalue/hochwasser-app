@@ -15,4 +15,72 @@
         <item name="learningPattern">false</item>
     </style>
 
+
+    <style name="FontHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/blue_dark</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="FontRegular">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="FontSecondary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+
+
+    <style name="CardBackground">
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginBottom">7dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+
+    <style name="StationCard">
+    </style>
+
+    <style name="StationCard.Title">
+        <item name="android:textAppearance">@style/FontRegular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
+    <style name="StationCard.Row">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">0dp</item>
+    </style>
+
+    <style name="StationCard.Row.Left">
+        <item name="android:layout_weight">1</item>
+        <item name="android:textAppearance">@style/FontRegular</item>
+    </style>
+
+    <style name="StationCard.Row.Left.SmallContent">
+        <item name="android:layout_weight">2</item>
+    </style>
+
+    <style name="StationCard.Row.Right">
+        <item name="android:layout_weight">2</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textAppearance">@style/FontRegular</item>
+    </style>
+
+    <style name="StationCard.Row.Right.SmallContent">
+        <item name="android:layout_weight">1</item>
+    </style>
+
 </resources>

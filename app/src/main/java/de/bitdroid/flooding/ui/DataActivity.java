@@ -40,8 +40,7 @@ public class DataActivity extends AbstractActivity {
 				Timber.d("selected " + selection.getWater().getName());
 
 				if (selection.getStation() != null) {
-					Timber.d("selected " + selection.getStation().getStationName());
-					finish();
+					onStationSelected(selection);
 					return;
 				}
 
@@ -54,11 +53,11 @@ public class DataActivity extends AbstractActivity {
 					return;
 				}
 
-				Timber.d("selected " + selection.getStation().getStationName());
-				finish();
+				onStationSelected(selection);
 				break;
 		}
 	}
+
 
 
 	private void startRiverSelection() {
@@ -72,6 +71,13 @@ public class DataActivity extends AbstractActivity {
 		startActivityForResult(
 				new StationSelection(water).toIntent(this, StationSelectionActivity.class),
 				REQUEST_SELECT_STATION);
+	}
+
+
+	private void onStationSelected(StationSelection selection) {
+		Timber.d("selected " + selection.getStation().getStationName());
+		startActivity(selection.toIntent(this, StationInfoActivity.class));
+		finish();
 	}
 
 }

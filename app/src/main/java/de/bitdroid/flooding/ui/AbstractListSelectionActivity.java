@@ -33,7 +33,7 @@ import rx.functions.Action1;
 import timber.log.Timber;
 
 
-@ContentView(R.layout.activity_select)
+@ContentView(R.layout.activity_select_list)
 abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 
 	private static final int REQUEST_MAP = 44;

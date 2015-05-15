@@ -14,7 +14,7 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 	@Override
 	public void init(Bundle bundle) {
 		addSection(newSection("Dummy", new DummyFragment()));
-		Intent intent = new Intent(this, StationSelectionActivity.class);
+		Intent intent = new Intent(this, DataActivity.class);
 		addSection(newSection(getString(R.string.nav_analysis), intent));
 	}
 

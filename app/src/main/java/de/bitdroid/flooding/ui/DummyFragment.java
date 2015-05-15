@@ -11,7 +11,7 @@ public class DummyFragment extends AbstractFragment {
 
     @Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_select_item, container, false);
+		return inflater.inflate(R.layout.activity_select, container, false);
     }
 
 }

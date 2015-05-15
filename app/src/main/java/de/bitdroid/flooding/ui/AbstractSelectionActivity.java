@@ -1,18 +1,15 @@
 package de.bitdroid.flooding.ui;
 
-import android.app.Service;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,18 +25,21 @@ import javax.inject.Inject;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.network.AbstractErrorAction;
 import de.bitdroid.flooding.network.NetworkUtils;
+import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 import timber.log.Timber;
 
 
-abstract class AbstractSelectionFragment<T> extends AbstractFragment {
+@ContentView(R.layout.activity_select)
+abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 
 	private final int searchHintStringId;
 	private final int itemViewLayoutResource;
 
 	@Inject private NetworkUtils networkUtils;
+	@Inject private InputMethodManager inputMethodManager;
 
 	@InjectView(R.id.list) RecyclerView recyclerView;
 
@@ -48,7 +48,7 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 	private SelectionAdapter adapter;
 
 
-	AbstractSelectionFragment(int searchHintStringId, int itemViewLayoutResource) {
+	AbstractSelectionActivity(int searchHintStringId, int itemViewLayoutResource) {
 		this.searchHintStringId = searchHintStringId;
 		this.itemViewLayoutResource = itemViewLayoutResource;
 	}
@@ -63,22 +63,9 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 	@Override
 	public final void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-	}
-
-
-    @Override
-	public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_select_item, container, false);
-    }
-
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
 
 		// setup list
-		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
 		adapter = new SelectionAdapter();
 		recyclerView.setAdapter(adapter);
@@ -91,7 +78,7 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 					public void call(List<T> items) {
 						adapter.setItems(items);
 					}
-				}, new AbstractErrorAction(AbstractSelectionFragment.this) {
+				}, new AbstractErrorAction(AbstractSelectionActivity.this) {
 					@Override
 					protected void doCall(Throwable throwable) {
 						Timber.e("failed to load data");
@@ -108,10 +95,15 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 
 
 	@Override
-	public final void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_select_water, menu);
+	public final boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_select_water, menu);
+		return true;
+	}
 
-		final ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		final ActionBar actionBar = getSupportActionBar();
 		searchMenuItem = menu.findItem(R.id.search);
 		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
 			@Override
@@ -149,6 +141,8 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 			@Override
 			public void afterTextChanged(Editable s) { }
 		});
+
+		return true;
 	}
 
 
@@ -166,17 +160,13 @@ abstract class AbstractSelectionFragment<T> extends AbstractFragment {
 
 
 	private void hideKeyboard() {
-		InputMethodManager inputManager
-				= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
-		inputManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+		inputMethodManager.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
 	}
 
 
 	private void showKeyboard() {
-		InputMethodManager inputManager
-				= (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
-		inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-		inputManager.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT);
+		inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+		inputMethodManager.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT);
 	}
 
 

@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.ui;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,11 +17,13 @@ import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
 import timber.log.Timber;
 
-public class RiverSelectionFragment extends AbstractSelectionFragment<BodyOfWater> {
+public class RiverSelectionActivity extends AbstractSelectionActivity<BodyOfWater> {
+
+	static final String EXTRA_BODY_OF_WATER = "EXTRA_BODY_OF_WATER";
 
 	@Inject private OdsManager odsManager;
 
-	public RiverSelectionFragment() {
+	public RiverSelectionActivity() {
 		super(R.string.menu_select_water_search_hint, R.layout.item_data);
 	}
 
@@ -38,14 +41,27 @@ public class RiverSelectionFragment extends AbstractSelectionFragment<BodyOfWate
 
 
 	@Override
-	protected void setDataView(BodyOfWater water, View view) {
+	protected void setDataView(final BodyOfWater water, View view) {
+		// water name
 		TextView text1 = (TextView) view.findViewById(android.R.id.text1);
 		text1.setText(StringUtils.toProperCase(water.getName()));
 		text1.setTextColor(getResources().getColor(android.R.color.black));
 
+		// station count
 		TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 		text2.setText(getString(R.string.data_station_count, water.getStationCount()));
 		text2.setTextColor(getResources().getColor(R.color.gray));
+
+		// return on click
+		view.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.putExtra(EXTRA_BODY_OF_WATER, water);
+				setResult(RESULT_OK, intent);
+				finish();
+			}
+		});
 	}
 
 

@@ -48,8 +48,12 @@
             />
 
 		<activity
-			android:name=".ui.StationSelectionActivity"
-			/>
+            android:name=".ui.DataActivity"
+            />
+
+        <activity
+            android:name=".ui.RiverSelectionActivity"
+            />
 
 	</application>
 </manifest>

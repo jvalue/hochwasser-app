@@ -10,7 +10,6 @@ android {
         targetSdkVersion 22
         versionCode 4
         versionName "1.0.3"
-        multiDexEnabled true
     }
 
     buildTypes {
@@ -34,12 +33,24 @@ android {
 dependencies {
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.android.support:recyclerview-v7:22.0.0'
-    compile 'com.google.android.gms:play-services-gcm:7.3.0'
+    compile('com.google.android.gms:play-services-gcm:7.3.0') {
+		exclude group: 'com.android.support'
+	}
     compile 'it.neokree:MaterialNavigationDrawer:1.3.3'
     compile 'com.getbase:floatingactionbutton:1.9.0'
     compile 'io.reactivex:rxandroid:0.24.0'
-    compile 'org.jvalue.ods:client-retrofit:0.1.3-SNAPSHOT'
-    compile 'org.jvalue.ceps:client-retrofit:0.1.1-SNAPSHOT'
+    compile('org.jvalue.ods:client-retrofit:0.1.3-SNAPSHOT') {
+		exclude group: 'javax.validation'
+	}
+    compile('org.jvalue.ceps:client-retrofit:0.1.1-SNAPSHOT') {
+		exclude group: 'com.google.guava'
+		exclude group: 'javax.validation'
+		exclude group: 'com.fasterxml.jackson.core'
+		exclude group: 'com.squareup.retrofit'
+		exclude group: 'io.reactivex'
+		exclude group: 'org.jvalue.ods'
+		exclude group: 'org.jvalue.commons'
+	}
     compile 'com.jakewharton.timber:timber:3.0.1'
     compile 'org.osmdroid:osmdroid-android:4.2'
     compile 'org.roboguice:roboguice:3.0.1'

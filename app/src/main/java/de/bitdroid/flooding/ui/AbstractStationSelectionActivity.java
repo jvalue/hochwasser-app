@@ -15,7 +15,7 @@ import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
 
-abstract class AbstractStationSelectionActivity extends AbstractSelectionActivity<Station> {
+abstract class AbstractStationSelectionActivity extends AbstractListSelectionActivity<Station> {
 
 	@Inject private OdsManager odsManager;
 

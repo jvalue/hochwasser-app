@@ -34,7 +34,7 @@ import timber.log.Timber;
 
 
 @ContentView(R.layout.activity_select)
-abstract class AbstractSelectionActivity<T> extends AbstractActivity {
+abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 
 	private static final int REQUEST_MAP = 44;
 
@@ -53,7 +53,7 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 	protected StationSelection stationSelection;
 
 
-	AbstractSelectionActivity(int searchHintStringId, int itemViewLayoutResource) {
+	AbstractListSelectionActivity(int searchHintStringId, int itemViewLayoutResource) {
 		this.searchHintStringId = searchHintStringId;
 		this.itemViewLayoutResource = itemViewLayoutResource;
 	}
@@ -90,7 +90,7 @@ abstract class AbstractSelectionActivity<T> extends AbstractActivity {
 					public void call(List<T> items) {
 						adapter.setItems(items);
 					}
-				}, new AbstractErrorAction(AbstractSelectionActivity.this) {
+				}, new AbstractErrorAction(AbstractListSelectionActivity.this) {
 					@Override
 					protected void doCall(Throwable throwable) {
 						Timber.e(throwable, "failed to load data");

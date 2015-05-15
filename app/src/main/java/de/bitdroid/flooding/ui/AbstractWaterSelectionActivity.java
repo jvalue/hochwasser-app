@@ -15,7 +15,7 @@ import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
 
-abstract class AbstractWaterSelectionActivity extends AbstractSelectionActivity<BodyOfWater> {
+abstract class AbstractWaterSelectionActivity extends AbstractListSelectionActivity<BodyOfWater> {
 
 	@Inject private OdsManager odsManager;
 

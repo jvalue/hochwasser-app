@@ -4,11 +4,15 @@ package de.bitdroid.flooding.ods;
 import android.util.Pair;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Optional;
 
 import org.jvalue.ods.api.DataApi;
 import org.jvalue.ods.api.data.Data;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +44,7 @@ public class OdsManager {
 	private final DataApi dataApi;
 	private final PegelOnlineUtils pegelOnlineUtils;
 
-	private List<Station> stationCache;
+	private Map<String, Station> stationCache; // station name --> station
 
 
 	@Inject
@@ -52,7 +56,7 @@ public class OdsManager {
 
 	public Observable<List<Station>> getStations() {
 		if (stationCache != null) {
-			return Observable.just(stationCache);
+			return Observable.just(sortStations(stationCache.values()));
 		} else {
 			return Observable.defer(new Func0<Observable<List<Station>>>() {
 				@Override
@@ -78,14 +82,15 @@ public class OdsManager {
 					} while (data.getCursor().getHasNext());
 
 					// count stations per water and build stations
-					stationCache = new ArrayList<>();
+					stationCache = new HashMap<>();
 					for (String waterName : builderMap.keySet()) {
 						BodyOfWater water = new BodyOfWater(waterName, builderMap.get(waterName).size());
 						for (Station.Builder builder : builderMap.get(waterName)) {
-							stationCache.add(builder.setBodyOfWater(water).build());
+							Station station = builder.setBodyOfWater(water).build();
+							stationCache.put(station.getStationName(), station);
 						}
 					}
-					return Observable.just(stationCache);
+					return Observable.just(sortStations(stationCache.values()));
 				}
 			});
 		}
@@ -108,6 +113,21 @@ public class OdsManager {
 	}
 
 
+	public Observable<Optional<Station>> getStationByName(final String stationName) {
+		if (stationCache == null) {
+			return getStations()
+					.flatMap(new Func1<Collection<Station>, Observable<Optional<Station>>>() {
+						@Override
+						public Observable<Optional<Station>> call(Collection<Station> stations) {
+							return Observable.just(Optional.of(stationCache.get(stationName)));
+						}
+					});
+		} else {
+			return Observable.just(Optional.of(stationCache.get(stationName)));
+		}
+	}
+
+
 	public Observable<List<BodyOfWater>> getBodyOfWaters() {
 		return getStations()
 				.flatMap(new Func1<List<Station>, Observable<List<BodyOfWater>>>() {
@@ -115,7 +135,7 @@ public class OdsManager {
 					public Observable<List<BodyOfWater>> call(List<Station> stations) {
 						Set<BodyOfWater> bodies = new HashSet<>();
 						for (Station station : stations) bodies.add(station.getBodyOfWater());
-						List<BodyOfWater> result = new ArrayList<>(bodies);
+						List<BodyOfWater> result = sortBodyOfWaters(bodies);
 						return Observable.just(result);
 					}
 				});
@@ -206,6 +226,30 @@ public class OdsManager {
 		}
 
 		return builder.build();
+	}
+
+
+	private List<Station> sortStations(Collection<Station> stations) {
+		List<Station> sortedStations = new ArrayList<>(stations);
+		Collections.sort(sortedStations, new Comparator<Station>() {
+			@Override
+			public int compare(Station lhs, Station rhs) {
+				return lhs.getStationName().compareTo(rhs.getStationName());
+			}
+		});
+		return sortedStations;
+	}
+
+
+	private List<BodyOfWater> sortBodyOfWaters(Collection<BodyOfWater> waters) {
+		List<BodyOfWater> sortedWaters = new ArrayList<>(waters);
+		Collections.sort(sortedWaters, new Comparator<BodyOfWater>() {
+			@Override
+			public int compare(BodyOfWater lhs, BodyOfWater rhs) {
+				return lhs.getName().compareTo(rhs.getName());
+			}
+		});
+		return sortedWaters;
 	}
 
 }

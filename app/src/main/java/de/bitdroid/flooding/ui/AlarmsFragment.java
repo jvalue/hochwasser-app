@@ -24,6 +24,7 @@ import de.bitdroid.flooding.network.AbstractErrorAction;
 import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
+import de.bitdroid.flooding.utils.StringUtils;
 import roboguice.inject.InjectView;
 import rx.functions.Action1;
 import timber.log.Timber;
@@ -120,7 +121,7 @@ public class AlarmsFragment extends AbstractFragment {
 		}
 
 		public void setItem(Alarm alarm) {
-			stationView.setText(alarm.getStation().getStationName());
+			stationView.setText(StringUtils.toProperCase(alarm.getStation().getStationName()));
 			descriptionView.setText("Level: " + alarm.getLevel());
 		}
 

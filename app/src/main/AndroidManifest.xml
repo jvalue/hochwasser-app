@@ -20,8 +20,10 @@
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-	<permission android:name="de.bitdroid.ods.permission.C2D_MESSAGE"
-				android:protectionLevel="signature"/>
+	<permission
+		android:name="de.bitdroid.flooding.permission.C2D_MESSAGE"
+		android:protectionLevel="signature"
+		/>
 	<uses-permission android:name="de.bitdroid.ods.permission.C2D_MESSAGE" />
 
 	<application 
@@ -73,6 +75,17 @@
             />
         <activity
             android:name=".ui.NewAlarmActivity"
+			/>
+
+		<receiver android:name="de.bitdroid.flooding.gcm.GcmBroadcastReceiver">
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
+				<category android:name="de.bitdroid.flooding" />
+			</intent-filter>
+		</receiver>
+
+		<service
+			android:name="de.bitdroid.flooding.gcm.GcmService"
 			/>
 
 		<meta-data

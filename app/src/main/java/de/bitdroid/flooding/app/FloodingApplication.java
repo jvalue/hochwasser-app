@@ -1,7 +1,7 @@
 package de.bitdroid.flooding.app;
 
 
-import android.app.Application;
+import com.orm.SugarApp;
 
 import de.bitdroid.flooding.BuildConfig;
 import de.bitdroid.flooding.ceps.CepsModule;
@@ -12,7 +12,7 @@ import timber.log.Timber;
 /**
  * Main application for flooding.
  */
-public class FloodingApplication extends Application {
+public class FloodingApplication extends SugarApp {
 
 	@Override
 	public void onCreate() {

@@ -75,5 +75,22 @@
             android:name=".ui.NewAlarmActivity"
 			/>
 
+		<meta-data
+			android:name="DATABASE"
+			android:value="pegelalarm.db"
+			/>
+		<meta-data
+			android:name="VERSION"
+			android:value="1"
+			/>
+		<meta-data
+			android:name="QUERY_LOG"
+			android:value="true"
+			/>
+		<meta-data
+			android:name="DOMAIN_PACKAGE_NAME"
+			android:value="de.bitdroid.flooding"
+			/>
+
 	</application>
 </manifest>

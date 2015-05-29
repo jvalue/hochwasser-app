@@ -16,4 +16,6 @@
     <color name="refresh_blue_dark">#ff345aa4</color>
     <color name="refresh_yellow">#ffffee00</color>
 
+    <color name="notification_light">#000000FF</color>
+
 </resources>

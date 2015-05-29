@@ -1,11 +1,20 @@
 package de.bitdroid.flooding.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.ceps.Alarm;
+import de.bitdroid.flooding.ceps.CepsManager;
 import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
@@ -23,6 +32,10 @@ import timber.log.Timber;
 @ContentView(R.layout.activity_new_alarm)
 public class NewAlarmActivity extends AbstractActivity {
 
+	@InjectView(R.id.text_station_name) TextView stationNameView;
+	@InjectView(R.id.edit_level) TextView levelEditView;
+	@InjectView(R.id.button_confirm) Button confirmButton;
+
 	@InjectView(R.id.card_levels) private CardView levelsCard;
 	@InjectView(R.id.card_char_values) private CardView charValuesCard;
 	@InjectView(R.id.card_metadata) private CardView metadataCard;
@@ -30,6 +43,7 @@ public class NewAlarmActivity extends AbstractActivity {
 
 	@Inject private NetworkUtils networkUtils;
 	@Inject private OdsManager odsManager;
+	@Inject private CepsManager cepsManager;
 	@Inject private StationInfoUtils stationInfoUtils;
 
 	private StationMeasurements measurements;
@@ -39,9 +53,55 @@ public class NewAlarmActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
 
 		// set title
-		Station station = new StationSelection(getIntent()).getStation();
-		getSupportActionBar().setTitle(StringUtils.toProperCase(station.getStationName()));
-		getSupportActionBar().setSubtitle(StringUtils.toProperCase(station.getBodyOfWater().getName()));
+		final Station station = new StationSelection(getIntent()).getStation();
+		getSupportActionBar().setTitle(getString(R.string.title_new_alarm));
+		stationNameView.setText(StringUtils.toProperCase(station.getStationName()));
+
+		// setup editing
+		levelEditView.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {  }
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {  }
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (levelEditView.getText().length() == 0) confirmButton.setEnabled(false);
+				else confirmButton.setEnabled(true);
+			}
+		});
+		confirmButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Alarm alarm = new Alarm.Builder()
+						.setAlarmWhenAboveLevel(true)
+						.setLevel(Double.valueOf(levelEditView.getText().toString()))
+						.setStation(station)
+						.build();
+
+				cepsManager
+						.addAlarm(alarm)
+						.compose(networkUtils.<Void>getDefaultTransformer())
+						.subscribe(new Action1<Void>() {
+							@Override
+							public void call(Void aVoid) {
+								Toast.makeText(NewAlarmActivity.this, getString(R.string.alarms_new_created), Toast.LENGTH_SHORT).show();
+								Intent intent = new Intent(NewAlarmActivity.this, MainDrawerActivity.class);
+								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+								startActivity(intent);
+								finish();
+							}
+						}, new Action1<Throwable>() {
+							@Override
+							public void call(Throwable throwable) {
+								Toast.makeText(NewAlarmActivity.this, getString(R.string.alarms_new_not_created), Toast.LENGTH_SHORT).show();
+								Timber.e(throwable, "failed to add alarm");
+							}
+						});
+			}
+		});
+
 
 		// load data
 		odsManager.getMeasurements(station)

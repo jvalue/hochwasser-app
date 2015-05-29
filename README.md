@@ -159,13 +159,13 @@ select station1, station2 from pattern
 [
     every station1=`pegelonline`
     (
-        uuid = 'UUID'
+        uuid = 'STATION_UUID'
         and timeseries.firstof(i => i.shortname = 'W') is not null
     )
     ->
     station2=`pegelonline`
     (
-        UUID = 'UUID'
+        uuid = 'STATION_UUID'
         and timeseries.firstof(i => i.shortname = 'W') is not null
     )
 ]
@@ -177,5 +177,5 @@ where
     and i.currentMeasurement.value > LEVEL) is not null
 ```
   - requiredArguments:
-    - `UUID` of type `STRING`
+    - `STATION_UUID` of type `STRING`
     - `LEVEL` of type `NUMBER`

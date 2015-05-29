@@ -7,6 +7,8 @@
 	<string name="nav_open">Öffnen</string>
 	<string name="nav_close">Schließen</string>
 
+    <string name="title_new_alarm">Neuer Alarm</string>
+
 	<string name="map_dialog_station_info">Breitengrad %1$f\nLängengrad %2$f</string>
 
 

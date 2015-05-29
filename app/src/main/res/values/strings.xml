@@ -11,6 +11,8 @@
 	<string name="nav_open">Open</string>
 	<string name="nav_close">Close</string>
 
+    <string name="title_new_alarm">New Alarm</string>
+
 	<string name="map_dialog_station_info">Latitude %1$f\nLongitude %2$f</string>
 
 

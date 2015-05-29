@@ -5,6 +5,8 @@ import com.google.common.base.Optional;
 
 import org.jvalue.ceps.api.RegistrationApi;
 import org.jvalue.ceps.api.notifications.Client;
+import org.jvalue.ceps.api.notifications.ClientDescription;
+import org.jvalue.ceps.api.notifications.GcmClientDescription;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import de.bitdroid.flooding.gcm.GcmManager;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import rx.Observable;
@@ -24,19 +27,21 @@ public class CepsManager {
 
 	private static final String PEGEL_ALARM_ADAPTER_ID = "pegelAlarm";
 	private static final String
-			ARGUMENT_UUID = "UUID",
+			ARGUMENT_UUID = "STATION_UUID",
 			ARGUMENT_LEVEL = "LEVEL",
 			ARGUMENT_ALARM_WHEN_ABOVE_LEVEL = "above";
 
 	private final RegistrationApi registrationApi;
 	private final OdsManager odsManager;
+	private final GcmManager gcmManager;
 
 	private List<Alarm> alarmsCache = null;
 
 	@Inject
-	CepsManager(RegistrationApi registrationApi, OdsManager odsManager) {
+	CepsManager(RegistrationApi registrationApi, OdsManager odsManager, GcmManager gcmManager) {
 		this.registrationApi = registrationApi;
 		this.odsManager = odsManager;
+		this.gcmManager = gcmManager;
 	}
 
 
@@ -76,6 +81,22 @@ public class CepsManager {
 					}
 				})
 				.toList();
+	}
+
+
+	public Observable<Void> addAlarm(Alarm alarm) {
+		Map<String, Object> args = new HashMap<>();
+		args.put(ARGUMENT_UUID, alarm.getStation().getUuid());
+		args.put(ARGUMENT_LEVEL, alarm.getLevel());
+		ClientDescription clientDescription = new GcmClientDescription(gcmManager.getRegId(), args);
+		return registrationApi
+				.registerClient(PEGEL_ALARM_ADAPTER_ID, clientDescription)
+				.flatMap(new Func1<Client, Observable<Void>>() {
+					@Override
+					public Observable<Void> call(Client client) {
+						return Observable.just(null);
+					}
+				});
 	}
 
 }

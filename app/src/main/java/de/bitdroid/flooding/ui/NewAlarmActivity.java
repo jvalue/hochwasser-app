@@ -18,10 +18,10 @@ import timber.log.Timber;
 
 
 /**
- * Displays information about a single station.
+ * Adds a new alarm.
  */
-@ContentView(R.layout.activity_station_info)
-public class StationInfoActivity extends AbstractActivity {
+@ContentView(R.layout.activity_new_alarm)
+public class NewAlarmActivity extends AbstractActivity {
 
 	@InjectView(R.id.card_levels) private CardView levelsCard;
 	@InjectView(R.id.card_char_values) private CardView charValuesCard;
@@ -49,7 +49,7 @@ public class StationInfoActivity extends AbstractActivity {
 				.subscribe(new Action1<StationMeasurements>() {
 					@Override
 					public void call(StationMeasurements stationMeasurements) {
-						StationInfoActivity.this.measurements = stationMeasurements;
+						NewAlarmActivity.this.measurements = stationMeasurements;
 						stationInfoUtils.setupStationCards(measurements, levelsCard, charValuesCard, metadataCard, mapCard);
 					}
 				}, new Action1<Throwable>() {
@@ -59,5 +59,6 @@ public class StationInfoActivity extends AbstractActivity {
 					}
 				});
 	}
+
 
 }

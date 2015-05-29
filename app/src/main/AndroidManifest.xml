@@ -46,25 +46,34 @@
             android:name=".ui.MainDrawerActivity"
             android:theme="@style/DrawerTheme"
             />
-
 		<activity
 			android:name=".ui.DataSelectionHandler$WaterSelectionActivity"
 			android:label="Select River"
-
 			/>
-
 		<activity
 			android:name=".ui.DataSelectionHandler$StationSelectionActivity"
 			android:label="Select Station"
 			/>
-
         <activity
             android:name=".ui.DataSelectionHandler$MapSelectionActivity"
             />
-
         <activity
             android:name=".ui.StationInfoActivity"
+			/>
+		<activity
+			android:name=".ui.AlarmsFragment$WaterSelectionActivity"
+			android:label="Select River"
+			/>
+		<activity
+			android:name=".ui.AlarmsFragment$StationSelectionActivity"
+			android:label="Select Station"
+			/>
+        <activity
+            android:name=".ui.AlarmsFragment$MapSelectionActivity"
             />
+        <activity
+            android:name=".ui.NewAlarmActivity"
+			/>
 
 	</application>
 </manifest>

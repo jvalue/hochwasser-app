@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class NewsFragment extends AbstractFragment {
 
 		// load items
 		List<NewsItem> items = newsManager.getAllNews();
+		Collections.sort(items);
 		adapter.setItems(items);
 	}
 

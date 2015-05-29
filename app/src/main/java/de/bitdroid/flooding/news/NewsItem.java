@@ -6,7 +6,11 @@ import com.orm.SugarRecord;
 import de.bitdroid.flooding.utils.Assert;
 
 
-public final class NewsItem extends SugarRecord<NewsItem> {
+/**
+ * One piece of news which can be displayed in the news section.
+ * News are sortable by timestamp, putting the newest item first.
+ */
+public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<NewsItem> {
 
 	private String title, content;
 	private long timestamp;
@@ -85,6 +89,12 @@ public final class NewsItem extends SugarRecord<NewsItem> {
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(title, content, timestamp, navigationEnabled, navigationPos, isNew);
+	}
+
+
+	@Override
+	public int compareTo(NewsItem another) {
+		return -Long.valueOf(timestamp).compareTo(another.getTimestamp());
 	}
 
 

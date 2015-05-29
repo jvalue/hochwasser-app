@@ -44,7 +44,7 @@ public class OdsManager {
 	private final DataApi dataApi;
 	private final PegelOnlineUtils pegelOnlineUtils;
 
-	private Map<String, Station> stationCache; // station name --> station
+	private Map<String, Station> stationCache; // station uuid --> station
 
 
 	@Inject
@@ -87,7 +87,7 @@ public class OdsManager {
 						BodyOfWater water = new BodyOfWater(waterName, builderMap.get(waterName).size());
 						for (Station.Builder builder : builderMap.get(waterName)) {
 							Station station = builder.setBodyOfWater(water).build();
-							stationCache.put(station.getStationName(), station);
+							stationCache.put(station.getUuid(), station);
 						}
 					}
 					return Observable.just(sortStations(stationCache.values()));
@@ -113,17 +113,17 @@ public class OdsManager {
 	}
 
 
-	public Observable<Optional<Station>> getStationByName(final String stationName) {
+	public Observable<Optional<Station>> getStationByUuid(final String stationUuid) {
 		if (stationCache == null) {
 			return getStations()
 					.flatMap(new Func1<Collection<Station>, Observable<Optional<Station>>>() {
 						@Override
 						public Observable<Optional<Station>> call(Collection<Station> stations) {
-							return Observable.just(Optional.of(stationCache.get(stationName)));
+							return Observable.just(Optional.of(stationCache.get(stationUuid)));
 						}
 					});
 		} else {
-			return Observable.just(Optional.of(stationCache.get(stationName)));
+			return Observable.just(Optional.of(stationCache.get(stationUuid)));
 		}
 	}
 

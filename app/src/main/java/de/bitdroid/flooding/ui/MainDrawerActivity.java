@@ -15,6 +15,7 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 	public void init(Bundle bundle) {
 		addSection(newSection("Dummy", new DummyFragment()));
 		Intent intent = new Intent(this, DataSelectionHandler.WaterSelectionActivity.class);
+		addSection(newSection(getString(R.string.nav_alarms), new AlarmsFragment()));
 		addSection(newSection(getString(R.string.nav_analysis), intent));
 	}
 

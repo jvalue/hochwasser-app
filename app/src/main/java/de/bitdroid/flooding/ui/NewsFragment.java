@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -59,6 +61,10 @@ public class NewsFragment extends AbstractFragment {
 		List<NewsItem> items = newsManager.getAllNews();
 		Collections.sort(items);
 		adapter.setItems(items);
+
+		// setup swipe to delete
+		SwipeableRecyclerViewTouchListener swipeTouchListener = new SwipeableRecyclerViewTouchListener(recyclerView, new NewsItemSwipeListener());
+		recyclerView.addOnItemTouchListener(swipeTouchListener);
 	}
 
 
@@ -101,6 +107,10 @@ public class NewsFragment extends AbstractFragment {
 			notifyDataSetChanged();
 		}
 
+		public List<NewsItem> getNewsList() {
+			return newsList;
+		}
+
 		@Override
 		public NewsItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_news, parent, false);
@@ -130,5 +140,32 @@ public class NewsFragment extends AbstractFragment {
 
 	}
 
+
+	protected class NewsItemSwipeListener implements SwipeableRecyclerViewTouchListener.SwipeListener {
+
+		@Override
+		public boolean canSwipe(int position) {
+			return true;
+		}
+
+		@Override
+		public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+			removeItems(reverseSortedPositions);
+		}
+
+		@Override
+		public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+			removeItems(reverseSortedPositions);
+		}
+
+		private void removeItems(int[] reverseSortedPositions) {
+			for (int position : reverseSortedPositions) {
+				adapter.getNewsList().get(position).delete();
+			}
+			adapter.setItems(newsManager.getAllNews());
+			adapter.notifyDataSetChanged();
+		}
+
+	}
 }
 

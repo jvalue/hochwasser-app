@@ -98,7 +98,7 @@
 	<string name="prefs_ods_sync_last_success">Letzte erfolgreiche Aufnahme</string>
 	<string name="prefs_ods_sync_last_fail">Letzte fehlgeschlagene Aufnahme</string>
 	<string name="prefs_ceps_servername">CEPS Servername</string>
-    <string name="prefs_about_version">Version</string>
+    <string name="about_version">Version</string>
     <string name="prefs_about_feedback_summary">Wünsche, Anregungen, Kritik, Lob</string>
     <string name="prefs_about_contribute">Mithelfen</string>
     <string name="prefs_about_contribute_summary">Alles open source!</string>

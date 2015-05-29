@@ -2,6 +2,7 @@ package de.bitdroid.flooding.ui;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,6 +11,7 @@ import javax.inject.Inject;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.gcm.GcmManager;
 import de.bitdroid.flooding.network.NetworkUtils;
+import de.bitdroid.flooding.utils.VersionUtils;
 import rx.functions.Action1;
 import timber.log.Timber;
 
@@ -20,13 +22,29 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 
 	@Inject private GcmManager gcmManager;
 	@Inject private NetworkUtils networkUtils;
+	@Inject private VersionUtils versionUtils;
 
 	@Override
 	public void init(Bundle bundle) {
+
+		// setup main sections
 		addSection(newSection(getString(R.string.nav_home), new NewsFragment()));
 		Intent intent = new Intent(this, DataSelectionHandler.WaterSelectionActivity.class);
 		addSection(newSection(getString(R.string.nav_alarms), new AlarmsFragment()));
 		addSection(newSection(getString(R.string.nav_analysis), intent));
+
+		// setup settings and feedback section
+		addBottomSection(newSection(getString(R.string.nav_settings), new SettingsFragment()));
+
+		String address = getString(R.string.feedback_mail_address);
+		String subject = getString(
+				R.string.feedback_mail_subject,
+				getString(R.string.app_name),
+				versionUtils.getVersion());
+		Intent mailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", address, null));
+		mailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+		Intent mailer = Intent.createChooser(mailIntent, getString(R.string.feedback_mail_chooser));
+		addBottomSection(newSection(getString(R.string.nav_feedback), mailer));
 
 		// register for gcm updates
 		if (!gcmManager.isRegistered()) {

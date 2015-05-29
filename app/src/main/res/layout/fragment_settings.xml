@@ -1,0 +1,64 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            style="@style/FontSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:text="@string/settings_version"
+            />
+
+        <TextView
+            android:id="@+id/versionTextView"
+            style="@style/FontSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            />
+
+
+    </LinearLayout>
+
+    <include layout="@layout/divider_settings"/>
+
+    <TextView
+        android:id="@+id/authorTextView"
+        style="@style/FontSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_about"
+        />
+
+    <include layout="@layout/divider_settings"/>
+
+    <TextView
+        android:id="@+id/creditsTextView"
+        style="@style/FontSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_credits"
+        />
+
+    <include layout="@layout/divider_settings"/>
+
+    <TextView
+        android:id="@+id/logoutTextView"
+        style="@style/FontSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_logout"
+        />
+
+</LinearLayout>
+

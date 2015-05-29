@@ -152,7 +152,7 @@ to be running handling alarms and notifications.
 The CEPS needs to be configured by
 
 - adding `pegelonline` source of the ODS
-- adding a new EPL adapter called `pegelAlarm` with the following details:
+- adding two new EPL adapter called `pegelAlarmAboveLevel` and `pegelAlarmBelowLevel` with the following details:
   - eplBlueprint:
 ```json
 select station1, station2 from pattern
@@ -175,6 +175,29 @@ where
     and
     station2.timeseries.firstof(i => i.shortname = 'W'
     and i.currentMeasurement.value > LEVEL) is not null
+```
+and
+```json
+select station1, station2 from pattern
+[
+    every station1=`pegelonline`
+    (
+        uuid = 'STATION_UUID'
+        and timeseries.firstof(i => i.shortname = 'W') is not null
+    )
+    ->
+    station2=`pegelonline`
+    (
+        uuid = 'STATION_UUID'
+        and timeseries.firstof(i => i.shortname = 'W') is not null
+    )
+]
+where
+    station1.timeseries.firstof(i => i.shortname = 'W'
+    and i.currentMeasurement.value >= LEVEL) is not null
+    and
+    station2.timeseries.firstof(i => i.shortname = 'W'
+    and i.currentMeasurement.value < LEVEL) is not null
 ```
   - requiredArguments:
     - `STATION_UUID` of type `STRING`

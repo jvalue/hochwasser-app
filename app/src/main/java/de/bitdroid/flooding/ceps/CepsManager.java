@@ -25,11 +25,12 @@ import timber.log.Timber;
 @Singleton
 public class CepsManager {
 
-	private static final String PEGEL_ALARM_ADAPTER_ID = "pegelAlarm";
+	private static final String
+			PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID = "pegelAlarmAboveLevel";
+	private static final String PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID = "pegelAlarmBelowLevel";
 	private static final String
 			ARGUMENT_UUID = "STATION_UUID",
-			ARGUMENT_LEVEL = "LEVEL",
-			ARGUMENT_ALARM_WHEN_ABOVE_LEVEL = "above";
+			ARGUMENT_LEVEL = "LEVEL";
 
 	private final RegistrationApi registrationApi;
 	private final OdsManager odsManager;
@@ -46,24 +47,22 @@ public class CepsManager {
 
 
 	public Observable<List<Alarm>> getAlarms() {
-		return registrationApi.getAllClients(PEGEL_ALARM_ADAPTER_ID)
-				.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
-					@Override
-					public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
-						Map<String, Alarm.Builder> builderMap = new HashMap<>(); // station name --> builder
-						for (Client client : clients) {
-							Map<String, Object> args = client.getEplArguments();
-							Alarm.Builder builder = new Alarm.Builder()
-									.setId(client.getId())
-									.setLevel((double) args.get(ARGUMENT_LEVEL))
-									// .setAlarmWhenAboveLevel((boolean) args.get(ARGUMENT_ALARM_WHEN_ABOVE_LEVEL));
-									.setAlarmWhenAboveLevel(true);
-							// 	TODO configure second adapter for below
-							builderMap.put((String) args.get(ARGUMENT_UUID), builder);
-						}
-						return Observable.from(builderMap.entrySet());
-					}
-				})
+		return Observable
+				.merge(
+						registrationApi.getAllClients(PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID)
+								.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
+									@Override
+									public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
+										return Observable.from(parseClients(clients, true).entrySet());
+									}
+								}),
+						registrationApi.getAllClients(PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID)
+								.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
+									@Override
+									public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
+										return Observable.from(parseClients(clients, false).entrySet());
+									}
+								}))
 				.flatMap(new Func1<Map.Entry<String, Alarm.Builder>, Observable<Alarm>>() {
 					@Override
 					public Observable<Alarm> call(final Map.Entry<String, Alarm.Builder> entry) {
@@ -89,14 +88,29 @@ public class CepsManager {
 		args.put(ARGUMENT_UUID, alarm.getStation().getUuid());
 		args.put(ARGUMENT_LEVEL, alarm.getLevel());
 		ClientDescription clientDescription = new GcmClientDescription(gcmManager.getRegId(), args);
+		String adapterId = alarm.isAlarmWhenAboveLevel() ? PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID : PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
 		return registrationApi
-				.registerClient(PEGEL_ALARM_ADAPTER_ID, clientDescription)
+				.registerClient(adapterId, clientDescription)
 				.flatMap(new Func1<Client, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Client client) {
 						return Observable.just(null);
 					}
 				});
+	}
+
+
+	private Map<String, Alarm.Builder> parseClients(List<Client> clients, boolean alarmWhenAboveLevel) {
+		Map<String, Alarm.Builder> builderMap = new HashMap<>(); // station uuid --> builder
+		for (Client client : clients) {
+			Map<String, Object> args = client.getEplArguments();
+			Alarm.Builder builder = new Alarm.Builder()
+					.setId(client.getId())
+					.setLevel((double) args.get(ARGUMENT_LEVEL))
+					.setAlarmWhenAboveLevel(true);
+			builderMap.put((String) args.get(ARGUMENT_UUID), builder);
+		}
+		return builderMap;
 	}
 
 }

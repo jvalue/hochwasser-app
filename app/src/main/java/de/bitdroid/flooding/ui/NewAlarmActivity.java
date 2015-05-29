@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class NewAlarmActivity extends AbstractActivity {
 
 	@InjectView(R.id.text_station_name) TextView stationNameView;
 	@InjectView(R.id.edit_level) TextView levelEditView;
+	@InjectView(R.id.selection_relation) RadioGroup selectionGroup;
 	@InjectView(R.id.button_confirm) Button confirmButton;
 
 	@InjectView(R.id.card_levels) private CardView levelsCard;
@@ -57,6 +59,9 @@ public class NewAlarmActivity extends AbstractActivity {
 		getSupportActionBar().setTitle(getString(R.string.title_new_alarm));
 		stationNameView.setText(StringUtils.toProperCase(station.getStationName()));
 
+		// select above level as default
+		selectionGroup.check(R.id.button_above);
+
 		// setup editing
 		levelEditView.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -74,8 +79,9 @@ public class NewAlarmActivity extends AbstractActivity {
 		confirmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				boolean alarmWhenAboveLevel = selectionGroup.getCheckedRadioButtonId() == R.id.button_above;
 				Alarm alarm = new Alarm.Builder()
-						.setAlarmWhenAboveLevel(true)
+						.setAlarmWhenAboveLevel(alarmWhenAboveLevel)
 						.setLevel(Double.valueOf(levelEditView.getText().toString()))
 						.setStation(station)
 						.build();

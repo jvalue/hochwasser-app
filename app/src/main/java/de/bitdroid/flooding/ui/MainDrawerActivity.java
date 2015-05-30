@@ -34,7 +34,7 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 		addSection(newSection(getString(R.string.nav_analysis), intent));
 
 		// setup settings and feedback section
-		addBottomSection(newSection(getString(R.string.nav_settings), new SettingsFragment()));
+		addBottomSection(newSection(getString(R.string.nav_settings), R.drawable.ic_settings, new SettingsFragment()));
 
 		String address = getString(R.string.feedback_mail_address);
 		String subject = getString(
@@ -44,7 +44,7 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 		Intent mailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", address, null));
 		mailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		Intent mailer = Intent.createChooser(mailIntent, getString(R.string.feedback_mail_chooser));
-		addBottomSection(newSection(getString(R.string.nav_feedback), mailer));
+		addBottomSection(newSection(getString(R.string.nav_feedback), R.drawable.ic_email, mailer));
 
 		// register for gcm updates
 		if (!gcmManager.isRegistered()) {

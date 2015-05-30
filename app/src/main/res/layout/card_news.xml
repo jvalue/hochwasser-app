@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="@dimen/card_margin"
     android:background="@android:color/white"
     >
 
@@ -11,26 +11,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="@dimen/card_padding"
         >
 
-        <TextView
-            android:id="@+id/news_title"
-            style="@style/FontHeader"
-            android:text="Title"
-            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
 
-        <TextView
-            android:id="@+id/news_timestamp"
-            style="@style/FontSecondary"
-            android:layout_marginTop="5dp"
-            android:text="Today, 12:21"
-            />
+            <TextView
+                android:id="@+id/news_timestamp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                style="@style/FontSecondary"
+                android:text="Today, 12:21"
+                />
+
+            <TextView
+                android:id="@+id/news_title"
+                android:layout_width="match_parent"
+                android:layout_toLeftOf="@id/news_timestamp"
+                style="@style/FontHeader"
+                android:text="Title"
+                />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/news_content"
             style="@style/FontRegular"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="Some super awesome content goes here"
             />
 

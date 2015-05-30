@@ -102,7 +102,7 @@ public class AlarmsFragment extends AbstractFragment {
 
 		@Override
 		public AlarmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_alarm, parent, false);
+			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_alarm, parent, false);
 			return new AlarmViewHolder(view);
 		}
 
@@ -116,8 +116,8 @@ public class AlarmsFragment extends AbstractFragment {
 
 		public AlarmViewHolder(View itemView) {
 			super(itemView);
-			this.stationView = (TextView) itemView.findViewById(android.R.id.text1);
-			this.descriptionView = (TextView) itemView.findViewById(android.R.id.text2);
+			this.stationView = (TextView) itemView.findViewById(R.id.alarm_title);
+			this.descriptionView = (TextView) itemView.findViewById(R.id.alarm_description);
 		}
 
 		public void setItem(Alarm alarm) {

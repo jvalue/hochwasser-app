@@ -16,6 +16,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 	private long timestamp;
 	private boolean navigationEnabled;
 	private int navigationPos;
+	private boolean isWarning;
 	private boolean isNew;
 
 	public NewsItem() { }
@@ -26,6 +27,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 			long timestamp,
 			boolean navigationEnabled,
 			int navigationPos,
+			boolean isWarning,
 			boolean isNew) {
 
 		this.title = title;
@@ -33,6 +35,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 		this.timestamp = timestamp;
 		this.navigationEnabled = navigationEnabled;
 		this.navigationPos = navigationPos;
+		this.isWarning = isWarning;
 		this.isNew = isNew;
 	}
 
@@ -62,6 +65,11 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 	}
 
 
+	public boolean getIsWarning() {
+		return isWarning;
+	}
+
+
 	public boolean getIsNew() {
 		return isNew;
 	}
@@ -82,13 +90,14 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 				Objects.equal(navigationPos, newsItem.navigationPos) &&
 				Objects.equal(title, newsItem.title) &&
 				Objects.equal(content, newsItem.content) &&
+				Objects.equal(isWarning, newsItem.isWarning) &&
 				Objects.equal(isNew, newsItem.isNew);
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(title, content, timestamp, navigationEnabled, navigationPos, isNew);
+		return Objects.hashCode(title, content, timestamp, navigationEnabled, navigationPos, isWarning, isNew);
 	}
 
 
@@ -104,7 +113,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 		private final long timestamp;
 		private boolean navigationEnabled = false;
 		private int navigationPos = -1;
-		private boolean isNew = false;
+		private boolean isWarning = false, isNew = false;
 
 		public Builder(String title, String content, long timestamp) {
 			Assert.assertNotNull(title, content);
@@ -127,6 +136,12 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 		}
 
 
+		public Builder isWarning(boolean isWarning) {
+			this.isWarning = isWarning;
+			return this;
+		}
+
+
 		public Builder isNew(boolean isNew) {
 			this.isNew = isNew;
 			return this;
@@ -134,7 +149,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 
 
 		public NewsItem build() {
-			return new NewsItem(title, content, timestamp, navigationEnabled, navigationPos, isNew);
+			return new NewsItem(title, content, timestamp, navigationEnabled, navigationPos, isWarning, isNew);
 		}
 	}
 

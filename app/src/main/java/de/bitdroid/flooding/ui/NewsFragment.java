@@ -10,6 +10,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
@@ -81,8 +82,8 @@ public class NewsFragment extends AbstractFragment {
 
 
 	private void addHelperNews() {
-		newsManager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), 2, true, false);
-		newsManager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, true, false);
+		newsManager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), 2, true, false, false);
+		newsManager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, true, false, false);
 	}
 
 
@@ -123,12 +124,14 @@ public class NewsFragment extends AbstractFragment {
 	protected class NewsItemViewHolder extends RecyclerView.ViewHolder {
 
 		private final TextView titleView, timestampView, contentView;
+		private final ImageView iconView;
 
 		public NewsItemViewHolder(View itemView) {
 			super(itemView);
 			this.titleView = (TextView) itemView.findViewById(R.id.news_title);
 			this.timestampView = (TextView) itemView.findViewById(R.id.news_timestamp);
 			this.contentView = (TextView) itemView.findViewById(R.id.news_content);
+			this.iconView = (ImageView) itemView.findViewById(R.id.icon);
 		}
 
 		public void setItem(NewsItem item) {
@@ -136,6 +139,8 @@ public class NewsFragment extends AbstractFragment {
 			Date date = new Date(item.getTimestamp());
 			timestampView.setText(DateFormat.getDateFormat(getActivity()).format(date) + " " + DateFormat.getTimeFormat(getActivity()).format(date));
 			contentView.setText(Html.fromHtml(item.getContent()));
+			if (item.getIsWarning()) iconView.setImageResource(R.drawable.ic_warning);
+			else iconView.setImageResource(R.drawable.ic_info);
 		}
 
 	}

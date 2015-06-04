@@ -101,7 +101,7 @@ public class GcmService extends RoboService {
 				alarm.getLevel());
 
 		// show notification and pass to news manager
-		newsManager.addItem(title, msg, 1, true, true);
+		newsManager.addItem(title, msg, 1, true, true, true);
 
 		// vibrate
 		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

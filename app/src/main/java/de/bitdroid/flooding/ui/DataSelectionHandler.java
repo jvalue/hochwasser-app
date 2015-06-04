@@ -2,6 +2,7 @@ package de.bitdroid.flooding.ui;
 
 
 import android.content.Context;
+import android.widget.Toast;
 
 import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
@@ -31,9 +32,18 @@ public class DataSelectionHandler {
 
 	public static class StationSelectionActivity extends AbstractStationSelectionActivity {
 
+		public StationSelectionActivity() {
+			super(true);
+		}
+
 		@Override
-		protected void onDataSelected(Station station) {
-			onStationSelected(this, station);
+		protected void onAllStationsSelected() {
+			Toast.makeText(this, "all selected!", Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		protected void onStationSelected(Station station) {
+			DataSelectionHandler.onStationSelected(this, station);
 		}
 
 		@Override

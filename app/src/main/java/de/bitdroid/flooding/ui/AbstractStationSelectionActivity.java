@@ -14,31 +14,67 @@ import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
+import rx.functions.Func1;
 
 abstract class AbstractStationSelectionActivity extends AbstractListSelectionActivity<Station> {
 
-	@Inject private OdsManager odsManager;
+	private static final Station ALL_STATIONS = new Station(
+			"a " + AbstractWaterSelectionActivity.class.getSimpleName() + ".ALL_STATIONS",
+			"a " + AbstractWaterSelectionActivity.class.getSimpleName() + ".ALL_STATIONS",
+			null,
+			-1f, -1f, -1f);
 
-	public AbstractStationSelectionActivity() {
+	@Inject private OdsManager odsManager;
+	private final boolean showAllStationsEntry;
+
+	public AbstractStationSelectionActivity(boolean showAllStationsEntry) {
 		super(R.string.menu_select_station_search_hint, R.layout.item_data);
+		this.showAllStationsEntry = showAllStationsEntry;
+	}
+
+
+	protected abstract void onAllStationsSelected();
+	protected abstract void onStationSelected(Station station);
+
+
+	@Override
+	public void onDataSelected(Station station) {
+		if (station.equals(ALL_STATIONS)) onAllStationsSelected();
+		else onStationSelected(station);
 	}
 
 
 	@Override
 	protected Observable<List<Station>> loadItems() {
-		return odsManager.getStationsByBodyOfWater(stationSelection.getWater());
+		return odsManager.getStationsByBodyOfWater(stationSelection.getWater())
+				.flatMap(new Func1<List<Station>, Observable<List<Station>>>() {
+					@Override
+					public Observable<List<Station>> call(List<Station> stations) {
+						if (showAllStationsEntry) stations.add(0, ALL_STATIONS);
+						return Observable.just(stations);
+					}
+				});
 	}
 
 
 	@Override
 	protected void setDataView(final Station station, View view) {
-		// station name
-		TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-		text1.setText(StringUtils.toProperCase(station.getStationName()));
-		text1.setTextColor(getResources().getColor(android.R.color.black));
+		if (station.equals(ALL_STATIONS)) {
+			view.findViewById(R.id.container_2).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.container_1).setVisibility(View.GONE);
 
-		// hide second text
-		view.findViewById(android.R.id.text2).setVisibility(View.GONE);
+		} else {
+			view.findViewById(R.id.container_1).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.container_2).setVisibility(View.GONE);
+
+			// station name
+			TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+			text1.setText(StringUtils.toProperCase(station.getStationName()));
+			text1.setTextColor(getResources().getColor(android.R.color.black));
+
+			// hide second text
+			view.findViewById(android.R.id.text2).setVisibility(View.GONE);
+		}
 	}
 
 

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-	android:layout_margin="10dp"
-	android:paddingLeft="6dp"
-	android:paddingRight="6dp"
-	android:paddingTop="6dp"
-	android:paddingBottom="6dp"
-	android:background="?android:attr/activatedBackgroundIndicator"
+    android:layout_marginLeft="@dimen/list_horizontal_margin"
+    android:layout_marginRight="@dimen/list_horizontal_margin"
+    android:padding="20dp"
+    android:background="@drawable/list_item_selector"
+    android:orientation="vertical"
 	>
 
 	<TextView

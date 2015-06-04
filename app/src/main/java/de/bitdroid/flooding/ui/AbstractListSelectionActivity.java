@@ -74,10 +74,11 @@ abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 		stationSelection = new StationSelection(getIntent());
 
 		// setup list
+		adapter = new SelectionAdapter();
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
-		adapter = new SelectionAdapter();
 		recyclerView.setAdapter(adapter);
+		recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
 		// load items
 		showSpinner();

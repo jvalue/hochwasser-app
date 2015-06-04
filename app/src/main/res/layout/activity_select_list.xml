@@ -4,14 +4,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/gray_light"
 	>
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:listSelector="@drawable/list_selector_light"
+		android:paddingBottom="@dimen/list_padding_bottom"
+		android:paddingTop="@dimen/list_padding_top"
+		android:clipToPadding="false"
 	/>
 
 	<include layout="@layout/spinner"/>

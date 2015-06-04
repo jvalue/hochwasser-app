@@ -12,7 +12,6 @@
 		android:id="@+id/list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:listSelector="@drawable/list_selector_light"
 	/>
 
 	<com.getbase.floatingactionbutton.AddFloatingActionButton

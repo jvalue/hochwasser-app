@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,9 @@ import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.utils.StringUtils;
 import roboguice.inject.InjectView;
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 public class AlarmsFragment extends AbstractFragment {
@@ -54,6 +57,10 @@ public class AlarmsFragment extends AbstractFragment {
 		recyclerView.setLayoutManager(layoutManager);
 		adapter = new AlarmsAdapter();
 		recyclerView.setAdapter(adapter);
+
+		// setup swipe to delete
+		SwipeableRecyclerViewTouchListener swipeTouchListener = new SwipeableRecyclerViewTouchListener(recyclerView, new AlarmSwipeListener());
+		recyclerView.addOnItemTouchListener(swipeTouchListener);
 
 		// setup add button
 		addButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +107,10 @@ public class AlarmsFragment extends AbstractFragment {
 			notifyDataSetChanged();
 		}
 
+		public List<Alarm> getAlarms() {
+			return new ArrayList<>(alarmList);
+		}
+
 		@Override
 		public AlarmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_alarm, parent, false);
@@ -123,6 +134,67 @@ public class AlarmsFragment extends AbstractFragment {
 		public void setItem(Alarm alarm) {
 			stationView.setText(StringUtils.toProperCase(alarm.getStation().getStationName()));
 			descriptionView.setText("Level: " + alarm.getLevel());
+		}
+
+	}
+
+
+	/**
+	 * Handles swipe to delete on alarm items
+	 */
+	protected class AlarmSwipeListener implements SwipeableRecyclerViewTouchListener.SwipeListener {
+
+		@Override
+		public boolean canSwipe(int position) {
+			return true;
+		}
+
+		@Override
+		public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+			removeItems(reverseSortedPositions);
+		}
+
+		@Override
+		public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+			removeItems(reverseSortedPositions);
+		}
+
+		private void removeItems(int[] reverseSortedPositions) {
+			List<Alarm> alarmsToRemove = new ArrayList<>();
+			List<Alarm> alarmsToKeep = adapter.getAlarms();
+			for (int position : reverseSortedPositions) {
+				alarmsToRemove.add(alarmsToKeep.remove(position));
+			}
+			adapter.setAlarms(alarmsToKeep);
+
+			Observable.from(alarmsToRemove)
+					.flatMap(new Func1<Alarm, Observable<Void>>() {
+						@Override
+						public Observable<Void> call(Alarm alarm) {
+							return cepsManager.removeAlarm(alarm);
+						}
+					})
+					.toList()
+					.flatMap(new Func1<List<Void>, Observable<List<Alarm>>>() {
+						@Override
+						public Observable<List<Alarm>> call(List<Void> voids) {
+							return cepsManager.getAlarms();
+						}
+					})
+					.compose(networkUtils.<List<Alarm>>getDefaultTransformer())
+					.subscribe(
+							new Action1<List<Alarm>>() {
+								@Override
+								public void call(List<Alarm> alarms) {
+									adapter.setAlarms(alarms);
+								}
+							},
+							new Action1<Throwable>() {
+								@Override
+								public void call(Throwable throwable) {
+									Timber.e(throwable, "error removing alarms");
+								}
+							});
 		}
 
 	}

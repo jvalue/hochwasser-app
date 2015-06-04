@@ -18,6 +18,7 @@ import javax.inject.Singleton;
 import de.bitdroid.flooding.gcm.GcmManager;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
+import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
 import timber.log.Timber;
@@ -26,8 +27,8 @@ import timber.log.Timber;
 public class CepsManager {
 
 	private static final String
-			PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID = "pegelAlarmAboveLevel";
-	private static final String PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID = "pegelAlarmBelowLevel";
+			PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID = "pegelAlarmAboveLevel",
+			PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID = "pegelAlarmBelowLevel";
 	private static final String
 			ARGUMENT_UUID = "STATION_UUID",
 			ARGUMENT_LEVEL = "LEVEL";
@@ -94,6 +95,19 @@ public class CepsManager {
 				.flatMap(new Func1<Client, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Client client) {
+						return Observable.just(null);
+					}
+				});
+	}
+
+
+	public Observable<Void> removeAlarm(Alarm alarm) {
+		String adapterId = alarm.isAlarmWhenAboveLevel() ? PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID : PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
+		String clientId = alarm.getId();
+		return registrationApi.unregisterClient(adapterId, clientId)
+				.flatMap(new Func1<Response, Observable<Void>>() {
+					@Override
+					public Observable<Void> call(Response response) {
 						return Observable.just(null);
 					}
 				});

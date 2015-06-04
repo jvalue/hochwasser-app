@@ -140,7 +140,7 @@ public class NewsFragment extends AbstractFragment {
 			timestampView.setText(DateFormat.getDateFormat(getActivity()).format(date) + " " + DateFormat.getTimeFormat(getActivity()).format(date));
 			contentView.setText(Html.fromHtml(item.getContent()));
 			if (item.getIsWarning()) iconView.setImageResource(R.drawable.ic_warning);
-			else iconView.setImageResource(R.drawable.ic_info);
+			else iconView.setImageResource(R.drawable.ic_announcement);
 		}
 
 	}

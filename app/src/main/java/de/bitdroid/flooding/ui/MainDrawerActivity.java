@@ -28,10 +28,10 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 	public void init(Bundle bundle) {
 
 		// setup main sections
-		addSection(newSection(getString(R.string.nav_home), new NewsFragment()));
+		addSection(newSection(getString(R.string.nav_home), R.drawable.ic_home, new NewsFragment()));
 		Intent intent = new Intent(this, DataSelectionHandler.WaterSelectionActivity.class);
-		addSection(newSection(getString(R.string.nav_alarms), new AlarmsFragment()));
-		addSection(newSection(getString(R.string.nav_analysis), intent));
+		addSection(newSection(getString(R.string.nav_alarms), R.drawable.ic_alert, new AlarmsFragment()));
+		addSection(newSection(getString(R.string.nav_analysis), R.drawable.ic_chart, intent));
 
 		// setup settings and feedback section
 		addBottomSection(newSection(getString(R.string.nav_settings), R.drawable.ic_settings, new SettingsFragment()));

@@ -134,8 +134,12 @@ public class AlarmsFragment extends AbstractFragment {
 		}
 
 		public void setItem(Alarm alarm) {
-			stationView.setText(StringUtils.toProperCase(alarm.getStation().getStationName()));
-			descriptionView.setText("Level: " + alarm.getLevel());
+			stationView.setText(StringUtils.toProperCase(alarm.getStation().getStationName()) + " - "
+					+ StringUtils.toProperCase(alarm.getStation().getBodyOfWater().getName()));
+			String description;
+			if (alarm.isAlarmWhenAboveLevel()) description = getString(R.string.alarms_description_above, alarm.getLevel());
+			else description = getString(R.string.alarms_description_below, alarm.getLevel());
+			descriptionView.setText(description);
 		}
 
 	}

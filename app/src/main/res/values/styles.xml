@@ -13,6 +13,7 @@
         <item name="colorAccent">@android:color/white</item>
         <item name="singleAccount">true</item>
         <item name="learningPattern">false</item>
+        <item name="drawerType">@integer/DRAWERTYPE_IMAGE</item>
     </style>
 
 

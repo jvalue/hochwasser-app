@@ -27,6 +27,9 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 	@Override
 	public void init(Bundle bundle) {
 
+		// setup top image
+		setDrawerHeaderImage(R.drawable.nav_alarms);
+
 		// setup main sections
 		addSection(newSection(getString(R.string.nav_home), R.drawable.ic_home, new NewsFragment()));
 		Intent intent = new Intent(this, DataSelectionHandler.WaterSelectionActivity.class);

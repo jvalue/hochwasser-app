@@ -41,6 +41,9 @@ public class AlarmsFragment extends AbstractFragment {
 	@InjectView(R.id.list) RecyclerView recyclerView;
 	private AlarmsAdapter adapter;
 
+	// flag indicating whether an alarm is currently being added.
+	// required to update the list
+	private boolean addingNewAlarm = false;
 
 
 	public AlarmsFragment() {
@@ -66,11 +69,26 @@ public class AlarmsFragment extends AbstractFragment {
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				addingNewAlarm = true;
 				startActivity(new Intent(getActivity(), WaterSelectionActivity.class));
 			}
 		});
 
 		// load items
+		loadAlarms();
+	}
+
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (addingNewAlarm) loadAlarms();
+	}
+
+
+	private void loadAlarms() {
+		if (addingNewAlarm) addingNewAlarm = false;
+
 		showSpinner();
 		cepsManager.getAlarms()
 				.compose(networkUtils.<List<Alarm>>getDefaultTransformer())
@@ -182,19 +200,12 @@ public class AlarmsFragment extends AbstractFragment {
 						}
 					})
 					.toList()
-					.flatMap(new Func1<List<Void>, Observable<List<Alarm>>>() {
-						@Override
-						public Observable<List<Alarm>> call(List<Void> voids) {
-							return cepsManager.getAlarms();
-						}
-					})
-					.compose(networkUtils.<List<Alarm>>getDefaultTransformer())
+					.compose(networkUtils.<List<Void>>getDefaultTransformer())
 					.subscribe(
-							new Action1<List<Alarm>>() {
+							new Action1<List<Void>>() {
 								@Override
-								public void call(List<Alarm> alarms) {
-									hideSpinner();
-									adapter.setAlarms(alarms);
+								public void call(List<Void> nothing) {
+									loadAlarms();
 								}
 							},
 							new Action1<Throwable>() {

@@ -95,6 +95,7 @@ public class CepsManager {
 				.flatMap(new Func1<Client, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Client client) {
+						clearAlarmsCache();
 						return Observable.just(null);
 					}
 				});
@@ -108,9 +109,15 @@ public class CepsManager {
 				.flatMap(new Func1<Response, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Response response) {
+						clearAlarmsCache();
 						return Observable.just(null);
 					}
 				});
+	}
+
+
+	public void clearAlarmsCache() {
+		alarmsCache = null;
 	}
 
 

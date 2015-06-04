@@ -1,132 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:orientation="vertical"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
     >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:orientation="vertical"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
-                android:orientation="vertical"
-                >
+                android:layout_margin="10dp"
+                android:orientation="vertical">
 
-                <TextView
-                    style="@style/FontHeader"
-                    android:text="@string/alarms_new_station_description"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        style="@style/FontHeader"
+                        android:text="@string/alarms_new_station_description"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_station_name"
+                        style="@style/FontRegular"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="6dp"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        style="@style/FontHeader"
+                        android:text="@string/alarms_new_level_description"
+                        />
+
+                    <EditText
+                        android:id="@+id/edit_level"
+                        style="@style/FontRegular"
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="3dp"
+                        android:hint="@string/alarms_new_level_hint"
+                        android:inputType="numberDecimal"
+                        />
+
+                    <TextView
+                        style="@style/FontRegular"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/alarms_new_trigger_description"
+                        />
+
+                    <RadioGroup
+                        android:id="@+id/selection_relation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checkedButton="@+id/above"
+                        android:orientation="vertical"
+                        >
+
+                        <RadioButton
+                            android:id="@+id/button_above"
+                            style="@style/FontRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/alarms_new_trigger_above"
+                            />
+
+                        <RadioButton
+                            android:id="@+id/button_below"
+                            style="@style/FontRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/alarms_new_trigger_below"
+                            />
+                    </RadioGroup>
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/button_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="6dp"
+                    android:enabled="false"
+                    android:text="@string/alarms_new_add"
                     />
 
-                <TextView
-                    android:id="@+id/text_station_name"
-                    style="@style/FontRegular"
-                    />
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="6dp"
+                android:layout_height="match_parent"
+                android:background="@color/gray_light"
                 android:orientation="vertical"
                 >
 
-                <TextView
-                    style="@style/FontHeader"
-                    android:text="@string/alarms_new_level_description"
-                    />
-
-                <EditText
-                    android:id="@+id/edit_level"
-                    style="@style/FontRegular"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_marginBottom="3dp"
-                    android:hint="@string/alarms_new_level_hint"
-                    android:inputType="numberDecimal"
-                    />
-
-                <TextView
-                    style="@style/FontRegular"
-                    android:layout_marginTop="3dp"
-                    android:text="@string/alarms_new_trigger_description"
-                    />
-
-                <RadioGroup
-                    android:id="@+id/selection_relation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checkedButton="@+id/above"
-                    android:orientation="vertical"
+                    android:layout_height="5dip"
+                    android:background="@drawable/card_shadow"
                     >
+                </View>
 
-                    <RadioButton
-                        android:id="@+id/button_above"
-                        style="@style/FontRegular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/alarms_new_trigger_above"
-                        />
+                <include layout="@layout/card_measurements"/>
 
-                    <RadioButton
-                        android:id="@+id/button_below"
-                        style="@style/FontRegular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/alarms_new_trigger_below"
-                        />
-                </RadioGroup>
+                <include layout="@layout/card_metadata"/>
+
+                <include layout="@layout/card_char_values"/>
+
+                <include layout="@layout/card_map"/>
+
             </LinearLayout>
 
-
-            <Button
-                android:id="@+id/button_confirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="6dp"
-                android:enabled="false"
-                android:text="@string/alarms_new_add"
-                />
-
         </LinearLayout>
 
+    </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/gray_light"
-            android:orientation="vertical"
-            >
+    <include layout="@layout/spinner"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="5dip"
-                android:background="@drawable/card_shadow"
-                >
-            </View>
-
-            <include layout="@layout/card_measurements"/>
-            <include layout="@layout/card_metadata"/>
-            <include layout="@layout/card_char_values"/>
-            <include layout="@layout/card_map"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</ScrollView>
-
+</RelativeLayout>

@@ -60,5 +60,11 @@
         android:text="@string/settings_logout"
         />
 
+    <include
+        layout="@layout/spinner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+
 </LinearLayout>
 

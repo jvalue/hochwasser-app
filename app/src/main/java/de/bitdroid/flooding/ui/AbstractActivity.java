@@ -3,12 +3,16 @@ package de.bitdroid.flooding.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import javax.inject.Inject;
 
+import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.auth.RestrictedResource;
 import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.InjectView;
 
 /**
  * Base activity class.
@@ -16,6 +20,9 @@ import roboguice.activity.RoboActionBarActivity;
 public class AbstractActivity extends RoboActionBarActivity implements RestrictedResource {
 
 	@Inject private LoginManager loginManager;
+	@Inject private UiUtils uiUtils;
+	@InjectView(R.id.spinner) private View spinnerContainerView;
+	@InjectView(R.id.spinner_image) private ImageView spinnerImageView;
 
 
 	@Override
@@ -47,6 +54,16 @@ public class AbstractActivity extends RoboActionBarActivity implements Restricte
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 		finish();
+	}
+
+
+	public void showSpinner() {
+		uiUtils.showSpinner(spinnerContainerView, spinnerImageView);
+	}
+
+
+	public void hideSpinner() {
+		uiUtils.hideSpinner(spinnerContainerView, spinnerImageView);
 	}
 
 }

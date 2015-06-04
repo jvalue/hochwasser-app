@@ -80,11 +80,13 @@ abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 		recyclerView.setAdapter(adapter);
 
 		// load items
+		showSpinner();
 		loadItems()
 				.compose(networkUtils.<List<T>>getDefaultTransformer())
 				.subscribe(new Action1<List<T>>() {
 					@Override
 					public void call(List<T> items) {
+						hideSpinner();
 						adapter.setItems(items);
 					}
 				}, new AbstractErrorAction(AbstractListSelectionActivity.this) {

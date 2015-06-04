@@ -26,4 +26,6 @@
 		fab:fab_colorPressed="@color/red_dark"
 		/>
 
+	<include layout="@layout/spinner"/>
+
 </RelativeLayout>

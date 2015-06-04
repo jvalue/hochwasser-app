@@ -71,11 +71,13 @@ public class AlarmsFragment extends AbstractFragment {
 		});
 
 		// load items
+		showSpinner();
 		cepsManager.getAlarms()
 				.compose(networkUtils.<List<Alarm>>getDefaultTransformer())
 				.subscribe(new Action1<List<Alarm>>() {
 					@Override
 					public void call(List<Alarm> alarms) {
+						hideSpinner();
 						adapter.setAlarms(alarms);
 					}
 				}, new AbstractErrorAction(AlarmsFragment.this) {
@@ -167,6 +169,7 @@ public class AlarmsFragment extends AbstractFragment {
 			}
 			adapter.setAlarms(alarmsToKeep);
 
+			showSpinner();
 			Observable.from(alarmsToRemove)
 					.flatMap(new Func1<Alarm, Observable<Void>>() {
 						@Override
@@ -186,6 +189,7 @@ public class AlarmsFragment extends AbstractFragment {
 							new Action1<List<Alarm>>() {
 								@Override
 								public void call(List<Alarm> alarms) {
+									hideSpinner();
 									adapter.setAlarms(alarms);
 								}
 							},

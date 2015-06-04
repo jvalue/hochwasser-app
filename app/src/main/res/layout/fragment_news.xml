@@ -14,4 +14,6 @@
 		android:listSelector="@drawable/list_selector_light"
 	/>
 
+	<include layout="@layout/spinner"/>
+
 </RelativeLayout>

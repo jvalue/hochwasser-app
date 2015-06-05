@@ -121,6 +121,7 @@
     <string name="station_card_char_hthw">Highest tide high water level (HThw)</string>
     <string name="station_card_char_ntnw">Lowest tide low water level (NTnw)</string>
     <string name="station_card_more">Show station info ...</string>
+    <string name="station_card_no_value">n/a</string>
 
 
 	<string name="error_invalid_server_url">Invalid server URL!</string>

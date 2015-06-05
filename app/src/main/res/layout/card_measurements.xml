@@ -31,7 +31,7 @@
                 <TextView
                     android:id="@+id/timestamp"
                     style="@style/StationCard.Row.Right"
-                    android:text="Yesterday, 2015"
+                    android:text="@string/station_card_no_value"
                     />
             </TableRow>
 
@@ -41,7 +41,7 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="4dp"
                 android:textSize="40sp"
-                android:text="10 cm"
+                android:text="@string/station_card_no_value"
                 />
 
         </TableLayout>

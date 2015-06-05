@@ -54,8 +54,10 @@ public class StationInfoUtils {
 	private void setupLevelCard(StationMeasurements measurements, CardView card) {
 		TextView timestampView = (TextView) card.findViewById(R.id.timestamp);
 		TextView levelView = (TextView) card.findViewById(R.id.level);
-		Date date = new Date(measurements.getLevelTimestamp());
-		timestampView.setText(DateFormat.getDateFormat(context).format(date) + " " + DateFormat.getTimeFormat(context).format(date));
+		if (measurements.getLevelTimestamp() != null) {
+			Date date = new Date(measurements.getLevelTimestamp());
+			timestampView.setText(DateFormat.getDateFormat(context).format(date) + " " + DateFormat.getTimeFormat(context).format(date));
+		}
 		if (measurements.getLevel() != null) {
 			levelView.setText(measurements.getLevel().getValue() + " " + measurements.getLevel().getUnit());
 		}

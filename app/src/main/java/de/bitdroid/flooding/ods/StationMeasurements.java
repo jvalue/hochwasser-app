@@ -11,10 +11,12 @@ import com.google.common.base.Objects;
  */
 public class StationMeasurements implements Parcelable {
 
+	private static final Long NO_VALUE = -999l;
+
 	private final Station station;
 	private final Measurement level;
 	private final Measurement levelZero;
-	private final long levelTimestamp; // unix timestamp in seconds
+	private final Long levelTimestamp; // unix timestamp in seconds
 
 	// statistical values are in German
 	private final Measurement
@@ -29,7 +31,7 @@ public class StationMeasurements implements Parcelable {
 
 	public StationMeasurements(
 			Station station,
-			Measurement level, Measurement levelZero, long levelTimestamp,
+			Measurement level, Measurement levelZero, Long levelTimestamp,
 			Measurement mw, Measurement mhw, Measurement mnw,
 			Measurement mtnw, Measurement mthw, Measurement hthw, Measurement ntnw) {
 
@@ -58,7 +60,7 @@ public class StationMeasurements implements Parcelable {
 		return levelZero;
 	}
 
-	public long getLevelTimestamp() {
+	public Long getLevelTimestamp() {
 		return levelTimestamp;
 	}
 
@@ -117,7 +119,9 @@ public class StationMeasurements implements Parcelable {
 		station = (Station) in.readValue(Station.class.getClassLoader());
 		level = (Measurement) in.readValue(Measurement.class.getClassLoader());
 		levelZero = (Measurement) in.readValue(Measurement.class.getClassLoader());
-		levelTimestamp = in.readLong();
+		long timestamp = in.readLong();
+		if (timestamp == NO_VALUE) levelTimestamp = null;
+		else levelTimestamp = timestamp;
 		mw = (Measurement) in.readValue(Measurement.class.getClassLoader());
 		mhw = (Measurement) in.readValue(Measurement.class.getClassLoader());
 		mnw = (Measurement) in.readValue(Measurement.class.getClassLoader());
@@ -137,7 +141,8 @@ public class StationMeasurements implements Parcelable {
 		dest.writeValue(station);
 		dest.writeValue(level);
 		dest.writeValue(levelZero);
-		dest.writeLong(levelTimestamp);
+		if (levelTimestamp == null) dest.writeLong(NO_VALUE);
+		else dest.writeLong(levelTimestamp);
 		dest.writeValue(mw);
 		dest.writeValue(mhw);
 		dest.writeValue(mnw);
@@ -164,7 +169,7 @@ public class StationMeasurements implements Parcelable {
 	public static class Builder {
 		private final Station station;
 		private Measurement level, levelZero;
-		private long levelTimestamp;
+		private Long levelTimestamp;
 		private Measurement mw, mhw, mnw;
 		private Measurement mtnw, mthw, hthw, ntnw;
 

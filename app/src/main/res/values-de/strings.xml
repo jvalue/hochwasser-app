@@ -140,6 +140,7 @@
     <string name="station_card_char_hthw">Höchstes Tidehochwasser (HThw)</string>
     <string name="station_card_char_ntnw">Niedrigstes Tideniedrigwasser (NTnw)</string>
     <string name="station_card_more">Stations Details anzeigen ...</string>
+    <string name="station_card_no_value">n. a.</string>
 
 
 	<string name="error_invalid_server_url">Ungültige Server URL!</string>

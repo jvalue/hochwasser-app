@@ -9,7 +9,7 @@ import de.bitdroid.flooding.ui.AbstractActivity;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.activity_river_graph_help)
-public class RiverGraphHelpActivity extends AbstractActivity {
+public class WaterGraphHelpActivity extends AbstractActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

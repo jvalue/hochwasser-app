@@ -82,7 +82,7 @@
             android:name=".ui.graph.WaterGraphActivity$MapInfoActivity"
             />
 		<activity
-			android:name=".ui.graph.RiverGraphHelpActivity"
+			android:name=".ui.graph.WaterGraphHelpActivity"
 			/>
 
 		<receiver android:name="de.bitdroid.flooding.gcm.GcmBroadcastReceiver">

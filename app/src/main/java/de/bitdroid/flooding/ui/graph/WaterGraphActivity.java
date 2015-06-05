@@ -187,7 +187,7 @@ public class WaterGraphActivity extends AbstractActivity {
 				return true;
 
 			case R.id.menu_help:
-				Intent intent = new Intent(this, RiverGraphHelpActivity.class);
+				Intent intent = new Intent(this, WaterGraphHelpActivity.class);
 				startActivity(intent);
 				return true;
 		}

@@ -9,9 +9,11 @@ import android.widget.Toast;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.gcm.GcmManager;
 import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.utils.VersionUtils;
+import it.neokree.materialnavigationdrawer.elements.MaterialAccount;
 import rx.functions.Action1;
 import timber.log.Timber;
 
@@ -23,12 +25,14 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 	@Inject private GcmManager gcmManager;
 	@Inject private NetworkUtils networkUtils;
 	@Inject private VersionUtils versionUtils;
+	@Inject private LoginManager loginManager;
 
 	@Override
 	public void init(Bundle bundle) {
 
 		// setup top image
-		setDrawerHeaderImage(R.drawable.nav_alarms);
+		addAccount(new MaterialAccount(this.getResources(),loginManager.getAccountName(), "", null, R.drawable.drawer_background));
+		setDrawerHeaderImage(R.drawable.drawer_background);
 
 		// setup main sections
 		addSection(newSection(getString(R.string.nav_home), R.drawable.ic_home, new NewsFragment()));

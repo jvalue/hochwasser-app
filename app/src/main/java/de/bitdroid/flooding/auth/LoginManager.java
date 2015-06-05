@@ -59,9 +59,13 @@ public class LoginManager {
 	}
 
 
-	public String getToken() throws IOException, UserRecoverableAuthException, GoogleAuthException {
-		cachedToken = GoogleAuthUtil.getToken(context, preferenceUtils.get(KEY_ACCOUNT_NAME), scope, new Bundle());
+	public String getToken(String accountName) throws IOException, UserRecoverableAuthException, GoogleAuthException {
+		cachedToken = GoogleAuthUtil.getToken(context, accountName, scope, new Bundle());
 		return cachedToken;
+	}
+
+	public String getToken() throws IOException, UserRecoverableAuthException, GoogleAuthException {
+		return getToken(preferenceUtils.get(KEY_ACCOUNT_NAME));
 	}
 
 

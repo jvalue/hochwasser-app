@@ -36,14 +36,19 @@ import timber.log.Timber;
 @ContentView(R.layout.activity_login)
 public class LoginActivity extends RoboActivity {
 
+	private static final String
+			STATE_SELECTED_ACCOUNT_NAME = "STATE_SELECTED_ACCOUNT_NAME";
+
 	private static final int
 			REQUEST_CODE_AUTH = 42,
 			REQUEST_CODE_ACCOUNT = 43;
 
-	@InjectView(R.id.login) SignInButton loginButton;
-	@Inject LoginManager loginManager;
-	@Inject UserApi userApi;
-	@Inject NetworkUtils networkUtils;
+	@InjectView(R.id.login) private SignInButton loginButton;
+	@Inject private LoginManager loginManager;
+	@Inject private UserApi userApi;
+	@Inject private NetworkUtils networkUtils;
+
+	private String selectedAccountName = null;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -62,8 +67,20 @@ public class LoginActivity extends RoboActivity {
 
 		// check if signed in
 		if (loginManager.getAccountName() != null) {
-			registerAndGetUser();
+			showMainActivity();
 		}
+
+		// restore state
+		if (savedInstanceState != null) {
+			selectedAccountName = savedInstanceState.getString(STATE_SELECTED_ACCOUNT_NAME);
+		}
+	}
+
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(STATE_SELECTED_ACCOUNT_NAME, selectedAccountName);
 	}
 
 
@@ -80,11 +97,13 @@ public class LoginActivity extends RoboActivity {
 		if (resultCode != RESULT_OK) return;
 		switch (requestCode) {
 			case REQUEST_CODE_AUTH:
+				// recovered from Google auth exception
 				registerAndGetUser();
 				break;
 
 			case REQUEST_CODE_ACCOUNT:
-				loginManager.setAccountName(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+				// user selected account
+				selectedAccountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 				registerAndGetUser();
 				break;
 		}
@@ -97,7 +116,7 @@ public class LoginActivity extends RoboActivity {
 					@Override
 					public Observable<String> call() {
 						try {
-							return Observable.just(loginManager.getToken());
+							return Observable.just(loginManager.getToken(selectedAccountName));
 						} catch (IOException | GoogleAuthException e) {
 							return Observable.error(e);
 						}
@@ -114,6 +133,7 @@ public class LoginActivity extends RoboActivity {
 					@Override
 					public void call(User user) {
 						Timber.d("login success (" + user.getId() + ")");
+						loginManager.setAccountName(selectedAccountName);
 						showMainActivity();
 					}
 				}, new Action1<Throwable>() {

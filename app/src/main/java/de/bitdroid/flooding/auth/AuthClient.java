@@ -13,7 +13,6 @@ import retrofit.client.Header;
 import retrofit.client.Request;
 import retrofit.client.Response;
 import retrofit.client.UrlConnectionClient;
-import timber.log.Timber;
 
 
 /**
@@ -33,11 +32,14 @@ public class AuthClient extends UrlConnectionClient {
 	@Override
 	public Response execute(Request request) throws IOException {
 		try {
-			String token = loginManager.getToken();
-			Timber.d("Access token = " + token);
-			Header authHeader = new Header("Authorization", "Bearer " + token);
 			List<Header> headers = new LinkedList<Header>(request.getHeaders());
-			headers.add(authHeader);
+
+			// if logged in add auth header
+			if (loginManager.getAccountName() != null) {
+				String token = loginManager.getToken();
+				Header authHeader = new Header("Authorization", "Bearer " + token);
+				headers.add(authHeader);
+			}
 
 			Request signedRequest = new Request(
 					request.getMethod(),

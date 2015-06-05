@@ -6,7 +6,6 @@ import android.support.v7.widget.CardView;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.ods.StationMeasurements;
@@ -23,12 +22,13 @@ import timber.log.Timber;
 @ContentView(R.layout.activity_station_info)
 public class StationInfoActivity extends AbstractActivity {
 
+	private static final String STATE_MEASUREMENTS = "STATE_MEASUREMENTS";
+
 	@InjectView(R.id.card_levels) private CardView levelsCard;
 	@InjectView(R.id.card_char_values) private CardView charValuesCard;
 	@InjectView(R.id.card_metadata) private CardView metadataCard;
 	@InjectView(R.id.card_map) private CardView mapCard;
 
-	@Inject private NetworkUtils networkUtils;
 	@Inject private OdsManager odsManager;
 	@Inject private StationInfoUtils stationInfoUtils;
 
@@ -44,20 +44,41 @@ public class StationInfoActivity extends AbstractActivity {
 		getSupportActionBar().setSubtitle(StringUtils.toProperCase(station.getBodyOfWater().getName()));
 
 		// load data
-		odsManager.getMeasurements(station)
-				.compose(networkUtils.<StationMeasurements>getDefaultTransformer())
-				.subscribe(new Action1<StationMeasurements>() {
-					@Override
-					public void call(StationMeasurements stationMeasurements) {
-						StationInfoActivity.this.measurements = stationMeasurements;
-						stationInfoUtils.setupStationCards(measurements, levelsCard, charValuesCard, metadataCard, mapCard);
-					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						Timber.e(throwable, "failed to download measurements");
-					}
-				});
+		if (savedInstanceState != null && savedInstanceState.get(STATE_MEASUREMENTS) != null) {
+			setupData((StationMeasurements) savedInstanceState.getParcelable(STATE_MEASUREMENTS));
+
+		} else {
+			showSpinner();
+			odsManager.getMeasurements(station)
+					.compose(networkUtils.<StationMeasurements>getDefaultTransformer())
+					.subscribe(new Action1<StationMeasurements>() {
+						@Override
+						public void call(StationMeasurements stationMeasurements) {
+							hideSpinner();
+							setupData(stationMeasurements);
+						}
+					}, new Action1<Throwable>() {
+						@Override
+						public void call(Throwable throwable) {
+							hideSpinner();
+							Timber.e(throwable, "failed to download measurements");
+						}
+					});
+		}
+
+	}
+
+
+	private void setupData(StationMeasurements measurements) {
+		this.measurements = measurements;
+		stationInfoUtils.setupStationCards(measurements, levelsCard, charValuesCard, metadataCard, mapCard);
+	}
+
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable(STATE_MEASUREMENTS, measurements);
 	}
 
 }

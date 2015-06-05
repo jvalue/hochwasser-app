@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_light"
     >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light"
         >
 
-        <include layout="@layout/card_measurements"/>
-        <include layout="@layout/card_metadata"/>
-        <include layout="@layout/card_char_values"/>
-        <include layout="@layout/card_map"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
-    </LinearLayout>
+            <include layout="@layout/card_measurements"/>
+            <include layout="@layout/card_metadata"/>
+            <include layout="@layout/card_char_values"/>
+            <include layout="@layout/card_map"/>
 
-</ScrollView>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/spinner"/>
+
+</RelativeLayout>

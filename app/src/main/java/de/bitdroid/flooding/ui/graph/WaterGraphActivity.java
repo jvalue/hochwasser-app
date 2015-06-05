@@ -167,8 +167,6 @@ public class WaterGraphActivity extends AbstractActivity {
 				return true;
 
 			case R.id.menu_normalize:
-				/*
-				TODO
 				if (showingRegularSeries) {
 					showRelativeRangeLabel();
 					graph.setSeries(getNormalizedSeries());
@@ -177,9 +175,8 @@ public class WaterGraphActivity extends AbstractActivity {
 					graph.setSeries(getRegularSeries());
 				}
 				this.showingRegularSeries = !showingRegularSeries;
-				if (levelData != null) graph.setData(levelData);
+				if (measurementsList != null) graph.setData(measurementsList);
 				invalidateOptionsMenu();
-				*/
 				return true;
 
 
@@ -286,24 +283,12 @@ public class WaterGraphActivity extends AbstractActivity {
 	}
 
 
-	/*
 	private List<Pair<AbstractSeries, Integer>> getNormalizedSeries() {
-		List<Pair<AbstractSeries, Integer>> series 
-				= new ArrayList<Pair<AbstractSeries, Integer>>();
+		List<Pair<AbstractSeries, Integer>> series = new ArrayList<>();
 
-		AbstractSeries normalizedSeries = new NormalizedSeries(
-				getString(R.string.series_water_levels_normalized),
-				COLUMN_STATION_KM,
-				COLUMN_LEVEL_VALUE,
-				COLUMN_LEVEL_UNIT,
-				COLUMN_CHARVALUES_MHW_VALUE,
-				COLUMN_CHARVALUES_MHW_UNIT,
-				COLUMN_CHARVALUES_MW_VALUE,
-				COLUMN_CHARVALUES_MW_UNIT,
-				COLUMN_CHARVALUES_MNW_VALUE,
-				COLUMN_CHARVALUES_MNW_UNIT);
+		AbstractSeries normalizedSeries = new NormalizedSeries(getString(R.string.series_water_levels_normalized));
 
-		series.add(new Pair<AbstractSeries, Integer>(
+		series.add(new Pair<>(
 					normalizedSeries,
 					R.xml.series_water_levels));
 
@@ -321,7 +306,6 @@ public class WaterGraphActivity extends AbstractActivity {
 
 		return series;
 	}
-	*/
 
 
 	private void showRegularRangeLabel() {
@@ -386,8 +370,7 @@ public class WaterGraphActivity extends AbstractActivity {
 		Collections.sort(measurementsList, new Comparator<StationMeasurements>() {
 			@Override
 			public int compare(StationMeasurements lhs, StationMeasurements rhs) {
-				return lhs.getStation().getBodyOfWater().getName().compareTo(
-						rhs.getStation().getBodyOfWater().getName());
+				return lhs.getStation().getRiverKm().compareTo(rhs.getStation().getRiverKm());
 			}
 		});
 	}

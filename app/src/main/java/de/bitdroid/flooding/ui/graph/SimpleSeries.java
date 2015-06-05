@@ -26,7 +26,6 @@ abstract class SimpleSeries extends AbstractListSeries {
 							getYValue(measurements).getValue(),
 							getYValue(measurements).getUnit()));
 		}
-		sortXValues();
 	}
 
 

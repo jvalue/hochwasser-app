@@ -1,7 +1,11 @@
 package de.bitdroid.flooding.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import javax.inject.Inject;
 
@@ -32,6 +36,7 @@ public class StationInfoActivity extends AbstractActivity {
 	@Inject private OdsManager odsManager;
 	@Inject private StationInfoUtils stationInfoUtils;
 
+	private Station station;
 	private StationMeasurements measurements;
 
     @Override
@@ -39,7 +44,7 @@ public class StationInfoActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
 
 		// set title
-		Station station = new StationSelection(getIntent()).getStation();
+		station = new StationSelection(getIntent()).getStation();
 		getSupportActionBar().setTitle(StringUtils.toProperCase(station.getStationName()));
 		getSupportActionBar().setSubtitle(StringUtils.toProperCase(station.getBodyOfWater().getName()));
 
@@ -79,6 +84,28 @@ public class StationInfoActivity extends AbstractActivity {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(STATE_MEASUREMENTS, measurements);
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_station_info, menu);
+		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.add_alarm:
+				Intent addAlarmIntent = new StationSelection(station.getBodyOfWater(), station)
+						.toIntent(this, NewAlarmActivity.class);
+				startActivity(addAlarmIntent);
+				return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 }

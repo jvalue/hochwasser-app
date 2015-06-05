@@ -7,12 +7,21 @@
     android:background="@color/gray_light"
     android:visibility="gone"
     >
+    
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:src="@drawable/spinner_background"
+        android:layout_centerInParent="true"
+        />
+
 
     <ImageView
         android:id="@+id/spinner_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:src="@drawable/spinner_01"
         />
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="spinner_anim_frame_length">400</integer>
+    <integer name="spinner_flip_half_length">300</integer>
 </resources>

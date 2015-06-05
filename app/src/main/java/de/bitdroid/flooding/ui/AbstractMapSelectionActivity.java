@@ -49,6 +49,7 @@ public abstract class AbstractMapSelectionActivity extends AbstractActivity impl
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle(R.string.alarms_new_title_station);
 
 		// load args
 		stationSelection = new StationSelection(getIntent());

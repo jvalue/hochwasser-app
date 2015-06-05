@@ -47,8 +47,8 @@
 	<string name="alarms_new_trigger_description">Alarm when water is</string>
 	<string name="alarms_new_trigger_above">above level</string>
 	<string name="alarms_new_trigger_below">below level</string>
-	<string name="alarms_new_title_river">Select river</string>
-	<string name="alarms_new_title_station">Select station</string>
+	<string name="alarms_new_title_river">Select River</string>
+	<string name="alarms_new_title_station">Select Station</string>
 	<string name="alarms_new_title_level">Select water level</string>
 	<string name="alarms_new_created">Added new alarm</string>
 	<string name="alarms_new_not_created">Not added</string>

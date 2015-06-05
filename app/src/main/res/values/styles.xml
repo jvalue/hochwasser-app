@@ -7,13 +7,22 @@
         <item name="colorAccent">@android:color/white</item>
     </style>
 
-    <style name="DrawerTheme" parent="MaterialNavigationDrawerTheme">
+    <style name="DrawerTheme" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar">
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/blue_dark</item>
         <item name="colorAccent">@android:color/white</item>
+        <item name="sectionStyle">@style/SectionTheme</item>
         <item name="singleAccount">true</item>
         <item name="learningPattern">false</item>
+        <item name="drawerColor">@color/gray_dark</item>
         <item name="drawerType">@integer/DRAWERTYPE_IMAGE</item>
+    </style>
+
+    <style name="SectionTheme">
+        <item name="sectionColorIcon">@android:color/white</item>
+        <item name="sectionColorText">@android:color/white</item>
+        <item name="sectionBackgroundColorPressed">@color/gray</item>
+        <item name="sectionBackgroundColorSelected">@color/gray_2</item>
     </style>
 
 

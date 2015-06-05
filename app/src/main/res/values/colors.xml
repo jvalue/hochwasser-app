@@ -5,6 +5,7 @@
     <color name="blue_dark">#3b77e7</color>
     <color name="blue_light">#ff88bbff</color>
 	<color name="gray">#777777</color>
+    <color name="gray_2">#ff5a5a5a</color>
     <color name="gray_light">#ffe1e1e1</color>
     <color name="gray_light_2">#ffb2b2b2</color>
     <color name="gray_dark">#ff474747</color>

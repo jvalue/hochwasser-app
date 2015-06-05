@@ -120,7 +120,7 @@ abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
-				actionBar.setIcon(R.drawable.ic_action_search);
+				actionBar.setIcon(R.drawable.ic_search);
 				showKeyboard();
 				searchBox.requestFocus();
 				// TODO show empty view

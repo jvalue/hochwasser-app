@@ -91,7 +91,7 @@
 
             <TableRow style="@style/GraphHelp.Row">
                 <ImageView
-                    android:src="@drawable/ic_action_normalize_dark"
+                    android:src="@drawable/ic_normalize_dark"
                     style="@style/GraphHelp.LeftItem"
                     />
 
@@ -104,7 +104,7 @@
 
             <TableRow style="@style/GraphHelp.Row">
                 <ImageView
-                    android:src="@drawable/ic_action_map_dark"
+                    android:src="@drawable/ic_place_dark"
                     style="@style/GraphHelp.LeftItem"
                     />
 

@@ -6,7 +6,7 @@
 	<item
 		android:id="@+id/menu_normalize"
 		android:title="@string/menu_graph_normalize"
-        android:icon="@drawable/ic_action_normalize_light"
+        android:icon="@drawable/ic_normalize"
         app:showAsAction="ifRoom"
 	/>
     <item
@@ -14,7 +14,7 @@
         app:showAsAction="ifRoom"
         android:title="@string/menu_graph_map"
         android:hint="@string/menu_graph_map"
-        android:icon="@drawable/ic_action_map_light"
+        android:icon="@drawable/ic_place"
     />
 	<item
 		android:id="@+id/menu_series"
@@ -24,6 +24,6 @@
 		android:id="@+id/menu_help"
 		android:title="@string/help"
 		android:hint="@string/help"
-		android:icon="@drawable/ic_action_help"
+		android:icon="@drawable/ic_help_outline"
 	/>
 </menu>

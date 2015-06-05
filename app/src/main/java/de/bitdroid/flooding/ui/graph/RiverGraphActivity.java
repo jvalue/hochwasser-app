@@ -119,10 +119,10 @@ public class RiverGraphActivity extends AbstractActivity {
 		MenuItem item = menu.findItem(R.id.menu_normalize);
 		if (showingRegularSeries) {
 			item.setTitle(getString(R.string.menu_graph_normalize));
-			item.setIcon(getResources().getDrawable(R.drawable.ic_action_normalize_light));
+			item.setIcon(getResources().getDrawable(R.drawable.ic_normalize));
 		} else {
 			item.setTitle(getString(R.string.menu_graph_regular));
-			item.setIcon(getResources().getDrawable(R.drawable.ic_action_cm));
+			item.setIcon(getResources().getDrawable(R.drawable.ic_denormalize));
 		}
 		return true;
 	}

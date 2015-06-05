@@ -76,7 +76,7 @@
             android:name=".ui.NewAlarmActivity"
 			/>
 		<activity
-			android:name=".ui.graph.RiverGraphActivity"
+			android:name=".ui.graph.WaterGraphActivity"
 			/>
 		<activity
 			android:name=".ui.graph.RiverGraphHelpActivity"

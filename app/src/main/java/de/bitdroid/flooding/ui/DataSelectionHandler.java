@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
-import de.bitdroid.flooding.ui.graph.RiverGraphActivity;
+import de.bitdroid.flooding.ui.graph.WaterGraphActivity;
 
 
 /**
@@ -39,7 +39,7 @@ public class DataSelectionHandler {
 
 		@Override
 		protected void onAllStationsSelected() {
-			Intent graphIntent = new StationSelection(getIntent()).toIntent(this, RiverGraphActivity.class);
+			Intent graphIntent = new StationSelection(getIntent()).toIntent(this, WaterGraphActivity.class);
 			startActivity(graphIntent);
 		}
 

@@ -36,8 +36,8 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import timber.log.Timber;
 
-@ContentView(R.layout.activity_river_graph)
-public class RiverGraphActivity extends AbstractActivity {
+@ContentView(R.layout.activity_water_graph)
+public class WaterGraphActivity extends AbstractActivity {
 
 	@Inject private OdsManager odsManager;
 
@@ -92,7 +92,7 @@ public class RiverGraphActivity extends AbstractActivity {
 					public void call(List<StationMeasurements> stationMeasurements) {
 						hideSpinner();
 						sortMeasurement(stationMeasurements);
-						RiverGraphActivity.this.measurementsList = stationMeasurements;
+						WaterGraphActivity.this.measurementsList = stationMeasurements;
 						graph.setData(stationMeasurements);
 					}
 				}, new Action1<Throwable>() {

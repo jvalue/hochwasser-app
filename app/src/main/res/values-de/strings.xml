@@ -187,11 +187,6 @@ Solltest du tiefer einsteigen wollen, so findest du den Quellecode kostenlos auf
     <string name="help_graph_action">
         Folgende Werkzeuge stehen zur Auswahl:
     </string>
-    <string name="help_graph_action_timestamps">
-        Sofern die Aufnahme von Wasserpegeln in den Einstellungen eingeschaltet ist,
-        kannst du hier einen bestimmten &lt;b&gt;Zeitstempel&lt;/b&gt; für den Graphen auswählen.
-        Nochmalerweise dauert es einige Zeit bis mehrere Zeitstempel angezeigt werden.
-    </string>
     <string name="help_graph_action_normalize">
         Der reguläre Graph zeigt Wasserstände relativ zu einem pro Station definiertem Pegelnullpunkt,
         was eine Analyse schwierig gestaltet.

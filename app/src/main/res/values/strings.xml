@@ -151,11 +151,6 @@
     <string name="help_graph_action">
         The available actions are:
     </string>
-    <string name="help_graph_action_timestamps">
-        If monitoring water levels is enabled in settings, you will be able to select a
-        &lt;b&gt;timestamp&lt;/b&gt; here to display in the graph. Generally it takes a couple of
-        hours before you can see multiple timestamps.
-    </string>
     <string name="help_graph_action_normalize">
         The regular graph shows absolute water levels, which is not ideal for analysing data.
         &lt;b&gt;Normalizing&lt;/b&gt; the graph will display the current levels in relation to

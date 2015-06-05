@@ -6,7 +6,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <TableLayout
             android:layout_margin="10dp"
             style="@style/GraphHelp">
@@ -86,19 +88,6 @@
                 android:layout_marginBottom="0dp"
                 android:text="@string/help_graph_action"
                 style="@style/GraphHelp.SectionTitle"/>
-
-            <TableRow style="@style/GraphHelp.Row">
-                <ImageView
-                    android:src="@drawable/ic_action_time_dark"
-                    style="@style/GraphHelp.LeftItem"
-                    />
-
-                <TextView
-                    android:id="@+id/timestamps"
-                    android:text="@string/help_graph_action_timestamps"
-                    style="@style/GraphHelp.RightItem"
-                    />
-            </TableRow>
 
             <TableRow style="@style/GraphHelp.Row">
                 <ImageView

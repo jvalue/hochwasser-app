@@ -2,9 +2,9 @@ package de.bitdroid.flooding.ui.graph;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -141,21 +141,20 @@ public class RiverGraphActivity extends AbstractActivity {
 					i++;
 				}
 
-				new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog))
+				new AlertDialog.Builder(this)
 					.setTitle(getString(R.string.series_select_dialog_title))
 					.setMultiChoiceItems(
 							items,
 							selectedItems,
 							new DialogInterface.OnMultiChoiceClickListener() {
-
 								@Override
 								public void onClick(DialogInterface dialog, int idx, boolean checked) {
 									selectedItems[idx] = checked;
 								}
 							}
 					)
-					.setNegativeButton(getString(R.string.btn_cancel), null)
-					.setPositiveButton(getString(R.string.btn_ok) , new DialogInterface.OnClickListener() {
+					.setNegativeButton(getString(android.R.string.cancel), null)
+					.setPositiveButton(getString(android.R.string.ok) , new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
 							Set<String> visibleSeries = new HashSet<String>();
@@ -186,7 +185,6 @@ public class RiverGraphActivity extends AbstractActivity {
 
 			case R.id.menu_map:
 				/*
-				TODO
 				Intent mapIntent = new Intent(getApplicationContext(), InfoMapActivity.class);
 				mapIntent.putExtra(InfoMapActivity.EXTRA_WATER_NAME, waterName);
 				startActivity(mapIntent);
@@ -197,14 +195,8 @@ public class RiverGraphActivity extends AbstractActivity {
 				return true;
 
 			case R.id.menu_help:
-				/*
-				TODO
 				Intent intent = new Intent(this, RiverGraphHelpActivity.class);
 				startActivity(intent);
-				overridePendingTransition(
-						R.anim.slide_enter_from_right,
-						R.anim.slide_exit_to_left);
-						*/
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

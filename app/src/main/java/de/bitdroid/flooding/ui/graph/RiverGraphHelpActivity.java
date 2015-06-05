@@ -11,7 +11,6 @@ import roboguice.inject.ContentView;
 @ContentView(R.layout.activity_river_graph_help)
 public class RiverGraphHelpActivity extends AbstractActivity {
 
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,9 +31,6 @@ public class RiverGraphHelpActivity extends AbstractActivity {
 		textView = (TextView) findViewById(R.id.series_extreme_tw);
 		textView.setText(Html.fromHtml(getString(R.string.help_graph_series_extreme_tw)));
 
-
-		textView = (TextView) findViewById(R.id.timestamps);
-		textView.setText(Html.fromHtml(getString(R.string.help_graph_action_timestamps)));
 
 		textView = (TextView) findViewById(R.id.map);
 		textView.setText(Html.fromHtml(getString(R.string.help_graph_action_map)));

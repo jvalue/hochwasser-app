@@ -28,6 +28,7 @@ import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.ods.StationMeasurements;
 import de.bitdroid.flooding.ui.AbstractActivity;
+import de.bitdroid.flooding.ui.AbstractMapSelectionActivity;
 import de.bitdroid.flooding.ui.StationSelection;
 import de.bitdroid.flooding.utils.StringUtils;
 import roboguice.inject.ContentView;
@@ -181,14 +182,8 @@ public class WaterGraphActivity extends AbstractActivity {
 
 
 			case R.id.menu_map:
-				/*
-				Intent mapIntent = new Intent(getApplicationContext(), InfoMapActivity.class);
-				mapIntent.putExtra(InfoMapActivity.EXTRA_WATER_NAME, waterName);
+				Intent mapIntent = new StationSelection(bodyOfWater).toIntent(this, MapInfoActivity.class);
 				startActivity(mapIntent);
-				overridePendingTransition(
-						R.anim.slide_enter_from_right,
-						R.anim.slide_exit_to_left);
-						*/
 				return true;
 
 			case R.id.menu_help:
@@ -373,6 +368,23 @@ public class WaterGraphActivity extends AbstractActivity {
 				return lhs.getStation().getRiverKm().compareTo(rhs.getStation().getRiverKm());
 			}
 		});
+	}
+
+
+	public static class MapInfoActivity extends AbstractMapSelectionActivity {
+
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			String bodyOfWaterName = new StationSelection(getIntent()).getWater().getName();
+			setTitle(StringUtils.toProperCase(bodyOfWaterName));
+		}
+
+		@Override
+		public void onStationClicked(Station station) {
+			// nothing to do
+		}
+
 	}
 
 }

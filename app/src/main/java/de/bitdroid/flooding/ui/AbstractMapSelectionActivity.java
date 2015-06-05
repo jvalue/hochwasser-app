@@ -27,7 +27,7 @@ import timber.log.Timber;
  * Select one station from a map.
  */
 @ContentView(R.layout.activity_select_map)
-abstract class AbstractMapSelectionActivity extends AbstractActivity implements StationClickListener {
+public abstract class AbstractMapSelectionActivity extends AbstractActivity implements StationClickListener {
 
 	private static final String
 			EXTRA_SCROLL_X = "EXTRA_SCROLL_X",

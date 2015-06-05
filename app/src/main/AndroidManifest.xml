@@ -78,6 +78,9 @@
 		<activity
 			android:name=".ui.graph.WaterGraphActivity"
 			/>
+        <activity
+            android:name=".ui.graph.WaterGraphActivity$MapInfoActivity"
+            />
 		<activity
 			android:name=".ui.graph.RiverGraphHelpActivity"
 			/>

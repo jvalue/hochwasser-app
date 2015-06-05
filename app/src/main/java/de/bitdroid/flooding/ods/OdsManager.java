@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import de.bitdroid.flooding.utils.PegelOnlineUtils;
 import rx.Observable;
 import rx.functions.Func0;
 import rx.functions.Func1;
@@ -42,15 +43,13 @@ public class OdsManager {
 			= "result.uuid,result.shortname,result.longname,result.km,result.latitude,result.longitude,result.water.longname,cursor";
 
 	private final DataApi dataApi;
-	private final PegelOnlineUtils pegelOnlineUtils;
 
 	private Map<String, Station> stationCache; // station uuid --> station
 
 
 	@Inject
-	OdsManager(DataApi dataApi, PegelOnlineUtils pegelOnlineUtils) {
+	OdsManager(DataApi dataApi) {
 		this.dataApi = dataApi;
-		this.pegelOnlineUtils = pegelOnlineUtils;
 	}
 
 
@@ -184,19 +183,32 @@ public class OdsManager {
 	private StationMeasurements parseMeasurements(Station station, JsonNode data) {
 		StationMeasurements.Builder builder = new StationMeasurements.Builder(station);
 
-		JsonNode timeSeries = data.path("timeseries").path(0);
+		JsonNode level = null;
+		for (JsonNode timeSeries : data.path("timeseries")) {
+			JsonNode type = timeSeries.path("shortname");
+			if (!type.isMissingNode() && type.asText().equals("W")) {
+				level = timeSeries;
+				break;
+			}
+		}
+
+		if (level == null) {
+			Timber.w("failed to find level data for station " + station.getStationName());
+			return builder.build();
+		}
+
 
 		// current measurement
-		JsonNode currentMeasurement = timeSeries.path("currentMeasurement");
+		JsonNode currentMeasurement = level.path("currentMeasurement");
 		if (!currentMeasurement.isMissingNode()) {
 			builder.setLevel(new Measurement(
 					(float) currentMeasurement.path("value").asDouble(),
-					timeSeries.path("unit").asText()));
-			builder.setLevelTimestamp(pegelOnlineUtils.parseStringTimestamp(currentMeasurement.path("timestamp").asText()));
+					level.path("unit").asText()));
+			builder.setLevelTimestamp(PegelOnlineUtils.parseStringTimestamp(currentMeasurement.path("timestamp").asText()));
 		}
 
 		// gauge zero
-		JsonNode gaugeZero = timeSeries.path("gaugeZero");
+		JsonNode gaugeZero = level.path("gaugeZero");
 		if (!gaugeZero.isMissingNode()) {
 			builder.setLevelZero(new Measurement(
 					(float) gaugeZero.path("value").asDouble(),
@@ -204,7 +216,7 @@ public class OdsManager {
 		}
 
 		// characteristic values
-		for (JsonNode charValue : timeSeries.path("characteristicValues")) {
+		for (JsonNode charValue : level.path("characteristicValues")) {
 			Measurement measurement = new Measurement((float) charValue.path("value").asDouble(), charValue.path("unit").asText());
 			String charType = charValue.path("shortname").asText();
 

@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.auth.RestrictedResource;
+import de.bitdroid.flooding.network.NetworkUtils;
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectView;
 
@@ -21,6 +22,7 @@ public class AbstractActivity extends RoboActionBarActivity implements Restricte
 
 	@Inject private LoginManager loginManager;
 	@Inject private UiUtils uiUtils;
+	@Inject protected NetworkUtils networkUtils;
 	@InjectView(R.id.spinner) private View spinnerContainerView;
 	@InjectView(R.id.spinner_image) private ImageView spinnerImageView;
 

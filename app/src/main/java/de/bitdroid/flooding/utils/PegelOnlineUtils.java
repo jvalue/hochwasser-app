@@ -1,4 +1,4 @@
-package de.bitdroid.flooding.ods;
+package de.bitdroid.flooding.utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -6,12 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.inject.Inject;
 
 public class PegelOnlineUtils {
 
+	private PegelOnlineUtils() { }
+
 	private static final String relativeCmUnit = "cm";
-	private static final Set<String> absoluteMeterUnits = new HashSet<String>();
+	private static final Set<String> absoluteMeterUnits = new HashSet<>();
 	static {
 		absoluteMeterUnits.add("m+nn");
 		absoluteMeterUnits.add("m+nhn");
@@ -29,28 +30,26 @@ public class PegelOnlineUtils {
 	private static final DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
 
-	@Inject
-	PegelOnlineUtils() { }
-
-
-	public double toCm(
-			double value,
+	public static float toCm(
+			float value,
 			String unit) {
 
-		unit = unit.toLowerCase();
+		Assert.assertNotNull(unit);
 
+		unit = unit.toLowerCase();
+		
 		if (unit.equals(relativeCmUnit)) return value;
 		else if (absoluteMeterUnits.contains(unit)) return value * 100;
 		else throw new IllegalArgumentException("Unknown unit " + unit);
 	}
 
 
-	public boolean isRelativeCmUnit(String unit) {
+	public static boolean isRelativeCmUnit(String unit) {
 		return unit.toLowerCase().equals(relativeCmUnit);
 	}
 
-
-	public long parseStringTimestamp(String stringTimestamp) {
+	public static long parseStringTimestamp(String stringTimestamp) {
+		Assert.assertNotNull(stringTimestamp);
 		try {
 			return dateParser.parse(stringTimestamp).getTime();
 		} catch (ParseException pe) {

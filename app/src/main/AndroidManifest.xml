@@ -76,6 +76,12 @@
         <activity
             android:name=".ui.NewAlarmActivity"
 			/>
+		<activity
+			android:name=".ui.graph.RiverGraphActivity"
+			/>
+		<activity
+			android:name=".ui.graph.RiverGraphHelpActivity"
+			/>
 
 		<receiver android:name="de.bitdroid.flooding.gcm.GcmBroadcastReceiver">
 			<intent-filter>

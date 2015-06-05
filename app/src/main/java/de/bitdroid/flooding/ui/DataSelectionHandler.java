@@ -2,10 +2,11 @@ package de.bitdroid.flooding.ui;
 
 
 import android.content.Context;
-import android.widget.Toast;
+import android.content.Intent;
 
 import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
+import de.bitdroid.flooding.ui.graph.RiverGraphActivity;
 
 
 /**
@@ -38,7 +39,8 @@ public class DataSelectionHandler {
 
 		@Override
 		protected void onAllStationsSelected() {
-			Toast.makeText(this, "all selected!", Toast.LENGTH_SHORT).show();
+			Intent graphIntent = new StationSelection(getIntent()).toIntent(this, RiverGraphActivity.class);
+			startActivity(graphIntent);
 		}
 
 		@Override

@@ -142,7 +142,7 @@ public class CepsManager {
 			Alarm.Builder builder = new Alarm.Builder()
 					.setId(client.getId())
 					.setLevel((double) args.get(ARGUMENT_LEVEL))
-					.setAlarmWhenAboveLevel(true);
+					.setAlarmWhenAboveLevel(alarmWhenAboveLevel);
 			builderMap.put((String) args.get(ARGUMENT_UUID), builder);
 		}
 		return builderMap;

@@ -124,22 +124,22 @@ final class WaterGraph implements OnTouchListener {
 	}
 
 
-	private static final String 
-			EXTRA_ZOOM_MIN = "zoomMin",
-			EXTRA_ZOOM_MAX = "zoomMax";
+	private static final String
+			STATE_ZOOM_MIN = "zoomMin",
+			STATE_ZOOM_MAX = "zoomMax";
 
 
 	public void saveState(Bundle state) {
 		manager.saveVisibleSeries(state);
-		storePoint(state, EXTRA_ZOOM_MIN, zoomMinXY);
-		storePoint(state, EXTRA_ZOOM_MAX, zoomMaxXY);
+		storePoint(state, STATE_ZOOM_MIN, zoomMinXY);
+		storePoint(state, STATE_ZOOM_MAX, zoomMaxXY);
 	}
 
 
 	public void restoreState(Bundle state) {
 		manager.restoreVisibleSeries(state);
-		zoomMinXY = restorePoint(state, EXTRA_ZOOM_MIN); 
-		zoomMaxXY = restorePoint(state, EXTRA_ZOOM_MAX); 
+		zoomMinXY = restorePoint(state, STATE_ZOOM_MIN);
+		zoomMaxXY = restorePoint(state, STATE_ZOOM_MAX);
         graph.setDomainBoundaries(zoomMinXY.x, zoomMaxXY.x, BoundaryMode.FIXED);
 		updateGraph();
 	}

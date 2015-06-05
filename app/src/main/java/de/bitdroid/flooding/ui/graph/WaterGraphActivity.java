@@ -40,13 +40,17 @@ import timber.log.Timber;
 @ContentView(R.layout.activity_water_graph)
 public class WaterGraphActivity extends AbstractActivity {
 
+	private static final String
+			STATE_MEASUREMENTS = "STATE_MEASUREMENTS",
+			STATE_SHOWING_REGULAR_SERIES = "STATE_SHOWING_REGULAR_SERIES";
+
+
 	@Inject private OdsManager odsManager;
 
 	private WaterGraph graph;
 	private boolean showingRegularSeries = true;
 	private BodyOfWater bodyOfWater;
-
-	private List<StationMeasurements> measurementsList;
+	private ArrayList<StationMeasurements> measurementsList;
 
 
     @Override
@@ -63,47 +67,78 @@ public class WaterGraphActivity extends AbstractActivity {
 		// setup graph
 		XYPlot graphView = (XYPlot) findViewById(R.id.graph);
 		graph = new WaterGraph(graphView, this);
-		graph.setSeries(getRegularSeries());
 		graph.setDomainAxis(
 				getString(R.string.graph_domainlabel),
 				new DecimalFormat("@@#"),
 				XYStepMode.SUBDIVIDE,
 				10);
-		showRegularRangeLabel();
 
 		// load data
-		showSpinner();
-		odsManager.getStationsByBodyOfWater(bodyOfWater)
-				.flatMap(new Func1<List<Station>, Observable<List<StationMeasurements>>>() {
-					@Override
-					public Observable<List<StationMeasurements>> call(List<Station> stations) {
-						return Observable.from(stations)
-								.flatMap(new Func1<Station, Observable<StationMeasurements>>() {
-									@Override
-									public Observable<StationMeasurements> call(Station station) {
-										return odsManager.getMeasurements(station);
-									}
-								})
-								.toList();
-					}
-				})
-				.compose(networkUtils.<List<StationMeasurements>>getDefaultTransformer())
-				.subscribe(new Action1<List<StationMeasurements>>() {
-					@Override
-					public void call(List<StationMeasurements> stationMeasurements) {
-						hideSpinner();
-						if (!assertValidMeasurements(stationMeasurements)) return;
-						sortMeasurement(stationMeasurements);
-						WaterGraphActivity.this.measurementsList = stationMeasurements;
-						graph.setData(stationMeasurements);
-					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						hideSpinner();
-						Timber.e(throwable, "failed to download measurements");
-					}
-				});
+		if (savedInstanceState != null) {
+			showingRegularSeries = savedInstanceState.getBoolean(STATE_SHOWING_REGULAR_SERIES);
+			ArrayList<StationMeasurements> measurementsList = savedInstanceState.getParcelableArrayList(STATE_MEASUREMENTS);
+			setupData(measurementsList);
+			graph.restoreState(savedInstanceState);
+
+		} else {
+			showSpinner();
+			odsManager.getStationsByBodyOfWater(bodyOfWater)
+					.flatMap(new Func1<List<Station>, Observable<List<StationMeasurements>>>() {
+						@Override
+						public Observable<List<StationMeasurements>> call(List<Station> stations) {
+							return Observable.from(stations)
+									.flatMap(new Func1<Station, Observable<StationMeasurements>>() {
+										@Override
+										public Observable<StationMeasurements> call(Station station) {
+											return odsManager.getMeasurements(station);
+										}
+									})
+									.toList();
+						}
+					})
+					.compose(networkUtils.<List<StationMeasurements>>getDefaultTransformer())
+					.subscribe(new Action1<List<StationMeasurements>>() {
+						@Override
+						public void call(List<StationMeasurements> stationMeasurements) {
+							hideSpinner();
+							setupData(stationMeasurements);
+						}
+					}, new Action1<Throwable>() {
+						@Override
+						public void call(Throwable throwable) {
+							hideSpinner();
+							Timber.e(throwable, "failed to download measurements");
+						}
+					});
+		}
+	}
+
+
+	@Override
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
+		state.putBoolean(STATE_SHOWING_REGULAR_SERIES, showingRegularSeries);
+		state.putParcelableArrayList(STATE_MEASUREMENTS, measurementsList);
+		graph.saveState(state);
+	}
+
+
+	private void setupData(List<StationMeasurements> measurementsList) {
+		if (!assertValidMeasurements(measurementsList)) return;
+
+		// setup graph UI
+		if (showingRegularSeries) {
+			graph.setSeries(getRegularSeries());
+			showRegularRangeLabel();
+		} else {
+			graph.setSeries(getNormalizedSeries());
+			showRelativeRangeLabel();
+		}
+
+		// set data
+		sortMeasurement(measurementsList);
+		this.measurementsList = new ArrayList<>(measurementsList);
+		graph.setData(measurementsList);
 	}
 
 
@@ -194,51 +229,6 @@ public class WaterGraphActivity extends AbstractActivity {
 		}
 		return super.onOptionsItemSelected(menuItem);
 	}
-
-
-	/*
-	private static final String 
-		EXTRA_SHOWING_REGULAR_SERIES = "EXTRA_SHOWING_REGULAR_SERIES",
-		EXTRA_TIMESTAMP = "EXTRA_TIMESTAMP",
-		EXTRA_SHOWING_SEEKBAR = "EXTRA_SHOWING_SEEKBAR",
-		EXTRA_DATA_DOWNLOADED = "EXTRA_DATA_DOWNLOADED";
-
-	@Override
-	protected void onSaveInstanceState(Bundle state) {
-		super.onSaveInstanceState(state);
-		state.putBoolean(EXTRA_SHOWING_REGULAR_SERIES, showingRegularSeries);
-		graph.saveState(state);
-	}
-
-
-	@Override
-	protected void onRestoreInstanceState(Bundle state) {
-		super.onRestoreInstanceState(state);
-
-		// restore series
-		this.showingRegularSeries = state.getBoolean(EXTRA_SHOWING_REGULAR_SERIES);
-		if (!showingRegularSeries) {
-			showRelativeRangeLabel();
-			graph.setSeries(getNormalizedSeries());
-			if (levelData != null) graph.setData(levelData);
-		}
-		graph.restoreState(state);
-
-		// set data loader
-		Loader<Cursor> loader = getLoaderManager().getLoader(DATA_LOADER_ID);
-		this.dataLoader = (CombinedSourceLoader) loader;
-
-		// restore timestamp
-		setTimestamp(state.getLong(EXTRA_TIMESTAMP));
-
-		// restore seekbar
-		showingSeekbar = state.getBoolean(EXTRA_SHOWING_SEEKBAR);
-		if (showingSeekbar) seekbar.setVisibility(View.VISIBLE);
-
-		this.newContentDownloaded =  state.getBoolean(EXTRA_DATA_DOWNLOADED);
-	}
-	*/
-
 
 
 	private List<Pair<AbstractSeries, Integer>> getRegularSeries() {

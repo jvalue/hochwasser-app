@@ -1,12 +1,15 @@
 package de.bitdroid.flooding.ods;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.common.base.Objects;
 
 /**
  * Model class for measurements of a station.
  */
-public class StationMeasurements {
+public class StationMeasurements implements Parcelable {
 
 	private final Station station;
 	private final Measurement level;
@@ -109,6 +112,54 @@ public class StationMeasurements {
 	public int hashCode() {
 		return Objects.hashCode(station, level, levelZero, levelTimestamp, mw, mhw, mnw, mtnw, mthw, hthw, ntnw);
 	}
+
+	protected StationMeasurements(Parcel in) {
+		station = (Station) in.readValue(Station.class.getClassLoader());
+		level = (Measurement) in.readValue(Measurement.class.getClassLoader());
+		levelZero = (Measurement) in.readValue(Measurement.class.getClassLoader());
+		levelTimestamp = in.readLong();
+		mw = (Measurement) in.readValue(Measurement.class.getClassLoader());
+		mhw = (Measurement) in.readValue(Measurement.class.getClassLoader());
+		mnw = (Measurement) in.readValue(Measurement.class.getClassLoader());
+		mtnw = (Measurement) in.readValue(Measurement.class.getClassLoader());
+		mthw = (Measurement) in.readValue(Measurement.class.getClassLoader());
+		hthw = (Measurement) in.readValue(Measurement.class.getClassLoader());
+		ntnw = (Measurement) in.readValue(Measurement.class.getClassLoader());
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeValue(station);
+		dest.writeValue(level);
+		dest.writeValue(levelZero);
+		dest.writeLong(levelTimestamp);
+		dest.writeValue(mw);
+		dest.writeValue(mhw);
+		dest.writeValue(mnw);
+		dest.writeValue(mtnw);
+		dest.writeValue(mthw);
+		dest.writeValue(hthw);
+		dest.writeValue(ntnw);
+	}
+
+	@SuppressWarnings("unused")
+	public static final Parcelable.Creator<StationMeasurements> CREATOR = new Parcelable.Creator<StationMeasurements>() {
+		@Override
+		public StationMeasurements createFromParcel(Parcel in) {
+			return new StationMeasurements(in);
+		}
+
+		@Override
+		public StationMeasurements[] newArray(int size) {
+			return new StationMeasurements[size];
+		}
+	};
+
 
 	public static class Builder {
 		private final Station station;

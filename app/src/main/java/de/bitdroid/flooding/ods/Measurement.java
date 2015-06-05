@@ -1,8 +1,11 @@
 package de.bitdroid.flooding.ods;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.common.base.Objects;
 
-public class Measurement {
+public class Measurement implements  Parcelable {
 
 	private final float value;
 	private final String unit;
@@ -33,4 +36,33 @@ public class Measurement {
 	public int hashCode() {
 		return Objects.hashCode(value, unit);
 	}
+
+	protected Measurement(Parcel in) {
+		value = in.readFloat();
+		unit = in.readString();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeFloat(value);
+		dest.writeString(unit);
+	}
+
+	@SuppressWarnings("unused")
+	public static final Parcelable.Creator<Measurement> CREATOR = new Parcelable.Creator<Measurement>() {
+		@Override
+		public Measurement createFromParcel(Parcel in) {
+			return new Measurement(in);
+		}
+
+		@Override
+		public Measurement[] newArray(int size) {
+			return new Measurement[size];
+		}
+	};
 }

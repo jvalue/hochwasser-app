@@ -92,6 +92,7 @@ public class WaterGraphActivity extends AbstractActivity {
 					@Override
 					public void call(List<StationMeasurements> stationMeasurements) {
 						hideSpinner();
+						if (!assertValidMeasurements(stationMeasurements)) return;
 						sortMeasurement(stationMeasurements);
 						WaterGraphActivity.this.measurementsList = stationMeasurements;
 						graph.setData(stationMeasurements);
@@ -319,21 +320,15 @@ public class WaterGraphActivity extends AbstractActivity {
 	}
 
 
-	/*
-	TODO
-	private boolean checkForValidData() {
+	private boolean assertValidMeasurements(List<StationMeasurements> measurementsList) {
 		// check that there are enough stations present to show in graph
 		boolean valid = true;
-
-		levelData.moveToFirst();
-		if (levelData.getCount() <= 1) valid = false;
-		else if (levelData.getCount() == 2) {
-			double km1 = levelData.getDouble(levelData.getColumnIndex(COLUMN_STATION_KM));
-			levelData.moveToNext();
-			double km2 = levelData.getDouble(levelData.getColumnIndex(COLUMN_STATION_KM));
+		if (measurementsList.size() <= 1) {
+			valid = false;
+		} else if (measurementsList.size() == 2) {
+			float km1 = measurementsList.get(0).getStation().getRiverKm();
+			float km2 = measurementsList.get(1).getStation().getRiverKm();
 			if (km1 == km2) valid = false;
-
-			levelData.moveToFirst();
 		}
 
 		if (valid) return true;
@@ -344,21 +339,18 @@ public class WaterGraphActivity extends AbstractActivity {
 				.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
-						RiverGraphActivity.this.onBackPressed();
+						finish();
 					}
 				})
 				.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						RiverGraphActivity.this.onBackPressed();
+						finish();
 					}
 				})
-				.create()
 				.show();
-
 		return false;
 	}
-	 */
 
 
 	private void sortMeasurement(List<StationMeasurements> measurementsList) {

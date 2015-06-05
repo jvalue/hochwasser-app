@@ -62,7 +62,7 @@
     <string name="alarms_triggered_msg_below">below level</string>
 
 
-    <string name="invalid_graph_title">Ooops</string>
+    <string name="invalid_graph_title">Insufficient data</string>
     <string name="invalid_graph_msg">Sorry, but there are not enough stations along this river to
     show the graph.</string>
 	<string name="series_select_dialog_title">Select Series</string>

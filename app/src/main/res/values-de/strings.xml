@@ -57,7 +57,7 @@
     <string name="alarms_triggered_msg_below">unterschritten</string>
 
 
-    <string name="invalid_graph_title">Ooops</string>
+    <string name="invalid_graph_title">Unzureichende Daten</string>
     <string name="invalid_graph_msg">Leider gitb es nicht genug Stationen an diesem Fluss um
     den Graphen anzeigen zu können.</string>
 	<string name="series_select_dialog_title">Linien auswählen</string>

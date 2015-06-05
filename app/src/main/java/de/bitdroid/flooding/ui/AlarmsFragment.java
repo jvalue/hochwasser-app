@@ -142,16 +142,29 @@ public class AlarmsFragment extends AbstractFragment {
 
 	protected class AlarmViewHolder extends RecyclerView.ViewHolder {
 
+		private final View containerView;
 		private final TextView stationView;
 		private final TextView descriptionView;
 
-		public AlarmViewHolder(View itemView) {
-			super(itemView);
-			this.stationView = (TextView) itemView.findViewById(R.id.alarm_title);
-			this.descriptionView = (TextView) itemView.findViewById(R.id.alarm_description);
+		public AlarmViewHolder(View containerView) {
+			super(containerView);
+			this.containerView = containerView;
+			this.stationView = (TextView) containerView.findViewById(R.id.alarm_title);
+			this.descriptionView = (TextView) containerView.findViewById(R.id.alarm_description);
 		}
 
-		public void setItem(Alarm alarm) {
+		public void setItem(final Alarm alarm) {
+			// setup on click
+			containerView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent stationIntent = new StationSelection(alarm.getStation().getBodyOfWater(), alarm.getStation())
+							.toIntent(getActivity(), StationInfoActivity.class);
+					startActivity(stationIntent);
+				}
+			});
+
+			// setup content
 			stationView.setText(StringUtils.toProperCase(alarm.getStation().getStationName()) + " - "
 					+ StringUtils.toProperCase(alarm.getStation().getBodyOfWater().getName()));
 			String description;

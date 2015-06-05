@@ -11,6 +11,8 @@ import com.google.common.base.Objects;
  */
 public class Station implements Parcelable {
 
+	private static final float NO_VALUE = -999f;
+
 	private final String uuid;
 	private final String stationName;
 	private final BodyOfWater bodyOfWater;
@@ -60,9 +62,9 @@ public class Station implements Parcelable {
 		this.uuid = in.readString();
 		this.stationName = in.readString();
 		this.bodyOfWater = (BodyOfWater) in.readValue(BodyOfWater.class.getClassLoader());
-		this.latitude = in.readFloat();
-		this.longitude = in.readFloat();
-		this.riverKm = in.readFloat();
+		this.latitude = valueToNull(in.readFloat());
+		this.longitude = valueToNull(in.readFloat());
+		this.riverKm = valueToNull(in.readFloat());
 	}
 
 	@Override
@@ -75,9 +77,9 @@ public class Station implements Parcelable {
 		dest.writeString(uuid);
 		dest.writeString(stationName);
 		dest.writeValue(bodyOfWater);
-		dest.writeFloat(latitude);
-		dest.writeFloat(longitude);
-		dest.writeFloat(riverKm);
+		dest.writeFloat(assertValueNotNull(latitude));
+		dest.writeFloat(assertValueNotNull(longitude));
+		dest.writeFloat(assertValueNotNull(riverKm));
 	}
 
 	@SuppressWarnings("unused")
@@ -110,6 +112,18 @@ public class Station implements Parcelable {
 	public int hashCode() {
 		return Objects.hashCode(uuid, stationName, bodyOfWater, latitude, longitude, riverKm);
 	}
+
+	private float assertValueNotNull(Float value) {
+		if (value == null) return NO_VALUE;
+		else return value;
+	}
+
+
+	private Float valueToNull(float value) {
+		if (value == NO_VALUE) return null;
+		else return value;
+	}
+
 
 	public static class Builder {
 		private String uuid;

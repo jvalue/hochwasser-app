@@ -56,7 +56,9 @@ public class StationInfoUtils {
 		TextView levelView = (TextView) card.findViewById(R.id.level);
 		Date date = new Date(measurements.getLevelTimestamp());
 		timestampView.setText(DateFormat.getDateFormat(context).format(date) + " " + DateFormat.getTimeFormat(context).format(date));
-		levelView.setText(measurements.getLevel().getValue() + " " + measurements.getLevel().getUnit());
+		if (measurements.getLevel() != null) {
+			levelView.setText(measurements.getLevel().getValue() + " " + measurements.getLevel().getUnit());
+		}
 	}
 
 
@@ -123,8 +125,13 @@ public class StationInfoUtils {
 				null);
 		mapView.getOverlays().add(overlay);
 
-		GeoPoint point = new GeoPoint(measurements.getStation().getLatitude(), measurements.getStation().getLongitude());
-		mapView.getController().setCenter(point);
+		GeoPoint center;
+		if (measurements.getStation().getLatitude() != null && measurements.getStation().getLongitude() != null) {
+			center = new GeoPoint(measurements.getStation().getLatitude(), measurements.getStation().getLongitude());
+		} else {
+			center = new GeoPoint(0, 0);
+		}
+		mapView.getController().setCenter(center);
 		mapView.getController().setZoom(9);
 		mapView.setOnTouchListener(new View.OnTouchListener() {
 			@Override

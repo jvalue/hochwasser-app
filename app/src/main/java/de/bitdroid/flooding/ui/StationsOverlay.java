@@ -38,8 +38,10 @@ public final class StationsOverlay extends ItemizedOverlay<OverlayItem> {
 
 		for (Station station : stations) {
 			String name = station.getStationName();
-			GeoPoint point = new GeoPoint(station.getLatitude(), station.getLongitude());
-			overlayItems.add(new OverlayItem(name, name, point));
+			if (station.getLatitude() != null && station.getLongitude() != null) {
+				GeoPoint point = new GeoPoint(station.getLatitude(), station.getLongitude());
+				overlayItems.add(new OverlayItem(name, name, point));
+			}
 		}
 
 		populate();

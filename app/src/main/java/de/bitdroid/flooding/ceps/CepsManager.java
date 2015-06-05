@@ -8,6 +8,7 @@ import org.jvalue.ceps.api.notifications.Client;
 import org.jvalue.ceps.api.notifications.ClientDescription;
 import org.jvalue.ceps.api.notifications.GcmClientDescription;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,39 +49,52 @@ public class CepsManager {
 
 
 	public Observable<List<Alarm>> getAlarms() {
-		return Observable
-				.merge(
-						registrationApi.getAllClients(PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID)
-								.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
-									@Override
-									public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
-										return Observable.from(parseClients(clients, true).entrySet());
-									}
-								}),
-						registrationApi.getAllClients(PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID)
-								.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
-									@Override
-									public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
-										return Observable.from(parseClients(clients, false).entrySet());
-									}
-								}))
-				.flatMap(new Func1<Map.Entry<String, Alarm.Builder>, Observable<Alarm>>() {
-					@Override
-					public Observable<Alarm> call(final Map.Entry<String, Alarm.Builder> entry) {
-						return odsManager.getStationByUuid(entry.getKey())
-								.flatMap(new Func1<Optional<Station>, Observable<Alarm>>() {
-									@Override
-									public Observable<Alarm> call(Optional<Station> stationOptional) {
-										if (!stationOptional.isPresent()) {
-											Timber.e("failed to find station with uuid " + entry.getKey());
-											return Observable.empty();
+		if (alarmsCache != null) {
+			List<Alarm> alarms = new ArrayList<>(alarmsCache);
+			return Observable.just(alarms);
+			
+		} else {
+			return Observable
+					.merge(
+							registrationApi.getAllClients(PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID)
+									.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
+										@Override
+										public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
+											return Observable.from(parseClients(clients, true).entrySet());
 										}
-										return Observable.just(entry.getValue().setStation(stationOptional.get()).build());
-									}
-								});
-					}
-				})
-				.toList();
+									}),
+							registrationApi.getAllClients(PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID)
+									.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
+										@Override
+										public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
+											return Observable.from(parseClients(clients, false).entrySet());
+										}
+									}))
+					.flatMap(new Func1<Map.Entry<String, Alarm.Builder>, Observable<Alarm>>() {
+						@Override
+						public Observable<Alarm> call(final Map.Entry<String, Alarm.Builder> entry) {
+							return odsManager.getStationByUuid(entry.getKey())
+									.flatMap(new Func1<Optional<Station>, Observable<Alarm>>() {
+										@Override
+										public Observable<Alarm> call(Optional<Station> stationOptional) {
+											if (!stationOptional.isPresent()) {
+												Timber.e("failed to find station with uuid " + entry.getKey());
+												return Observable.empty();
+											}
+											return Observable.just(entry.getValue().setStation(stationOptional.get()).build());
+										}
+									});
+						}
+					})
+					.toList()
+					.flatMap(new Func1<List<Alarm>, Observable<List<Alarm>>>() {
+						@Override
+						public Observable<List<Alarm>> call(List<Alarm> alarms) {
+							CepsManager.this.alarmsCache = new ArrayList<>(alarms);
+							return Observable.just(alarms);
+						}
+					});
+		}
 	}
 
 

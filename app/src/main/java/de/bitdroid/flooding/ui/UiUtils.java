@@ -67,22 +67,9 @@ public class UiUtils {
 		spinnerContainerView.setVisibility(View.VISIBLE);
 	}
 
-	/*
-	public void showSpinner(View spinnerContainerView, ImageView spinnerImageView) {
-
-		spinnerImageView.setBackgroundResource(R.drawable.spinner);
-		AnimationDrawable animationDrawable = (AnimationDrawable) spinnerImageView.getBackground();
-		animationDrawable.start();
-	}
-	*/
-
 
 	public void hideSpinner(View spinnerContainerView, ImageView spinnerImageView) {
-		// AnimationDrawable animationDrawable = (AnimationDrawable) spinnerImageView.getBackground();
-		// animationDrawable.stop();
-
 		spinnerImageView.clearAnimation();
-
 		spinnerContainerView.setVisibility(View.GONE);
 	}
 

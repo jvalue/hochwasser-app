@@ -15,6 +15,7 @@
         <item name="singleAccount">true</item>
         <item name="learningPattern">false</item>
         <item name="drawerColor">@color/gray_dark</item>
+        <item name="drawerType">@integer/DRAWERTYPE_CUSTOM</item>
     </style>
 
     <style name="SectionTheme">

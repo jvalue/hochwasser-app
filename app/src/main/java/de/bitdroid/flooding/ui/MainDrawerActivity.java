@@ -5,13 +5,15 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.utils.VersionUtils;
-import it.neokree.materialnavigationdrawer.elements.MaterialAccount;
 import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 
 /**
@@ -25,9 +27,11 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 	@Override
 	public void init(Bundle bundle) {
 
-		// setup top image
-		addAccount(new MaterialAccount(this.getResources(),loginManager.getAccountName(), "", null, R.drawable.drawer_background));
-		setDrawerHeaderImage(R.drawable.drawer_background);
+		// setup drawer header
+		View drawerHeader = LayoutInflater.from(this).inflate(R.layout.drawer_header, null);
+		TextView emailView = (TextView) drawerHeader.findViewById(R.id.text_email);
+		emailView.setText(loginManager.getAccountName());
+		setDrawerHeaderCustom(drawerHeader);
 
 		// setup main sections
 		addSection(newSection(getString(R.string.nav_home), R.drawable.ic_home, new NewsFragment()));

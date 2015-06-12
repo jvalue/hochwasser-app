@@ -25,7 +25,7 @@ abstract class AbstractWaterSelectionActivity extends AbstractListSelectionActiv
 
 
 	@Override
-	protected Observable<List<BodyOfWater>> loadItems() {
+	protected Observable<List<BodyOfWater>> doLoadItems() {
 		return odsManager.getBodyOfWaters();
 	}
 

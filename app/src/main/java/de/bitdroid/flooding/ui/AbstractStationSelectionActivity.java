@@ -45,7 +45,7 @@ abstract class AbstractStationSelectionActivity extends AbstractListSelectionAct
 
 
 	@Override
-	protected Observable<List<Station>> loadItems() {
+	protected Observable<List<Station>> doLoadItems() {
 		return odsManager.getStationsByBodyOfWater(stationSelection.getWater())
 				.flatMap(new Func1<List<Station>, Observable<List<Station>>>() {
 					@Override

@@ -19,7 +19,7 @@ public abstract class AbstractErrorAction implements Action1<Throwable> {
 
 
 	@Override
-	public void call(Throwable throwable) {
+	public final void call(Throwable throwable) {
 		if (throwable instanceof OnErrorThrowable) {
 			call(throwable.getCause());
 			return;

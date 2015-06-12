@@ -16,6 +16,16 @@
 		android:clipToPadding="false"
 	/>
 
+    <TextView
+        android:id="@+id/error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/error_network_tap_to_retry"
+        android:visibility="gone"
+        style="@style/FontSecondary"
+        />
+
 	<include layout="@layout/spinner"/>
 
 </RelativeLayout>

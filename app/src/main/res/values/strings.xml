@@ -231,5 +231,6 @@ Thanks everyone!
     <string name="error_auth_message">There was a problem verifying your account, please try logging in again.</string>
     <string name="error_login_title">Unable to login</string>
     <string name="error_login_message">There was an error during login, please try again.</string>
+    <string name="error_network_tap_to_retry">No Internet connection, tap to retry.</string>
 
 </resources>

@@ -24,10 +24,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.network.AbstractErrorAction;
 import de.bitdroid.flooding.network.DefaultErrorAction;
 import de.bitdroid.flooding.network.ErrorActionBuilder;
 import de.bitdroid.flooding.network.HideSpinnerAction;
-import de.bitdroid.flooding.network.NetworkUtils;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import rx.Observable;
@@ -42,10 +42,10 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 	private final int searchHintStringId;
 	private final int itemViewLayoutResource;
 
-	@Inject private NetworkUtils networkUtils;
 	@Inject private InputMethodManager inputMethodManager;
 
 	@InjectView(R.id.list) RecyclerView recyclerView;
+	@InjectView(R.id.error) View errorView;
 
 	private MenuItem searchMenuItem = null;
 	private EditText searchBox = null;
@@ -60,7 +60,7 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 	}
 
 
-	protected abstract Observable<List<T>> loadItems();
+	protected abstract Observable<List<T>> doLoadItems();
 	protected abstract void setDataView(T data, View view);
 	protected abstract List<T> filterItems(CharSequence constraint, List<T> items);
 	protected abstract void onDataSelected(T data);
@@ -81,9 +81,23 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 		recyclerView.setAdapter(adapter);
 		recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
+		// setup error view (e.g. not network connection)
+		errorView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				loadItems();
+			}
+		});
+
 		// load items
+		loadItems();
+	}
+
+
+	private void loadItems() {
 		showSpinner();
-		compositeSubscription.add(loadItems()
+		errorView.setVisibility(View.GONE);
+		compositeSubscription.add(doLoadItems()
 				.compose(networkUtils.<List<T>>getDefaultTransformer())
 				.subscribe(new Action1<List<T>>() {
 					@Override
@@ -94,6 +108,12 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 				}, new ErrorActionBuilder()
 						.add(new DefaultErrorAction(this, this, "failed to load data"))
 						.add(new HideSpinnerAction(this))
+						.add(new AbstractErrorAction() {
+							@Override
+							protected void doCall(Throwable throwable) {
+								errorView.setVisibility(View.VISIBLE);
+							}
+						})
 						.build()));
 	}
 

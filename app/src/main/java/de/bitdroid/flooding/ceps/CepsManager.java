@@ -5,7 +5,6 @@ import com.google.common.base.Optional;
 
 import org.jvalue.ceps.api.RegistrationApi;
 import org.jvalue.ceps.api.notifications.Client;
-import org.jvalue.ceps.api.notifications.ClientDescription;
 import org.jvalue.ceps.api.notifications.GcmClientDescription;
 
 import java.util.ArrayList;
@@ -99,13 +98,28 @@ public class CepsManager {
 
 
 	public Observable<Void> addAlarm(Alarm alarm) {
-		Map<String, Object> args = new HashMap<>();
+		// collect alarm parameters
+		final Map<String, Object> args = new HashMap<>();
 		args.put(ARGUMENT_UUID, alarm.getStation().getUuid());
 		args.put(ARGUMENT_LEVEL, alarm.getLevel());
-		ClientDescription clientDescription = new GcmClientDescription(gcmManager.getRegId(), args);
-		String adapterId = alarm.isAlarmWhenAboveLevel() ? PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID : PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
-		return registrationApi
-				.registerClient(adapterId, clientDescription)
+		final String adapterId = alarm.isAlarmWhenAboveLevel() ? PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID : PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
+
+		// register for GCM
+		Observable<Void> gcmObservable;
+		if (!gcmManager.isRegistered()) {
+			Timber.d("registering for GCM");
+			gcmObservable = gcmManager.register();
+		} else {
+			gcmObservable = Observable.just(null);
+		}
+
+		return gcmObservable
+				.flatMap(new Func1<Void, Observable<Client>>() {
+					@Override
+					public Observable<Client> call(Void nothing) {
+						return registrationApi.registerClient(adapterId, new GcmClientDescription(gcmManager.getRegId(), args));
+					}
+				})
 				.flatMap(new Func1<Client, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Client client) {

@@ -220,6 +220,8 @@ which is operated by the &lt;a href=&quot;http://www.wsv.de&quot;&gt;Wasser- und
 Thanks everyone!
     </string>
 
+    <string name="settings_quick_message">Software made in Erlangen, Germany\nThanks for your support!</string>
+
     <string name="error_internal_title">That didn\'t work</string>
     <string name="error_internal_message">Ups, this is embarrassing. There was an internal error while processing your request, we are sorry!</string>
     <string name="error_internal_details">Details</string>

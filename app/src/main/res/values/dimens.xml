@@ -2,6 +2,7 @@
 <resources>
     <dimen name="card_padding">16dp</dimen>
     <dimen name="card_margin_bottom">10dp</dimen>
+    <dimen name="card_margin_bottom_large">15dp</dimen>
     <dimen name="card_margin_horizontal">10dp</dimen>
 
     <dimen name="list_horizontal_margin">0dp</dimen>

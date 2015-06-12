@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_map"
     android:layout_height="300dp"
-    style="@style/CardBackground"
+    style="@style/CardBackground.Large"
     >
 
     <org.osmdroid.views.MapView

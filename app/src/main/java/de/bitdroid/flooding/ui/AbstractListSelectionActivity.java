@@ -34,7 +34,7 @@ import timber.log.Timber;
 
 
 @ContentView(R.layout.activity_select_list)
-abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
+abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivity {
 
 	private static final int REQUEST_MAP = 44;
 
@@ -82,7 +82,7 @@ abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 
 		// load items
 		showSpinner();
-		loadItems()
+		compositeSubscription.add(loadItems()
 				.compose(networkUtils.<List<T>>getDefaultTransformer())
 				.subscribe(new Action1<List<T>>() {
 					@Override
@@ -95,7 +95,7 @@ abstract class AbstractListSelectionActivity<T> extends AbstractActivity {
 					protected void doCall(Throwable throwable) {
 						Timber.e(throwable, "failed to load data");
 					}
-				});
+				}));
 	}
 
 

@@ -23,7 +23,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.news.NewsItem;
 import de.bitdroid.flooding.news.NewsManager;
 import roboguice.inject.InjectView;
@@ -33,7 +32,6 @@ public class NewsFragment extends AbstractFragment {
 	private static final String PREFS_NAME = NewsFragment.class.getSimpleName();
 	private static final String KEY_FIRST_START = "KEY_FIRST_START";
 
-	@Inject private NetworkUtils networkUtils;
 	@Inject private NewsManager newsManager;
 
 	@InjectView(R.id.list) RecyclerView recyclerView;

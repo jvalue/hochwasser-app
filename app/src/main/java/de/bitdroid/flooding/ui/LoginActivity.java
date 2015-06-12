@@ -23,8 +23,6 @@ import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.auth.LoginManager;
-import de.bitdroid.flooding.network.NetworkUtils;
-import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import rx.Observable;
@@ -34,7 +32,7 @@ import rx.functions.Func1;
 import timber.log.Timber;
 
 @ContentView(R.layout.activity_login)
-public class LoginActivity extends RoboActivity {
+public class LoginActivity extends AbstractActivity {
 
 	private static final String
 			STATE_SELECTED_ACCOUNT_NAME = "STATE_SELECTED_ACCOUNT_NAME";
@@ -46,7 +44,6 @@ public class LoginActivity extends RoboActivity {
 	@InjectView(R.id.login) private SignInButton loginButton;
 	@Inject private LoginManager loginManager;
 	@Inject private UserApi userApi;
-	@Inject private NetworkUtils networkUtils;
 
 	private String selectedAccountName = null;
 
@@ -111,7 +108,7 @@ public class LoginActivity extends RoboActivity {
 
 
 	private void registerAndGetUser() {
-		Observable
+		compositeSubscription.add(Observable
 				.defer(new Func0<Observable<String>>() {
 					@Override
 					public Observable<String> call() {
@@ -151,7 +148,7 @@ public class LoginActivity extends RoboActivity {
 							Toast.makeText(LoginActivity.this, "unknown error", Toast.LENGTH_SHORT).show();
 						}
 					}
-				});
+				}));
 	}
 
 }

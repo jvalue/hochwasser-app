@@ -27,7 +27,7 @@ import timber.log.Timber;
  * Select one station from a map.
  */
 @ContentView(R.layout.activity_select_map)
-public abstract class AbstractMapSelectionActivity extends AbstractActivity implements StationClickListener {
+public abstract class AbstractMapSelectionActivity extends AbstractRestrictedActivity implements StationClickListener {
 
 	private static final String
 			EXTRA_SCROLL_X = "EXTRA_SCROLL_X",
@@ -93,7 +93,7 @@ public abstract class AbstractMapSelectionActivity extends AbstractActivity impl
 		if (stationSelection.getWater() == null) stationsObservable = odsManager.getStations();
 		else stationsObservable = odsManager.getStationsByBodyOfWater(stationSelection.getWater());
 
-		stationsObservable
+		compositeSubscription.add(stationsObservable
 				.flatMap(new Func1<List<Station>, Observable<List<Station>>>() {
 					@Override
 					public Observable<List<Station>> call(List<Station> stations) {
@@ -126,7 +126,7 @@ public abstract class AbstractMapSelectionActivity extends AbstractActivity impl
 					public void call(Throwable throwable) {
 						Timber.e(throwable, "failed to download stations");
 					}
-				});
+				}));
 	}
 
 

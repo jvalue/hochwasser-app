@@ -91,7 +91,7 @@ public class AlarmsFragment extends AbstractFragment {
 		if (addingNewAlarm) addingNewAlarm = false;
 
 		showSpinner();
-		cepsManager.getAlarms()
+		compositeSubscription.add(cepsManager.getAlarms()
 				.compose(networkUtils.<List<Alarm>>getDefaultTransformer())
 				.subscribe(new Action1<List<Alarm>>() {
 					@Override
@@ -106,7 +106,7 @@ public class AlarmsFragment extends AbstractFragment {
 					protected void doCall(Throwable throwable) {
 						Timber.e(throwable, "failed to load data");
 					}
-				});
+				}));
 	}
 
 
@@ -208,7 +208,7 @@ public class AlarmsFragment extends AbstractFragment {
 			adapter.setAlarms(alarmsToKeep);
 
 			showSpinner();
-			Observable.from(alarmsToRemove)
+			compositeSubscription.add(Observable.from(alarmsToRemove)
 					.flatMap(new Func1<Alarm, Observable<Void>>() {
 						@Override
 						public Observable<Void> call(Alarm alarm) {
@@ -229,7 +229,7 @@ public class AlarmsFragment extends AbstractFragment {
 								public void call(Throwable throwable) {
 									Timber.e(throwable, "error removing alarms");
 								}
-							});
+							}));
 		}
 
 	}

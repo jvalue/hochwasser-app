@@ -5,11 +5,11 @@ import android.text.Html;
 import android.widget.TextView;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.ui.AbstractActivity;
+import de.bitdroid.flooding.ui.AbstractRestrictedActivity;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.activity_river_graph_help)
-public class WaterGraphHelpActivity extends AbstractActivity {
+public class WaterGraphHelpActivity extends AbstractRestrictedActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

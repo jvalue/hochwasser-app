@@ -24,7 +24,7 @@ import timber.log.Timber;
  * Displays information about a single station.
  */
 @ContentView(R.layout.activity_station_info)
-public class StationInfoActivity extends AbstractActivity {
+public class StationInfoActivity extends AbstractRestrictedActivity {
 
 	private static final String STATE_MEASUREMENTS = "STATE_MEASUREMENTS";
 
@@ -54,7 +54,7 @@ public class StationInfoActivity extends AbstractActivity {
 
 		} else {
 			showSpinner();
-			odsManager.getMeasurements(station)
+			compositeSubscription.add(odsManager.getMeasurements(station)
 					.compose(networkUtils.<StationMeasurements>getDefaultTransformer())
 					.subscribe(new Action1<StationMeasurements>() {
 						@Override
@@ -68,7 +68,7 @@ public class StationInfoActivity extends AbstractActivity {
 							hideSpinner();
 							Timber.e(throwable, "failed to download measurements");
 						}
-					});
+					}));
 		}
 
 	}

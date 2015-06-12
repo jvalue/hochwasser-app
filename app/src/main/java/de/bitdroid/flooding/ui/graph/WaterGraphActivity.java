@@ -27,7 +27,7 @@ import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.ods.StationMeasurements;
-import de.bitdroid.flooding.ui.AbstractActivity;
+import de.bitdroid.flooding.ui.AbstractRestrictedActivity;
 import de.bitdroid.flooding.ui.AbstractMapSelectionActivity;
 import de.bitdroid.flooding.ui.StationSelection;
 import de.bitdroid.flooding.utils.StringUtils;
@@ -38,7 +38,7 @@ import rx.functions.Func1;
 import timber.log.Timber;
 
 @ContentView(R.layout.activity_water_graph)
-public class WaterGraphActivity extends AbstractActivity {
+public class WaterGraphActivity extends AbstractRestrictedActivity {
 
 	private static final String
 			STATE_MEASUREMENTS = "STATE_MEASUREMENTS",

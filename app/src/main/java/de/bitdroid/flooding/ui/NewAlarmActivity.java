@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ceps.Alarm;
 import de.bitdroid.flooding.ceps.CepsManager;
-import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.ods.StationMeasurements;
@@ -31,7 +30,7 @@ import timber.log.Timber;
  * Adds a new alarm.
  */
 @ContentView(R.layout.activity_new_alarm)
-public class NewAlarmActivity extends AbstractActivity {
+public class NewAlarmActivity extends AbstractRestrictedActivity {
 
 	@InjectView(R.id.text_station_name) TextView stationNameView;
 	@InjectView(R.id.edit_level) TextView levelEditView;
@@ -43,7 +42,6 @@ public class NewAlarmActivity extends AbstractActivity {
 	@InjectView(R.id.card_metadata) private CardView metadataCard;
 	@InjectView(R.id.card_map) private CardView mapCard;
 
-	@Inject private NetworkUtils networkUtils;
 	@Inject private OdsManager odsManager;
 	@Inject private CepsManager cepsManager;
 	@Inject private StationInfoUtils stationInfoUtils;
@@ -87,7 +85,7 @@ public class NewAlarmActivity extends AbstractActivity {
 						.build();
 
 				showSpinner();
-				cepsManager
+				compositeSubscription.add(cepsManager
 						.addAlarm(alarm)
 						.compose(networkUtils.<Void>getDefaultTransformer())
 						.subscribe(new Action1<Void>() {
@@ -106,13 +104,13 @@ public class NewAlarmActivity extends AbstractActivity {
 								Toast.makeText(NewAlarmActivity.this, getString(R.string.alarms_new_not_created), Toast.LENGTH_SHORT).show();
 								Timber.e(throwable, "failed to add alarm");
 							}
-						});
+						}));
 			}
 		});
 
 
 		// load data
-		odsManager.getMeasurements(station)
+		compositeSubscription.add(odsManager.getMeasurements(station)
 				.compose(networkUtils.<StationMeasurements>getDefaultTransformer())
 				.subscribe(new Action1<StationMeasurements>() {
 					@Override
@@ -125,7 +123,7 @@ public class NewAlarmActivity extends AbstractActivity {
 					public void call(Throwable throwable) {
 						Timber.e(throwable, "failed to download measurements");
 					}
-				});
+				}));
 	}
 
 

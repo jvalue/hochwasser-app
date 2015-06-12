@@ -14,6 +14,7 @@ import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.auth.RestrictedResource;
 import roboguice.fragment.provided.RoboFragment;
 import roboguice.inject.InjectView;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Base fragment class.
@@ -24,6 +25,7 @@ abstract class AbstractFragment extends RoboFragment implements RestrictedResour
 	@Inject private UiUtils uiUtils;
 	@InjectView(R.id.spinner) private View spinnerContainerView;
 	@InjectView(R.id.spinner_image) private ImageView spinnerImageView;
+	protected CompositeSubscription compositeSubscription = new CompositeSubscription();
 
 	private final int layoutResource;
 
@@ -39,6 +41,14 @@ abstract class AbstractFragment extends RoboFragment implements RestrictedResour
 
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		compositeSubscription.unsubscribe();
+		compositeSubscription = new CompositeSubscription();
+	}
+
+
+	@Override
 	public void logout() {
 		loginManager.clearToken();
 		loginManager.clearAccountName();
@@ -48,12 +58,12 @@ abstract class AbstractFragment extends RoboFragment implements RestrictedResour
 	}
 
 
-	public void showSpinner() {
+	protected void showSpinner() {
 		uiUtils.showSpinner(spinnerContainerView, spinnerImageView);
 	}
 
 
-	public void hideSpinner() {
+	protected void hideSpinner() {
 		uiUtils.hideSpinner(spinnerContainerView, spinnerImageView);
 	}
 

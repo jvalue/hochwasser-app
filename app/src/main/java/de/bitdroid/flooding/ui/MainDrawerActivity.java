@@ -15,6 +15,7 @@ import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.utils.VersionUtils;
 import it.neokree.materialnavigationdrawer.elements.MaterialAccount;
 import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 /**
@@ -26,6 +27,7 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 	@Inject private NetworkUtils networkUtils;
 	@Inject private VersionUtils versionUtils;
 	@Inject private LoginManager loginManager;
+	protected CompositeSubscription compositeSubscription = new CompositeSubscription();
 
 	@Override
 	public void init(Bundle bundle) {
@@ -55,7 +57,7 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 
 		// register for gcm updates
 		if (!gcmManager.isRegistered()) {
-			gcmManager
+			compositeSubscription.add(gcmManager
 					.register()
 					.compose(networkUtils.<Void>getDefaultTransformer())
 					.subscribe(new Action1<Void>() {
@@ -69,8 +71,16 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 							Toast.makeText(MainDrawerActivity.this, "failed to register for GCM", Toast.LENGTH_LONG).show();
 							Timber.e(throwable, "failed to register GCM");
 						}
-					});
+					}));
 		}
+	}
+
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		compositeSubscription.unsubscribe();
+		compositeSubscription = new CompositeSubscription();
 	}
 
 }

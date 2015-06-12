@@ -108,6 +108,7 @@ public class LoginActivity extends AbstractActivity {
 
 
 	private void registerAndGetUser() {
+		showSpinner();
 		compositeSubscription.add(Observable
 				.defer(new Func0<Observable<String>>() {
 					@Override
@@ -130,6 +131,7 @@ public class LoginActivity extends AbstractActivity {
 					@Override
 					public void call(User user) {
 						Timber.d("login success (" + user.getId() + ")");
+						hideSpinner();
 						loginManager.setAccountName(selectedAccountName);
 						showMainActivity();
 					}
@@ -137,6 +139,7 @@ public class LoginActivity extends AbstractActivity {
 					@Override
 					public void call(Throwable throwable) {
 						Timber.e(throwable, "login error");
+						hideSpinner();
 						if (throwable instanceof UserRecoverableAuthException) {
 							Timber.d("starting recover activity");
 							startActivityForResult(((UserRecoverableAuthException) throwable).getIntent(), REQUEST_CODE_AUTH);

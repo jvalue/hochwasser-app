@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.ui;
 
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.auth.LoginManager;
 import de.bitdroid.flooding.utils.VersionUtils;
 import it.neokree.materialnavigationdrawer.elements.MaterialAccount;
+import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 
 /**
  * Container activity for the main navigation drawer.
@@ -45,6 +47,14 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 		mailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		Intent mailer = Intent.createChooser(mailIntent, getString(R.string.feedback_mail_chooser));
 		addBottomSection(newSection(getString(R.string.nav_feedback), R.drawable.ic_email, mailer));
+	}
+
+
+	protected void setSection(int idx) {
+		MaterialSection<?> section = getSectionList().get(idx);
+		setSection(section);
+		changeToolbarColor(section);
+		if (section.getTargetFragment()  != null) setFragment((Fragment) section.getTargetFragment(), section.getTitle());
 	}
 
 }

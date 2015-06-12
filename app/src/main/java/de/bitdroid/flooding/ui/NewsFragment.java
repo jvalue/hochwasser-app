@@ -144,18 +144,29 @@ public class NewsFragment extends AbstractFragment {
 
 	protected class NewsItemViewHolder extends RecyclerView.ViewHolder {
 
+		private final View containerView;
 		private final TextView titleView, timestampView, contentView;
 		private final ImageView iconView;
 
 		public NewsItemViewHolder(View itemView) {
 			super(itemView);
+			this.containerView = itemView;
 			this.titleView = (TextView) itemView.findViewById(R.id.news_title);
 			this.timestampView = (TextView) itemView.findViewById(R.id.news_timestamp);
 			this.contentView = (TextView) itemView.findViewById(R.id.news_content);
 			this.iconView = (ImageView) itemView.findViewById(R.id.icon);
 		}
 
-		public void setItem(NewsItem item) {
+		public void setItem(final NewsItem item) {
+			// setup navigation to other sections on click
+			containerView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					((MainDrawerActivity) getActivity()).setSection(item.getNavigationPos());
+				}
+			});
+
+			// setup content
 			titleView.setText(item.getTitle());
 			Date date = new Date(item.getTimestamp());
 			timestampView.setText(DateFormat.getDateFormat(getActivity()).format(date) + " " + DateFormat.getTimeFormat(getActivity()).format(date));

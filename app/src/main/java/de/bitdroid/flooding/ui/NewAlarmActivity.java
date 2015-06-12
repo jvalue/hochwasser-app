@@ -16,6 +16,9 @@ import javax.inject.Inject;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ceps.Alarm;
 import de.bitdroid.flooding.ceps.CepsManager;
+import de.bitdroid.flooding.network.DefaultErrorAction;
+import de.bitdroid.flooding.network.ErrorActionBuilder;
+import de.bitdroid.flooding.network.HideSpinnerAction;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.ods.StationMeasurements;
@@ -23,7 +26,6 @@ import de.bitdroid.flooding.utils.StringUtils;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import rx.functions.Action1;
-import timber.log.Timber;
 
 
 /**
@@ -50,7 +52,7 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 
 		// set title
 		final Station station = new StationSelection(getIntent()).getStation();
@@ -63,10 +65,12 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 		// setup editing
 		levelEditView.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {  }
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {  }
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -98,13 +102,10 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 								startActivity(intent);
 								finish();
 							}
-						}, new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								Toast.makeText(NewAlarmActivity.this, getString(R.string.alarms_new_not_created), Toast.LENGTH_SHORT).show();
-								Timber.e(throwable, "failed to add alarm");
-							}
-						}));
+						}, new ErrorActionBuilder()
+								.add(new DefaultErrorAction(NewAlarmActivity.this, NewAlarmActivity.this, "failed to add alarm"))
+								.add(new HideSpinnerAction(NewAlarmActivity.this))
+								.build()));
 			}
 		});
 
@@ -118,12 +119,10 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 						NewAlarmActivity.this.measurements = stationMeasurements;
 						stationInfoUtils.setupStationCards(measurements, levelsCard, charValuesCard, metadataCard, mapCard);
 					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						Timber.e(throwable, "failed to download measurements");
-					}
-				}));
+				}, new ErrorActionBuilder()
+						.add(new DefaultErrorAction(NewAlarmActivity.this, NewAlarmActivity.this, "failed to download measurements"))
+						.add(new HideSpinnerAction(NewAlarmActivity.this))
+						.build()));
 	}
 
 

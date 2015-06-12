@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.network.DefaultErrorAction;
+import de.bitdroid.flooding.network.ErrorActionBuilder;
+import de.bitdroid.flooding.network.HideSpinnerAction;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.ods.StationMeasurements;
@@ -17,7 +20,6 @@ import de.bitdroid.flooding.utils.StringUtils;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import rx.functions.Action1;
-import timber.log.Timber;
 
 
 /**
@@ -62,13 +64,10 @@ public class StationInfoActivity extends AbstractRestrictedActivity {
 							hideSpinner();
 							setupData(stationMeasurements);
 						}
-					}, new Action1<Throwable>() {
-						@Override
-						public void call(Throwable throwable) {
-							hideSpinner();
-							Timber.e(throwable, "failed to download measurements");
-						}
-					}));
+					}, new ErrorActionBuilder()
+							.add(new DefaultErrorAction(this, this, "failed to download measurements"))
+							.add(new HideSpinnerAction(this))
+							.build()));
 		}
 
 	}

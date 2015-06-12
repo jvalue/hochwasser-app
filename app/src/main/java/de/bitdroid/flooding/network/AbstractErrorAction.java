@@ -1,29 +1,32 @@
 package de.bitdroid.flooding.network;
 
 
-import de.bitdroid.flooding.auth.AuthException;
-import de.bitdroid.flooding.auth.RestrictedResource;
+import rx.exceptions.OnErrorThrowable;
 import rx.functions.Action1;
 
 /**
- * Base RxJava error handler for triggering logout on auth exception.
+ * Base RxJava error handler which can forward the error
+ * to further handlers.
  */
 public abstract class AbstractErrorAction implements Action1<Throwable> {
 
-	private final RestrictedResource restrictedResource;
 
-	public AbstractErrorAction(RestrictedResource restrictedResource) {
-		this.restrictedResource = restrictedResource;
+	private Action1<Throwable> nextAction = null;
+
+	public void setNextAction(Action1<Throwable> nextAction) {
+		this.nextAction = nextAction;
 	}
 
 
 	@Override
-	public final void call(Throwable throwable) {
-		if (throwable instanceof AuthException) {
-			restrictedResource.logout();
+	public void call(Throwable throwable) {
+		if (throwable instanceof OnErrorThrowable) {
+			call(throwable.getCause());
 			return;
 		}
+
 		doCall(throwable);
+		if (nextAction != null) nextAction.call(throwable);
 	}
 
 

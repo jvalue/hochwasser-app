@@ -12,6 +12,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.network.DefaultErrorAction;
+import de.bitdroid.flooding.network.ErrorActionBuilder;
+import de.bitdroid.flooding.network.HideSpinnerAction;
 import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
@@ -20,7 +23,6 @@ import roboguice.inject.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import timber.log.Timber;
 
 
 /**
@@ -121,12 +123,10 @@ public abstract class AbstractMapSelectionActivity extends AbstractRestrictedAct
 						if (stationSelection.getWater() == null) mapView.getController().setZoom(8);
 						else mapView.getController().setZoom(7);
 					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						Timber.e(throwable, "failed to download stations");
-					}
-				}));
+				}, new ErrorActionBuilder()
+						.add(new DefaultErrorAction(this, this, "failed to download stations"))
+						.add(new HideSpinnerAction(this))
+						.build()));
 	}
 
 

@@ -19,7 +19,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Base fragment class.
  */
-abstract class AbstractFragment extends RoboFragment implements RestrictedResource {
+public abstract class AbstractFragment extends RoboFragment implements RestrictedResource {
 
 	@Inject private LoginManager loginManager;
 	@Inject private UiUtils uiUtils;
@@ -58,12 +58,12 @@ abstract class AbstractFragment extends RoboFragment implements RestrictedResour
 	}
 
 
-	protected void showSpinner() {
+	public void showSpinner() {
 		uiUtils.showSpinner(spinnerContainerView, spinnerImageView);
 	}
 
 
-	protected void hideSpinner() {
+	public void hideSpinner() {
 		uiUtils.hideSpinner(spinnerContainerView, spinnerImageView);
 	}
 

@@ -220,4 +220,14 @@ which is operated by the &lt;a href=&quot;http://www.wsv.de&quot;&gt;Wasser- und
 Thanks everyone!
     </string>
 
+    <string name="error_internal_title">That didn\'t work</string>
+    <string name="error_internal_message">Ups, this is embarrassing. There was an internal error while processing your request, we are sorry!</string>
+    <string name="error_internal_details">Details</string>
+    <string name="error_network_title">No internet connection</string>
+    <string name="error_network_message">Failed to perform request due to a problem with the internet connection</string>
+    <string name="error_auth_title">Not authenticated</string>
+    <string name="error_auth_message">There was a problem verifying your account, please try logging in again.</string>
+    <string name="error_login_title">Unable to login</string>
+    <string name="error_login_message">There was an error during login, please try again.</string>
+
 </resources>

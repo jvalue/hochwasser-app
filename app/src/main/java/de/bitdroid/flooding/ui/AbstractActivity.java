@@ -55,12 +55,12 @@ public class AbstractActivity extends RoboActionBarActivity {
 	}
 
 
-	protected void showSpinner() {
+	public void showSpinner() {
 		uiUtils.showSpinner(spinnerContainerView, spinnerImageView);
 	}
 
 
-	protected void hideSpinner() {
+	public void hideSpinner() {
 		uiUtils.hideSpinner(spinnerContainerView, spinnerImageView);
 	}
 

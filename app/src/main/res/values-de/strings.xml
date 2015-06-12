@@ -198,6 +198,15 @@ Solltest du tiefer einsteigen wollen, so findest du den Quellecode kostenlos auf
         Zeigt die Stationen auf einer &lt;b&gt;Karte&lt;/b&gt; an.
         Klicke auf eine Station um mehr Informationen zu erhalten.
     </string>
+    <string name="error_auth_message">Ein Problem mit Ihrem Konto ist aufgetreten, bitte melden Sie sich erneut an.</string>
+    <string name="error_auth_title">Login Fehler</string>
+    <string name="error_internal_details">Details</string>
+    <string name="error_internal_message">Ups, das ist peinlich. Leider gab es einen internen Fehler, das tut uns leid!</string>
+    <string name="error_internal_title">Das hat nicht funktioniert</string>
+    <string name="error_login_message">Ein Problem ist beim anmelden aufgetreten, bitte probieren sie es erneut.</string>
+    <string name="error_login_title">Login Fehler</string>
+    <string name="error_network_message">Es gab ein Problem mit der Internet Verbindung.</string>
+    <string name="error_network_title">Keine Internet Verbindung</string>
 
 
 </resources>

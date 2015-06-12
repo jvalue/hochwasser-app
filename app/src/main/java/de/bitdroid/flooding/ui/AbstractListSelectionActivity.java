@@ -24,13 +24,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.network.AbstractErrorAction;
+import de.bitdroid.flooding.network.DefaultErrorAction;
+import de.bitdroid.flooding.network.ErrorActionBuilder;
+import de.bitdroid.flooding.network.HideSpinnerAction;
 import de.bitdroid.flooding.network.NetworkUtils;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
-import timber.log.Timber;
 
 
 @ContentView(R.layout.activity_select_list)
@@ -90,12 +91,10 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 						hideSpinner();
 						adapter.setItems(items);
 					}
-				}, new AbstractErrorAction(AbstractListSelectionActivity.this) {
-					@Override
-					protected void doCall(Throwable throwable) {
-						Timber.e(throwable, "failed to load data");
-					}
-				}));
+				}, new ErrorActionBuilder()
+						.add(new DefaultErrorAction(this, this, "failed to load data"))
+						.add(new HideSpinnerAction(this))
+						.build()));
 	}
 
 

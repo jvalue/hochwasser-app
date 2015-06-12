@@ -2,10 +2,10 @@ package de.bitdroid.flooding.ui;
 
 
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -142,10 +142,11 @@ public class LoginActivity extends AbstractActivity {
 							startActivityForResult(((UserRecoverableAuthException) throwable).getIntent(), REQUEST_CODE_AUTH);
 
 						} else if (throwable instanceof IOException) {
-							Toast.makeText(LoginActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-
-						} else {
-							Toast.makeText(LoginActivity.this, "unknown error", Toast.LENGTH_SHORT).show();
+							new AlertDialog.Builder(LoginActivity.this)
+									.setTitle(R.string.error_login_title)
+									.setMessage(R.string.error_login_message)
+									.setPositiveButton(android.R.string.ok, null)
+									.show();
 						}
 					}
 				}));

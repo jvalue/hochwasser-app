@@ -21,7 +21,9 @@ import javax.inject.Inject;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ceps.Alarm;
 import de.bitdroid.flooding.ceps.CepsManager;
-import de.bitdroid.flooding.network.AbstractErrorAction;
+import de.bitdroid.flooding.network.DefaultErrorAction;
+import de.bitdroid.flooding.network.ErrorActionBuilder;
+import de.bitdroid.flooding.network.HideSpinnerAction;
 import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
@@ -30,7 +32,6 @@ import roboguice.inject.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import timber.log.Timber;
 
 public class AlarmsFragment extends AbstractFragment {
 
@@ -101,12 +102,10 @@ public class AlarmsFragment extends AbstractFragment {
 						else emptyView.setVisibility(View.VISIBLE);
 						adapter.setAlarms(alarms);
 					}
-				}, new AbstractErrorAction(AlarmsFragment.this) {
-					@Override
-					protected void doCall(Throwable throwable) {
-						Timber.e(throwable, "failed to load data");
-					}
-				}));
+				}, new ErrorActionBuilder()
+						.add(new DefaultErrorAction(this.getActivity(), this, "failed to load data"))
+						.add(new HideSpinnerAction(this))
+						.build()));
 	}
 
 
@@ -223,13 +222,10 @@ public class AlarmsFragment extends AbstractFragment {
 								public void call(List<Void> nothing) {
 									loadAlarms();
 								}
-							},
-							new Action1<Throwable>() {
-								@Override
-								public void call(Throwable throwable) {
-									Timber.e(throwable, "error removing alarms");
-								}
-							}));
+							}, new ErrorActionBuilder()
+									.add(new DefaultErrorAction(AlarmsFragment.this.getActivity(), AlarmsFragment.this, "error removing alarm"))
+									.add(new HideSpinnerAction(AlarmsFragment.this))
+									.build()));
 		}
 
 	}

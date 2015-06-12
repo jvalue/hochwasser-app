@@ -1,6 +1,8 @@
 package de.bitdroid.flooding.ceps;
 
 
+import android.util.Pair;
+
 import com.google.common.base.Optional;
 
 import org.jvalue.ceps.api.RegistrationApi;
@@ -21,6 +23,7 @@ import de.bitdroid.flooding.ods.Station;
 import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import timber.log.Timber;
 
 @Singleton
@@ -56,36 +59,41 @@ public class CepsManager {
 			return Observable
 					.merge(
 							registrationApi.getAllClients(PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID)
-									.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
+									.flatMap(new Func1<List<Client>, Observable<Pair<String, Alarm.Builder>>>() {
 										@Override
-										public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
-											return Observable.from(parseClients(clients, true).entrySet());
+										public Observable<Pair<String, Alarm.Builder>> call(List<Client> clients) {
+											return Observable.from(parseClients(clients, true));
 										}
 									}),
 							registrationApi.getAllClients(PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID)
-									.flatMap(new Func1<List<Client>, Observable<Map.Entry<String, Alarm.Builder>>>() {
+									.flatMap(new Func1<List<Client>, Observable<Pair<String, Alarm.Builder>>>() {
 										@Override
-										public Observable<Map.Entry<String, Alarm.Builder>> call(List<Client> clients) {
-											return Observable.from(parseClients(clients, false).entrySet());
+										public Observable<Pair<String, Alarm.Builder>> call(List<Client> clients) {
+											return Observable.from(parseClients(clients, false));
 										}
 									}))
-					.flatMap(new Func1<Map.Entry<String, Alarm.Builder>, Observable<Alarm>>() {
+					.flatMap(new Func1<Pair<String, Alarm.Builder>, Observable<Alarm>>() {
 						@Override
-						public Observable<Alarm> call(final Map.Entry<String, Alarm.Builder> entry) {
-							return odsManager.getStationByUuid(entry.getKey())
+						public Observable<Alarm> call(final Pair<String, Alarm.Builder> entry) {
+							return odsManager.getStationByUuid(entry.first)
 									.flatMap(new Func1<Optional<Station>, Observable<Alarm>>() {
 										@Override
 										public Observable<Alarm> call(Optional<Station> stationOptional) {
 											if (!stationOptional.isPresent()) {
-												Timber.e("failed to find station with uuid " + entry.getKey());
+												Timber.e("failed to find station with uuid " + entry.first);
 												return Observable.empty();
 											}
-											return Observable.just(entry.getValue().setStation(stationOptional.get()).build());
+											return Observable.just(entry.second.setStation(stationOptional.get()).build());
 										}
 									});
 						}
 					})
-					.toList()
+					.toSortedList(new Func2<Alarm, Alarm, Integer>() {
+						@Override
+						public Integer call(Alarm alarm1, Alarm alarm2) {
+							return alarm1.getStation().getStationName().compareTo(alarm2.getStation().getStationName());
+						}
+					})
 					.flatMap(new Func1<List<Alarm>, Observable<List<Alarm>>>() {
 						@Override
 						public Observable<List<Alarm>> call(List<Alarm> alarms) {
@@ -149,17 +157,17 @@ public class CepsManager {
 	}
 
 
-	private Map<String, Alarm.Builder> parseClients(List<Client> clients, boolean alarmWhenAboveLevel) {
-		Map<String, Alarm.Builder> builderMap = new HashMap<>(); // station uuid --> builder
+	private List<Pair<String, Alarm.Builder>> parseClients(List<Client> clients, boolean alarmWhenAboveLevel) {
+		List<Pair<String, Alarm.Builder>> builders = new ArrayList<>(); // station uuid --> builder
 		for (Client client : clients) {
 			Map<String, Object> args = client.getEplArguments();
 			Alarm.Builder builder = new Alarm.Builder()
 					.setId(client.getId())
 					.setLevel((double) args.get(ARGUMENT_LEVEL))
 					.setAlarmWhenAboveLevel(alarmWhenAboveLevel);
-			builderMap.put((String) args.get(ARGUMENT_UUID), builder);
+			builders.add(new Pair<>((String) args.get(ARGUMENT_UUID), builder));
 		}
-		return builderMap;
+		return builders;
 	}
 
 }

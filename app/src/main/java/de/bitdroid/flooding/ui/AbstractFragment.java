@@ -61,4 +61,9 @@ public abstract class AbstractFragment extends RoboFragment implements Restricte
 		uiUtils.hideSpinner(spinnerContainerView, spinnerImageView);
 	}
 
+
+	public boolean isSpinnerVisible() {
+		return uiUtils.isSpinnerVisible(spinnerContainerView);
+	}
+
 }

@@ -91,7 +91,7 @@ public class AlarmsFragment extends AbstractFragment {
 	private void loadAlarms() {
 		if (addingNewAlarm) addingNewAlarm = false;
 
-		showSpinner();
+		if (!isSpinnerVisible()) showSpinner();
 		compositeSubscription.add(cepsManager.getAlarms()
 				.compose(networkUtils.<List<Alarm>>getDefaultTransformer())
 				.subscribe(new Action1<List<Alarm>>() {

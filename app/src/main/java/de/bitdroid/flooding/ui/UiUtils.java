@@ -82,6 +82,11 @@ public class UiUtils {
 	}
 
 
+	public boolean isSpinnerVisible(View spinnerContainerView) {
+		return spinnerContainerView.getVisibility() == View.VISIBLE;
+	}
+
+
 	public void logout(Activity parentActivity) {
 		// clear local data
 		loginManager.clearToken();

@@ -95,7 +95,6 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 						.subscribe(new Action1<Void>() {
 							@Override
 							public void call(Void aVoid) {
-								hideSpinner();
 								Toast.makeText(NewAlarmActivity.this, getString(R.string.alarms_new_created), Toast.LENGTH_SHORT).show();
 								Intent intent = new Intent(NewAlarmActivity.this, MainDrawerActivity.class);
 								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

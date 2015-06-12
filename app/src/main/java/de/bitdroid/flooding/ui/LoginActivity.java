@@ -131,7 +131,6 @@ public class LoginActivity extends AbstractActivity {
 					@Override
 					public void call(User user) {
 						Timber.d("login success (" + user.getId() + ")");
-						hideSpinner();
 						loginManager.setAccountName(selectedAccountName);
 						showMainActivity();
 					}

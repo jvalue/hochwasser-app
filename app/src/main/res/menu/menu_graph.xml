@@ -11,10 +11,10 @@
 	/>
     <item
         android:id="@+id/menu_map"
-        app:showAsAction="ifRoom"
         android:title="@string/menu_graph_map"
         android:hint="@string/menu_graph_map"
         android:icon="@drawable/ic_place"
+        app:showAsAction="ifRoom"
     />
 	<item
 		android:id="@+id/menu_series"
@@ -25,5 +25,6 @@
 		android:title="@string/help"
 		android:hint="@string/help"
 		android:icon="@drawable/ic_help_outline"
+        app:showAsAction="ifRoom"
 	/>
 </menu>

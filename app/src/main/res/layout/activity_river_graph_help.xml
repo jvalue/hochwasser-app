@@ -1,132 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              style="@style/GraphHelp">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_light"
+    android:paddingTop="@dimen/list_padding_top"
+    android:paddingBottom="@dimen/list_padding_bottom"
+    android:clipToPadding="false"
+    style="@style/GraphHelp"
+    >
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        style="@style/CardBackground.Large"
+        >
 
-        <TableLayout
-            android:layout_margin="10dp"
-            style="@style/GraphHelp">
-
-            <TextView
-                android:id="@+id/intro"
-                android:text="@string/help_graph"
-                android:layout_marginTop="0dp"
-                style="@style/GraphHelp.SectionTitle"/>
-
-
-            <TextView
-                android:id="@+id/intro_series"
-                android:layout_marginBottom="0dp"
-                android:text="@string/help_graph_series"
-                style="@style/GraphHelp.SectionTitle"/>
-
-            <TableRow style="@style/GraphHelp.Row">
-                <ImageView
-                    android:src="@drawable/circle_water"
-                    android:padding="3dp"
-                    style="@style/GraphHelp.LeftItem"
-                    />
-
-                <TextView
-                    android:id="@+id/series_water"
-                    android:text="@string/help_graph_series_water"
-                    style="@style/GraphHelp.RightItem"
-                    />
-            </TableRow>
-
-            <TableRow style="@style/GraphHelp.Row">
-                <ImageView
-                    android:src="@drawable/circle_mw"
-                    android:padding="3dp"
-                    style="@style/GraphHelp.LeftItem"
-                    />
-
-                <TextView
-                    android:id="@+id/series_mw"
-                    android:text="@string/help_graph_series_mw"
-                    style="@style/GraphHelp.RightItem"
-                    />
-            </TableRow>
-
-            <TableRow style="@style/GraphHelp.Row">
-                <ImageView
-                    android:src="@drawable/circle_average_tw"
-                    android:padding="3dp"
-                    style="@style/GraphHelp.LeftItem"
-                    />
-
-                <TextView
-                    android:id="@+id/series_average_tw"
-                    android:text="@string/help_graph_series_average_tw"
-                    style="@style/GraphHelp.RightItem"
-                    />
-            </TableRow>
-
-            <TableRow style="@style/GraphHelp.Row">
-                <ImageView
-                    android:src="@drawable/circle_extreme_tw"
-                    android:padding="3dp"
-                    style="@style/GraphHelp.LeftItem"
-                    />
-
-                <TextView
-                    android:id="@+id/series_extreme_tw"
-                    android:text="@string/help_graph_series_extreme_tw"
-                    style="@style/GraphHelp.RightItem"
-                    />
-            </TableRow>
-
-
-            <TextView
-                android:id="@+id/intro_action"
-                android:layout_marginBottom="0dp"
-                android:text="@string/help_graph_action"
-                style="@style/GraphHelp.SectionTitle"/>
-
-            <TableRow style="@style/GraphHelp.Row">
-                <ImageView
-                    android:src="@drawable/ic_normalize_dark"
-                    style="@style/GraphHelp.LeftItem"
-                    />
-
-                <TextView
-                    android:id="@+id/normalize"
-                    android:text="@string/help_graph_action_normalize"
-                    style="@style/GraphHelp.RightItem"
-                    />
-            </TableRow>
-
-            <TableRow style="@style/GraphHelp.Row">
-                <ImageView
-                    android:src="@drawable/ic_place_dark"
-                    style="@style/GraphHelp.LeftItem"
-                    />
-
-                <TextView
-                    android:id="@+id/map"
-                    android:text="@string/help_graph_action_map"
-                    style="@style/GraphHelp.RightItem"
-                    />
-            </TableRow>
-
-        </TableLayout>
-
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="vertical">
 
-        <include
-            layout="@layout/spinner"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-        />
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                >
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/intro"
+                    style="@style/GraphHelp.SectionTitle"
+                    android:layout_marginTop="0dp"
+                    android:text="@string/help_graph"/>
 
- </ScrollView>
+
+                <TextView
+                    android:id="@+id/intro_series"
+                    style="@style/GraphHelp.SectionTitle"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/help_graph_series"/>
+
+                <TableRow style="@style/GraphHelp.Row">
+
+                    <ImageView
+                        style="@style/GraphHelp.LeftItem"
+                        android:padding="3dp"
+                        android:src="@drawable/circle_water"
+                        />
+
+                    <TextView
+                        android:id="@+id/series_water"
+                        style="@style/GraphHelp.RightItem"
+                        android:text="@string/help_graph_series_water"
+                        />
+                </TableRow>
+
+                <TableRow style="@style/GraphHelp.Row">
+
+                    <ImageView
+                        style="@style/GraphHelp.LeftItem"
+                        android:padding="3dp"
+                        android:src="@drawable/circle_mw"
+                        />
+
+                    <TextView
+                        android:id="@+id/series_mw"
+                        style="@style/GraphHelp.RightItem"
+                        android:text="@string/help_graph_series_mw"
+                        />
+                </TableRow>
+
+                <TableRow style="@style/GraphHelp.Row">
+
+                    <ImageView
+                        style="@style/GraphHelp.LeftItem"
+                        android:padding="3dp"
+                        android:src="@drawable/circle_average_tw"
+                        />
+
+                    <TextView
+                        android:id="@+id/series_average_tw"
+                        style="@style/GraphHelp.RightItem"
+                        android:text="@string/help_graph_series_average_tw"
+                        />
+                </TableRow>
+
+                <TableRow style="@style/GraphHelp.Row">
+
+                    <ImageView
+                        style="@style/GraphHelp.LeftItem"
+                        android:padding="3dp"
+                        android:src="@drawable/circle_extreme_tw"
+                        />
+
+                    <TextView
+                        android:id="@+id/series_extreme_tw"
+                        style="@style/GraphHelp.RightItem"
+                        android:text="@string/help_graph_series_extreme_tw"
+                        />
+                </TableRow>
+
+
+                <TextView
+                    android:id="@+id/intro_action"
+                    style="@style/GraphHelp.SectionTitle"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/help_graph_action"/>
+
+                <TableRow style="@style/GraphHelp.Row">
+
+                    <ImageView
+                        style="@style/GraphHelp.LeftItem"
+                        android:src="@drawable/ic_normalize_dark"
+                        />
+
+                    <TextView
+                        android:id="@+id/normalize"
+                        style="@style/GraphHelp.RightItem"
+                        android:text="@string/help_graph_action_normalize"
+                        />
+                </TableRow>
+
+                <TableRow style="@style/GraphHelp.Row">
+
+                    <ImageView
+                        style="@style/GraphHelp.LeftItem"
+                        android:src="@drawable/ic_place_dark"
+                        />
+
+                    <TextView
+                        android:id="@+id/map"
+                        style="@style/GraphHelp.RightItem"
+                        android:text="@string/help_graph_action_map"
+                        />
+                </TableRow>
+
+            </TableLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
+            <include
+                layout="@layout/spinner"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</ScrollView>

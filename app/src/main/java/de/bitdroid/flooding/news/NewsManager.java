@@ -13,6 +13,8 @@ import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ui.MainDrawerActivity;
+import rx.Observable;
+import rx.functions.Func0;
 
 
 /**
@@ -33,8 +35,13 @@ public class NewsManager {
 	}
 
 
-	public List<NewsItem> getAllNews() {
-		return NewsItem.listAll(NewsItem.class);
+	public Observable<List<NewsItem>> getAllNews() {
+		return Observable.defer(new Func0<Observable<List<NewsItem>>>() {
+			@Override
+			public Observable<List<NewsItem>> call() {
+				return Observable.just(NewsItem.listAll(NewsItem.class));
+			}
+		});
 	}
 
 

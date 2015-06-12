@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 
@@ -23,9 +24,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.news.DefaultTransformer;
 import de.bitdroid.flooding.news.NewsItem;
 import de.bitdroid.flooding.news.NewsManager;
 import roboguice.inject.InjectView;
+import rx.functions.Action1;
+import timber.log.Timber;
 
 public class NewsFragment extends AbstractFragment {
 
@@ -57,9 +61,7 @@ public class NewsFragment extends AbstractFragment {
 		if (isFirstStart()) addHelperNews();
 
 		// load items
-		List<NewsItem> items = newsManager.getAllNews();
-		Collections.sort(items);
-		adapter.setItems(items);
+		loadNews();
 
 		// setup swipe to delete
 		SwipeableRecyclerViewTouchListener swipeTouchListener = new SwipeableRecyclerViewTouchListener(recyclerView, new NewsItemSwipeListener());
@@ -82,6 +84,27 @@ public class NewsFragment extends AbstractFragment {
 	private void addHelperNews() {
 		newsManager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), 2, true, false, false);
 		newsManager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, true, false, false);
+	}
+
+
+	private void loadNews() {
+		compositeSubscription.add(newsManager.getAllNews()
+				.compose(new DefaultTransformer<List<NewsItem>>())
+				.subscribe(new Action1<List<NewsItem>>() {
+					@Override
+					public void call(List<NewsItem> items) {
+						Collections.sort(items);
+						adapter.setItems(items);
+						adapter.notifyDataSetChanged();
+					}
+				}, new Action1<Throwable>() {
+					@Override
+					public void call(Throwable throwable) {
+						// should (TM) never happen
+						Timber.e(throwable, "failed to fetch news entries");
+						Toast.makeText(NewsFragment.this.getActivity(), "Error getting news", Toast.LENGTH_SHORT).show();
+					}
+				}));
 	}
 
 
@@ -164,9 +187,10 @@ public class NewsFragment extends AbstractFragment {
 		private void removeItems(int[] reverseSortedPositions) {
 			for (int position : reverseSortedPositions) {
 				adapter.getNewsList().get(position).delete();
+				adapter.getNewsList().remove(position);
 			}
-			adapter.setItems(newsManager.getAllNews());
 			adapter.notifyDataSetChanged();
+			loadNews();
 		}
 
 	}

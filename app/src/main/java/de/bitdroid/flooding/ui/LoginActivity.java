@@ -144,7 +144,7 @@ public class LoginActivity extends AbstractActivity {
 							Timber.d("starting recover activity");
 							startActivityForResult(((UserRecoverableAuthException) throwable).getIntent(), REQUEST_CODE_AUTH);
 
-						} else if (throwable instanceof IOException) {
+						} else {
 							new AlertDialog.Builder(LoginActivity.this)
 									.setTitle(R.string.error_login_title)
 									.setMessage(R.string.error_login_message)

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Pegel Alarm</string>
-    <string name="content_provider_authority">de.bitdroid.flooding.provider</string>
+    <string name="app_name" translatable="false">Pegel Alarm</string>
 
 	<string name="nav_home">News</string>
 	<string name="nav_alarms">Alarms</string>
@@ -9,19 +8,11 @@
 	<string name="nav_settings">Settings</string>
     <string name="nav_feedback">Feedback</string>
 
-	<string name="nav_open">Open</string>
-	<string name="nav_close">Close</string>
-
     <string name="title_new_alarm">New Alarm</string>
-
-	<string name="map_dialog_station_info">Latitude %1$f\nLongitude %2$f</string>
-
 
 	<string name="menu_graph_select_series">Series</string>
 	<string name="menu_graph_normalize">Normalized plot</string>
 	<string name="menu_graph_regular">Regular plot</string>
-	<string name="menu_graph_timestamp">Timestamps</string>
-	<string name="menu_graph_seekbar">Timestamps</string>
 	<string name="menu_graph_map">Map</string>
 
 	<string name="graph_rangelabel_cm">Water Level (cm)</string>
@@ -29,13 +20,9 @@
 	<string name="graph_domainlabel">Location along River (km)</string>
 
 	<string name="menu_search">Search</string>
-    <string name="search_empty">No results</string>
     <string name="menu_select_water_search_hint">Rivers</string>
     <string name="menu_select_station_search_hint">Stations</string>
     <string name="menu_map">Map</string>
-
-	<string name="menu_alarms_add">Add alarm</string>
-
 
 	<string name="alarms_empty">Press the + Button to add a new alarm</string>
 	<string name="alarms_description_above">When level above %1$.2f cm</string>
@@ -51,22 +38,15 @@
 	<string name="alarms_new_title_station">Select Station</string>
 	<string name="alarms_new_title_level">Select water level</string>
 	<string name="alarms_new_created">Added new alarm</string>
-	<string name="alarms_new_not_created">Not added</string>
-	<string name="alarms_new_already_added">Already added!</string>
-    <string name="alarms_new_menu_data">Station data</string>
-	<string name="alarms_registration_pending">Starting alarm ...</string>
-	<string name="alarms_registration_error">Error starting alarm, tap to retry.</string>
 	<string name="alarms_triggered_title">%1$s alarm triggered!</string>
 	<string name="alarms_triggered_msg">%1$s is %2$s %3$.2f cm</string>
     <string name="alarms_triggered_msg_above">above level</string>
     <string name="alarms_triggered_msg_below">below level</string>
 
-
     <string name="invalid_graph_title">Insufficient data</string>
     <string name="invalid_graph_msg">Sorry, but there are not enough stations along this river to
     show the graph.</string>
 	<string name="series_select_dialog_title">Select Series</string>
-	<string name="series_monitor_dialog_title">Select a Timestamp</string>
 	<string name="series_water_levels">Water Levels</string>
 	<string name="series_water_levels_normalized">Normalized Water Levels</string>
 	<string name="series_mw">MW</string>
@@ -77,33 +57,17 @@
 	<string name="series_hthw">HThw</string>
 	<string name="series_ntnw">NTnw</string>
 
-	<string name="btn_ok">Ok</string>
-	<string name="btn_cancel">Cancel</string>
 	<string name="help">Help</string>
-	<string name="delete">Delete</string>
-	<string name="select_all">Select all</string>
-	<string name="never">never</string>
-    <string name="share">Share</string>
-    <string name="share_with">Share with</string>
-
-	<string name="news_empty">Nothing new.</string>
 
 	<string name="news_intro_alarms_title">Alarms</string>
     <string name="news_intro_alarms_content">Want alarms when water levels reach a certain level? &lt;b&gt;Click here!&lt;/b&gt;</string>
 	<string name="news_intro_data_title">Water levels</string>
 	<string name="news_intro_data_content">Want more details about the current water situation? &lt;b&gt;Click here!&lt;/b&gt;</string>
-    <string name="news_intro_recording_title">Level Recording</string>
-    <string name="news_intro_recording_content">Interested in recording water levels over a longer period of time?
-        &lt;b&gt;Enable&lt;/b&gt; recordings in settings!</string>
 
-
-	<string name="data_empty">No data found. Loading might take a little while when first starting the app.</string>
-    <string name="data_empty_loading">Loading ...</string>
 	<string name="data_station_count">%1$d stations</string>
 	<string name="data_station_all">All stations</string>
 
     <string name="station_menu_graph">River graph</string>
-    <string name="station_menu_alarm">Create alarm</string>
     <string name="station_card_level_title">Measurement</string>
     <string name="station_card_level_from">Timestamp</string>
     <string name="station_card_info_title">General Information</string>
@@ -120,14 +84,11 @@
     <string name="station_card_char_mtnw">Average tide low water level (MTnw)</string>
     <string name="station_card_char_hthw">Highest tide high water level (HThw)</string>
     <string name="station_card_char_ntnw">Lowest tide low water level (NTnw)</string>
-    <string name="station_card_more">Show station info ...</string>
     <string name="station_card_no_value">n/a</string>
 
-
-	<string name="error_invalid_server_url">Invalid server URL!</string>
-    <string name="error_play_services_missing_title">Google Play Services missing</string>
-    <string name="error_play_services_missing_msg">Sorry, this action requires the Google Play Services to be installed on your device.</string>
-
+    <string name="feedback_mail_chooser">Thanks for the feedback!</string>
+    <string name="feedback_mail_address" translatable="false">philipp.eichhorn@bitdroid.de</string>
+    <string name="feedback_mail_subject" translatable="false">%1$s feedback (v%2$s)</string>
 
     <string name="help_graph">
         The graph shows all &lt;b&gt;water levels&lt;/b&gt; (y-axis) along a &lt;b&gt;river&lt;/b&gt; (x-axis).
@@ -162,14 +123,11 @@
     </string>
 
 
-    <string name="feedback_mail_chooser">Thanks for the feedback!</string>
-    <string name="feedback_mail_address">philipp.eichhorn@bitdroid.de</string>
-    <string name="feedback_mail_subject">%1$s feedback (v%2$s)</string>
-
     <string name="settings_version">Version</string>
     <string name="settings_about">About</string>
     <string name="settings_credits">Credits</string>
     <string name="settings_logout">Logout</string>
+    <string name="settings_quick_message">Software made in Erlangen, Germany\nThanks for your support!</string>
 
     <string name="settings_about_message">
 This application was developed at the &lt;a href=&quot;http://osr.informatik.uni-erlangen.de&quot;&gt;Professorship for Open Source Software&lt;/a&gt; lead by Prof. Dr. Dirk
@@ -183,44 +141,48 @@ Happy Coding!
     </string>
 
     <string name="settings_credits_message">
-This app is being powered by a number of small and large &lt;b&gt;open source projects&lt;/b&gt;
-which all together have made this project happen. We couldn\'t have done this without them.
-To those fellow developers out there spending their part time creating those libraries:
-you guys are awesome, keep on rocking!&lt;br&gt;
-&lt;br&gt;
-The libraries in use are:&lt;br&gt;
-&lt;br&gt;
-&lt;a href=&quot;https://github.com/jvalue/open-data-service&quot;&gt;Open Data Service&lt;/a&gt;, &lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot;&gt;AGPL v3&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;https://github.com/jvalue/cep-service&quot;&gt;CEP Service&lt;/a&gt;, &lt;a href=&quot;https://www.gnu.org/licenses/gpl-2.0.html&quot;&gt;GPL v2&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;http://androidplot.com&quot;&gt;AndroidPlot 0.6.1&lt;/a&gt;, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;br&gt;
-Google Support v4, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;br&gt;
-Google Play Services, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;http://wiki.fasterxml.com/JacksonHome&quot;&gt;fasterxml jackson&lt;/a&gt;, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;https://github.com/osmdroid/osmdroid&quot;&gt;osmdorid&lt;/a&gt;, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;https://github.com/gabrielemariotti/cardslib&quot;&gt;Card Library&lt;/a&gt;, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;https://github.com/MartinvanZ/Inscription&quot;&gt;Inscription&lt;/a&gt;, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;http://www.slf4j.org&quot;&gt;SLF4J&lt;/a&gt;, &lt;a href=&quot;http://opensource.org/licenses/MIT&quot;&gt;MIT license&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;https://www.crashlytics.com&quot;&gt;crashlytics&lt;/a&gt;, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;https://github.com/kolavar/android-support-v4-preferencefragment&quot;&gt;android-support-v4-preferencefragment&lt;/a&gt;, &lt;a href=&quot;https://www.apache.org/licenses/LICENSE-2.0.html&quot;&gt;Apache v2&lt;/a&gt;
-&lt;p&gt;
-Furthermore this application uses water related data provided by &lt;a href=&quot;https://pegelonline.wsv.de&quot;&gt;PegelOnline&lt;/a&gt;,
-which is operated by the &lt;a href=&quot;http://www.wsv.de&quot;&gt;Wasser- und Schifffahrtsverwaltung des Bundes&lt;/a&gt; (WSV).
-&lt;p&gt;
-Thanks everyone!
+        This app is being powered by a number of small and large &lt;b&gt;open source projects&lt;/b&gt;
+        which all together have made this project happen. We couldn\'t have done this without them.
+        To those fellow developers out there spending their part time creating those libraries:
+        you guys are awesome, keep on rocking!&lt;br&gt;
+        &lt;br&gt;
+        The libraries in use are:&lt;br&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/jvalue/open-data-service&quot;&gt;Open Data Service&lt;/a&gt; from the Professorship for Open-Source-Software, Erlangen
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/jvalue/cep-service&quot;&gt;CEP Service&lt;/a&gt; from the Professorship for Open-Source-Software, Erlangen
+        &lt;br&gt;
+        &lt;a href=&quot;http://androidplot.com&quot;&gt;AndroidPlot 0.6.1&lt;/a&gt; from a small developer team in Silicon Valley, USA
+        &lt;br&gt;
+        &lt;a href=&quot;http://wiki.fasterxml.com/JacksonHome&quot;&gt;fasterxml jackson&lt;/a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/osmdroid/osmdroid&quot;&gt;osmdorid&lt;/a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;https://www.crashlytics.com&quot;&gt;crashlytics&lt;/a&gt; from Fabric
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/brnunes/SwipeableRecyclerView&quot;&gt;SwipeableRecyclerView&lt;/a&gt; from Bruno R. Nunes
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/neokree/MaterialNavigationDrawer&quot;&gt;MaterialNavigationDrawer&lt;/a&gt; from Fabio Biola
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/futuresimple/android-floating-action-button&quot;&gt;Android Floating Action Button&lt;/a&gt; from Base
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/ReactiveX/RxJava&quot;&gt;RxJava&lt;/a&gt; from ReactiveX
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/square/retrofit&quot;&gt;Retrofit&lt;/a&gt; from Square
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/JakeWharton/timber&quot;&gt;Timber&lt;/a&gt; from Jake Wharton
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/google/guava&quot;&gt;Guava&lt;/a&gt; from Google Inc.
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/roboguice/roboguice&quot;&gt;RoboGuice&lt;/a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/satyan/sugar&quot;&gt;Sugar&lt;/a&gt; from Satya Narayan
+        &lt;br&gt;&lt;br&gt;
+        Furthermore this application uses water related data provided by &lt;a href=&quot;https://pegelonline.wsv.de&quot;&gt;PegelOnline&lt;/a&gt;,
+        which is operated by the &lt;a href=&quot;http://www.wsv.de&quot;&gt;Wasser- und Schifffahrtsverwaltung des Bundes&lt;/a&gt; (WSV).
+        &lt;p&gt;
+        Thanks everyone!
     </string>
-
-    <string name="settings_quick_message">Software made in Erlangen, Germany\nThanks for your support!</string>
 
     <string name="error_internal_title">That didn\'t work</string>
     <string name="error_internal_message">Ups, this is embarrassing. There was an internal error while processing your request, we are sorry!</string>

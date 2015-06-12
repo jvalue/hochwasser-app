@@ -4,19 +4,11 @@
     <string name="nav_analysis">Wasserstände</string>
     <string name="nav_settings">Einstellungen</string>
 
-    <string name="nav_open">Öffnen</string>
-    <string name="nav_close">Schließen</string>
-
     <string name="title_new_alarm">Neuer Alarm</string>
-
-    <string name="map_dialog_station_info">Breitengrad %1$f\nLängengrad %2$f</string>
-
 
     <string name="menu_graph_select_series">Linien</string>
     <string name="menu_graph_normalize">Normalisierter Graph</string>
     <string name="menu_graph_regular">Regulärer Graph</string>
-    <string name="menu_graph_timestamp">Zeitstempel</string>
-    <string name="menu_graph_seekbar">Zeitstempel</string>
     <string name="menu_graph_map">Karte</string>
 
     <string name="graph_rangelabel_cm">Wasserstand (cm)</string>
@@ -24,13 +16,9 @@
     <string name="graph_domainlabel">Flusskilometer (km)</string>
 
     <string name="menu_search">Suchen</string>
-    <string name="search_empty">Keine Ergebnisse</string>
     <string name="menu_select_water_search_hint">Flüsse</string>
     <string name="menu_select_station_search_hint">Stationen</string>
     <string name="menu_map">Karte</string>
-
-    <string name="menu_alarms_add">Neuer Alarm</string>
-
 
     <string name="alarms_empty">Drücken Sie den + Knopf um einen neuen Alarm hinzuzufügen</string>
     <string name="alarms_description_above">Falls Pegel über %1$.2f cm</string>
@@ -46,22 +34,15 @@
     <string name="alarms_new_title_station">Station auswählen</string>
     <string name="alarms_new_title_level">Wasserstand auswählen</string>
     <string name="alarms_new_created">Alarm hinzugefügt</string>
-    <string name="alarms_new_not_created">Nicht hinzugefügt</string>
-    <string name="alarms_new_already_added">Alarm existiert bereits!</string>
-    <string name="alarms_new_menu_data">Station Details</string>
-    <string name="alarms_registration_pending">Alarm wird gestartet ...</string>
-    <string name="alarms_registration_error">Fehler beim Starten, hier drücken um erneut zu probieren.</string>
     <string name="alarms_triggered_title">%1$s Alarm ausgelöst!</string>
     <string name="alarms_triggered_msg">%1$s hat den Pegel %3$.2f cm %2$s.</string>
     <string name="alarms_triggered_msg_above">überschritten</string>
     <string name="alarms_triggered_msg_below">unterschritten</string>
 
-
     <string name="invalid_graph_title">Unzureichende Daten</string>
     <string name="invalid_graph_msg">Leider gitb es nicht genug Stationen an diesem Fluss um
     den Graphen anzeigen zu können.</string>
     <string name="series_select_dialog_title">Linien auswählen</string>
-    <string name="series_monitor_dialog_title">Zeitstempel auswählen</string>
     <string name="series_water_levels">Wasserstand</string>
     <string name="series_water_levels_normalized">Normalisierter Wasserstand</string>
     <string name="series_mw">MW</string>
@@ -72,56 +53,17 @@
     <string name="series_hthw">HThw</string>
     <string name="series_ntnw">NTnw</string>
 
-    <string name="btn_ok">Ok</string>
-    <string name="btn_cancel">Abbrechen</string>
     <string name="help">Hilfe</string>
-    <string name="delete">Löschen</string>
-    <string name="select_all">Alle auswählen</string>
-    <string name="never">nie</string>
-    <string name="share">Teilen</string>
-    <string name="share_with">Teilen mit</string>
-
-
-    <string name="prefs_cat_ods_monitor">Aufnahmen</string>
-    <string name="prefs_cat_advanced">Erweitert</string>
-    <string name="prefs_cat_about">Info</string>
-
-    <string name="prefs_ods_servername">ODS Servername</string>
-    <string name="prefs_ods_monitor">Wasserstände aufnehmen</string>
-    <string name="prefs_ods_monitor_days">Aufnahme Zeitraum</string>
-    <string name="prefs_ods_monitor_days_format">%1$s Tage</string>
-    <string name="prefs_ods_monitor_interval">Zeit zwischen Aufnahmen</string>
-    <string name="prefs_ods_monitor_interval_format">%1$s Stunden</string>
-    <string name="prefs_ods_monitor_wifi">Aufnahmen nur mit Wifi</string>
-    <string name="prefs_ods_sync_last">Letzte Aufnahme</string>
-    <string name="prefs_ods_sync_last_success">Letzte erfolgreiche Aufnahme</string>
-    <string name="prefs_ods_sync_last_fail">Letzte fehlgeschlagene Aufnahme</string>
-    <string name="prefs_ceps_servername">CEPS Servername</string>
-    <string name="about_version">Version</string>
-    <string name="prefs_about_feedback_summary">Wünsche, Anregungen, Kritik, Lob</string>
-    <string name="prefs_about_contribute">Mithelfen</string>
-    <string name="prefs_about_contribute_summary">Alles open source!</string>
-    <string name="prefs_about_legal">Impressum</string>
-
-
-    <string name="news_empty">Nichts neues.</string>
 
     <string name="news_intro_alarms_title">Alarme</string>
     <string name="news_intro_alarms_content">Interessiert an Alarmen sobald bestimmte Wasserstände überschritten wurden? &lt;b&gt;Klicke hier!&lt;/b&gt;</string>
     <string name="news_intro_data_title">Wasserstände</string>
     <string name="news_intro_data_content">Auf der Suche nach mehr Details über aktuelle Wasserstände? &lt;b&gt;Klicke hier!&lt;/b&gt;</string>
-    <string name="news_intro_recording_title">Pegel Aufnehmen</string>
-    <string name="news_intro_recording_content">Willst du Wasserpegel über einen längeren Zeitraum aufnehmen und analysiern?
-        &lt;b&gt;Schalte Aufnahmen&lt;/b&gt; in den Einstellungen &lt;b&gt;ein!&lt;/b&gt;</string>
 
-
-    <string name="data_empty">Keine Daten gefunden. Das Laden kann beim ersten Start etwas Zeit beanspruchen.</string>
-    <string name="data_empty_loading">Lädt ...</string>
     <string name="data_station_count">%1$d Stationen</string>
     <string name="data_station_all">Alle Stationen</string>
 
     <string name="station_menu_graph">Fluss Graph</string>
-    <string name="station_menu_alarm">Neuer Alarm</string>
     <string name="station_card_level_title">Messwert</string>
     <string name="station_card_level_from">Messzeit</string>
     <string name="station_card_info_title">Stammdaten</string>
@@ -138,28 +80,9 @@
     <string name="station_card_char_mtnw">Mittleres Tideniedrigwasser (MTnw)</string>
     <string name="station_card_char_hthw">Höchstes Tidehochwasser (HThw)</string>
     <string name="station_card_char_ntnw">Niedrigstes Tideniedrigwasser (NTnw)</string>
-    <string name="station_card_more">Stations Details anzeigen ...</string>
     <string name="station_card_no_value">n. a.</string>
 
-
-    <string name="error_invalid_server_url">Ungültige Server URL!</string>
-    <string name="error_play_services_missing_title">Google Play Services nicht installiert!</string>
-    <string name="error_play_services_missing_msg">Das tut uns Leid, aber für diese Aktion müssen die Google Play Services installiert sein.</string>
-
-
     <string name="feedback_mail_chooser">Danke für das Feedback!</string>
-
-    <string name="contribute_title">%1$s ist open source!</string>
-    <string name="contribute_msg">
-Du bist herzlich dazu eingeladen bei dieser App mitzuhelfen!
-&lt;p&gt;
-Dabei reicht es schon vollkommen wenn du Fehler findest und meldest, Verbesserungen vorschlägst
-oder einfach schreibst was dir bei dieser App durch den Kopf geht.
-&lt;p&gt;
-Solltest du tiefer einsteigen wollen, so findest du den Quellecode kostenlos auf
-&lt;a href=&quot;https://github.com/jvalue/hochwasser-app&quot;&gt;GitHub&lt;/a&gt;
-    </string>
-
 
     <string name="help_graph">
         Der Graph zeigt alle &lt;b&gt;Wasserstände&lt;/b&gt; (y-Achse) entlang eines &lt;b&gt;Flusses&lt;/b&gt; (x-Achse) an.
@@ -198,15 +121,75 @@ Solltest du tiefer einsteigen wollen, so findest du den Quellecode kostenlos auf
         Klicke auf eine Station um mehr Informationen zu erhalten.
     </string>
 
+    <string name="settings_version">Version</string>
+    <string name="settings_about">Impressum</string>
+    <string name="settings_credits">Open Source Komponenten</string>
+    <string name="settings_logout">Ausloggen</string>
     <string name="settings_quick_message">Software made in Erlangen, Germany\nDanke für die für Unterstützung!</string>
 
-    <string name="error_auth_message">Ein Problem mit Ihrem Konto ist aufgetreten, bitte melden Sie sich erneut an.</string>
-    <string name="error_auth_title">Login Fehler</string>
+    <string name="settings_about_message">
+        PegelAlarm wurde an der &lt;a href=&quot;http://osr.informatik.uni-erlangen.de&quot;&gt;Professur für Open Source Software&lt;/a&gt; unter der Leitung von Prof. Dr. Dirk
+        Riehle an der &lt;a href=&quot;http://www.uni-erlangen.de&quot;&gt;Friedrich-Alexander-Universität&lt;/a&gt; (FAU) in Erlangen-N&#252;rnberg von Philipp Eichhorn entwickelt.&lt;br/&gt;
+        &lt;br/&gt;
+        PegelAlarm ist Open Source und auf &lt;a href=&quot;https://github.com/jvalue/hochwasser-app&quot;&gt;GitHub&lt;/a&gt; verfügbar.
+        &lt;br/&gt;
+        Wir freuen uns über Feedback! Bei Ideen, Wünschen oder Anregungen einfach eine &lt;a href=&quot;mailto:philipp.eichhorn@bitdroid.de&quot;&gt;Email&lt;/a&gt;
+        schreiben!&lt;br/&gt;
+        &lt;br/&gt;
+        Happy Coding!
+    </string>
+
+    <string name="settings_credits_message">
+        PegelAlarm basiert auf einer Reihe von kleinen und großen &lt;b&gt;Open Source Projekten&lt;/b&gt;
+        ohne die PegelAlarm nie möglich gewesen wäre. An alle Entwickler die in ihrer Freizeit an diesen
+        Projekten arbeiten: ihr seit Rockstars!&lt;br&gt;
+        &lt;br&gt;
+        PegelAlarm verwendet:&lt;br&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/jvalue/open-data-service&quot;&gt;Open Data Service&lt;/a&gt; der Professur für Open-Source-Software, Erlangen
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/jvalue/cep-service&quot;&gt;CEP Service&lt;/a&gt; der Professur für Open-Source-Software, Erlangen
+        &lt;br&gt;
+        &lt;a href=&quot;http://androidplot.com&quot;&gt;AndroidPlot 0.6.1&lt;/a&gt; von einer kleinen Entwicklergruppe in Silicon Valley, USA
+        &lt;br&gt;
+        &lt;a href=&quot;http://wiki.fasterxml.com/JacksonHome&quot;&gt;fasterxml jackson&lt;/a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/osmdroid/osmdroid&quot;&gt;osmdorid&lt;/a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;https://www.crashlytics.com&quot;&gt;crashlytics&lt;/a&gt; von Fabric
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/brnunes/SwipeableRecyclerView&quot;&gt;SwipeableRecyclerView&lt;/a&gt; von Bruno R. Nunes
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/neokree/MaterialNavigationDrawer&quot;&gt;MaterialNavigationDrawer&lt;/a&gt; von Fabio Biola
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/futuresimple/android-floating-action-button&quot;&gt;Android Floating Action Button&lt;/a&gt; von Base
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/ReactiveX/RxJava&quot;&gt;RxJava&lt;/a&gt; von ReactiveX
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/square/retrofit&quot;&gt;Retrofit&lt;/a&gt; von Square
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/JakeWharton/timber&quot;&gt;Timber&lt;/a&gt; von Jake Wharton
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/google/guava&quot;&gt;Guava&lt;/a&gt; von Google Inc.
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/roboguice/roboguice&quot;&gt;RoboGuice&lt;/a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;https://github.com/satyan/sugar&quot;&gt;Sugar&lt;/a&gt; von Satya Narayan
+        &lt;br&gt;&lt;br&gt;
+        Zusätzlich verwendet PegelAlarm Daten von &lt;a href=&quot;https://pegelonline.wsv.de&quot;&gt;PegelOnline&lt;/a&gt;
+        das von der &lt;a href=&quot;http://www.wsv.de&quot;&gt;Wasser- und Schifffahrtsverwaltung des Bundes&lt;/a&gt; (WSV)
+        betrieben wird.
+        &lt;p&gt;
+        Vielen danke für die super Unterstützung!
+    </string>
+
+    <string name="error_auth_message">Es ist ein Problem mit Ihrem Konto aufgetreten, bitte melden Sie sich erneut an.</string>
+    <string name="error_auth_title">Anmeldefehler</string>
     <string name="error_internal_details">Details</string>
     <string name="error_internal_message">Ups, das ist peinlich. Leider gab es einen internen Fehler, das tut uns leid!</string>
     <string name="error_internal_title">Das hat nicht funktioniert</string>
-    <string name="error_login_message">Ein Problem ist beim anmelden aufgetreten, bitte probieren sie es erneut.</string>
-    <string name="error_login_title">Login Fehler</string>
+    <string name="error_login_message">Es ist ein Problem beim Anmelden aufgetreten, bitte probieren Sie es erneut.</string>
+    <string name="error_login_title">Anmeldefehler</string>
     <string name="error_network_message">Es gab ein Problem mit der Internet Verbindung.</string>
     <string name="error_network_title">Keine Internet Verbindung</string>
     <string name="error_network_tap_to_retry">Keine Internet Verbindung, zum Wiederholen antippen.</string>

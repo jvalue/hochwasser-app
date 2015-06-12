@@ -32,7 +32,7 @@
 	<string name="menu_alarms_add">Neuer Alarm</string>
 
 
-	<string name="alarms_empty">Keine Alarme gestartet.</string>
+	<string name="alarms_empty">Drücken Sie den + Knopf um einen neuen Alarm hinzuzufügen</string>
 	<string name="alarms_description_above">Falls Pegel über %1$.2f cm</string>
 	<string name="alarms_description_below">Falls Pegel unter %1$.2f cm</string>
 	<string name="alarms_new_add">Alarm starten</string>

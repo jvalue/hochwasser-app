@@ -37,8 +37,9 @@ public class AlarmsFragment extends AbstractFragment {
 	@Inject private NetworkUtils networkUtils;
 	@Inject private CepsManager cepsManager;
 
-	@InjectView(R.id.button_add) FloatingActionButton addButton;
-	@InjectView(R.id.list) RecyclerView recyclerView;
+	@InjectView(R.id.button_add) private FloatingActionButton addButton;
+	@InjectView(R.id.list) private RecyclerView recyclerView;
+	@InjectView(R.id.empty) private View emptyView;
 	private AlarmsAdapter adapter;
 
 	// flag indicating whether an alarm is currently being added.
@@ -96,6 +97,8 @@ public class AlarmsFragment extends AbstractFragment {
 					@Override
 					public void call(List<Alarm> alarms) {
 						hideSpinner();
+						if (!alarms.isEmpty()) emptyView.setVisibility(View.GONE);
+						else emptyView.setVisibility(View.VISIBLE);
 						adapter.setAlarms(alarms);
 					}
 				}, new AbstractErrorAction(AlarmsFragment.this) {

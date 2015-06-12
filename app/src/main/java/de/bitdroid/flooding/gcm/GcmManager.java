@@ -91,6 +91,17 @@ public class GcmManager {
 
 
 	/**
+	 * Removes all locally stored GCM information but does not contact any servers (e.g. Google servers
+	 * for actually unregistering this device).
+	 */
+	public void clear() {
+		SharedPreferences.Editor editor = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
+		editor.clear();
+		editor.commit();
+	}
+
+
+	/**
 	 * @return the last stored reg id or null if none was stored or the app version has changed since.
 	 */
 	public String getRegId() {

@@ -1,7 +1,9 @@
 package de.bitdroid.flooding.ui;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -10,14 +12,20 @@ import android.widget.ImageView;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.auth.LoginManager;
+import de.bitdroid.flooding.gcm.GcmManager;
 
 public class UiUtils {
 
 	private final Context context;
+	private final LoginManager loginManager;
+	private final GcmManager gcmManager;
 
 	@Inject
-	UiUtils(Context context) {
+	UiUtils(Context context, LoginManager loginManager, GcmManager gcmManager) {
 		this.context = context;
+		this.loginManager = loginManager;
+		this.gcmManager = gcmManager;
 	}
 
 
@@ -71,6 +79,19 @@ public class UiUtils {
 	public void hideSpinner(View spinnerContainerView, ImageView spinnerImageView) {
 		spinnerImageView.clearAnimation();
 		spinnerContainerView.setVisibility(View.GONE);
+	}
+
+
+	public void logout(Activity parentActivity) {
+		// clear local data
+		loginManager.clearToken();
+		loginManager.clearAccountName();
+		gcmManager.clear();
+
+		// start login activity
+		Intent intent = new Intent(parentActivity, LoginActivity.class);
+		parentActivity.startActivity(intent);
+		parentActivity.finish();
 	}
 
 }

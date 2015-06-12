@@ -18,7 +18,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class AbstractActivity extends RoboActionBarActivity {
 
-	@Inject private UiUtils uiUtils;
+	@Inject protected UiUtils uiUtils;
 	@Inject protected NetworkUtils networkUtils;
 	@InjectView(R.id.spinner) private View spinnerContainerView;
 	@InjectView(R.id.spinner_image) private ImageView spinnerImageView;

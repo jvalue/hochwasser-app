@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name" translatable="false">Pegel Alarm</string>
 
+    <string name="welcome_to">Welcome to</string>
+
 	<string name="nav_home">News</string>
 	<string name="nav_alarms">Alarms</string>
 	<string name="nav_analysis">Water levels</string>

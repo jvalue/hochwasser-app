@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.ui;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,9 +31,12 @@ public class AbstractActivity extends RoboActionBarActivity {
 		super.onCreate(savedInstanceState);
 
 		// action bar back button
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayShowHomeEnabled(true);
+		}
 	}
 
 

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="welcome_to">Willkommen zu</string>
+
     <string name="nav_alarms">Alarme</string>
     <string name="nav_analysis">Wasserstände</string>
     <string name="nav_settings">Einstellungen</string>

@@ -90,7 +90,7 @@ public class UiUtils {
 	public void logout(Activity parentActivity) {
 		// clear local data
 		loginManager.clearToken();
-		loginManager.clearAccountName();
+		loginManager.clearAccount();
 		gcmManager.clear();
 
 		// start login activity

@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.ui;
 
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -35,7 +36,7 @@ import timber.log.Timber;
 public class LoginActivity extends AbstractActivity {
 
 	private static final String
-			STATE_SELECTED_ACCOUNT_NAME = "STATE_SELECTED_ACCOUNT_NAME";
+			STATE_SELECTED_ACCOUNT = "STATE_SELECTED_ACCOUNT";
 
 	private static final int
 			REQUEST_CODE_AUTH = 42,
@@ -45,7 +46,7 @@ public class LoginActivity extends AbstractActivity {
 	@Inject private LoginManager loginManager;
 	@Inject private UserApi userApi;
 
-	private String selectedAccountName = null;
+	private Account selectedAccount = null;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -63,13 +64,13 @@ public class LoginActivity extends AbstractActivity {
 		});
 
 		// check if signed in
-		if (loginManager.getAccountName() != null) {
+		if (loginManager.getAccount().isPresent()) {
 			showMainActivity();
 		}
 
 		// restore state
 		if (savedInstanceState != null) {
-			selectedAccountName = savedInstanceState.getString(STATE_SELECTED_ACCOUNT_NAME);
+			selectedAccount = savedInstanceState.getParcelable(STATE_SELECTED_ACCOUNT);
 		}
 	}
 
@@ -77,7 +78,7 @@ public class LoginActivity extends AbstractActivity {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(STATE_SELECTED_ACCOUNT_NAME, selectedAccountName);
+		outState.putParcelable(STATE_SELECTED_ACCOUNT, selectedAccount);
 	}
 
 
@@ -100,7 +101,9 @@ public class LoginActivity extends AbstractActivity {
 
 			case REQUEST_CODE_ACCOUNT:
 				// user selected account
-				selectedAccountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+				selectedAccount = new Account(
+						data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME),
+						data.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 				registerAndGetUser();
 				break;
 		}
@@ -114,7 +117,7 @@ public class LoginActivity extends AbstractActivity {
 					@Override
 					public Observable<String> call() {
 						try {
-							return Observable.just(loginManager.getToken(selectedAccountName));
+							return Observable.just(loginManager.getToken(selectedAccount));
 						} catch (IOException | GoogleAuthException e) {
 							return Observable.error(e);
 						}
@@ -131,7 +134,7 @@ public class LoginActivity extends AbstractActivity {
 					@Override
 					public void call(User user) {
 						Timber.d("login success (" + user.getId() + ")");
-						loginManager.setAccountName(selectedAccountName);
+						loginManager.setAccount(selectedAccount);
 						showMainActivity();
 					}
 				}, new Action1<Throwable>() {

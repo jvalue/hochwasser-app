@@ -3,6 +3,7 @@ package de.bitdroid.flooding.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import javax.inject.Inject;
 
@@ -42,6 +43,11 @@ public class PreferenceUtils {
 		SharedPreferences.Editor editor = android.preference.PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.remove(key);
 		editor.commit();
+	}
+
+
+	public boolean containsKey(String key) {
+		return PreferenceManager.getDefaultSharedPreferences(context).contains(key);
 	}
 
 }

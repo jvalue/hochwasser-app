@@ -1,7 +1,11 @@
 package de.bitdroid.flooding.auth;
 
 
+import android.accounts.Account;
+
 import com.google.android.gms.auth.GoogleAuthException;
+
+import org.roboguice.shaded.goole.common.base.Optional;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -35,8 +39,9 @@ public class AuthClient extends UrlConnectionClient {
 			List<Header> headers = new LinkedList<Header>(request.getHeaders());
 
 			// if logged in add auth header
-			if (loginManager.getAccountName() != null) {
-				String token = loginManager.getToken();
+			Optional<Account> account = loginManager.getAccount();
+			if (account.isPresent()) {
+				String token = loginManager.getToken(account.get());
 				Header authHeader = new Header("Authorization", "Bearer " + token);
 				headers.add(authHeader);
 			}

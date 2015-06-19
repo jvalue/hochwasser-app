@@ -1,6 +1,7 @@
 package de.bitdroid.flooding.ui;
 
 
+import android.accounts.Account;
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import org.roboguice.shaded.goole.common.base.Optional;
 
 import javax.inject.Inject;
 
@@ -30,7 +33,8 @@ public class MainDrawerActivity extends AbstractRoboDrawerActivity {
 		// setup drawer header
 		View drawerHeader = LayoutInflater.from(this).inflate(R.layout.drawer_header, null);
 		TextView emailView = (TextView) drawerHeader.findViewById(R.id.text_email);
-		emailView.setText(loginManager.getAccountName());
+		Optional<Account> account = loginManager.getAccount();
+		if (account.isPresent()) emailView.setText(account.get().name);
 		setDrawerHeaderCustom(drawerHeader);
 
 		// setup main sections

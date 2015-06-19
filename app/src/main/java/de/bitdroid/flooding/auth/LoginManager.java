@@ -1,12 +1,15 @@
 package de.bitdroid.flooding.auth;
 
 
+import android.accounts.Account;
 import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+
+import org.roboguice.shaded.goole.common.base.Optional;
 
 import java.io.IOException;
 
@@ -22,7 +25,9 @@ import timber.log.Timber;
  */
 public class LoginManager {
 
-	private static final String KEY_ACCOUNT_NAME = "accountName";
+	private static final String
+			KEY_ACCOUNT_NAME = "accountName",
+			KEY_ACCOUNT_TYPE = "accountType";
 
 	private final Context context;
 	private final PreferenceUtils preferenceUtils;
@@ -43,29 +48,40 @@ public class LoginManager {
 	}
 
 
-	public void setAccountName(String accountName) {
-		Timber.d("setting account name to " + accountName);
-		preferenceUtils.set(KEY_ACCOUNT_NAME, accountName);
+	public void setAccount(Account account) {
+		Timber.d("setting account to " + account);
+		preferenceUtils.set(KEY_ACCOUNT_NAME, account.name);
+		preferenceUtils.set(KEY_ACCOUNT_TYPE, account.type);
 	}
 
 
-	public void clearAccountName() {
+	public void clearAccount() {
 		preferenceUtils.clear(KEY_ACCOUNT_NAME);
+		preferenceUtils.clear(KEY_ACCOUNT_TYPE);
 	}
 
 
-	public String getAccountName() {
-		return preferenceUtils.get(KEY_ACCOUNT_NAME);
+	public Optional<Account> getAccount() {
+		if (!preferenceUtils.containsKey(KEY_ACCOUNT_NAME)
+				|| !preferenceUtils.containsKey(KEY_ACCOUNT_TYPE)) {
+			return Optional.absent();
+		}
+		return Optional.of(new Account(
+				preferenceUtils.get(KEY_ACCOUNT_NAME),
+				preferenceUtils.get(KEY_ACCOUNT_TYPE)));
 	}
 
 
-	public String getToken(String accountName) throws IOException, UserRecoverableAuthException, GoogleAuthException {
-		cachedToken = GoogleAuthUtil.getToken(context, accountName, scope, new Bundle());
+	public String getToken(Account account) throws IOException, UserRecoverableAuthException, GoogleAuthException {
+		cachedToken = GoogleAuthUtil.getToken(context, account, scope, new Bundle());
 		return cachedToken;
 	}
 
-	public String getToken() throws IOException, UserRecoverableAuthException, GoogleAuthException {
-		return getToken(preferenceUtils.get(KEY_ACCOUNT_NAME));
+
+	public Optional<String> getToken() throws IOException, UserRecoverableAuthException, GoogleAuthException {
+		Optional<Account> account = getAccount();
+		if (account.isPresent()) return Optional.absent();
+		return Optional.of(getToken(getAccount().get()));
 	}
 
 

@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.utils.PreferenceUtils;
+import de.bitdroid.flooding.utils.PreferenceUtilsFactory;
 import timber.log.Timber;
 
 
@@ -24,6 +25,8 @@ import timber.log.Timber;
  * Handles login / logout to the app.
  */
 public class LoginManager {
+
+	private static final String PREFS_NAME = "LOGIN_MANAGER";
 
 	private static final String
 			KEY_ACCOUNT_NAME = "accountName",
@@ -39,10 +42,10 @@ public class LoginManager {
 	@Inject
 	LoginManager(
 			Context context,
-			PreferenceUtils preferenceUtils) {
+			PreferenceUtilsFactory preferenceUtilsFactory) {
 
 		this.context = context;
-		this.preferenceUtils = preferenceUtils;
+		this.preferenceUtils = preferenceUtilsFactory.createUtils(PREFS_NAME);
 		this.scope = "audience:server:client_id:" + context.getString(R.string.google_oauth_web_client_id);
 
 	}
@@ -56,14 +59,14 @@ public class LoginManager {
 
 
 	public void clearAccount() {
-		preferenceUtils.clear(KEY_ACCOUNT_NAME);
-		preferenceUtils.clear(KEY_ACCOUNT_TYPE);
+		preferenceUtils.remove(KEY_ACCOUNT_NAME);
+		preferenceUtils.remove(KEY_ACCOUNT_TYPE);
 	}
 
 
 	public Optional<Account> getAccount() {
-		if (!preferenceUtils.containsKey(KEY_ACCOUNT_NAME)
-				|| !preferenceUtils.containsKey(KEY_ACCOUNT_TYPE)) {
+		if (!preferenceUtils.contains(KEY_ACCOUNT_NAME)
+				|| !preferenceUtils.contains(KEY_ACCOUNT_TYPE)) {
 			return Optional.absent();
 		}
 		return Optional.of(new Account(

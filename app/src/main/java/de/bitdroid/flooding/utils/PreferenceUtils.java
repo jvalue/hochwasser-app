@@ -3,9 +3,6 @@ package de.bitdroid.flooding.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import javax.inject.Inject;
 
 /**
  * Easier android shared preferences handling.
@@ -13,41 +10,47 @@ import javax.inject.Inject;
 public class PreferenceUtils {
 
 	private final Context context;
+	private final String prefsName;
 
-	@Inject
-	PreferenceUtils(Context context) {
+	PreferenceUtils(Context context, String prefsName) {
 		this.context = context;
+		this.prefsName = prefsName;
 	}
 
 
 	public void set(String key, String value) {
-		SharedPreferences.Editor editor = android.preference.PreferenceManager.getDefaultSharedPreferences(context).edit();
+		SharedPreferences.Editor editor = getPrefs().edit();
 		editor.putString(key, value);
 		editor.commit();
 	}
 
 
 	public void set(String key, long value) {
-		SharedPreferences.Editor editor = android.preference.PreferenceManager.getDefaultSharedPreferences(context).edit();
+		SharedPreferences.Editor editor = getPrefs().edit();
 		editor.putLong(key, value);
 		editor.commit();
 	}
 
 
 	public String get(String key) {
-		return android.preference.PreferenceManager.getDefaultSharedPreferences(context).getString(key, null);
+		return getPrefs().getString(key, null);
 	}
 
 
-	public void clear(String key) {
-		SharedPreferences.Editor editor = android.preference.PreferenceManager.getDefaultSharedPreferences(context).edit();
+	public void remove(String key) {
+		SharedPreferences.Editor editor = getPrefs().edit();
 		editor.remove(key);
 		editor.commit();
 	}
 
 
-	public boolean containsKey(String key) {
-		return PreferenceManager.getDefaultSharedPreferences(context).contains(key);
+	public boolean contains(String key) {
+		return getPrefs().contains(key);
+	}
+
+
+	private SharedPreferences getPrefs() {
+		return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
 	}
 
 }

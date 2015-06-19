@@ -33,7 +33,7 @@ public class CepsManager {
 			PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID = "pegelAlarmAboveLevel",
 			PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID = "pegelAlarmBelowLevel";
 	private static final String
-			ARGUMENT_UUID = "STATION_UUID",
+			ARGUMENT_GAUGE_ID = "GAUGE_ID",
 			ARGUMENT_LEVEL = "LEVEL";
 
 	private final RegistrationApi registrationApi;
@@ -108,7 +108,7 @@ public class CepsManager {
 	public Observable<Void> addAlarm(Alarm alarm) {
 		// collect alarm parameters
 		final Map<String, Object> args = new HashMap<>();
-		args.put(ARGUMENT_UUID, alarm.getStation().getUuid());
+		args.put(ARGUMENT_GAUGE_ID, alarm.getStation().getGaugeId());
 		args.put(ARGUMENT_LEVEL, alarm.getLevel());
 		final String adapterId = alarm.isAlarmWhenAboveLevel() ? PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID : PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
 
@@ -165,7 +165,7 @@ public class CepsManager {
 					.setId(client.getId())
 					.setLevel((double) args.get(ARGUMENT_LEVEL))
 					.setAlarmWhenAboveLevel(alarmWhenAboveLevel);
-			builders.add(new Pair<>((String) args.get(ARGUMENT_UUID), builder));
+			builders.add(new Pair<>((String) args.get(ARGUMENT_GAUGE_ID), builder));
 		}
 		return builders;
 	}

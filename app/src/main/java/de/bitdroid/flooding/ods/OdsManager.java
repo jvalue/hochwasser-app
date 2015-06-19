@@ -37,10 +37,10 @@ import timber.log.Timber;
 @Singleton
 public class OdsManager {
 
-	private static final String PEGELONLINE_SOURCE_ID = "pegelonline";
+	private static final String PEGEL_ALARM_SOURCE_ID = "pegelalarm";
 	private static final int QUERY_COUNT = 100;
 	private static final String PROPERTY_FILTER_STATION
-			= "result.uuid,result.shortname,result.longname,result.km,result.latitude,result.longitude,result.water.longname,cursor";
+			= "result.gaugeId,result.name,result.km,result.latitude,result.longitude,result.water.longname,cursor";
 
 	private final DataApi dataApi;
 
@@ -66,7 +66,7 @@ public class OdsManager {
 					Data data;
 					do {
 						// iterate over ODS cursor
-						data = dataApi.getObjectsSynchronously(PEGELONLINE_SOURCE_ID, startId, QUERY_COUNT, PROPERTY_FILTER_STATION);
+						data = dataApi.getObjectsSynchronously(PEGEL_ALARM_SOURCE_ID, startId, QUERY_COUNT, PROPERTY_FILTER_STATION);
 						for (JsonNode node : data.getResult()) {
 							Pair<String, Station.Builder> pair = parseStation(node);
 							List<Station.Builder> stationsList = builderMap.get(pair.first);
@@ -86,7 +86,7 @@ public class OdsManager {
 						BodyOfWater water = new BodyOfWater(waterName, builderMap.get(waterName).size());
 						for (Station.Builder builder : builderMap.get(waterName)) {
 							Station station = builder.setBodyOfWater(water).build();
-							stationCache.put(station.getUuid(), station);
+							stationCache.put(station.getGaugeId(), station);
 						}
 					}
 					return Observable.just(sortStations(stationCache.values()));
@@ -142,8 +142,8 @@ public class OdsManager {
 
 
 	public Observable<StationMeasurements> getMeasurements(final Station station) {
-		Timber.d("loading station " + station.getUuid());
-		return dataApi.getObjectAttribute(PEGELONLINE_SOURCE_ID, station.getUuid(), "")
+		Timber.d("loading station " + station.getGaugeId());
+		return dataApi.getObjectAttribute(PEGEL_ALARM_SOURCE_ID, station.getGaugeId(), "")
 				.flatMap(new Func1<JsonNode, Observable<StationMeasurements>>() {
 					@Override
 					public Observable<StationMeasurements> call(JsonNode data) {
@@ -158,8 +158,8 @@ public class OdsManager {
 	 */
 	private Pair<String, Station.Builder> parseStation(JsonNode node) {
 		Station.Builder builder = new Station.Builder()
-				.setUuid(node.path("uuid").asText())
-				.setStationName(node.path("longname").asText());
+				.setGaugeId(node.path("gaugeId").asText())
+				.setStationName(node.path("name").asText());
 
 		Float lat = parseFloat(node.path("latitude"));
 		if (lat != null) builder.setLatitude(lat);
@@ -169,7 +169,7 @@ public class OdsManager {
 		if (riverKm != null) builder.setRiverKm(riverKm);
 
 		return new Pair<>(
-				node.path("water").path("longname").asText(),
+				node.path("water").asText(),
 				builder);
 	}
 
@@ -183,40 +183,17 @@ public class OdsManager {
 	private StationMeasurements parseMeasurements(Station station, JsonNode data) {
 		StationMeasurements.Builder builder = new StationMeasurements.Builder(station);
 
-		JsonNode level = null;
-		for (JsonNode timeSeries : data.path("timeseries")) {
-			JsonNode type = timeSeries.path("shortname");
-			if (!type.isMissingNode() && type.asText().equals("W")) {
-				level = timeSeries;
-				break;
-			}
-		}
-
-		if (level == null) {
-			Timber.w("failed to find level data for station " + station.getStationName());
-			return builder.build();
-		}
-
-
 		// current measurement
-		JsonNode currentMeasurement = level.path("currentMeasurement");
+		JsonNode currentMeasurement = data.path("currentMeasurement");
 		if (!currentMeasurement.isMissingNode()) {
 			builder.setLevel(new Measurement(
 					(float) currentMeasurement.path("value").asDouble(),
-					level.path("unit").asText()));
+					currentMeasurement.path("unit").asText()));
 			builder.setLevelTimestamp(PegelOnlineUtils.parseStringTimestamp(currentMeasurement.path("timestamp").asText()));
 		}
 
-		// gauge zero
-		JsonNode gaugeZero = level.path("gaugeZero");
-		if (!gaugeZero.isMissingNode()) {
-			builder.setLevelZero(new Measurement(
-					(float) gaugeZero.path("value").asDouble(),
-					gaugeZero.path("unit").asText()));
-		}
-
 		// characteristic values
-		for (JsonNode charValue : level.path("characteristicValues")) {
+		for (JsonNode charValue : currentMeasurement.path("characteristicValues")) {
 			Measurement measurement = new Measurement((float) charValue.path("value").asDouble(), charValue.path("unit").asText());
 			String charType = charValue.path("shortname").asText();
 

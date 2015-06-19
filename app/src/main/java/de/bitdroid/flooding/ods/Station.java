@@ -13,20 +13,20 @@ public class Station implements Parcelable {
 
 	private static final float NO_VALUE = -999f;
 
-	private final String uuid;
+	private final String gaugeId;
 	private final String stationName;
 	private final BodyOfWater bodyOfWater;
 	private final Float latitude, longitude;
 	private final Float riverKm;
 
 	public Station(
-			String uuid,
+			String gaugeId,
 			String stationName,
 			BodyOfWater bodyOfWater,
 			Float latitude, Float longitude,
 			Float riverKm) {
 
-		this.uuid = uuid;
+		this.gaugeId = gaugeId;
 		this.stationName = stationName;
 		this.bodyOfWater = bodyOfWater;
 		this.latitude = latitude;
@@ -34,8 +34,8 @@ public class Station implements Parcelable {
 		this.riverKm = riverKm;
 	}
 
-	public String getUuid() {
-		return uuid;
+	public String getGaugeId() {
+		return gaugeId;
 	}
 
 	public String getStationName() {
@@ -59,7 +59,7 @@ public class Station implements Parcelable {
 	}
 
 	protected Station(Parcel in) {
-		this.uuid = in.readString();
+		this.gaugeId = in.readString();
 		this.stationName = in.readString();
 		this.bodyOfWater = (BodyOfWater) in.readValue(BodyOfWater.class.getClassLoader());
 		this.latitude = valueToNull(in.readFloat());
@@ -74,7 +74,7 @@ public class Station implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(uuid);
+		dest.writeString(gaugeId);
 		dest.writeString(stationName);
 		dest.writeValue(bodyOfWater);
 		dest.writeFloat(assertValueNotNull(latitude));
@@ -100,7 +100,7 @@ public class Station implements Parcelable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Station station = (Station) o;
-		return Objects.equal(uuid, station.uuid) &&
+		return Objects.equal(gaugeId, station.gaugeId) &&
 				Objects.equal(latitude, station.latitude) &&
 				Objects.equal(longitude, station.longitude) &&
 				Objects.equal(riverKm, station.riverKm) &&
@@ -110,7 +110,7 @@ public class Station implements Parcelable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(uuid, stationName, bodyOfWater, latitude, longitude, riverKm);
+		return Objects.hashCode(gaugeId, stationName, bodyOfWater, latitude, longitude, riverKm);
 	}
 
 	private float assertValueNotNull(Float value) {
@@ -126,14 +126,14 @@ public class Station implements Parcelable {
 
 
 	public static class Builder {
-		private String uuid;
+		private String gaugeId;
 		private String stationName;
 		private BodyOfWater bodyOfWater;
 		private Float latitude, longitude;
 		private Float riverKm;
 
-		public Builder setUuid(String uuid) {
-			this.uuid = uuid;
+		public Builder setGaugeId(String gaugeId) {
+			this.gaugeId = gaugeId;
 			return this;
 		}
 
@@ -163,7 +163,7 @@ public class Station implements Parcelable {
 		}
 
 		public Station build() {
-			return new Station(uuid, stationName, bodyOfWater, latitude, longitude, riverKm);
+			return new Station(gaugeId, stationName, bodyOfWater, latitude, longitude, riverKm);
 		}
 	}
 }

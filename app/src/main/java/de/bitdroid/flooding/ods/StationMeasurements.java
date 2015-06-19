@@ -15,7 +15,6 @@ public class StationMeasurements implements Parcelable {
 
 	private final Station station;
 	private final Measurement level;
-	private final Measurement levelZero;
 	private final Long levelTimestamp; // unix timestamp in seconds
 
 	// statistical values are in German
@@ -31,13 +30,12 @@ public class StationMeasurements implements Parcelable {
 
 	public StationMeasurements(
 			Station station,
-			Measurement level, Measurement levelZero, Long levelTimestamp,
+			Measurement level, Long levelTimestamp,
 			Measurement mw, Measurement mhw, Measurement mnw,
 			Measurement mtnw, Measurement mthw, Measurement hthw, Measurement ntnw) {
 
 		this.station = station;
 		this.level = level;
-		this.levelZero = levelZero;
 		this.levelTimestamp = levelTimestamp;
 		this.mw = mw;
 		this.mhw = mhw;
@@ -54,10 +52,6 @@ public class StationMeasurements implements Parcelable {
 
 	public Measurement getLevel() {
 		return level;
-	}
-
-	public Measurement getLevelZero() {
-		return levelZero;
 	}
 
 	public Long getLevelTimestamp() {
@@ -100,7 +94,6 @@ public class StationMeasurements implements Parcelable {
 		return Objects.equal(station, measurement.station) &&
 				Objects.equal(levelTimestamp, measurement.levelTimestamp) &&
 				Objects.equal(level, measurement.level) &&
-				Objects.equal(levelZero, measurement.levelZero) &&
 				Objects.equal(mw, measurement.mw) &&
 				Objects.equal(mhw, measurement.mhw) &&
 				Objects.equal(mnw, measurement.mnw) &&
@@ -112,13 +105,12 @@ public class StationMeasurements implements Parcelable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(station, level, levelZero, levelTimestamp, mw, mhw, mnw, mtnw, mthw, hthw, ntnw);
+		return Objects.hashCode(station, level, levelTimestamp, mw, mhw, mnw, mtnw, mthw, hthw, ntnw);
 	}
 
 	protected StationMeasurements(Parcel in) {
 		station = (Station) in.readValue(Station.class.getClassLoader());
 		level = (Measurement) in.readValue(Measurement.class.getClassLoader());
-		levelZero = (Measurement) in.readValue(Measurement.class.getClassLoader());
 		long timestamp = in.readLong();
 		if (timestamp == NO_VALUE) levelTimestamp = null;
 		else levelTimestamp = timestamp;
@@ -140,7 +132,6 @@ public class StationMeasurements implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeValue(station);
 		dest.writeValue(level);
-		dest.writeValue(levelZero);
 		if (levelTimestamp == null) dest.writeLong(NO_VALUE);
 		else dest.writeLong(levelTimestamp);
 		dest.writeValue(mw);
@@ -168,7 +159,7 @@ public class StationMeasurements implements Parcelable {
 
 	public static class Builder {
 		private final Station station;
-		private Measurement level, levelZero;
+		private Measurement level;
 		private Long levelTimestamp;
 		private Measurement mw, mhw, mnw;
 		private Measurement mtnw, mthw, hthw, ntnw;
@@ -179,11 +170,6 @@ public class StationMeasurements implements Parcelable {
 
 		public Builder setLevel(Measurement level) {
 			this.level = level;
-			return this;
-		}
-
-		public Builder setLevelZero(Measurement levelZero) {
-			this.levelZero = levelZero;
 			return this;
 		}
 
@@ -228,7 +214,7 @@ public class StationMeasurements implements Parcelable {
 		}
 
 		public StationMeasurements build() {
-			return new StationMeasurements(station, level, levelZero, levelTimestamp, mw, mhw, mnw, mtnw, mthw, hthw, ntnw);
+			return new StationMeasurements(station, level, levelTimestamp, mw, mhw, mnw, mtnw, mthw, hthw, ntnw);
 		}
 	}
 }

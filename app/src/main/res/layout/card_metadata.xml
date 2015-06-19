@@ -73,19 +73,6 @@
                     />
             </TableRow>
 
-            <TableRow>
-
-                <TextView
-                    style="@style/StationCard.Row.Left"
-                    android:text="@string/station_card_info_zero_height"
-                    />
-
-                <TextView
-                    android:id="@+id/zero"
-                    style="@style/StationCard.Row.Right"
-                    />
-            </TableRow>
-
         </TableLayout>
 
     </LinearLayout>

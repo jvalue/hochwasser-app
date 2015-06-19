@@ -96,7 +96,6 @@ public class StationInfoUtils {
 		TextView waterView = (TextView) card.findViewById(R.id.water);
 		TextView riverKmView = (TextView) card.findViewById(R.id.riverKm);
 		TextView coordinatesView = (TextView) card.findViewById(R.id.coordinates);
-		TextView zeroView = (TextView) card.findViewById(R.id.zero);
 
 		Station station = measurements.getStation();
 		nameView.setText(StringUtils.toProperCase(station.getStationName()));
@@ -107,11 +106,6 @@ public class StationInfoUtils {
 			coordinatesView.setText(station.getLatitude() + ", " + station.getLongitude());
 		} else {
 			hideParentView(coordinatesView);
-		}
-		if (measurements.getLevelZero() != null) {
-			zeroView.setText(measurements.getLevelZero().getValue() + measurements.getLevelZero().getUnit());
-		} else {
-			hideParentView(zeroView);
 		}
 	}
 

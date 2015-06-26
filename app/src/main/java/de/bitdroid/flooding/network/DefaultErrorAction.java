@@ -33,7 +33,7 @@ public class DefaultErrorAction extends AbstractErrorAction {
 
 	public DefaultErrorAction(Context context, RestrictedResource restrictedResource, String logMessage) {
 		this.context = context;
-		this.restrictedResource = Optional.of(restrictedResource);
+		this.restrictedResource = Optional.fromNullable(restrictedResource);
 		this.logMessage = logMessage;
 	}
 

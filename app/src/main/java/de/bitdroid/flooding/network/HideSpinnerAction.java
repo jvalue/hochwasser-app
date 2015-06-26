@@ -24,8 +24,8 @@ public class HideSpinnerAction extends AbstractErrorAction {
 
 	@Override
 	protected void doCall(Throwable throwable) {
-		if (activity != null) activity.hideSpinner();
-		if (fragment != null) fragment.hideSpinner();
+		if (activity != null && activity.isSpinnerVisible()) activity.hideSpinner();
+		if (fragment != null && fragment.isSpinnerVisible()) fragment.hideSpinner();
 	}
 
 }

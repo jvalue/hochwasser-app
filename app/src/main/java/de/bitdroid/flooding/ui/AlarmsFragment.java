@@ -32,8 +32,11 @@ import roboguice.inject.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 public class AlarmsFragment extends AbstractFragment {
+
+	private static final int REQUEST_ADD_ALARM = 42;
 
 	@Inject private NetworkUtils networkUtils;
 	@Inject private CepsManager cepsManager;
@@ -42,10 +45,6 @@ public class AlarmsFragment extends AbstractFragment {
 	@InjectView(R.id.list) private RecyclerView recyclerView;
 	@InjectView(R.id.empty) private View emptyView;
 	private AlarmsAdapter adapter;
-
-	// flag indicating whether an alarm is currently being added.
-	// required to update the list
-	private boolean addingNewAlarm = false;
 
 
 	public AlarmsFragment() {
@@ -71,33 +70,23 @@ public class AlarmsFragment extends AbstractFragment {
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				addingNewAlarm = true;
-				startActivity(new Intent(getActivity(), WaterSelectionActivity.class));
+				startActivityForResult(new Intent(getActivity(), WaterSelectionActivity.class), REQUEST_ADD_ALARM);
 			}
 		});
 
 		// load items
+		showSpinner();
 		loadAlarms();
 	}
 
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (addingNewAlarm) loadAlarms();
-	}
-
-
 	private void loadAlarms() {
-		if (addingNewAlarm) addingNewAlarm = false;
-
-		if (!isSpinnerVisible()) showSpinner();
 		compositeSubscription.add(cepsManager.getAlarms()
 				.compose(networkUtils.<List<Alarm>>getDefaultTransformer())
 				.subscribe(new Action1<List<Alarm>>() {
 					@Override
 					public void call(List<Alarm> alarms) {
-						hideSpinner();
+						if (isSpinnerVisible()) hideSpinner();
 						if (!alarms.isEmpty()) emptyView.setVisibility(View.GONE);
 						else emptyView.setVisibility(View.VISIBLE);
 						adapter.setAlarms(alarms);
@@ -106,6 +95,16 @@ public class AlarmsFragment extends AbstractFragment {
 						.add(new DefaultErrorAction(this.getActivity(), this, "failed to load data"))
 						.add(new HideSpinnerAction(this))
 						.build()));
+	}
+
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case REQUEST_ADD_ALARM:
+				loadAlarms();
+				break;
+		}
 	}
 
 
@@ -220,6 +219,7 @@ public class AlarmsFragment extends AbstractFragment {
 							new Action1<List<Void>>() {
 								@Override
 								public void call(List<Void> nothing) {
+									showSpinner();
 									loadAlarms();
 								}
 							}, new ErrorActionBuilder()

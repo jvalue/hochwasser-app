@@ -68,4 +68,8 @@ public class AbstractActivity extends RoboActionBarActivity {
 		uiUtils.hideSpinner(spinnerContainerView, spinnerImageView);
 	}
 
+
+	public boolean isSpinnerVisible() {
+		return uiUtils.isSpinnerVisible(spinnerContainerView);
+	}
 }

@@ -105,7 +105,7 @@ public class CepsManager {
 	}
 
 
-	public Observable<Void> addAlarm(Alarm alarm) {
+	public Observable<Void> addAlarm(final Alarm alarm) {
 		// collect alarm parameters
 		final Map<String, Object> args = new HashMap<>();
 		args.put(ARGUMENT_GAUGE_ID, alarm.getStation().getGaugeId());
@@ -131,29 +131,29 @@ public class CepsManager {
 				.flatMap(new Func1<Client, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Client client) {
-						clearAlarmsCache();
+						alarmsCache.add(new Alarm.Builder()
+								.setId(client.getId())
+								.setLevel(alarm.getLevel())
+								.setStation(alarm.getStation())
+								.setAlarmWhenAboveLevel(alarm.isAlarmWhenAboveLevel())
+								.build());
 						return Observable.just(null);
 					}
 				});
 	}
 
 
-	public Observable<Void> removeAlarm(Alarm alarm) {
+	public Observable<Void> removeAlarm(final Alarm alarm) {
 		String adapterId = alarm.isAlarmWhenAboveLevel() ? PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID : PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
 		String clientId = alarm.getId();
 		return registrationApi.unregisterClient(adapterId, clientId)
 				.flatMap(new Func1<Response, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Response response) {
-						clearAlarmsCache();
+						alarmsCache.remove(alarm);
 						return Observable.just(null);
 					}
 				});
-	}
-
-
-	public void clearAlarmsCache() {
-		alarmsCache = null;
 	}
 
 

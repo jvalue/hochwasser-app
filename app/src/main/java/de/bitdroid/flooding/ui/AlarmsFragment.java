@@ -146,11 +146,11 @@ public class AlarmsFragment extends AbstractFragment {
 		private final TextView stationView;
 		private final TextView descriptionView;
 
-		public AlarmViewHolder(View containerView) {
-			super(containerView);
-			this.containerView = containerView;
-			this.stationView = (TextView) containerView.findViewById(R.id.alarm_title);
-			this.descriptionView = (TextView) containerView.findViewById(R.id.alarm_description);
+		public AlarmViewHolder(View view) {
+			super(view);
+			this.containerView = view.findViewById(R.id.container);
+			this.stationView = (TextView) view.findViewById(R.id.alarm_title);
+			this.descriptionView = (TextView) view.findViewById(R.id.alarm_description);
 		}
 
 		public void setItem(final Alarm alarm) {

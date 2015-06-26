@@ -150,7 +150,7 @@ public class NewsFragment extends AbstractFragment {
 
 		public NewsItemViewHolder(View itemView) {
 			super(itemView);
-			this.containerView = itemView;
+			this.containerView = itemView.findViewById(R.id.container);
 			this.titleView = (TextView) itemView.findViewById(R.id.news_title);
 			this.timestampView = (TextView) itemView.findViewById(R.id.news_timestamp);
 			this.contentView = (TextView) itemView.findViewById(R.id.news_content);

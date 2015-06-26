@@ -112,17 +112,17 @@ public class OdsManager {
 	}
 
 
-	public Observable<Optional<Station>> getStationByUuid(final String stationUuid) {
+	public Observable<Optional<Station>> getStationByGaugeId(final String gaugeId) {
 		if (stationCache == null) {
 			return getStations()
 					.flatMap(new Func1<Collection<Station>, Observable<Optional<Station>>>() {
 						@Override
 						public Observable<Optional<Station>> call(Collection<Station> stations) {
-							return Observable.just(Optional.of(stationCache.get(stationUuid)));
+							return Observable.just(Optional.of(stationCache.get(gaugeId)));
 						}
 					});
 		} else {
-			return Observable.just(Optional.of(stationCache.get(stationUuid)));
+			return Observable.just(Optional.of(stationCache.get(gaugeId)));
 		}
 	}
 

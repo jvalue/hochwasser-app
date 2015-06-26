@@ -6,8 +6,6 @@
     android:minWidth="180dp"
     android:resizeMode="horizontal"
     android:updatePeriodMillis="3600000"
+    android:configure="de.bitdroid.flooding.widget.ConfigureStationInfoWidgetActivity"
     />
 
-    <!--
-    android:configure="de.bitdroid.flooding.widget.ConfigureStationInfoWidgetActivity"
-    -->

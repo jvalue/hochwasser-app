@@ -75,7 +75,7 @@ public class CepsManager {
 					.flatMap(new Func1<Pair<String, Alarm.Builder>, Observable<Alarm>>() {
 						@Override
 						public Observable<Alarm> call(final Pair<String, Alarm.Builder> entry) {
-							return odsManager.getStationByUuid(entry.first)
+							return odsManager.getStationByGaugeId(entry.first)
 									.flatMap(new Func1<Optional<Station>, Observable<Alarm>>() {
 										@Override
 										public Observable<Alarm> call(Optional<Station> stationOptional) {

@@ -16,7 +16,7 @@ import de.bitdroid.flooding.utils.StringUtils;
 import rx.Observable;
 import rx.functions.Func1;
 
-abstract class AbstractStationSelectionActivity extends AbstractListSelectionActivity<Station> {
+public abstract class AbstractStationSelectionActivity extends AbstractListSelectionActivity<Station> {
 
 	private static final Station ALL_STATIONS = new Station(
 			"a " + AbstractWaterSelectionActivity.class.getSimpleName() + ".ALL_STATIONS",

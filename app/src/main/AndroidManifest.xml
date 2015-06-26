@@ -89,6 +89,14 @@
 			</intent-filter>
 		</receiver>
 
+        <activity android:name=".widget.ConfigureStationInfoWidgetActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".widget.ConfigureStationInfoWidgetActivity$WaterSelectionActivity"/>
+        <activity android:name=".widget.ConfigureStationInfoWidgetActivity$StationSelectionActivity"/>
+        <activity android:name=".widget.ConfigureStationInfoWidgetActivity$MapSelectionActivity"/>
         <receiver android:name=".widget.StationInfoWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

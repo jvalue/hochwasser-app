@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    {% include head.html %}
+    {% include nav-blog.html %}
+    <body>
+    {% include blog-header.html %}
+    <div class="posts">
+        {% for post in paginator.posts %}
+        <div class="container">
+            <div class="post col-md-6 col-md-offset-3">
+                <h2 class="post-title">
+                    <a href="{{ site.baseurl }}{{ post.url }}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+                {{ post.date | date_to_string }}
+                {{ post.content }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="container text-center">
+        {% if paginator.next_page %}
+        <a class="btn btn-default btn-pagination" href="{{ site.baseurl }}/page{{paginator.next_page}}">Older</a>
+        {% else %}
+        <span class="btn btn-default btn-pagination">Older</span>
+        {% endif %}
+        {% if paginator.previous_page %}
+        {% if paginator.page == 2 %}
+        <a class="btn btn-default btn-pagination" href="{{ site.baseurl }}/">Newer</a>
+        {% else %}
+        <a class="btn btn-default btn-pagination"
+           href="{{ site.baseurl }}/page{{paginator.previous_page}}">Newer</a>
+        {% endif %}
+        {% else %}
+        <span class="btn btn-default btn-pagination">Newer</span>
+        {% endif %}
+    </div>
+    {% include footer.html %}
+    {% include js.html %}
+
+    </body>
+</html>

@@ -1,0 +1,25 @@
+    <!-- Newsletter Section -->
+    <section id="newsletter" class="container content-section text-center">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>Newsletter</h2>
+                <form
+                        action="https://tinyletter.com/PegelAlarm"
+                        method="post"
+                        target="popupwindow"
+                        onsubmit="window.open('https://tinyletter.com/PegelAlarm', 'popupwindow', 'scrollbars=yes,width=800,height=600');return true"
+                        class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="tlemail">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" placeholder="Email" name="email" id="tlemail"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-default btn-lg" value="Subscribe"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>

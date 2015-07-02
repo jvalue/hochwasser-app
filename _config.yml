@@ -1,0 +1,28 @@
+# Site settings
+title: PegelAlarm
+email: info@pegelalarm.org
+url: https://pegelalarm.org
+description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
+
+# Color settings
+color:
+  primary-light: '#FFFFFF'
+  primary-medium: '#333333'
+  blue: '#6699FF'
+  links: '#219ab3'
+
+# Footer settings
+footer: PegelAlarm
+
+# Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
+social:
+  - title: github
+    url: https://github.com/jvalue/hochwasser-app
+
+# Build settings
+markdown: kramdown
+permalink: /blog/:year/:month/:day/:title.html
+
+
+paginate: 5
+paginate_path: "/blog/page:num/"

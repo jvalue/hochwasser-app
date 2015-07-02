@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="card_margin_horizontal">128dp</dimen>
-    <dimen name="list_horizontal_margin">128dp</dimen>
-</resources>

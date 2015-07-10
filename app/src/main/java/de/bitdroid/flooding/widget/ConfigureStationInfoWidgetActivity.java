@@ -123,7 +123,7 @@ public class ConfigureStationInfoWidgetActivity extends AbstractActivity {
 	public static class StationSelectionActivity extends AbstractStationSelectionActivity {
 
 		public StationSelectionActivity() {
-			super(true);
+			super(false);
 		}
 
 		@Override

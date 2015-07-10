@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import javax.inject.Inject;
 
-import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.ui.AbstractActivity;
@@ -19,43 +15,37 @@ import de.bitdroid.flooding.ui.AbstractStationSelectionActivity;
 import de.bitdroid.flooding.ui.AbstractWaterSelectionActivity;
 import de.bitdroid.flooding.ui.StationSelection;
 import de.bitdroid.flooding.ui.graph.WaterGraphActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
-@ContentView(R.layout.activity_widget_configuration)
+/**
+ * This actiivty helps during widget configuration. It mainly acts as a dispatcher
+ * to start the station selection process.
+ */
 public class ConfigureStationInfoWidgetActivity extends AbstractActivity {
 
 	private static final int REQUEST_SELECT_STATION = 42;
-
-	@InjectView(R.id.text_station) TextView stationText;
-	@InjectView(R.id.button_create) Button createButton;
-
 	@Inject private WidgetDataManager widgetDataManager;
 
 	private int appWidgetId;
-	private Station selectedStation = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		appWidgetId = getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 
-		// setup station text view
-		stationText.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivityForResult(
-						new Intent(ConfigureStationInfoWidgetActivity.this, WaterSelectionActivity.class),
-						REQUEST_SELECT_STATION);
-			}
-		});
+		// start selection activity
+		startActivityForResult(
+				new Intent(ConfigureStationInfoWidgetActivity.this, WaterSelectionActivity.class),
+				REQUEST_SELECT_STATION);
+	}
 
-		// setup create button
-		createButton.setEnabled(false);
-		createButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case REQUEST_SELECT_STATION:
+				if (resultCode != RESULT_OK) break;
+				Station selectedStation = new StationSelection(data).getStation();
+
 				// store selected station
 				widgetDataManager.storeGaugeId(appWidgetId, selectedStation.getGaugeId());
 
@@ -73,19 +63,6 @@ public class ConfigureStationInfoWidgetActivity extends AbstractActivity {
 				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 				setResult(RESULT_OK, resultValue);
 				finish();
-			}
-		});
-	}
-
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			case REQUEST_SELECT_STATION:
-				if (resultCode != RESULT_OK) break;
-				selectedStation = new StationSelection(data).getStation();
-				stationText.setText(selectedStation.getStationName());
-				createButton.setEnabled(true);
 				break;
 		}
 	}

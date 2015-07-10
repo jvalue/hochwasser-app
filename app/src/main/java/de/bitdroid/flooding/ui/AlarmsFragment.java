@@ -35,7 +35,9 @@ import rx.functions.Func1;
 
 public class AlarmsFragment extends AbstractFragment {
 
-	private static final int REQUEST_ADD_ALARM = 42;
+	private static final int
+			REQUEST_ADD_ALARM = 42,
+			REQUEST_SHOW_STATION_INFO = 43;
 
 	@Inject private NetworkUtils networkUtils;
 	@Inject private CepsManager cepsManager;
@@ -101,6 +103,7 @@ public class AlarmsFragment extends AbstractFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			case REQUEST_ADD_ALARM:
+			case REQUEST_SHOW_STATION_INFO:
 				loadAlarms();
 				break;
 		}
@@ -160,7 +163,7 @@ public class AlarmsFragment extends AbstractFragment {
 				public void onClick(View v) {
 					Intent stationIntent = new StationSelection(alarm.getStation().getBodyOfWater(), alarm.getStation())
 							.toIntent(getActivity(), StationInfoActivity.class);
-					startActivity(stationIntent);
+					startActivityForResult(stationIntent, REQUEST_SHOW_STATION_INFO);
 				}
 			});
 

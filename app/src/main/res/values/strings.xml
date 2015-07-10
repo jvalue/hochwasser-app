@@ -122,7 +122,7 @@
         their average max and min values, effectively treating the distance (max - min) as 100%.
     </string>
     <string name="help_graph_action_map">
-        Display &lt;b&gt;station locations&lt;/b&gt; on a map. Click a station for more information.
+        Display all &lt;b&gt;station locations&lt;/b&gt; of this river on a map.
     </string>
 
 

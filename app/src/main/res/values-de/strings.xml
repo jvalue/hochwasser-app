@@ -121,8 +121,7 @@
         und Tiefwerten angezeit. Die Distanz MHW - MNW entspricht dabei 100%.
     </string>
     <string name="help_graph_action_map">
-        Zeigt die Stationen auf einer &lt;b&gt;Karte&lt;/b&gt; an.
-        Klicke auf eine Station um mehr Informationen zu erhalten.
+        Zeigt alle Stationen entlang dieses Flusses auf einer &lt;b&gt;Karte&lt;/b&gt; an.
     </string>
 
     <string name="settings_version">Version</string>
@@ -181,7 +180,7 @@
         &lt;a href=&quot;https://github.com/satyan/sugar&quot;&gt;Sugar&lt;/a&gt; von Satya Narayan
         &lt;br&gt;&lt;br&gt;
         Zusätzlich verwendet PegelAlarm Daten von &lt;a href=&quot;https://pegelonline.wsv.de&quot;&gt;PegelOnline&lt;/a&gt;
-        das von der &lt;a href=&quot;http://www.wsv.de&quot;&gt;Wasser- und Schifffahrtsverwaltung des Bundes&lt;/a&gt; (WSV)
+        welches von der &lt;a href=&quot;http://www.wsv.de&quot;&gt;Wasser- und Schifffahrtsverwaltung des Bundes&lt;/a&gt; (WSV)
         betrieben wird.
         &lt;p&gt;
         Vielen danke für die super Unterstützung!

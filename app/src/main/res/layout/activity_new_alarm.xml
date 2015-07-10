@@ -110,7 +110,7 @@
                     android:enabled="false"
                     android:text="@string/alarms_new_add"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/button_selector"
+                    android:background="@drawable/blue_selector"
                     />
 
             </LinearLayout>

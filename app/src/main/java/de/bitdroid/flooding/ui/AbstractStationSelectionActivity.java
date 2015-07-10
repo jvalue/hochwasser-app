@@ -28,7 +28,7 @@ public abstract class AbstractStationSelectionActivity extends AbstractListSelec
 	private final boolean showAllStationsEntry;
 
 	public AbstractStationSelectionActivity(boolean showAllStationsEntry) {
-		super(R.string.menu_select_station_search_hint, R.layout.item_data);
+		super(R.string.select_station, R.string.menu_select_station_search_hint, R.layout.item_data);
 		this.showAllStationsEntry = showAllStationsEntry;
 	}
 

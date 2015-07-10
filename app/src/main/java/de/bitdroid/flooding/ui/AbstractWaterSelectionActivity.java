@@ -20,7 +20,7 @@ public abstract class AbstractWaterSelectionActivity extends AbstractListSelecti
 	@Inject private OdsManager odsManager;
 
 	public AbstractWaterSelectionActivity() {
-		super(R.string.menu_select_water_search_hint, R.layout.item_data);
+		super(R.string.select_river, R.string.menu_select_water_search_hint, R.layout.item_data);
 	}
 
 

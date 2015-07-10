@@ -36,14 +36,15 @@
 	<string name="alarms_new_trigger_description">Alarm when water is</string>
 	<string name="alarms_new_trigger_above">above level</string>
 	<string name="alarms_new_trigger_below">below level</string>
-	<string name="alarms_new_title_river">Select River</string>
-	<string name="alarms_new_title_station">Select Station</string>
-	<string name="alarms_new_title_level">Select water level</string>
 	<string name="alarms_new_created">Added new alarm</string>
 	<string name="alarms_triggered_title">%1$s alarm triggered!</string>
 	<string name="alarms_triggered_msg">%1$s is %2$s %3$.2f cm</string>
     <string name="alarms_triggered_msg_above">above level</string>
     <string name="alarms_triggered_msg_below">below level</string>
+
+    <string name="select_river">Select River</string>
+    <string name="select_station">Select Station</string>
+    <string name="select_level">Select water level</string>
 
     <string name="invalid_graph_title">Insufficient data</string>
     <string name="invalid_graph_msg">Sorry, but there are not enough stations along this river to

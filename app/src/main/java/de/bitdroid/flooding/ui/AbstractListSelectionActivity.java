@@ -39,7 +39,8 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 
 	private static final int REQUEST_MAP = 44;
 
-	private final int searchHintStringId;
+	private final int titleResource;
+	private final int searchHintResource;
 	private final int itemViewLayoutResource;
 
 	@Inject private InputMethodManager inputMethodManager;
@@ -54,8 +55,9 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 	protected StationSelection stationSelection;
 
 
-	AbstractListSelectionActivity(int searchHintStringId, int itemViewLayoutResource) {
-		this.searchHintStringId = searchHintStringId;
+	AbstractListSelectionActivity(int titleResource, int searchHintResource, int itemViewLayoutResource) {
+		this.titleResource = titleResource;
+		this.searchHintResource = searchHintResource;
 		this.itemViewLayoutResource = itemViewLayoutResource;
 	}
 
@@ -70,6 +72,9 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// set title
+		getSupportActionBar().setTitle(getString(titleResource));
 
 		// read args
 		stationSelection = new StationSelection(getIntent());
@@ -159,7 +164,7 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 		});
 
 		searchBox = (EditText) MenuItemCompat.getActionView(searchMenuItem).findViewById(R.id.search_box);
-		searchBox.setHint(getString(searchHintStringId));
+		searchBox.setHint(getString(searchHintResource));
 		searchBox.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {

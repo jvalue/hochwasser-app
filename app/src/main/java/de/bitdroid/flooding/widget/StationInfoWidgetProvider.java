@@ -22,6 +22,8 @@ import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
 import de.bitdroid.flooding.ods.StationMeasurements;
+import de.bitdroid.flooding.ui.StationInfoActivity;
+import de.bitdroid.flooding.ui.StationSelection;
 import roboguice.RoboGuice;
 import roboguice.receiver.RoboAppWidgetProvider;
 import rx.Observable;
@@ -62,22 +64,22 @@ public class StationInfoWidgetProvider extends RoboAppWidgetProvider {
 					.subscribe(new Action1<StationMeasurements>() {
 						@Override
 						public void call(StationMeasurements measurements) {
+							// update UI
 							remoteViews.setTextViewText(R.id.station_name, measurements.getStation().getStationName());
 							remoteViews.setTextViewText(R.id.value, measurements.getLevel().getValue() + " " + measurements.getLevel().getUnit());
 							remoteViews.setTextViewText(R.id.date, DateFormat.getDateFormat(context).format(new Date(measurements.getLevelTimestamp())));
+
+							// set click to show more station details
+							Intent intent = new StationSelection(measurements.getStation().getBodyOfWater(), measurements.getStation())
+									.toIntent(context, StationInfoActivity.class);
+							PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+							remoteViews.setOnClickPendingIntent(R.id.container, pendingIntent);
+
 							appWidgetManager.updateAppWidget(widgetId, remoteViews);
 						}
 					}, new ErrorActionBuilder()
 							.add(new DefaultErrorAction(context, "failed to fetch measurements"))
 							.build());
-
-			// setup click to update
-			Intent intent = new Intent(context, StationInfoWidgetProvider.class);
-			intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			remoteViews.setOnClickPendingIntent(R.id.container, pendingIntent);
-			appWidgetManager.updateAppWidget(widgetId, remoteViews);
 		}
 	}
 

@@ -287,7 +287,9 @@ public class AlarmsFragment extends AbstractFragment {
 
 
 	private static void onStationSelected(Context context, Station station) {
-		context.startActivity(new StationSelection(station.getBodyOfWater(), station).toIntent(context, NewAlarmActivity.class));
+		Intent intent = new StationSelection(station.getBodyOfWater(), station).toIntent(context, NewAlarmActivity.class);
+		intent.putExtra(NewAlarmActivity.EXTRA_START_MAIN_ACTIVITY_ON_FINISH, true);
+		context.startActivity(intent);
 	}
 
 }

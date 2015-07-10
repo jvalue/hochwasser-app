@@ -34,6 +34,9 @@ import rx.functions.Action1;
 @ContentView(R.layout.activity_new_alarm)
 public class NewAlarmActivity extends AbstractRestrictedActivity {
 
+	// if true this activity will start the main activity once confirmed
+	public static final String EXTRA_START_MAIN_ACTIVITY_ON_FINISH = "EXTRA_START_MAIN_ACTIVITY_ON_FINISH";
+
 	@InjectView(R.id.text_station_name) TextView stationNameView;
 	@InjectView(R.id.edit_level) TextView levelEditView;
 	@InjectView(R.id.selection_relation) RadioGroup selectionGroup;
@@ -95,10 +98,14 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 						.subscribe(new Action1<Void>() {
 							@Override
 							public void call(Void aVoid) {
+
 								Toast.makeText(NewAlarmActivity.this, getString(R.string.alarms_new_created), Toast.LENGTH_SHORT).show();
-								Intent intent = new Intent(NewAlarmActivity.this, MainDrawerActivity.class);
-								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-								startActivity(intent);
+								boolean startMainActivity = getIntent().getBooleanExtra(EXTRA_START_MAIN_ACTIVITY_ON_FINISH, false);
+								if (startMainActivity) {
+									Intent intent = new Intent(NewAlarmActivity.this, MainDrawerActivity.class);
+									intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+									startActivity(intent);
+								}
 								finish();
 							}
 						}, new ErrorActionBuilder()

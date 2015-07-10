@@ -19,6 +19,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 	private boolean isWarning;
 	private boolean isNew;
 
+	// empty DB constructor
 	public NewsItem() { }
 
 	public NewsItem(

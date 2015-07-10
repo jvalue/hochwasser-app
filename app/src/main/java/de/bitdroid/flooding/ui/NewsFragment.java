@@ -28,7 +28,10 @@ import de.bitdroid.flooding.news.DefaultTransformer;
 import de.bitdroid.flooding.news.NewsItem;
 import de.bitdroid.flooding.news.NewsManager;
 import roboguice.inject.InjectView;
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func0;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 public class NewsFragment extends AbstractFragment {
@@ -56,9 +59,6 @@ public class NewsFragment extends AbstractFragment {
 		recyclerView.setLayoutManager(layoutManager);
 		adapter = new NewsAdapter();
 		recyclerView.setAdapter(adapter);
-
-		// add helper news
-		if (isFirstStart()) addHelperNews();
 
 		// load items
 		loadNews();
@@ -88,11 +88,35 @@ public class NewsFragment extends AbstractFragment {
 
 
 	private void loadNews() {
-		compositeSubscription.add(newsManager.getAllNews()
+		Observable<Void> newsObservable = null;
+
+		// add helper news
+		if (isFirstStart()) {
+			showSpinner();
+			newsObservable = Observable.defer(new Func0<Observable<Void>>() {
+				@Override
+				public Observable<Void> call() {
+					addHelperNews();
+					return Observable.just(null);
+				}
+			});
+		} else {
+			newsObservable = Observable.just(null);
+		}
+
+		// actually load news
+		compositeSubscription.add(newsObservable
+				.flatMap(new Func1<Void, Observable<List<NewsItem>>>() {
+					@Override
+					public Observable<List<NewsItem>> call(Void aVoid) {
+						return newsManager.getAllNews();
+					}
+				})
 				.compose(new DefaultTransformer<List<NewsItem>>())
 				.subscribe(new Action1<List<NewsItem>>() {
 					@Override
 					public void call(List<NewsItem> items) {
+						if (isSpinnerVisible()) hideSpinner();
 						Collections.sort(items);
 						adapter.setItems(items);
 						adapter.notifyDataSetChanged();
@@ -100,6 +124,7 @@ public class NewsFragment extends AbstractFragment {
 				}, new Action1<Throwable>() {
 					@Override
 					public void call(Throwable throwable) {
+						if (isSpinnerVisible()) hideSpinner();
 						// should (TM) never happen
 						Timber.e(throwable, "failed to fetch news entries");
 						Toast.makeText(NewsFragment.this.getActivity(), "Error getting news", Toast.LENGTH_SHORT).show();

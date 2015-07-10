@@ -8,8 +8,8 @@ import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
 
 /**
- * Helper methods for passing {@link de.bitdroid.flooding.ods.BodyOfWater} and
- * {@link de.bitdroid.flooding.ods.Station} instances via {@link android.content.Intent}s.
+ * Helper methods for passing {@link BodyOfWater} and
+ * {@link Station} instances via {@link android.content.Intent}s.
  */
 public class StationSelection {
 

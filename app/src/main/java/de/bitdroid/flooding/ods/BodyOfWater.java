@@ -5,14 +5,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.common.base.Objects;
+import com.orm.SugarRecord;
 
 /**
  * Model class for one body of water (usually a river).
  */
-public class BodyOfWater implements Parcelable {
+public class BodyOfWater extends SugarRecord<BodyOfWater> implements Parcelable {
 
-	private final String name;
-	private final int stationCount;
+	private String name;
+	private int stationCount;
+
+	// empty DB constructor
+	public BodyOfWater() { }
 
 	public BodyOfWater(String name, int stationCount) {
 		this.name = name;

@@ -43,19 +43,20 @@ public class OdsManager {
 			= "result.gaugeId,result.name,result.km,result.latitude,result.longitude,result.water.longname,cursor";
 
 	private final DataApi dataApi;
-
-	private Map<String, Station> stationCache; // station uuid --> station
+	private final StationsCache stationCache;
 
 
 	@Inject
-	OdsManager(DataApi dataApi) {
+	OdsManager(DataApi dataApi, StationsCache stationCache) {
 		this.dataApi = dataApi;
+		this.stationCache = stationCache;
 	}
 
 
 	public Observable<List<Station>> getStations() {
-		if (stationCache != null) {
-			return Observable.just(sortStations(stationCache.values()));
+		if (stationCache.getStations().isPresent()) {
+			return Observable.just(sortStations(stationCache.getStations().get().values()));
+
 		} else {
 			return Observable.defer(new Func0<Observable<List<Station>>>() {
 				@Override
@@ -81,15 +82,17 @@ public class OdsManager {
 					} while (data.getCursor().getHasNext());
 
 					// count stations per water and build stations
-					stationCache = new HashMap<>();
+					Map<String, Station> stations = new HashMap<>();
 					for (String waterName : builderMap.keySet()) {
 						BodyOfWater water = new BodyOfWater(waterName, builderMap.get(waterName).size());
 						for (Station.Builder builder : builderMap.get(waterName)) {
 							Station station = builder.setBodyOfWater(water).build();
-							stationCache.put(station.getGaugeId(), station);
+							stations.put(station.getGaugeId(), station);
 						}
 					}
-					return Observable.just(sortStations(stationCache.values()));
+					stationCache.setStations(stations);
+
+					return Observable.just(sortStations(stations.values()));
 				}
 			});
 		}
@@ -113,16 +116,16 @@ public class OdsManager {
 
 
 	public Observable<Optional<Station>> getStationByGaugeId(final String gaugeId) {
-		if (stationCache == null) {
+		if (!stationCache.getStations().isPresent()) {
 			return getStations()
 					.flatMap(new Func1<Collection<Station>, Observable<Optional<Station>>>() {
 						@Override
 						public Observable<Optional<Station>> call(Collection<Station> stations) {
-							return Observable.just(Optional.of(stationCache.get(gaugeId)));
+							return Observable.just(Optional.of(stationCache.getStations().get().get(gaugeId)));
 						}
 					});
 		} else {
-			return Observable.just(Optional.of(stationCache.get(gaugeId)));
+			return Observable.just(Optional.of(stationCache.getStations().get().get(gaugeId)));
 		}
 	}
 

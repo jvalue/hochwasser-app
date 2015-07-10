@@ -5,19 +5,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.common.base.Objects;
+import com.orm.SugarRecord;
 
 /**
  * Model class for meta data of one station.
  */
-public class Station implements Parcelable {
+public class Station extends SugarRecord<Station> implements Parcelable {
 
 	private static final float NO_VALUE = -999f;
 
-	private final String gaugeId;
-	private final String stationName;
-	private final BodyOfWater bodyOfWater;
-	private final Float latitude, longitude;
-	private final Float riverKm;
+	private String gaugeId;
+	private String stationName;
+	private BodyOfWater bodyOfWater;
+	private Float latitude, longitude;
+	private Float riverKm;
+
+	// empty DB constructor
+	public Station() { }
 
 	public Station(
 			String gaugeId,

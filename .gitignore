@@ -8,8 +8,6 @@ gen/
 *.swo
 *.iml
 .gradle/
-crashlytics.properties
-com_crashlytics_export_strings.xml
-crashlytics-build.properties
+fabric.properties
 config.xml
 *.apk

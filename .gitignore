@@ -6,10 +6,10 @@ gen/
 .settings/
 *.swp
 *.swo
-googleApiKey.xml
 *.iml
 .gradle/
 crashlytics.properties
 com_crashlytics_export_strings.xml
 crashlytics-build.properties
 config.xml
+*.apk

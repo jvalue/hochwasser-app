@@ -123,5 +123,10 @@
 			android:value="de.bitdroid.flooding"
 			/>
 
+		<meta-data
+			android:name="roboguice.annotations.packages"
+			android:value="roboguice,de.bitdroid.flooding"
+			/>
+
 	</application>
 </manifest>

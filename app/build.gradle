@@ -14,7 +14,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -26,6 +26,13 @@ android {
 
     lintOptions {
         warning 'MissingTranslation'
+    }
+}
+
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-AguiceAnnotationDatabasePackageName=de.bitdroid.flooding"
     }
 }
 

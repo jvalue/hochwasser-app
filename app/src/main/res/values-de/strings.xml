@@ -59,6 +59,7 @@
 
     <string name="help">Hilfe</string>
 
+    <string name="news_empty">Noch keine News</string>
     <string name="news_intro_alarms_title">Alarme</string>
     <string name="news_intro_alarms_content">Interessiert an Alarmen sobald bestimmte Wasserstände überschritten wurden? &lt;b&gt;Klicke hier!&lt;/b&gt;</string>
     <string name="news_intro_data_title">Wasserstände</string>

@@ -41,6 +41,7 @@ public class NewsFragment extends AbstractFragment {
 
 	@Inject private NewsManager newsManager;
 
+	@InjectView(R.id.empty) View emptyView;
 	@InjectView(R.id.list) RecyclerView recyclerView;
 	private NewsAdapter adapter;
 
@@ -88,7 +89,7 @@ public class NewsFragment extends AbstractFragment {
 
 
 	private void loadNews() {
-		Observable<Void> newsObservable = null;
+		Observable<Void> newsObservable;
 
 		// add helper news
 		if (isFirstStart()) {
@@ -152,6 +153,9 @@ public class NewsFragment extends AbstractFragment {
 			this.newsList.clear();
 			this.newsList.addAll(items);
 			notifyDataSetChanged();
+
+			if (items.isEmpty()) emptyView.setVisibility(View.VISIBLE);
+			else emptyView.setVisibility(View.GONE);
 		}
 
 		public List<NewsItem> getNewsList() {

@@ -83,6 +83,7 @@ public class NewsFragment extends AbstractFragment {
 
 
 	private void addHelperNews() {
+		newsManager.addItem(getString(R.string.news_intro_widget_title), getString(R.string.news_intro_widget_content), 0, false, false, false);
 		newsManager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), 2, true, false, false);
 		newsManager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, true, false, false);
 	}

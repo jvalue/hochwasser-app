@@ -64,6 +64,8 @@
     <string name="news_intro_alarms_content">Interessiert an Alarmen sobald bestimmte Wasserstände überschritten wurden? &lt;b&gt;Klicke hier!&lt;/b&gt;</string>
     <string name="news_intro_data_title">Wasserstände</string>
     <string name="news_intro_data_content">Auf der Suche nach mehr Details über aktuelle Wasserstände? &lt;b&gt;Klicke hier!&lt;/b&gt;</string>
+    <string name="news_intro_widget_title">Widgets</string>
+    <string name="news_intro_widget_content">Mit Widgets kannst du die Daten einzelner Stationen im Auge behalten, auch wenn die App nicht offen ist.</string>
 
     <string name="data_station_count">%1$d Stationen</string>
     <string name="data_station_all">Alle Stationen</string>

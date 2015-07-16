@@ -14,6 +14,7 @@ import de.bitdroid.flooding.ceps.Alarm;
 import de.bitdroid.flooding.ceps.CepsManager;
 import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.news.NewsManager;
+import de.bitdroid.flooding.ui.NewsFragment;
 import de.bitdroid.flooding.utils.StringUtils;
 import roboguice.service.RoboService;
 import rx.functions.Action1;
@@ -101,7 +102,7 @@ public class GcmService extends RoboService {
 				alarm.getLevel());
 
 		// show notification and pass to news manager
-		newsManager.addItem(title, msg, 1, true, true, true);
+		newsManager.addItem(title, msg, NewsFragment.NAV_ID_ALARMS, true, true, true);
 
 		// vibrate
 		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

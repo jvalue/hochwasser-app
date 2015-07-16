@@ -62,13 +62,13 @@ public class NewsManager {
 	public NewsItem addItem(
 			String title,
 			String content,
-			int navPos,
+			int navId,
 			boolean navigationEnabled,
 			boolean isWarning,
 			boolean showNotification) {
 
 		NewsItem.Builder builder = new NewsItem.Builder(title, content, System.currentTimeMillis());
-		if (navigationEnabled) builder.setNavigationPos(navPos);
+		if (navigationEnabled) builder.setNavigationId(navId);
 		builder.isWarning(isWarning);
 		NewsItem item = builder.build();
 

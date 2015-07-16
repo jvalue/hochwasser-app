@@ -15,7 +15,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 	private String title, content;
 	private long timestamp;
 	private boolean navigationEnabled;
-	private int navigationPos;
+	private int navigationId; // arbitrary id for identifying the target action
 	private boolean isWarning;
 	private boolean isNew;
 
@@ -27,7 +27,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 			String content, 
 			long timestamp,
 			boolean navigationEnabled,
-			int navigationPos,
+			int navigationId,
 			boolean isWarning,
 			boolean isNew) {
 
@@ -35,7 +35,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 		this.content = content;
 		this.timestamp = timestamp;
 		this.navigationEnabled = navigationEnabled;
-		this.navigationPos = navigationPos;
+		this.navigationId = navigationId;
 		this.isWarning = isWarning;
 		this.isNew = isNew;
 	}
@@ -61,8 +61,8 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 	}
 
 
-	public int getNavigationPos() {
-		return navigationPos;
+	public int getNavigationId() {
+		return navigationId;
 	}
 
 
@@ -88,7 +88,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 		NewsItem newsItem = (NewsItem) o;
 		return Objects.equal(timestamp, newsItem.timestamp) &&
 				Objects.equal(navigationEnabled, newsItem.navigationEnabled) &&
-				Objects.equal(navigationPos, newsItem.navigationPos) &&
+				Objects.equal(navigationId, newsItem.navigationId) &&
 				Objects.equal(title, newsItem.title) &&
 				Objects.equal(content, newsItem.content) &&
 				Objects.equal(isWarning, newsItem.isWarning) &&
@@ -98,7 +98,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(title, content, timestamp, navigationEnabled, navigationPos, isWarning, isNew);
+		return Objects.hashCode(title, content, timestamp, navigationEnabled, navigationId, isWarning, isNew);
 	}
 
 
@@ -113,7 +113,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 		private final String title, content;
 		private final long timestamp;
 		private boolean navigationEnabled = false;
-		private int navigationPos = -1;
+		private int navigationId = -1;
 		private boolean isWarning = false, isNew = false;
 
 		public Builder(String title, String content, long timestamp) {
@@ -124,9 +124,9 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 		}
 
 
-		public Builder setNavigationPos(int navigationPos) {
+		public Builder setNavigationId(int navigationPos) {
 			navigationEnabled = true;
-			this.navigationPos = navigationPos;
+			this.navigationId = navigationPos;
 			return this;
 		}
 
@@ -150,7 +150,7 @@ public final class NewsItem extends SugarRecord<NewsItem> implements Comparable<
 
 
 		public NewsItem build() {
-			return new NewsItem(title, content, timestamp, navigationEnabled, navigationPos, isWarning, isNew);
+			return new NewsItem(title, content, timestamp, navigationEnabled, navigationId, isWarning, isNew);
 		}
 	}
 

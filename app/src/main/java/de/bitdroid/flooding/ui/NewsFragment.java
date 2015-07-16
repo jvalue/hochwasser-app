@@ -36,6 +36,10 @@ import timber.log.Timber;
 
 public class NewsFragment extends AbstractFragment {
 
+	public static final int
+			NAV_ID_ALARMS = 1,
+			NAV_ID_WATER_LEVELS = 2;
+
 	private static final String PREFS_NAME = NewsFragment.class.getSimpleName();
 	private static final String KEY_FIRST_START = "KEY_FIRST_START";
 
@@ -83,9 +87,9 @@ public class NewsFragment extends AbstractFragment {
 
 
 	private void addHelperNews() {
-		newsManager.addItem(getString(R.string.news_intro_widget_title), getString(R.string.news_intro_widget_content), 0, false, false, false);
-		newsManager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), 2, true, false, false);
-		newsManager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), 1, true, false, false);
+		newsManager.addItem(getString(R.string.news_intro_widget_title), getString(R.string.news_intro_widget_content), -1, false, false, false);
+		newsManager.addItem(getString(R.string.news_intro_data_title), getString(R.string.news_intro_data_content), NAV_ID_WATER_LEVELS, true, false, false);
+		newsManager.addItem(getString(R.string.news_intro_alarms_title), getString(R.string.news_intro_alarms_content), NAV_ID_ALARMS, true, false, false);
 	}
 
 
@@ -192,7 +196,16 @@ public class NewsFragment extends AbstractFragment {
 			containerView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					((MainDrawerActivity) getActivity()).setSection(item.getNavigationPos());
+					if (!item.isNavigationEnabled()) return;
+					switch (item.getNavigationId()) {
+						case NAV_ID_ALARMS:
+							((MainDrawerActivity) getActivity()).setSection(1);
+							break;
+
+						case NAV_ID_WATER_LEVELS:
+							((MainDrawerActivity) getActivity()).setSection(2);
+							break;
+					}
 				}
 			});
 

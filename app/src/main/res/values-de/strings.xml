@@ -133,17 +133,23 @@
     <string name="settings_logout">Ausloggen</string>
     <string name="settings_quick_message">Software made in Erlangen, Germany\nDanke für die für Unterstützung!</string>
 
-    <string name="settings_about_message">
-        PegelAlarm wurde an der &lt;a href=&quot;http://osr.informatik.uni-erlangen.de&quot;&gt;Professur für Open Source Software&lt;/a&gt; unter der Leitung von Prof. Dr. Dirk
-        Riehle an der &lt;a href=&quot;http://www.uni-erlangen.de&quot;&gt;Friedrich-Alexander-Universität&lt;/a&gt; (FAU) in Erlangen-N&#252;rnberg von Philipp Eichhorn entwickelt.&lt;br/&gt;
-        &lt;br/&gt;
-        PegelAlarm ist Open Source und auf &lt;a href=&quot;https://github.com/jvalue/hochwasser-app&quot;&gt;GitHub&lt;/a&gt; verfügbar.
-        &lt;br/&gt;
-        Wir freuen uns über Feedback! Bei Ideen, Wünschen oder Anregungen einfach eine &lt;a href=&quot;mailto:philipp.eichhorn@bitdroid.de&quot;&gt;Email&lt;/a&gt;
-        schreiben!&lt;br/&gt;
-        &lt;br/&gt;
-        Happy Coding!
-    </string>
+    <string name="settings_about_message"><![CDATA[
+PegelAlarm wurde an der <a href="http://osr.informatik.uni-erlangen.de">Professur für Open Source Software</a> unter der Leitung von Prof. Dr. Dirk
+Riehle an der <a href="http://www.uni-erlangen.de">Friedrich-Alexander-Universität</a> (FAU) in Erlangen-Nürnberg von Philipp Eichhorn entwickelt.<br/>
+<br/>
+PegelAlarm ist Open Source und auf <a href="https://github.com/jvalue/hochwasser-app">GitHub</a> verfügbar.
+<br/>
+Wir freuen uns über Feedback! Bei Ideen, Wünschen oder Anregungen einfach eine <a href="mailto:philipp.eichhorn@bitdroid.de">Email</a>
+schreiben!<br/>
+<br/>
+Happy Coding!
+<br/>
+<br/>
+<br/>
+Copyright © 2014 Philipp Eichhorn
+<br/>
+Copyright © 2014, 2015 Friedrich-Alexander-Universität Erlangen-Nürnberg
+    ]]></string>
 
     <string name="settings_credits_message">
         PegelAlarm basiert auf einer Reihe von kleinen und großen &lt;b&gt;Open Source Projekten&lt;/b&gt;

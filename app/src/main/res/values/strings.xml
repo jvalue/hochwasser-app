@@ -135,16 +135,22 @@
     <string name="settings_logout">Logout</string>
     <string name="settings_quick_message">Software made in Erlangen, Germany\nThanks for your support!</string>
 
-    <string name="settings_about_message">
-This application was developed at the &lt;a href=&quot;http://osr.informatik.uni-erlangen.de&quot;&gt;Professorship for Open Source Software&lt;/a&gt; lead by Prof. Dr. Dirk
-Riehle at the &lt;a href=&quot;http://www.uni-erlangen.de&quot;&gt;Friedrich-Alexander-University&lt;/a&gt; (FAU) of Erlangen-N&#252;rnberg by Philipp Eichhorn.&lt;br/&gt;
-&lt;br/&gt;
-The app is open source and is available at &lt;a href=&quot;https://github.com/jvalue/hochwasser-app&quot;&gt;GitHub&lt;/a&gt;&lt;br/&gt;
-&lt;br/&gt;
-We would love to hear from you! Send us an &lt;a href=&quot;mailto:philipp.eichhorn@bitdroid.de&quot;&gt;email&lt;/a&gt; and let us know what you think!&lt;br/&gt;
-&lt;br/&gt;
+    <string name="settings_about_message"><![CDATA[
+This application was developed at the <a href="http://osr.informatik.uni-erlangen.de">Professorship for Open Source Software</a>
+of the <a href="http://www.uni-erlangen.de">Friedrich-Alexander-University</a> (FAU) of Erlangen-Nürnberg by Philipp Eichhorn.<br/>
+<br/>
+The app is open source and is available at <a href="https://github.com/jvalue/hochwasser-app">GitHub</a><br/>
+<br/>
+We would love to hear from you! Send us an <a href="mailto:philipp.eichhorn@bitdroid.de">email</a> and let us know what you think!<br/>
+<br/>
 Happy Coding!
-    </string>
+<br/>
+<br/>
+<br/>
+Copyright © 2014 Philipp Eichhorn
+<br/>
+Copyright © 2014, 2015 Friedrich-Alexander-Universität Erlangen-Nürnberg
+    ]]></string>
 
     <string name="settings_credits_message">
         This app is being powered by a number of small and large &lt;b&gt;open source projects&lt;/b&gt;

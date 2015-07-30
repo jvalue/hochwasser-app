@@ -1,5 +1,6 @@
 ---
 title: Willkommen zu Pegel Alarm!
+layout: post
 ---
 
 Pegel Alarm ist ein App, welche ihre Nutzer über Wasserstände in Deutschland

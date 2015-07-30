@@ -272,6 +272,17 @@ a:focus {
 
 }
 
+
+.post-title {
+    text-align: center;
+}
+
+.post-date {
+    font-size: 18px;
+    color: #aeaeae;
+    text-align: center;
+}
+
 .btn-pagination {
     margin: 20px;
 }

@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.GoogleAuthException;
-import com.google.common.base.Optional;
+
+import org.roboguice.shaded.goole.common.base.Optional;
 
 import java.net.UnknownHostException;
 

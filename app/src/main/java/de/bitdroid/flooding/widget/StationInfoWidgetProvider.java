@@ -8,8 +8,9 @@ import android.content.Intent;
 import android.text.format.DateFormat;
 import android.widget.RemoteViews;
 
-import com.google.common.base.Optional;
 import com.google.inject.Injector;
+
+import org.roboguice.shaded.goole.common.base.Optional;
 
 import java.util.Date;
 

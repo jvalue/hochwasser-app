@@ -4,10 +4,10 @@ package de.bitdroid.flooding.ods;
 import android.util.Pair;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Optional;
 
 import org.jvalue.ods.api.DataApi;
 import org.jvalue.ods.api.data.Data;
+import org.roboguice.shaded.goole.common.base.Optional;
 
 import java.util.ArrayList;
 import java.util.Collection;

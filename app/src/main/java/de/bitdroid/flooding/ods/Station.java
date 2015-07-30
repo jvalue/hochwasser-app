@@ -4,8 +4,9 @@ package de.bitdroid.flooding.ods;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.common.base.Objects;
 import com.orm.SugarRecord;
+
+import org.roboguice.shaded.goole.common.base.Objects;
 
 /**
  * Model class for meta data of one station.

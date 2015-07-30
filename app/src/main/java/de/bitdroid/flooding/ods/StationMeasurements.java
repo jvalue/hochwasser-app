@@ -4,7 +4,8 @@ package de.bitdroid.flooding.ods;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.common.base.Objects;
+import org.roboguice.shaded.goole.common.base.Objects;
+
 
 /**
  * Model class for measurements of a station.

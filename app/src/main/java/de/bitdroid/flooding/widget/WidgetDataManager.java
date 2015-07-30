@@ -3,7 +3,7 @@ package de.bitdroid.flooding.widget;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.google.common.base.Optional;
+import org.roboguice.shaded.goole.common.base.Optional;
 
 import javax.inject.Inject;
 

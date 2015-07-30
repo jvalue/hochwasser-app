@@ -3,11 +3,10 @@ package de.bitdroid.flooding.ceps;
 
 import android.util.Pair;
 
-import com.google.common.base.Optional;
-
 import org.jvalue.ceps.api.RegistrationApi;
 import org.jvalue.ceps.api.notifications.Client;
 import org.jvalue.ceps.api.notifications.GcmClientDescription;
+import org.roboguice.shaded.goole.common.base.Optional;
 
 import java.util.ArrayList;
 import java.util.HashMap;

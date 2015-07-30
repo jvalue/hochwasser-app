@@ -1,7 +1,7 @@
 package de.bitdroid.flooding.ceps;
 
 
-import com.google.common.base.Objects;
+import org.roboguice.shaded.goole.common.base.Objects;
 
 import de.bitdroid.flooding.ods.Station;
 

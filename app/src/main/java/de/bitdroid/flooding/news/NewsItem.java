@@ -1,7 +1,8 @@
 package de.bitdroid.flooding.news;
 
-import com.google.common.base.Objects;
 import com.orm.SugarRecord;
+
+import org.roboguice.shaded.goole.common.base.Objects;
 
 import de.bitdroid.flooding.utils.Assert;
 

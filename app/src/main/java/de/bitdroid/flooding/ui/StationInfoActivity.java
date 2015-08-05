@@ -46,6 +46,7 @@ public class StationInfoActivity extends AbstractRestrictedActivity implements S
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		analyticsUtils.onScreen("station details screen");
 
 		// set title
 		station = new StationSelection(getIntent()).getStation();
@@ -109,6 +110,7 @@ public class StationInfoActivity extends AbstractRestrictedActivity implements S
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.add_alarm:
+				analyticsUtils.onClick("add new alarm");
 				Intent addAlarmIntent = new StationSelection(station.getBodyOfWater(), station)
 						.toIntent(this, NewAlarmActivity.class);
 				startActivity(addAlarmIntent);
@@ -122,6 +124,7 @@ public class StationInfoActivity extends AbstractRestrictedActivity implements S
 	@Override
 	public void onRefresh() {
 		// ignore if still loading
+		analyticsUtils.onClick("refresh data");
 		if (isSpinnerVisible()) return;
 		refreshLayout.setRefreshing(true);
 		loadData();

@@ -72,7 +72,7 @@ public class ConfigureStationInfoWidgetActivity extends AbstractActivity {
 	public static class WaterSelectionActivity extends AbstractWaterSelectionActivity {
 
 		@Override
-		protected void onDataSelected(BodyOfWater water) {
+		protected void onWaterSelected(BodyOfWater water) {
 			startActivityForResult(
 					new StationSelection(water).toIntent(this, StationSelectionActivity.class),
 					REQUEST_SELECT_STATION);
@@ -136,8 +136,8 @@ public class ConfigureStationInfoWidgetActivity extends AbstractActivity {
 	public static class MapSelectionActivity extends AbstractMapSelectionActivity {
 
 		@Override
-		public void onStationClicked(Station station) {
-			onStationSelected(this, station);
+		public void onStationSelected(Station station) {
+			ConfigureStationInfoWidgetActivity.onStationSelected(this, station);
 		}
 
 	}

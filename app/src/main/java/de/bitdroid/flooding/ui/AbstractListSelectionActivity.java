@@ -144,6 +144,7 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 		MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
+				analyticsUtils.onClick("search for station by name");
 				actionBar.setIcon(R.drawable.ic_search);
 				showKeyboard();
 				searchBox.requestFocus();
@@ -188,6 +189,7 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 	public final boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
 			case R.id.map:
+				analyticsUtils.onClick("show on map");
 				hideKeyboard();
 				startActivityForResult(stationSelection.toIntent(this, getMapSelectionClass()), REQUEST_MAP);
 				return true;

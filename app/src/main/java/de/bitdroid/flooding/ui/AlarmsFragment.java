@@ -245,9 +245,8 @@ public class AlarmsFragment extends AbstractFragment {
 	public static class WaterSelectionActivity extends AbstractWaterSelectionActivity {
 
 		@Override
-		protected void onDataSelected(BodyOfWater water) {
+		protected void onWaterSelected(BodyOfWater water) {
 			startActivity(new StationSelection(water).toIntent(this, StationSelectionActivity.class));
-			analyticsUtils.onClick("select water");
 		}
 
 		@Override
@@ -269,7 +268,6 @@ public class AlarmsFragment extends AbstractFragment {
 
 		@Override
 		protected void onStationSelected(Station station) {
-			analyticsUtils.onClick("select station");
 			AlarmsFragment.onStationSelected(this, station);
 		}
 
@@ -284,9 +282,8 @@ public class AlarmsFragment extends AbstractFragment {
 	public static class MapSelectionActivity extends AbstractMapSelectionActivity {
 
 		@Override
-		public void onStationClicked(Station station) {
-			analyticsUtils.onClick("select station");
-			onStationSelected(this, station);
+		public void onStationSelected(Station station) {
+			AlarmsFragment.onStationSelected(this, station);
 		}
 
 	}

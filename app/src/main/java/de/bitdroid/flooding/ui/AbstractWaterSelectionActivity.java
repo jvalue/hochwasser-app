@@ -25,10 +25,20 @@ public abstract class AbstractWaterSelectionActivity extends AbstractListSelecti
 	}
 
 
+	protected abstract void onWaterSelected(BodyOfWater water);
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		analyticsUtils.onScreen("select water screen");
+	}
+
+
+	@Override
+	protected final void onDataSelected(BodyOfWater water) {
+		analyticsUtils.onClick("select water");
+		onWaterSelected(water);
 	}
 
 

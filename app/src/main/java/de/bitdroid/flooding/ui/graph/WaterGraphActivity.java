@@ -363,7 +363,7 @@ public class WaterGraphActivity extends AbstractRestrictedActivity {
 		}
 
 		@Override
-		public void onStationClicked(Station station) {
+		public void onStationSelected(Station station) {
 			// nothing to do
 		}
 

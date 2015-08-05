@@ -19,8 +19,7 @@ public class DataSelectionHandler {
 	public static class WaterSelectionActivity extends AbstractWaterSelectionActivity {
 
 		@Override
-		protected void onDataSelected(BodyOfWater water) {
-			analyticsUtils.onClick("select water");
+		protected void onWaterSelected(BodyOfWater water) {
 			startActivity(new StationSelection(water).toIntent(this, StationSelectionActivity.class));
 		}
 
@@ -40,14 +39,12 @@ public class DataSelectionHandler {
 
 		@Override
 		protected void onAllStationsSelected() {
-			analyticsUtils.onClick("select all stations");
 			Intent graphIntent = new StationSelection(getIntent()).toIntent(this, WaterGraphActivity.class);
 			startActivity(graphIntent);
 		}
 
 		@Override
 		protected void onStationSelected(Station station) {
-			analyticsUtils.onClick("select station");
 			DataSelectionHandler.onStationSelected(this, station);
 		}
 
@@ -62,9 +59,8 @@ public class DataSelectionHandler {
 	public static class MapSelectionActivity extends AbstractMapSelectionActivity {
 
 		@Override
-		public void onStationClicked(Station station) {
-			analyticsUtils.onClick("select station");
-			onStationSelected(this, station);
+		public void onStationSelected(Station station) {
+			DataSelectionHandler.onStationSelected(this, station);
 		}
 
 	}

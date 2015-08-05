@@ -46,9 +46,14 @@ public abstract class AbstractStationSelectionActivity extends AbstractListSelec
 
 
 	@Override
-	public void onDataSelected(Station station) {
-		if (station.equals(ALL_STATIONS)) onAllStationsSelected();
-		else onStationSelected(station);
+	public final void onDataSelected(Station station) {
+		if (station.equals(ALL_STATIONS)) {
+			analyticsUtils.onClick("select all stations");
+			onAllStationsSelected();
+		} else {
+			analyticsUtils.onClick("select station");
+			onStationSelected(station);
+		}
 	}
 
 

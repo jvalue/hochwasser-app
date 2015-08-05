@@ -29,7 +29,7 @@ import rx.functions.Func1;
  * Select one station from a map.
  */
 @ContentView(R.layout.activity_select_map)
-public abstract class AbstractMapSelectionActivity extends AbstractRestrictedActivity implements StationClickListener {
+public abstract class AbstractMapSelectionActivity extends AbstractRestrictedActivity {
 
 	private static final String
 			EXTRA_SCROLL_X = "EXTRA_SCROLL_X",
@@ -46,7 +46,9 @@ public abstract class AbstractMapSelectionActivity extends AbstractRestrictedAct
 
 	private StationSelection stationSelection;
 
-	public abstract void onStationClicked(Station station);
+
+	protected abstract void onStationSelected(Station station);
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -116,7 +118,13 @@ public abstract class AbstractMapSelectionActivity extends AbstractRestrictedAct
 						stationsOverlay = new StationsOverlay(
 								AbstractMapSelectionActivity.this,
 								stations,
-								AbstractMapSelectionActivity.this);
+								new StationClickListener() {
+									@Override
+									public void onStationClicked(Station station) {
+										analyticsUtils.onClick("select station");
+										onStationSelected(station);
+									}
+								});
 						mapView.getOverlays().add(stationsOverlay);
 
 						GeoPoint point = getCenter(stations);

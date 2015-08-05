@@ -56,6 +56,7 @@ public class AlarmsFragment extends AbstractFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		analyticsUtils.onScreen("alarms screen");
 
 		// setup list
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -71,6 +72,7 @@ public class AlarmsFragment extends AbstractFragment {
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				analyticsUtils.onClick("add new alarm");
 				startActivityForResult(new Intent(getActivity(), WaterSelectionActivity.class), REQUEST_ADD_ALARM);
 			}
 		});
@@ -161,6 +163,7 @@ public class AlarmsFragment extends AbstractFragment {
 			containerView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					analyticsUtils.onClick("show alarm details");
 					Intent stationIntent = new StationSelection(alarm.getStation().getBodyOfWater(), alarm.getStation())
 							.toIntent(getActivity(), StationInfoActivity.class);
 					startActivityForResult(stationIntent, REQUEST_SHOW_STATION_INFO);
@@ -191,11 +194,13 @@ public class AlarmsFragment extends AbstractFragment {
 
 		@Override
 		public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+			analyticsUtils.onSwipe("remove left swipe");
 			removeItems(reverseSortedPositions);
 		}
 
 		@Override
 		public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+			analyticsUtils.onSwipe("remove right swipe");
 			removeItems(reverseSortedPositions);
 		}
 
@@ -242,6 +247,7 @@ public class AlarmsFragment extends AbstractFragment {
 		@Override
 		protected void onDataSelected(BodyOfWater water) {
 			startActivity(new StationSelection(water).toIntent(this, StationSelectionActivity.class));
+			analyticsUtils.onClick("select water");
 		}
 
 		@Override
@@ -259,12 +265,11 @@ public class AlarmsFragment extends AbstractFragment {
 		}
 
 		@Override
-		protected void onAllStationsSelected() {
-
-		}
+		protected void onAllStationsSelected() { }
 
 		@Override
 		protected void onStationSelected(Station station) {
+			analyticsUtils.onClick("select station");
 			AlarmsFragment.onStationSelected(this, station);
 		}
 
@@ -280,6 +285,7 @@ public class AlarmsFragment extends AbstractFragment {
 
 		@Override
 		public void onStationClicked(Station station) {
+			analyticsUtils.onClick("select station");
 			onStationSelected(this, station);
 		}
 

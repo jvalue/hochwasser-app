@@ -24,6 +24,7 @@ public class FloodingApplication extends SugarApp {
 				this,
 				RoboGuice.DEFAULT_STAGE,
 				RoboGuice.newDefaultRoboModule(this),
+				new AppModule(),
 				new OdsModule(),
 				new CepsModule());
 

@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.ui;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +22,13 @@ public abstract class AbstractWaterSelectionActivity extends AbstractListSelecti
 
 	public AbstractWaterSelectionActivity() {
 		super(R.string.select_river, R.string.menu_select_water_search_hint, R.layout.item_data);
+	}
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		analyticsUtils.onScreen("select water screen");
 	}
 
 

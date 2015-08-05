@@ -1,5 +1,6 @@
 package de.bitdroid.flooding.ui;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,6 +31,13 @@ public abstract class AbstractStationSelectionActivity extends AbstractListSelec
 	public AbstractStationSelectionActivity(boolean showAllStationsEntry) {
 		super(R.string.select_station, R.string.menu_select_station_search_hint, R.layout.item_data);
 		this.showAllStationsEntry = showAllStationsEntry;
+	}
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		analyticsUtils.onScreen("select station screen");
 	}
 
 

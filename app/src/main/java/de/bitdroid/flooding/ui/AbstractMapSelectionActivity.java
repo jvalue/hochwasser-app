@@ -52,6 +52,7 @@ public abstract class AbstractMapSelectionActivity extends AbstractRestrictedAct
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.select_station);
+		analyticsUtils.onScreen("map selection screen");
 
 		// load args
 		stationSelection = new StationSelection(getIntent());

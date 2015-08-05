@@ -3,7 +3,6 @@ package de.bitdroid.flooding.app;
 import android.content.Context;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -27,8 +26,7 @@ public class AppModule implements Module {
 	public Tracker provideTracker(Context context) {
 		// setup Google analytics
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
-		analytics.setLocalDispatchPeriod(1);
-		analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+		analytics.setLocalDispatchPeriod(1800);
 		Tracker tracker = analytics.newTracker(context.getString(R.string.google_analytics_property_id));
 		tracker.enableExceptionReporting(true);
 		tracker.enableAdvertisingIdCollection(true);

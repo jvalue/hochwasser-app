@@ -11,7 +11,8 @@ public class AnalyticsUtils {
 			CATEGORY_UX = "UX";
 
 	public static final String
-			ACTION_CLICK = "click";
+			ACTION_CLICK = "click",
+			ACTION_SWIPE = "swipe";
 
 
 	private final Tracker tracker;
@@ -29,8 +30,17 @@ public class AnalyticsUtils {
 
 	public void onClick(String label) {
 		tracker.send(new HitBuilders.EventBuilder()
-				.setCategory(AnalyticsUtils.CATEGORY_UX)
-				.setAction(AnalyticsUtils.ACTION_CLICK)
+				.setCategory(CATEGORY_UX)
+				.setAction(ACTION_CLICK)
+				.setLabel(label)
+				.build());
+	}
+
+
+	public void onSwipe(String label) {
+		tracker.send(new HitBuilders.EventBuilder()
+				.setCategory(CATEGORY_UX)
+				.setAction(ACTION_SWIPE)
 				.setLabel(label)
 				.build());
 	}

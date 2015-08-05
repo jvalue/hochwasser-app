@@ -58,6 +58,7 @@ public class NewsFragment extends AbstractFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		analyticsUtils.onScreen("news screen");
 
 		// setup list
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -199,10 +200,12 @@ public class NewsFragment extends AbstractFragment {
 					if (!item.isNavigationEnabled()) return;
 					switch (item.getNavigationId()) {
 						case NAV_ID_ALARMS:
+							analyticsUtils.onClick("alarms");
 							((MainDrawerActivity) getActivity()).setSection(1);
 							break;
 
 						case NAV_ID_WATER_LEVELS:
+							analyticsUtils.onClick("water levels");
 							((MainDrawerActivity) getActivity()).setSection(2);
 							break;
 					}
@@ -230,11 +233,13 @@ public class NewsFragment extends AbstractFragment {
 
 		@Override
 		public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+			analyticsUtils.onSwipe("remove left swipe");
 			removeItems(reverseSortedPositions);
 		}
 
 		@Override
 		public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+			analyticsUtils.onSwipe("remove right swipe");
 			removeItems(reverseSortedPositions);
 		}
 

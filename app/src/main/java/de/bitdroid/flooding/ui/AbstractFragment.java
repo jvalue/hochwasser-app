@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.app.AnalyticsUtils;
 import de.bitdroid.flooding.auth.RestrictedResource;
 import roboguice.fragment.provided.RoboFragment;
 import roboguice.inject.InjectView;
@@ -20,6 +21,7 @@ import rx.subscriptions.CompositeSubscription;
 public abstract class AbstractFragment extends RoboFragment implements RestrictedResource {
 
 	@Inject private UiUtils uiUtils;
+	@Inject protected AnalyticsUtils analyticsUtils;
 	@InjectView(R.id.spinner) private View spinnerContainerView;
 	@InjectView(R.id.spinner_image) private ImageView spinnerImageView;
 

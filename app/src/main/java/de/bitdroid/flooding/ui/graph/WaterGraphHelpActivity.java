@@ -14,6 +14,7 @@ public class WaterGraphHelpActivity extends AbstractRestrictedActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		analyticsUtils.onScreen("water graph help screen");
 		setTitle(getString(R.string.help));
 
 		TextView textView = (TextView) findViewById(R.id.intro);

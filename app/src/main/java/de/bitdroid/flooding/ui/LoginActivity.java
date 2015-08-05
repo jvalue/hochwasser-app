@@ -36,6 +36,9 @@ import timber.log.Timber;
 public class LoginActivity extends AbstractActivity {
 
 	private static final String
+			GOOGLE_ACCOUNT_TYPE = "com.google";
+
+	private static final String
 			STATE_SELECTED_ACCOUNT = "STATE_SELECTED_ACCOUNT";
 
 	private static final int
@@ -59,9 +62,17 @@ public class LoginActivity extends AbstractActivity {
 			public void onClick(View view) {
 				analyticsUtils.onClick("login");
 
-				String[] accountTypes = new String[]{"com.google"};
-				Intent intent = AccountPicker.newChooseAccountIntent(
-						null, null, accountTypes, false, null, null, null, null);
+				// check if there is only one account --> bypass account picker
+				Account[] accounts = AccountManager.get(LoginActivity.this).getAccountsByType(GOOGLE_ACCOUNT_TYPE);
+				if (accounts.length == 1) {
+					selectedAccount = accounts[0];
+					registerAndGetUser();
+					return;
+				}
+
+				// if multiple accounts are present show account picker
+				String[] accountTypes = new String[]{ GOOGLE_ACCOUNT_TYPE };
+				Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
 				startActivityForResult(intent, REQUEST_CODE_ACCOUNT);
 			}
 		});

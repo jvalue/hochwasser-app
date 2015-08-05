@@ -56,6 +56,7 @@ public class WaterGraphActivity extends AbstractRestrictedActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		analyticsUtils.onScreen("water graph screen");
 
 		// get selected water
 		StationSelection selection = new StationSelection(getIntent());
@@ -169,6 +170,7 @@ public class WaterGraphActivity extends AbstractRestrictedActivity {
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
 			case R.id.menu_series:
+				analyticsUtils.onClick("configure visible series");
 				List<String> seriesKeys = graph.getSeriesKeys();
 				final String[] items = seriesKeys.toArray(new String[seriesKeys.size()]);
 				final boolean[] selectedItems = new boolean[seriesKeys.size()];
@@ -205,9 +207,11 @@ public class WaterGraphActivity extends AbstractRestrictedActivity {
 
 			case R.id.menu_normalize:
 				if (showingRegularSeries) {
+					analyticsUtils.onClick("show normalized series");
 					showRelativeRangeLabel();
 					graph.setSeries(getNormalizedSeries());
 				} else {
+					analyticsUtils.onClick("show absolute series");
 					showRegularRangeLabel();
 					graph.setSeries(getRegularSeries());
 				}
@@ -218,11 +222,13 @@ public class WaterGraphActivity extends AbstractRestrictedActivity {
 
 
 			case R.id.menu_map:
+				analyticsUtils.onClick("show river on map");
 				Intent mapIntent = new StationSelection(bodyOfWater).toIntent(this, MapInfoActivity.class);
 				startActivity(mapIntent);
 				return true;
 
 			case R.id.menu_help:
+				analyticsUtils.onClick("show help");
 				Intent intent = new Intent(this, WaterGraphHelpActivity.class);
 				startActivity(intent);
 				return true;

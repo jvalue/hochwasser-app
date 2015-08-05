@@ -42,7 +42,7 @@
 
 		<activity
             android:name=".ui.MainDrawerActivity"
-            android:theme="@style/DrawerTheme"
+            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar"
             />
 		<activity
 			android:name=".ui.DataSelectionHandler$WaterSelectionActivity"

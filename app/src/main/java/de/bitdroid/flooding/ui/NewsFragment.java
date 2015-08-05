@@ -201,12 +201,12 @@ public class NewsFragment extends AbstractFragment {
 					switch (item.getNavigationId()) {
 						case NAV_ID_ALARMS:
 							analyticsUtils.onClick("alarms");
-							((MainDrawerActivity) getActivity()).setSection(1);
+							((MainDrawerActivity) getActivity()).showDrawerItem(MainDrawerActivity.ID_ALARMS);
 							break;
 
 						case NAV_ID_WATER_LEVELS:
 							analyticsUtils.onClick("water levels");
-							((MainDrawerActivity) getActivity()).setSection(2);
+							((MainDrawerActivity) getActivity()).showDrawerItem(MainDrawerActivity.ID_WATER_LEVELS);
 							break;
 					}
 				}

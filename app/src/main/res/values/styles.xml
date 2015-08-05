@@ -1,44 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/blue</item>
-        <item name="colorPrimaryDark">@color/blue_dark</item>
-        <item name="colorAccent">@color/gray_light_2</item>
-        <item name="colorControlActivated">@color/blue</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorControlActivated</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/blue</item>
-        <item name="colorPrimaryDark">@color/blue_dark</item>
-        <item name="colorAccent">@color/gray_light_2</item>
-        <item name="android:actionBarStyle">@style/Theme.AppCompat.Light.DarkActionBar</item>
-        <item name="colorControlActivated">@color/blue</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorControlActivated</item>
     </style>
-
-    <style name="DrawerTheme" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar">
-        <item name="colorPrimary">@color/blue</item>
-        <item name="colorPrimaryDark">@color/blue_dark</item>
-        <item name="colorAccent">@color/gray_light_2</item>
-        <item name="sectionStyle">@style/SectionTheme</item>
-        <item name="singleAccount">true</item>
-        <item name="learningPattern">false</item>
-        <item name="drawerColor">@color/gray_dark</item>
-        <item name="drawerType">@integer/DRAWERTYPE_CUSTOM</item>
-    </style>
-
-    <style name="SectionTheme">
-        <item name="sectionColorIcon">@android:color/white</item>
-        <item name="sectionColorText">@android:color/white</item>
-        <item name="sectionBackgroundColorPressed">@color/gray</item>
-        <item name="sectionBackgroundColorSelected">@color/gray_2</item>
-    </style>
-
 
     <style name="FontHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/blue_dark</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">18dp</item>
     </style>
 

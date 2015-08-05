@@ -15,8 +15,8 @@
    inkscape:version="0.91 r"
    version="1.1"
    id="svg2"
-   height="32"
-   width="32"
+   height="80"
+   width="80"
    inkscape:export-filename="/home/maddoc/android/flooding/res/drawable-ldpi/ic_launcher.png"
    inkscape:export-xdpi="33.75"
    inkscape:export-ydpi="33.75">
@@ -28,21 +28,22 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8284271"
-     inkscape:cx="-39.342759"
+     inkscape:cx="-125.60979"
      inkscape:cy="31.846946"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
      showgrid="true"
      inkscape:window-width="1916"
      inkscape:window-height="1143"
-     inkscape:window-x="1680"
+     inkscape:window-x="0"
      inkscape:window-y="36"
      inkscape:window-maximized="0"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:snap-global="false"
      inkscape:snap-bbox="true"
-     inkscape:bbox-nodes="true">
+     inkscape:bbox-nodes="true"
+     borderlayer="true">
     <inkscape:grid
        spacingx="1px"
        snapvisiblegridlinesonly="true"
@@ -565,7 +566,7 @@
      id="layer1"
      inkscape:label="Layer#1"
      style="display:none"
-     transform="translate(0,-64.000001)">
+     transform="translate(0,-16.000001)">
     <rect
        style="fill:#74aa7b;fill-opacity:0.78743956"
        id="rect25675"
@@ -579,7 +580,7 @@
      inkscape:label="WaveLine"
      id="layer2"
      inkscape:groupmode="layer"
-     transform="translate(0,-64.000001)">
+     transform="translate(0,-16.000001)">
     <path
        sodipodi:nodetypes="ccc"
        inkscape:connector-curvature="0"
@@ -592,16 +593,23 @@
      id="g3883"
      inkscape:label="Wave1"
      style="display:inline"
-     transform="translate(0,-64.000001)" />
+     transform="translate(0,-16.000001)" />
   <g
      style="display:inline"
      inkscape:label="Duck"
      id="layer3"
      inkscape:groupmode="layer"
-     transform="translate(0,-64.000001)">
+     transform="translate(0,-16.000001)">
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.31696415;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4246"
+       width="141.66504"
+       height="113.05059"
+       x="-36.007519"
+       y="-1.5491681" />
     <g
        id="g4286"
-       transform="matrix(0.8,0,0,0.8,-2.9146695,23.235408)">
+       transform="matrix(1.4992527,0,0,1.4992527,4.5526633,-50.380585)">
       <path
          style="fill:#ff2121;fill-opacity:1;stroke:#e51f1f;stroke-width:0.79476333;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m 41.650932,64.103638 c -2.383881,3.66918 -6.955208,3.864395 -6.955208,3.864395 0,0 -1.604392,-8.56614 1.502475,-6.14365 3.106867,2.42249 5.452733,2.279255 5.452733,2.279255 z"
@@ -633,37 +641,37 @@
      inkscape:label="Wave2"
      id="layer5"
      inkscape:groupmode="layer"
-     transform="translate(0,-64.000001)" />
+     transform="translate(0,-16.000001)" />
   <g
      style="display:inline"
      inkscape:label="Wave3"
      id="layer7"
      inkscape:groupmode="layer"
-     transform="translate(0,-64.000001)" />
+     transform="translate(0,-16.000001)" />
   <g
      style="display:inline"
      inkscape:label="Stick"
      id="layer6"
      inkscape:groupmode="layer"
-     transform="translate(0,-64.000001)" />
+     transform="translate(0,-16.000001)" />
   <g
      style="display:inline"
      inkscape:label="Wave4"
      id="layer8"
      inkscape:groupmode="layer"
-     transform="translate(0,-64.000001)" />
+     transform="translate(0,-16.000001)" />
   <g
      inkscape:groupmode="layer"
      id="g4178"
      inkscape:label="Circle"
      style="display:inline"
-     transform="translate(0,-64.000001)" />
+     transform="translate(0,-16.000001)" />
   <g
      style="display:none"
      inkscape:label="Circle dark"
      id="g24840"
      inkscape:groupmode="layer"
-     transform="translate(0,-64.000001)">
+     transform="translate(0,-16.000001)">
     <path
        style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;opacity:0.8;fill:#151517;fill-opacity:1;stroke:none;stroke-width:3.07692289;marker:none;filter:url(#filter25693);enable-background:accumulate"
        d="M 48,8 C 25.926833,8 8,25.926833 8,48 8,59.16329 12.580916,69.271577 19.96875,76.53125 12.873876,69.311124 8.5,59.409877 8.5,48.5 c 0,-22.073167 17.926833,-40 40,-40 10.909878,0 20.811124,4.373876 28.03125,11.46875 C 69.271577,12.580916 59.16329,8 48,8 Z M 75.34375,23.15625 C 81.304381,29.714838 84.9375,38.432684 84.9375,48 84.9375,68.410275 68.410275,84.9375 48,84.9375 c -9.567316,0 -18.285162,-3.633119 -24.84375,-9.59375 6.614474,6.245985 15.521465,10.09375 25.34375,10.09375 20.41028,0 36.9375,-16.527225 36.9375,-36.9375 0,-9.822285 -3.847766,-18.729276 -10.09375,-25.34375 z"
@@ -675,7 +683,7 @@
      id="g24844"
      inkscape:label="Circle light"
      style="display:none"
-     transform="translate(0,-64.000001)">
+     transform="translate(0,-16.000001)">
     <path
        style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;opacity:0.8;fill:#aeeeff;fill-opacity:1;stroke:none;stroke-width:3.07692289;marker:none;filter:url(#filter25697);enable-background:accumulate"
        d="m 47.5,10.5625 c -20.410275,0 -36.9375,16.527225 -36.9375,36.9375 0,9.822285 3.847765,18.729276 10.09375,25.34375 C 14.695619,66.285162 11.0625,57.567316 11.0625,48 11.0625,27.589725 27.589725,11.0625 48,11.0625 c 9.567316,0 18.285162,3.633119 24.84375,9.59375 C 66.229276,14.410265 57.322285,10.5625 47.5,10.5625 Z m 28.53125,8.90625 C 83.126124,26.688876 87.5,36.590123 87.5,47.5 c 0,22.073167 -17.926833,40 -40,40 C 36.590123,87.5 26.688876,83.126124 19.46875,76.03125 26.728423,83.419084 36.83671,88 48,88 70.073167,88 88,70.073167 88,48 88,36.83671 83.419084,26.728423 76.03125,19.46875 Z"
@@ -687,11 +695,11 @@
      id="g25705"
      inkscape:label="Circle dark copy"
      style="display:inline"
-     transform="translate(0,-64.000001)" />
+     transform="translate(0,-16.000001)" />
   <g
      style="display:inline"
      inkscape:label="Circle light copy"
      id="g25701"
      inkscape:groupmode="layer"
-     transform="translate(0,-64.000001)" />
+     transform="translate(0,-16.000001)" />
 </svg>

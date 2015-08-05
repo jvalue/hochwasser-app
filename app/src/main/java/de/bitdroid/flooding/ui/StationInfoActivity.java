@@ -64,7 +64,7 @@ public class StationInfoActivity extends AbstractRestrictedActivity implements S
 
 		// setup swipe to refresh
 		refreshLayout.setOnRefreshListener(this);
-		refreshLayout.setColorSchemeResources(R.color.blue_light, R.color.blue, R.color.blue_dark);
+		refreshLayout.setColorSchemeResources(R.color.blue_light, R.color.colorPrimary, R.color.colorPrimaryDark);
 	}
 
 

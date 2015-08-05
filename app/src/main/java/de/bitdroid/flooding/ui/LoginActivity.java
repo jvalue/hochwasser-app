@@ -150,6 +150,7 @@ public class LoginActivity extends AbstractActivity {
 							startActivityForResult(((UserRecoverableAuthException) throwable).getIntent(), REQUEST_CODE_AUTH);
 
 						} else {
+							analyticsUtils.onException("login error", false);
 							new AlertDialog.Builder(LoginActivity.this)
 									.setTitle(R.string.error_login_title)
 									.setMessage(R.string.error_login_message)

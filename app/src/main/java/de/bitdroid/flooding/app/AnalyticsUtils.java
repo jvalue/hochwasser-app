@@ -35,4 +35,12 @@ public class AnalyticsUtils {
 				.build());
 	}
 
+
+	public void onException(String description, boolean isFatal) {
+		tracker.send(new HitBuilders.ExceptionBuilder()
+				.setDescription(description)
+				.setFatal(isFatal)
+				.build());
+	}
+
 }

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
@@ -24,7 +23,6 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.app.AnalyticsConstants;
 import de.bitdroid.flooding.auth.LoginManager;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -53,17 +51,13 @@ public class LoginActivity extends AbstractActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		tracker.setScreenName("login screen");
+		analyticsUtils.onScreen("login screen");
 
 		// setup login
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory(AnalyticsConstants.CATEGORY_UX)
-						.setAction(AnalyticsConstants.ACTION_CLICK)
-						.setLabel("login")
-						.build());
+				analyticsUtils.onClick("login");
 
 				String[] accountTypes = new String[]{"com.google"};
 				Intent intent = AccountPicker.newChooseAccountIntent(

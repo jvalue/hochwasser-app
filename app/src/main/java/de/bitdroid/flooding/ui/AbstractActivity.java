@@ -6,11 +6,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.google.android.gms.analytics.Tracker;
-
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
+import de.bitdroid.flooding.app.AnalyticsUtils;
 import de.bitdroid.flooding.network.NetworkUtils;
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectView;
@@ -23,7 +22,7 @@ public class AbstractActivity extends RoboActionBarActivity {
 
 	@Inject protected UiUtils uiUtils;
 	@Inject protected NetworkUtils networkUtils;
-	@Inject protected Tracker tracker;
+	@Inject protected AnalyticsUtils analyticsUtils;
 	@InjectView(R.id.spinner) private View spinnerContainerView;
 	@InjectView(R.id.spinner_image) private ImageView spinnerImageView;
 	protected CompositeSubscription compositeSubscription = new CompositeSubscription();

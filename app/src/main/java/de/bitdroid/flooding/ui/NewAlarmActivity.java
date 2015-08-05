@@ -11,12 +11,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-
 import javax.inject.Inject;
 
 import de.bitdroid.flooding.R;
-import de.bitdroid.flooding.app.AnalyticsConstants;
 import de.bitdroid.flooding.ceps.Alarm;
 import de.bitdroid.flooding.ceps.CepsManager;
 import de.bitdroid.flooding.network.DefaultErrorAction;
@@ -59,7 +56,7 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		tracker.setScreenName("new alarm screen");
+		analyticsUtils.onScreen("new alarm screen");
 
 		// set title
 		final Station station = new StationSelection(getIntent()).getStation();
@@ -88,11 +85,7 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 		confirmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory(AnalyticsConstants.CATEGORY_UX)
-						.setAction(AnalyticsConstants.ACTION_CLICK)
-						.setLabel("create alarm")
-						.build());
+				analyticsUtils.onClick("create alarm");
 
 				boolean alarmWhenAboveLevel = selectionGroup.getCheckedRadioButtonId() == R.id.button_above;
 				Alarm alarm = new Alarm.Builder()

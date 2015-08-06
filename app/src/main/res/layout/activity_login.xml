@@ -39,6 +39,16 @@
             android:textColor="@android:color/black"
             />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Demo"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:rotation="10"
+            />
+
     </LinearLayout>
 
     <com.google.android.gms.common.SignInButton

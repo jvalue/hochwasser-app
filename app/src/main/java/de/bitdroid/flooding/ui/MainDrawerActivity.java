@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -131,6 +132,7 @@ public class MainDrawerActivity extends AbstractActivity implements Drawer.OnDra
 				.addProfiles(new ProfileDrawerItem().withName(account.name).withIcon(getResources().getDrawable(R.drawable.ic_duck)))
 				.withSelectionListEnabledForSingleProfile(false)
 				.withProfileImagesClickable(false)
+				.withHeaderBackgroundScaleType(ImageView.ScaleType.CENTER_CROP)
 				.build();
 
 		// setup actual nav drawer

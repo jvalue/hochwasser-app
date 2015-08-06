@@ -14,6 +14,7 @@
         >
 
         <ImageView
+            android:id="@+id/img_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/welcome"
@@ -39,17 +40,18 @@
             android:textColor="@android:color/black"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Demo"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:rotation="10"
-            />
-
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/draft"
+        android:layout_centerInParent="true"
+        android:paddingBottom="250dp"
+        android:paddingLeft="50dp"
+        android:rotation="-20"
+        />
+
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/login"

@@ -34,7 +34,7 @@
     <string name="alarms_new_trigger_above">über dem Pegel ist</string>
     <string name="alarms_new_trigger_below">unter dem Pegel ist</string>
     <string name="alarms_new_created">Alarm hinzugefügt</string>
-    <string name="alarms_triggered_title">%1$s Alarm ausgelöst!</string>
+    <string name="alarms_triggered_title">%1$s Alarm</string>
     <string name="alarms_triggered_msg">%1$s hat den Pegel %3$.2f cm %2$s.</string>
     <string name="alarms_triggered_msg_above">überschritten</string>
     <string name="alarms_triggered_msg_below">unterschritten</string>

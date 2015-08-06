@@ -88,13 +88,13 @@ public class NewsManager {
 		stackBuilder.addNextIntent(intent);
 
 		PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-		NotificationCompat.Builder builder =  new NotificationCompat.Builder(context)
-			.setSmallIcon(R.drawable.ic_duck_small)
-			.setContentTitle(item.getTitle())
-			.setContentText(item.getContent())
-			.setAutoCancel(true)
-			.setLights(context.getResources().getColor(R.color.notification_light), 1000, 3000)
-			.setContentIntent(pendingIntent);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+				.setSmallIcon(R.drawable.ic_duck_small)
+				.setContentTitle(item.getTitle())
+				.setStyle(new NotificationCompat.BigTextStyle().bigText(item.getContent()))
+				.setAutoCancel(true)
+				.setLights(context.getResources().getColor(R.color.notification_light), 1000, 3000)
+				.setContentIntent(pendingIntent);
 
 		notificationManager.notify(NOTIFICATION_ID, builder.build());
 	}

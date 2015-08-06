@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import de.bitdroid.flooding.BuildConfig;
 import de.bitdroid.flooding.R;
 import de.bitdroid.flooding.auth.LoginManager;
 import roboguice.inject.ContentView;
@@ -79,7 +80,18 @@ public class LoginActivity extends AbstractActivity {
 
 		// check if signed in
 		if (loginManager.getAccount().isPresent()) {
-			showMainActivity();
+			if (BuildConfig.DEBUG) {
+				showMainActivity();
+			} else {
+				// show main activity after delay (slash screen)
+				loginButton.setVisibility(View.GONE);
+				loginButton.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						showMainActivity();
+					}
+				}, 2000);
+			}
 		}
 
 		// restore state

@@ -89,7 +89,7 @@ public class NewsManager {
 
 		PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder builder =  new NotificationCompat.Builder(context)
-			.setSmallIcon(R.drawable.ic_duck)
+			.setSmallIcon(R.drawable.ic_duck_small)
 			.setContentTitle(item.getTitle())
 			.setContentText(item.getContent())
 			.setAutoCancel(true)

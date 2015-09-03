@@ -101,12 +101,11 @@ public class UiUtils {
 	}
 
 
-	public void showBetaDialog() {
-		new AlertDialog.Builder(context)
+	public AlertDialog.Builder createBetaDialog() {
+		return new AlertDialog.Builder(context)
 				.setTitle(R.string.beta_title)
 				.setMessage(R.string.beta_message)
-				.setPositiveButton(android.R.string.ok, null)
-				.show();
+				.setPositiveButton(android.R.string.ok, null);
 	}
 
 }

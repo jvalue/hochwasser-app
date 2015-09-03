@@ -4,6 +4,7 @@ package de.bitdroid.flooding.ui;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -62,19 +63,26 @@ public class LoginActivity extends AbstractActivity {
 			@Override
 			public void onClick(View view) {
 				analyticsUtils.onClick("login");
+				uiUtils.createBetaDialog()
+						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										// check if there is only one account --> bypass account picker
+										Account[] accounts = AccountManager.get(LoginActivity.this).getAccountsByType(GOOGLE_ACCOUNT_TYPE);
+										if (accounts.length == 1) {
+											selectedAccount = accounts[0];
+											registerAndGetUser();
+											return;
+										}
 
-				// check if there is only one account --> bypass account picker
-				Account[] accounts = AccountManager.get(LoginActivity.this).getAccountsByType(GOOGLE_ACCOUNT_TYPE);
-				if (accounts.length == 1) {
-					selectedAccount = accounts[0];
-					registerAndGetUser();
-					return;
-				}
-
-				// if multiple accounts are present show account picker
-				String[] accountTypes = new String[]{ GOOGLE_ACCOUNT_TYPE };
-				Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
-				startActivityForResult(intent, REQUEST_CODE_ACCOUNT);
+										// if multiple accounts are present show account picker
+										String[] accountTypes = new String[]{ GOOGLE_ACCOUNT_TYPE };
+										Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
+										startActivityForResult(intent, REQUEST_CODE_ACCOUNT);
+									}
+								})
+						.setNegativeButton(android.R.string.cancel, null)
+						.show();
 			}
 		});
 

@@ -165,7 +165,7 @@ public class MainDrawerActivity extends AbstractActivity implements Drawer.OnDra
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 			case R.id.menu_beta:
-				uiUtils.showBetaDialog();
+				uiUtils.createBetaDialog().show();
 				return true;
 		}
 		return super.onOptionsItemSelected(menuItem);

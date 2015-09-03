@@ -57,6 +57,9 @@
     <string name="series_hthw">HThw</string>
     <string name="series_ntnw">NTnw</string>
 
+    <string name="beta_title">Haftungsausschluss</string>
+    <string name="beta_message">Pegel Alarm befindet sich momentan in einer Beta Phase und sollte daher <b>nicht</b> im produktiven Einsatz verwendet  werden. Die Korrektheit der Daten kann nicht garantiert werden und die Verwendung geschieht auf eigene Gefahr!</string>
+
     <string name="help">Hilfe</string>
 
     <string name="news_empty">Noch keine News</string>

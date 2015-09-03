@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -147,6 +150,25 @@ public class MainDrawerActivity extends AbstractActivity implements Drawer.OnDra
 
 	public void showDrawerItem(int drawerItemId) {
 		drawer.setSelectionByIdentifier(drawerItemId);
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_main, menu);
+		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch (menuItem.getItemId()) {
+			case R.id.menu_beta:
+				uiUtils.showBetaDialog();
+				return true;
+		}
+		return super.onOptionsItemSelected(menuItem);
 	}
 
 }

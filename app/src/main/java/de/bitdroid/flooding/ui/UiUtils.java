@@ -2,6 +2,7 @@ package de.bitdroid.flooding.ui;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -97,6 +98,15 @@ public class UiUtils {
 		Intent intent = new Intent(parentActivity, LoginActivity.class);
 		parentActivity.startActivity(intent);
 		parentActivity.finish();
+	}
+
+
+	public void showBetaDialog() {
+		new AlertDialog.Builder(context)
+				.setTitle(R.string.beta_title)
+				.setMessage(R.string.beta_message)
+				.setPositiveButton(android.R.string.ok, null)
+				.show();
 	}
 
 }

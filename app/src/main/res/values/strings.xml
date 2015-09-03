@@ -60,6 +60,10 @@
 	<string name="series_hthw">HThw</string>
 	<string name="series_ntnw">NTnw</string>
 
+    <string name="beta">Draft</string>
+    <string name="beta_title">Disclaimer</string>
+    <string name="beta_message">Pegel Alarm is currently in a beta phase and should <b>not</b> be used in production, as we cannot guarantee the correctness of the provided data. Use at your own risk!</string>
+
 	<string name="help">Help</string>
 
     <string name="news_empty">No news yet</string>

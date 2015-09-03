@@ -45,7 +45,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/draft"
+        android:src="@drawable/beta"
         android:layout_centerInParent="true"
         android:paddingBottom="250dp"
         android:paddingLeft="50dp"

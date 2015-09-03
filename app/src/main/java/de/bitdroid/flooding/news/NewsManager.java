@@ -92,6 +92,7 @@ public class NewsManager {
 				.setSmallIcon(R.drawable.ic_duck_small)
 				.setContentTitle(item.getTitle())
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(item.getContent()))
+				.setContentText(item.getContent())
 				.setAutoCancel(true)
 				.setLights(context.getResources().getColor(R.color.notification_light), 1000, 3000)
 				.setContentIntent(pendingIntent);

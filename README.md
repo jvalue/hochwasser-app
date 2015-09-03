@@ -2,7 +2,7 @@ hochwasser-app
 ==============
 
 
-** Configuring the ODS
+## Configuring the ODS
 
 This app requires an instance of the Open Data Service (ODS) to be running in order to download
 flooding related data. As such the ODS needs to have a data source configured with the
@@ -144,7 +144,7 @@ following details:
 }
 ```
 
-** Configuring the CEPS
+## Configuring the CEPS
 
 Besides the ODS, this app also requires an instance of the Complex Event Service (CEPS)
 to be running handling alarms and notifications.

@@ -1,5 +1,7 @@
 # Pegel Alarm
 
+![Banner](playstore/banner.png)
+
 This repository contains the source for the Android application __Pegel Alarm__. Pegel Alarm helps people living in areas affected by floodings in Germany by providing alarms whenever rivers haven rise above user defined thresholds. For more info please visit [http://pegelalarm.de/](http://pegelalarm.de/) (in German).
 
 ### App setup

@@ -8,5 +8,5 @@ dass ein Nutzer denkt, dass die App fehlerfrei ihren Dienst für immer erledigen
 Aus diesem Grund müssen wir den Zugang zur App bedauerlicherweise einschränken.
 Wir werden sie interessierten Parteien nur zu Demozwecken bereitstellen.
 Die ursprünglich adressierten Endbenutzer werden Pegel Alarm nicht nutzen können.
-Unser Nutzungszweck ist somit die Demonstration der Fähigkeiten des JValue Open Data Service.
+Unser Nutzungszweck ist somit die Demonstration der Fähigkeiten des [JValue Open-Data-Service](https://github.com/jvalue/open-data-service).
 Diesen werden wir weiter entwickeln.

@@ -3,7 +3,7 @@ title: Willkommen zu Pegel Alarm!
 layout: post
 ---
 
-Pegel Alarm ist ein App, welche ihre Nutzer über Wasserstände in Deutschland
+Pegel Alarm ist eine App, welche ihre Nutzer über Wasserstände in Deutschland
 informiert. Sie basiert auf dem [JValue Offenen
 Datendienst](https://github.com/jvalue/open-data-service) und wird entwickelt
 von Mitarbeitern und Studierenden der Friedrich-Alexander-Universität

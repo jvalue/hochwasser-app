@@ -47,13 +47,16 @@
             android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar"
             />
 		<activity
-			android:name=".ui.DataSelectionHandler$WaterSelectionActivity"
+			android:name=".ui.StationLevelsSelectionHandler$WaterSelectionActivity"
 			/>
 		<activity
-			android:name=".ui.DataSelectionHandler$StationSelectionActivity"
+			android:name=".ui.StationLevelsSelectionHandler$StationSelectionActivity"
 			/>
         <activity
-            android:name=".ui.DataSelectionHandler$MapSelectionActivity"
+            android:name=".ui.StationLevelsSelectionHandler$MapSelectionActivity"
+            />
+        <activity
+            android:name=".ui.WaterGraphSelectionHandler$WaterSelectionActivity"
             />
         <activity
             android:name=".ui.StationInfoActivity"

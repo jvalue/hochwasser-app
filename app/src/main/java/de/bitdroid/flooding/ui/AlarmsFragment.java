@@ -259,13 +259,6 @@ public class AlarmsFragment extends AbstractFragment {
 
 	public static class StationSelectionActivity extends AbstractStationSelectionActivity {
 
-		public StationSelectionActivity() {
-			super(false);
-		}
-
-		@Override
-		protected void onAllStationsSelected() { }
-
 		@Override
 		protected void onStationSelected(Station station) {
 			AlarmsFragment.onStationSelected(this, station);

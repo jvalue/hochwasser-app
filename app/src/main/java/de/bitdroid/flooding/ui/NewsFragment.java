@@ -206,7 +206,7 @@ public class NewsFragment extends AbstractFragment {
 
 						case NAV_ID_WATER_LEVELS:
 							analyticsUtils.onClick("water levels");
-							((MainDrawerActivity) getActivity()).showDrawerItem(MainDrawerActivity.ID_WATER_LEVELS);
+							((MainDrawerActivity) getActivity()).showDrawerItem(MainDrawerActivity.ID_STATION_LEVELS);
 							break;
 					}
 				}

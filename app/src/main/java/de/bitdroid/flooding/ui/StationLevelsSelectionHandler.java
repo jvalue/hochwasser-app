@@ -2,11 +2,9 @@ package de.bitdroid.flooding.ui;
 
 
 import android.content.Context;
-import android.content.Intent;
 
 import de.bitdroid.flooding.ods.BodyOfWater;
 import de.bitdroid.flooding.ods.Station;
-import de.bitdroid.flooding.ui.graph.WaterGraphActivity;
 
 
 /**
@@ -14,7 +12,7 @@ import de.bitdroid.flooding.ui.graph.WaterGraphActivity;
  *
  * This is the "glue" holding the various selection activities together.
  */
-public class DataSelectionHandler {
+public class StationLevelsSelectionHandler {
 
 	public static class WaterSelectionActivity extends AbstractWaterSelectionActivity {
 
@@ -33,19 +31,9 @@ public class DataSelectionHandler {
 
 	public static class StationSelectionActivity extends AbstractStationSelectionActivity {
 
-		public StationSelectionActivity() {
-			super(true);
-		}
-
-		@Override
-		protected void onAllStationsSelected() {
-			Intent graphIntent = new StationSelection(getIntent()).toIntent(this, WaterGraphActivity.class);
-			startActivity(graphIntent);
-		}
-
 		@Override
 		protected void onStationSelected(Station station) {
-			DataSelectionHandler.onStationSelected(this, station);
+			StationLevelsSelectionHandler.onStationSelected(this, station);
 		}
 
 		@Override
@@ -60,7 +48,7 @@ public class DataSelectionHandler {
 
 		@Override
 		public void onStationSelected(Station station) {
-			DataSelectionHandler.onStationSelected(this, station);
+			StationLevelsSelectionHandler.onStationSelected(this, station);
 		}
 
 	}

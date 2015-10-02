@@ -42,6 +42,7 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 	private final int titleResource;
 	private final int searchHintResource;
 	private final int itemViewLayoutResource;
+	private final boolean showMapsMenu;
 
 	@Inject private InputMethodManager inputMethodManager;
 
@@ -56,9 +57,15 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 
 
 	AbstractListSelectionActivity(int titleResource, int searchHintResource, int itemViewLayoutResource) {
+		this(titleResource, searchHintResource, itemViewLayoutResource, true);
+	}
+
+
+	AbstractListSelectionActivity(int titleResource, int searchHintResource, int itemViewLayoutResource, boolean showMapsMenu) {
 		this.titleResource = titleResource;
 		this.searchHintResource = searchHintResource;
 		this.itemViewLayoutResource = itemViewLayoutResource;
+		this.showMapsMenu = showMapsMenu;
 	}
 
 
@@ -180,6 +187,8 @@ abstract class AbstractListSelectionActivity<T> extends AbstractRestrictedActivi
 			public void afterTextChanged(Editable s) {
 			}
 		});
+
+		if (!showMapsMenu) menu.findItem(R.id.map).setVisible(false);
 
 		return true;
 	}

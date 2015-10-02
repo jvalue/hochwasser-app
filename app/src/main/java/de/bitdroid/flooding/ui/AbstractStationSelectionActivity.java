@@ -19,18 +19,11 @@ import rx.functions.Func1;
 
 public abstract class AbstractStationSelectionActivity extends AbstractListSelectionActivity<Station> {
 
-	private static final Station ALL_STATIONS = new Station(
-			"a " + AbstractWaterSelectionActivity.class.getSimpleName() + ".ALL_STATIONS",
-			"a " + AbstractWaterSelectionActivity.class.getSimpleName() + ".ALL_STATIONS",
-			null,
-			-1f, -1f, -1f);
+	@Inject
+	private OdsManager odsManager;
 
-	@Inject private OdsManager odsManager;
-	private final boolean showAllStationsEntry;
-
-	public AbstractStationSelectionActivity(boolean showAllStationsEntry) {
+	public AbstractStationSelectionActivity() {
 		super(R.string.select_station, R.string.menu_select_station_search_hint, R.layout.item_data);
-		this.showAllStationsEntry = showAllStationsEntry;
 	}
 
 
@@ -41,19 +34,13 @@ public abstract class AbstractStationSelectionActivity extends AbstractListSelec
 	}
 
 
-	protected abstract void onAllStationsSelected();
 	protected abstract void onStationSelected(Station station);
 
 
 	@Override
 	public final void onDataSelected(Station station) {
-		if (station.equals(ALL_STATIONS)) {
-			analyticsUtils.onClick("select all stations");
-			onAllStationsSelected();
-		} else {
-			analyticsUtils.onClick("select station");
-			onStationSelected(station);
-		}
+		analyticsUtils.onClick("select station");
+		onStationSelected(station);
 	}
 
 
@@ -63,7 +50,6 @@ public abstract class AbstractStationSelectionActivity extends AbstractListSelec
 				.flatMap(new Func1<List<Station>, Observable<List<Station>>>() {
 					@Override
 					public Observable<List<Station>> call(List<Station> stations) {
-						if (showAllStationsEntry) stations.add(0, ALL_STATIONS);
 						return Observable.just(stations);
 					}
 				});
@@ -72,22 +58,16 @@ public abstract class AbstractStationSelectionActivity extends AbstractListSelec
 
 	@Override
 	protected void setDataView(final Station station, View view) {
-		if (station.equals(ALL_STATIONS)) {
-			view.findViewById(R.id.container_2).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.container_1).setVisibility(View.GONE);
+		view.findViewById(R.id.container_1).setVisibility(View.VISIBLE);
+		view.findViewById(R.id.container_2).setVisibility(View.GONE);
 
-		} else {
-			view.findViewById(R.id.container_1).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.container_2).setVisibility(View.GONE);
+		// station name
+		TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+		text1.setText(StringUtils.toProperCase(station.getStationName()));
+		text1.setTextColor(getResources().getColor(android.R.color.black));
 
-			// station name
-			TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-			text1.setText(StringUtils.toProperCase(station.getStationName()));
-			text1.setTextColor(getResources().getColor(android.R.color.black));
-
-			// hide second text
-			view.findViewById(android.R.id.text2).setVisibility(View.GONE);
-		}
+		// hide second text
+		view.findViewById(android.R.id.text2).setVisibility(View.GONE);
 	}
 
 
@@ -95,7 +75,7 @@ public abstract class AbstractStationSelectionActivity extends AbstractListSelec
 	protected List<Station> filterItems(CharSequence constraint, List<Station> items) {
 		List<Station> result = new ArrayList<>(items);
 		if (constraint == null || constraint.length() == 0) return result;
-		String stringConstraint= constraint.toString().toLowerCase();
+		String stringConstraint = constraint.toString().toLowerCase();
 		Iterator<Station> iter = result.iterator();
 		while (iter.hasNext()) {
 			if (!iter.next().getStationName().toLowerCase().contains(stringConstraint)) {

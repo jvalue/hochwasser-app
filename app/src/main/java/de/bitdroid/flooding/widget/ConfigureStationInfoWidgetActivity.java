@@ -14,7 +14,6 @@ import de.bitdroid.flooding.ui.AbstractMapSelectionActivity;
 import de.bitdroid.flooding.ui.AbstractStationSelectionActivity;
 import de.bitdroid.flooding.ui.AbstractWaterSelectionActivity;
 import de.bitdroid.flooding.ui.StationSelection;
-import de.bitdroid.flooding.ui.graph.WaterGraphActivity;
 
 /**
  * This actiivty helps during widget configuration. It mainly acts as a dispatcher
@@ -98,16 +97,6 @@ public class ConfigureStationInfoWidgetActivity extends AbstractActivity {
 
 
 	public static class StationSelectionActivity extends AbstractStationSelectionActivity {
-
-		public StationSelectionActivity() {
-			super(false);
-		}
-
-		@Override
-		protected void onAllStationsSelected() {
-			Intent graphIntent = new StationSelection(getIntent()).toIntent(this, WaterGraphActivity.class);
-			startActivityForResult(graphIntent, REQUEST_SELECT_STATION);
-		}
 
 		@Override
 		protected void onStationSelected(Station station) {

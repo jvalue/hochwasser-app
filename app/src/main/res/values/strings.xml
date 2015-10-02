@@ -6,7 +6,8 @@
 
 	<string name="nav_home">News</string>
 	<string name="nav_alarms">Alarms</string>
-	<string name="nav_analysis">Water levels</string>
+	<string name="nav_stations">Station levels</string>
+    <string name="nav_river_graphs">River graphs</string>
 	<string name="nav_settings">Settings</string>
     <string name="nav_feedback">Feedback</string>
 

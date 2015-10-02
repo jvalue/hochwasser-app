@@ -41,9 +41,10 @@ public class MainDrawerActivity extends AbstractActivity implements Drawer.OnDra
 	public static final int
 			ID_NEWS = 0,
 			ID_ALARMS = 1,
-			ID_WATER_LEVELS = 2,
-			ID_SETTINGS = 3,
-			ID_FEEDBACK = 4;
+			ID_STATION_LEVELS = 2,
+			ID_RIVER_GRAPHS = 3,
+			ID_SETTINGS = 4,
+			ID_FEEDBACK = 5;
 
 
 	@Inject private VersionUtils versionUtils;
@@ -84,7 +85,8 @@ public class MainDrawerActivity extends AbstractActivity implements Drawer.OnDra
 				.addDrawerItems(
 						new PrimaryDrawerItem().withName(R.string.nav_home).withIconTintingEnabled(true).withIcon(R.drawable.ic_home).withIdentifier(ID_NEWS),
 						new PrimaryDrawerItem().withName(R.string.nav_alarms).withIconTintingEnabled(true).withIcon(R.drawable.ic_alert).withIdentifier(ID_ALARMS),
-						new PrimaryDrawerItem().withName(R.string.nav_analysis).withIconTintingEnabled(true).withIcon(R.drawable.ic_chart).withIdentifier(ID_WATER_LEVELS)
+						new PrimaryDrawerItem().withName(R.string.nav_stations).withIconTintingEnabled(true).withIcon(R.drawable.ic_gauge).withIdentifier(ID_STATION_LEVELS),
+						new PrimaryDrawerItem().withName(R.string.nav_river_graphs).withIconTintingEnabled(true).withIcon(R.drawable.ic_chart).withIdentifier(ID_RIVER_GRAPHS)
 				)
 				.addStickyDrawerItems(
 						new PrimaryDrawerItem().withName(R.string.nav_settings).withIconTintingEnabled(true).withIcon(R.drawable.ic_settings).withIdentifier(ID_SETTINGS),
@@ -131,8 +133,12 @@ public class MainDrawerActivity extends AbstractActivity implements Drawer.OnDra
 				toolbar.setTitle(R.string.nav_alarms);
 				break;
 
-			case ID_WATER_LEVELS:
-				startActivity(new Intent(this, DataSelectionHandler.WaterSelectionActivity.class));
+			case ID_STATION_LEVELS:
+				startActivity(new Intent(this, StationLevelsSelectionHandler.WaterSelectionActivity.class));
+				break;
+
+			case ID_RIVER_GRAPHS:
+				startActivity(new Intent(this, WaterGraphSelectionHandler.WaterSelectionActivity.class));
 				break;
 
 			case ID_SETTINGS:

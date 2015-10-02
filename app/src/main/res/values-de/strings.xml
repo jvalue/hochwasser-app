@@ -4,7 +4,8 @@
     <string name="welcome_to">Willkommen zu</string>
 
     <string name="nav_alarms">Alarme</string>
-    <string name="nav_analysis">Wasserstände</string>
+    <string name="nav_stations">Station Wasserstände</string>
+    <string name="nav_river_graphs">Fluss Graphen</string>
     <string name="nav_settings">Einstellungen</string>
 
     <string name="title_new_alarm">Neuer Alarm</string>

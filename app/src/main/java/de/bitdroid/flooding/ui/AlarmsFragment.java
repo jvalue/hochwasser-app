@@ -5,13 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
+
+import org.roboguice.shaded.goole.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,13 +117,78 @@ public class AlarmsFragment extends AbstractFragment {
 	}
 
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, view, menuInfo);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.menu_alarm_context, menu);
+	}
+
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.delete:
+				analyticsUtils.onClick("remove");
+				Alarm alarmToDelete = adapter.getAlarm(adapter.getSelectedItemPos());
+				deleteAlarms(Lists.newArrayList(alarmToDelete));
+				return true;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+
+	private void deleteAlarms(List<Alarm> alarmsToRemove) {
+		List<Alarm> alarmsToKeep = adapter.getAlarms();
+		alarmsToKeep.removeAll(alarmsToRemove);
+		adapter.setAlarms(alarmsToKeep);
+
+		showSpinner();
+		compositeSubscription.add(Observable.from(alarmsToRemove)
+				.flatMap(new Func1<Alarm, Observable<Void>>() {
+					@Override
+					public Observable<Void> call(Alarm alarm) {
+						return cepsManager.removeAlarm(alarm);
+					}
+				})
+				.toList()
+				.compose(networkUtils.<List<Void>>getDefaultTransformer())
+				.subscribe(
+						new Action1<List<Void>>() {
+							@Override
+							public void call(List<Void> nothing) {
+								showSpinner();
+								loadAlarms();
+							}
+						}, new ErrorActionBuilder()
+								.add(new DefaultErrorAction(AlarmsFragment.this.getActivity(), AlarmsFragment.this, "error removing alarm"))
+								.add(new HideSpinnerAction(AlarmsFragment.this))
+								.build()));
+	}
+
+
 	protected class AlarmsAdapter extends RecyclerView.Adapter<AlarmViewHolder> {
 
 		private final List<Alarm> alarmList = new ArrayList<>();
+		private int selectedItemPos; // long click to select an item
 
 		@Override
-		public void onBindViewHolder(AlarmViewHolder holder, int position) {
+		public void onBindViewHolder(final AlarmViewHolder holder, final int position) {
 			holder.setItem(alarmList.get(position));
+			registerForContextMenu(holder.containerView);
+			holder.containerView.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					selectedItemPos = position;
+					return false;
+				}
+			});
+		}
+
+		@Override
+		public void onViewRecycled(AlarmViewHolder holder) {
+			unregisterForContextMenu(holder.containerView);
+			super.onViewRecycled(holder);
 		}
 
 		@Override
@@ -136,10 +206,18 @@ public class AlarmsFragment extends AbstractFragment {
 			return new ArrayList<>(alarmList);
 		}
 
+		public Alarm getAlarm(int position) {
+			return alarmList.get(position);
+		}
+
 		@Override
 		public AlarmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_alarm, parent, false);
 			return new AlarmViewHolder(view);
+		}
+
+		public int getSelectedItemPos() {
+			return selectedItemPos;
 		}
 
 	}
@@ -206,35 +284,12 @@ public class AlarmsFragment extends AbstractFragment {
 
 		private void removeItems(int[] reverseSortedPositions) {
 			List<Alarm> alarmsToRemove = new ArrayList<>();
-			List<Alarm> alarmsToKeep = adapter.getAlarms();
+			List<Alarm> allAlarms = adapter.getAlarms();
 			for (int position : reverseSortedPositions) {
-				alarmsToRemove.add(alarmsToKeep.remove(position));
+				alarmsToRemove.add(adapter.getAlarm(position));
 			}
-			adapter.setAlarms(alarmsToKeep);
-
-			showSpinner();
-			compositeSubscription.add(Observable.from(alarmsToRemove)
-					.flatMap(new Func1<Alarm, Observable<Void>>() {
-						@Override
-						public Observable<Void> call(Alarm alarm) {
-							return cepsManager.removeAlarm(alarm);
-						}
-					})
-					.toList()
-					.compose(networkUtils.<List<Void>>getDefaultTransformer())
-					.subscribe(
-							new Action1<List<Void>>() {
-								@Override
-								public void call(List<Void> nothing) {
-									showSpinner();
-									loadAlarms();
-								}
-							}, new ErrorActionBuilder()
-									.add(new DefaultErrorAction(AlarmsFragment.this.getActivity(), AlarmsFragment.this, "error removing alarm"))
-									.add(new HideSpinnerAction(AlarmsFragment.this))
-									.build()));
+			deleteAlarms(alarmsToRemove);
 		}
-
 	}
 
 

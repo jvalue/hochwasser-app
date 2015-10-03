@@ -210,4 +210,6 @@ Copyright © 2014, 2015 Friedrich-Alexander-Universität Erlangen-Nürnberg
     <string name="error_network_title">Keine Internet Verbindung</string>
     <string name="error_network_tap_to_retry">Keine Internet Verbindung, zum Wiederholen antippen.</string>
 
+    <string name="delete">Löschen</string>
+
 </resources>

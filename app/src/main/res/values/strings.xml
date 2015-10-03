@@ -212,4 +212,6 @@ Copyright © 2014, 2015 Friedrich-Alexander-Universität Erlangen-Nürnberg
     <string name="error_login_message">There was an error during login, please try again.</string>
     <string name="error_network_tap_to_retry">No Internet connection, tap to retry.</string>
 
+    <string name="delete">Delete</string>
+
 </resources>

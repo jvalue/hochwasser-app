@@ -1,6 +1,8 @@
 package de.bitdroid.flooding.ceps;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Pair;
 
 import org.jvalue.ceps.api.RegistrationApi;
@@ -17,8 +19,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import de.bitdroid.flooding.gcm.GcmManager;
+import de.bitdroid.flooding.gcm.GcmService;
 import de.bitdroid.flooding.ods.OdsManager;
 import de.bitdroid.flooding.ods.Station;
+import de.bitdroid.flooding.ods.StationMeasurements;
 import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
@@ -36,6 +40,7 @@ public class CepsManager {
 			ARGUMENT_GAUGE_ID = "GAUGE_ID",
 			ARGUMENT_LEVEL = "LEVEL";
 
+	private final Context context;
 	private final RegistrationApi registrationApi;
 	private final OdsManager odsManager;
 	private final GcmManager gcmManager;
@@ -43,7 +48,8 @@ public class CepsManager {
 	private List<Alarm> alarmsCache = null;
 
 	@Inject
-	CepsManager(RegistrationApi registrationApi, OdsManager odsManager, GcmManager gcmManager) {
+	CepsManager(Context context, RegistrationApi registrationApi, OdsManager odsManager, GcmManager gcmManager) {
+		this.context = context;
 		this.registrationApi = registrationApi;
 		this.odsManager = odsManager;
 		this.gcmManager = gcmManager;
@@ -138,7 +144,21 @@ public class CepsManager {
 				.flatMap(new Func1<Client, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Client client) {
+						// cache new alarm
 						alarmsCache.add(new Alarm(client.getId(), alarm));
+
+						// check if alarm should be triggered immediately
+						StationMeasurements measurements = odsManager.getMeasurements(alarm.getStation()).toBlocking().first();
+						boolean triggerAlarm = false;
+						if (alarm.isAlarmWhenAboveLevel() && alarm.isAlarmWhenBelowLevel() && alarm.getLevel() != measurements.getLevel().getValueInCm()) triggerAlarm = true;
+						else if (alarm.isAlarmWhenAboveLevel() && measurements.getLevel().getValueInCm() > alarm.getLevel()) triggerAlarm = true;
+						else if (alarm.isAlarmWhenBelowLevel() && measurements.getLevel().getValueInCm() < alarm.getLevel()) triggerAlarm = true;
+						if (triggerAlarm) {
+							Intent serviceIntent = new Intent(context, GcmService.class);
+							serviceIntent.putExtra(GcmService.ARGUMENT_REGISTRATION_ID, client.getId());
+							context.startService(serviceIntent);
+						}
+
 						return Observable.just(null);
 					}
 				});

@@ -83,6 +83,7 @@ public class GcmService extends RoboService {
 
 
 	private void onTriggeredAlarm(Alarm alarm) {
+		// TODO
 		Timber.i("triggering alarm " + alarm.getId());
 
 		// show news

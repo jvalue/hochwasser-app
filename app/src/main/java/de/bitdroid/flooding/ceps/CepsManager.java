@@ -30,7 +30,8 @@ public class CepsManager {
 
 	private static final String
 			PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID = "pegelAlarmAboveLevel",
-			PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID = "pegelAlarmBelowLevel";
+			PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID = "pegelAlarmBelowLevel",
+			PEGEL_ALARM_ABOVE_OR_BELOW_LEVEL_ADAPTER_ID = "pegelAlarmAboveOrBelowLevel";
 	private static final String
 			ARGUMENT_GAUGE_ID = "GAUGE_ID",
 			ARGUMENT_LEVEL = "LEVEL";
@@ -61,14 +62,21 @@ public class CepsManager {
 									.flatMap(new Func1<List<Client>, Observable<Pair<String, Alarm.Builder>>>() {
 										@Override
 										public Observable<Pair<String, Alarm.Builder>> call(List<Client> clients) {
-											return Observable.from(parseClients(clients, true));
+											return Observable.from(parseClients(clients, true, false));
 										}
 									}),
 							registrationApi.getAllClients(PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID)
 									.flatMap(new Func1<List<Client>, Observable<Pair<String, Alarm.Builder>>>() {
 										@Override
 										public Observable<Pair<String, Alarm.Builder>> call(List<Client> clients) {
-											return Observable.from(parseClients(clients, false));
+											return Observable.from(parseClients(clients, false, true));
+										}
+									}),
+							registrationApi.getAllClients(PEGEL_ALARM_ABOVE_OR_BELOW_LEVEL_ADAPTER_ID)
+									.flatMap(new Func1<List<Client>, Observable<Pair<String, Alarm.Builder>>>() {
+										@Override
+										public Observable<Pair<String, Alarm.Builder>> call(List<Client> clients) {
+											return Observable.from(parseClients(clients, true, true));
 										}
 									}))
 					.flatMap(new Func1<Pair<String, Alarm.Builder>, Observable<Alarm>>() {
@@ -109,7 +117,7 @@ public class CepsManager {
 		final Map<String, Object> args = new HashMap<>();
 		args.put(ARGUMENT_GAUGE_ID, alarm.getStation().getGaugeId());
 		args.put(ARGUMENT_LEVEL, alarm.getLevel());
-		final String adapterId = alarm.isAlarmWhenAboveLevel() ? PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID : PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
+		final String adapterId = alarmToAdapterId(alarm);
 
 		// register for GCM
 		Observable<Void> gcmObservable;
@@ -130,12 +138,7 @@ public class CepsManager {
 				.flatMap(new Func1<Client, Observable<Void>>() {
 					@Override
 					public Observable<Void> call(Client client) {
-						alarmsCache.add(new Alarm.Builder()
-								.setId(client.getId())
-								.setLevel(alarm.getLevel())
-								.setStation(alarm.getStation())
-								.setAlarmWhenAboveLevel(alarm.isAlarmWhenAboveLevel())
-								.build());
+						alarmsCache.add(new Alarm(client.getId(), alarm));
 						return Observable.just(null);
 					}
 				});
@@ -143,7 +146,7 @@ public class CepsManager {
 
 
 	public Observable<Void> removeAlarm(final Alarm alarm) {
-		String adapterId = alarm.isAlarmWhenAboveLevel() ? PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID : PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
+		String adapterId = alarmToAdapterId(alarm);
 		String clientId = alarm.getId();
 		return registrationApi.unregisterClient(adapterId, clientId)
 				.flatMap(new Func1<Response, Observable<Void>>() {
@@ -156,17 +159,31 @@ public class CepsManager {
 	}
 
 
-	private List<Pair<String, Alarm.Builder>> parseClients(List<Client> clients, boolean alarmWhenAboveLevel) {
+	private List<Pair<String, Alarm.Builder>> parseClients(List<Client> clients, boolean alarmWhenAboveLevel, boolean alarmWhenBelowLevel) {
 		List<Pair<String, Alarm.Builder>> builders = new ArrayList<>(); // station uuid --> builder
 		for (Client client : clients) {
 			Map<String, Object> args = client.getEplArguments();
 			Alarm.Builder builder = new Alarm.Builder()
 					.setId(client.getId())
 					.setLevel((double) args.get(ARGUMENT_LEVEL))
-					.setAlarmWhenAboveLevel(alarmWhenAboveLevel);
+					.setAlarmWhenAboveLevel(alarmWhenAboveLevel)
+					.setAlarmWhenBelowLevel(alarmWhenBelowLevel);
 			builders.add(new Pair<>((String) args.get(ARGUMENT_GAUGE_ID), builder));
 		}
 		return builders;
+	}
+
+
+	private String alarmToAdapterId(Alarm alarm) {
+		if (alarm.isAlarmWhenAboveLevel() && alarm.isAlarmWhenBelowLevel()) {
+			return PEGEL_ALARM_ABOVE_OR_BELOW_LEVEL_ADAPTER_ID;
+		} else if (alarm.isAlarmWhenAboveLevel()) {
+			return PEGEL_ALARM_ABOVE_LEVEL_ADAPTER_ID;
+		} else if (alarm.isAlarmWhenBelowLevel()) {
+			return PEGEL_ALARM_BELOW_LEVEL_ADAPTER_ID;
+		} else {
+			throw new IllegalArgumentException("alarm is neither for above or below level");
+		}
 	}
 
 }

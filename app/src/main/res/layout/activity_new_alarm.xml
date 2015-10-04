@@ -74,30 +74,24 @@
                         android:text="@string/alarms_new_trigger_description"
                         />
 
-                    <RadioGroup
-                        android:id="@+id/selection_relation"
+                    <CheckBox
+                        android:id="@+id/checkbox_above_level"
+                        style="@style/FontRegular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checkedButton="@+id/above"
-                        android:orientation="vertical"
-                        >
+                        android:text="@string/alarms_new_trigger_above"
+                        android:layout_marginTop="6dp"
+                        />
 
-                        <RadioButton
-                            android:id="@+id/button_above"
-                            style="@style/FontRegular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/alarms_new_trigger_above"
-                            />
+                    <CheckBox
+                        android:id="@+id/checkbox_below_level"
+                        style="@style/FontRegular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/alarms_new_trigger_below"
+                        android:layout_marginTop="6dp"
+                        />
 
-                        <RadioButton
-                            android:id="@+id/button_below"
-                            style="@style/FontRegular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/alarms_new_trigger_below"
-                            />
-                    </RadioGroup>
                 </LinearLayout>
 
 
@@ -106,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="10dp"
                     android:enabled="false"
                     android:text="@string/alarms_new_add"
                     android:textColor="@android:color/white"

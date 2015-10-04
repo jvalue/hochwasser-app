@@ -7,7 +7,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,8 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 
 	@InjectView(R.id.text_station_name) TextView stationNameView;
 	@InjectView(R.id.edit_level) TextView levelEditView;
-	@InjectView(R.id.selection_relation) RadioGroup selectionGroup;
+	@InjectView(R.id.checkbox_above_level) CheckBox aboveLevelCheckBox;
+	@InjectView(R.id.checkbox_below_level) CheckBox belowLevelCheckBox;
 	@InjectView(R.id.button_confirm) Button confirmButton;
 
 	@InjectView(R.id.card_levels) private CardView levelsCard;
@@ -64,7 +66,21 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 		stationNameView.setText(StringUtils.toProperCase(station.getStationName()));
 
 		// select above level as default
-		selectionGroup.check(R.id.button_above);
+		aboveLevelCheckBox.setChecked(true);
+
+		// toggle confirm button when level check box change
+		aboveLevelCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				onLevelCheckBoxChanged();
+			}
+		});
+		belowLevelCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				onLevelCheckBoxChanged();
+			}
+		});
 
 		// setup editing
 		levelEditView.addTextChangedListener(new TextWatcher() {
@@ -87,9 +103,9 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 			public void onClick(View v) {
 				analyticsUtils.onClick("create alarm");
 
-				boolean alarmWhenAboveLevel = selectionGroup.getCheckedRadioButtonId() == R.id.button_above;
 				Alarm alarm = new Alarm.Builder()
-						.setAlarmWhenAboveLevel(alarmWhenAboveLevel)
+						.setAlarmWhenAboveLevel(aboveLevelCheckBox.isChecked())
+						.setAlarmWhenBelowLevel(belowLevelCheckBox.isChecked())
 						.setLevel(Double.valueOf(levelEditView.getText().toString()))
 						.setStation(station)
 						.build();
@@ -134,5 +150,13 @@ public class NewAlarmActivity extends AbstractRestrictedActivity {
 						.build()));
 	}
 
+
+	private void onLevelCheckBoxChanged() {
+		boolean enableConfirm = false;
+		if (aboveLevelCheckBox.isChecked() || belowLevelCheckBox.isChecked()) {
+			enableConfirm = true;
+		}
+		confirmButton.setEnabled(enableConfirm);
+	}
 
 }

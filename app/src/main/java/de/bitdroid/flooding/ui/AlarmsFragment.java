@@ -37,6 +37,7 @@ import roboguice.inject.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 public class AlarmsFragment extends AbstractFragment {
 
@@ -252,7 +253,8 @@ public class AlarmsFragment extends AbstractFragment {
 			stationView.setText(StringUtils.toProperCase(alarm.getStation().getStationName()) + " - "
 					+ StringUtils.toProperCase(alarm.getStation().getBodyOfWater().getName()));
 			String description;
-			if (alarm.isAlarmWhenAboveLevel()) description = getString(R.string.alarms_description_above, alarm.getLevel());
+			if (alarm.isAlarmWhenAboveLevel() && alarm.isAlarmWhenBelowLevel()) description = getString(R.string.alarms_description_above_or_below, alarm.getLevel());
+			else if (alarm.isAlarmWhenAboveLevel()) description = getString(R.string.alarms_description_above, alarm.getLevel());
 			else description = getString(R.string.alarms_description_below, alarm.getLevel());
 			descriptionView.setText(description);
 		}
@@ -284,7 +286,6 @@ public class AlarmsFragment extends AbstractFragment {
 
 		private void removeItems(int[] reverseSortedPositions) {
 			List<Alarm> alarmsToRemove = new ArrayList<>();
-			List<Alarm> allAlarms = adapter.getAlarms();
 			for (int position : reverseSortedPositions) {
 				alarmsToRemove.add(adapter.getAlarm(position));
 			}

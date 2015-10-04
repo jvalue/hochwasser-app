@@ -13,13 +13,18 @@ public class Alarm {
 	private final String id;
 	private final Station station;
 	private final double level;
-	private final boolean alarmWhenAboveLevel;
+	private final boolean alarmWhenAboveLevel, alarmWhenBelowLevel;
 
-	public Alarm(String id, Station station, double level, boolean alarmWhenAboveLevel) {
+	public Alarm(String id, Station station, double level, boolean alarmWhenAboveLevel, boolean alarmWhenBelowLevel) {
 		this.id = id;
 		this.station = station;
 		this.level = level;
 		this.alarmWhenAboveLevel = alarmWhenAboveLevel;
+		this.alarmWhenBelowLevel = alarmWhenBelowLevel;
+	}
+
+	public Alarm(String id, Alarm copy) {
+		this(id, copy.station, copy.level, copy.alarmWhenAboveLevel, copy.alarmWhenBelowLevel);
 	}
 
 	public String getId() {
@@ -38,6 +43,10 @@ public class Alarm {
 		return alarmWhenAboveLevel;
 	}
 
+	public boolean isAlarmWhenBelowLevel() {
+		return alarmWhenBelowLevel;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -45,13 +54,14 @@ public class Alarm {
 		Alarm alarm = (Alarm) o;
 		return Objects.equal(level, alarm.level) &&
 				Objects.equal(alarmWhenAboveLevel, alarm.alarmWhenAboveLevel) &&
+				Objects.equal(alarmWhenBelowLevel, alarm.alarmWhenBelowLevel) &&
 				Objects.equal(id, alarm.id) &&
 				Objects.equal(station, alarm.station);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, station, level, alarmWhenAboveLevel);
+		return Objects.hashCode(id, station, level, alarmWhenAboveLevel, alarmWhenBelowLevel);
 	}
 
 
@@ -60,7 +70,7 @@ public class Alarm {
 		private String id;
 		private Station station;
 		private double level;
-		private boolean alarmWhenAboveLevel;
+		private boolean alarmWhenAboveLevel, alarmWhenBelowLevel;
 
 		public Builder setId(String id) {
 			this.id = id;
@@ -82,8 +92,13 @@ public class Alarm {
 			return this;
 		}
 
+		public Builder setAlarmWhenBelowLevel(boolean alarmWhenBelowLevel) {
+			this.alarmWhenBelowLevel = alarmWhenBelowLevel;
+			return this;
+		}
+
 		public Alarm build() {
-			return new Alarm(id, station, level, alarmWhenAboveLevel);
+			return new Alarm(id, station, level, alarmWhenAboveLevel, alarmWhenBelowLevel);
 		}
 	}
 

@@ -2,7 +2,6 @@ package de.bitdroid.flooding.gcm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.os.Vibrator;
 
 import java.util.List;
@@ -14,89 +13,77 @@ import de.bitdroid.flooding.ceps.Alarm;
 import de.bitdroid.flooding.ceps.CepsManager;
 import de.bitdroid.flooding.network.NetworkUtils;
 import de.bitdroid.flooding.news.NewsManager;
+import de.bitdroid.flooding.ods.OdsManager;
+import de.bitdroid.flooding.ods.StationMeasurements;
 import de.bitdroid.flooding.ui.NewsFragment;
 import de.bitdroid.flooding.utils.StringUtils;
-import roboguice.service.RoboService;
-import rx.functions.Action1;
+import roboguice.service.RoboIntentService;
 import timber.log.Timber;
 
 /**
  * Processes GCM messages.
  */
-public class GcmService extends RoboService {
+public class GcmService extends RoboIntentService {
 
-	private static final String ARGUMENT_REGISTRATION_ID = "client";
+	public static final String ARGUMENT_REGISTRATION_ID = "client";
 
 	@Inject private CepsManager cepsManager;
+	@Inject private OdsManager odsManager;
 	@Inject private NewsManager newsManager;
 	@Inject private NetworkUtils networkUtils;
-	private int runningDownloadsCount = 0; // indicates how many async operations are currently running. Used to stop this service.
 
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
+	public GcmService() {
+		super(GcmService.class.getSimpleName());
 	}
 
-
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	protected void onHandleIntent(Intent intent) {
 		final String registrationId = intent.getExtras().getString(ARGUMENT_REGISTRATION_ID);
 		Timber.d("received registration id " + registrationId);
 
-		++runningDownloadsCount;
+		try {
+			List<Alarm> alarms = cepsManager.getAlarms().toBlocking().first();
+			Alarm triggeredAlarm = null;
+			for (Alarm alarm : alarms) {
+				if (alarm.getId().equals(registrationId)) {
+					triggeredAlarm = alarm;
+					break;
+				}
+			}
+			if (triggeredAlarm == null) {
+				Timber.e("failed to find alarm with id " + registrationId);
+				GcmBroadcastReceiver.completeWakefulIntent(intent);
+				return;
+			}
 
-		cepsManager.getAlarms()
-				.compose(networkUtils.<List<Alarm>>getDefaultTransformer())
-				.subscribe(new Action1<List<Alarm>>() {
-					@Override
-					public void call(List<Alarm> alarms) {
-						assertProperShutdown();
+			Timber.i("triggering alarm " + triggeredAlarm.getId());
 
-						Alarm triggeredAlam = null;
-						for (Alarm alarm : alarms) {
-							if (alarm.getId().equals(registrationId)) triggeredAlam = alarm;
-						}
-						if (triggeredAlam == null) {
-							Timber.e("failed to find alarm with id " + registrationId);
-							return;
-						}
+			if (!(triggeredAlarm.isAlarmWhenAboveLevel() && triggeredAlarm.isAlarmWhenBelowLevel())) {
+				showAlarmNotification(triggeredAlarm, triggeredAlarm.isAlarmWhenAboveLevel());
 
-						onTriggeredAlarm(triggeredAlam);
-					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						assertProperShutdown();
-						Timber.e(throwable, "failed to download alarms");
-					}
-				});
+			} else {
+				// no info about above or below level, download latest station info to find out
+				StationMeasurements measurements = odsManager.getMeasurements(triggeredAlarm.getStation()).toBlocking().first();
+				boolean aboveLevel = measurements.getLevel().getValueInCm() > triggeredAlarm.getLevel();
+				showAlarmNotification(triggeredAlarm, aboveLevel);
+			}
+		} catch (Exception e) {
+			Timber.e(e, "failed to trigger alarm");
+		}
 
-		return START_STICKY;
+		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 
 
-	private void assertProperShutdown() {
-		--runningDownloadsCount;
-		if (runningDownloadsCount == 0) stopSelf();
-	}
-
-
-	private void onTriggeredAlarm(Alarm alarm) {
-		// TODO
-		Timber.i("triggering alarm " + alarm.getId());
-
-		// show news
-		String station = StringUtils.toProperCase(alarm.getStation().getStationName());
-		String river = StringUtils.toProperCase(alarm.getStation().getBodyOfWater().getName());
-
-		String title = getString(R.string.alarms_triggered_title, station);
-
-		String relation = alarm.isAlarmWhenAboveLevel()
+	private void showAlarmNotification(Alarm alarm, boolean aboveLevel) {
+		final String relation = aboveLevel
 				? getString(R.string.alarms_triggered_msg_above)
 				: getString(R.string.alarms_triggered_msg_below);
-
-		String msg = getString(
+		final String station = StringUtils.toProperCase(alarm.getStation().getStationName());
+		final String river = StringUtils.toProperCase(alarm.getStation().getBodyOfWater().getName());
+		final String title = getString(R.string.alarms_triggered_title, station);
+		final String msg = getString(
 				R.string.alarms_triggered_msg,
 				station + " (" + river + ")",
 				relation,
@@ -109,6 +96,5 @@ public class GcmService extends RoboService {
 		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		vibrator.vibrate(400);
 	}
-
 
 }

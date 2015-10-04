@@ -37,7 +37,6 @@ import roboguice.inject.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import timber.log.Timber;
 
 public class AlarmsFragment extends AbstractFragment {
 

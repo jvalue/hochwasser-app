@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import org.roboguice.shaded.goole.common.base.Objects;
 
+import de.bitdroid.flooding.utils.PegelOnlineUtils;
+
 
 public class Measurement implements  Parcelable {
 
@@ -22,6 +24,10 @@ public class Measurement implements  Parcelable {
 
 	public String getUnit() {
 		return unit;
+	}
+
+	public float getValueInCm() {
+		return PegelOnlineUtils.toCm(value, unit);
 	}
 
 	@Override

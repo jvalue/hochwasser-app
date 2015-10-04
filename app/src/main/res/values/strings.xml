@@ -4,8 +4,8 @@
 
     <string name="welcome_to">Welcome to</string>
 
-	<string name="nav_home">News</string>
-	<string name="nav_alarms">Alarms</string>
+	<string name="nav_home">News &amp; Alarms</string>
+	<string name="nav_alarms">Alarm definitions</string>
 	<string name="nav_stations">Station levels</string>
     <string name="nav_river_graphs">River graphs</string>
 	<string name="nav_settings">Settings</string>

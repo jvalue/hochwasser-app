@@ -3,7 +3,8 @@
 
     <string name="welcome_to">Willkommen zu</string>
 
-    <string name="nav_alarms">Alarme</string>
+    <string name="nav_home">News &amp; Alarme</string>
+    <string name="nav_alarms">Alarm Definitionen</string>
     <string name="nav_stations">Station Wasserstände</string>
     <string name="nav_river_graphs">Fluss Graphen</string>
     <string name="nav_settings">Einstellungen</string>

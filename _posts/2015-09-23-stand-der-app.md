@@ -1,5 +1,5 @@
 ---
-title: Zum Stand der App Pegel Alarm!
+title: Zum Stand von Pegel Alarm
 layout: post
 ---
 Pegel Alarm ist (fürs erste) fertig entwickelt und läuft stabil.
